@@ -1,0 +1,27 @@
+{
+  "name": "hotel",
+  "version": "1.0.0",
+  "description": "A hotel booking with small cms",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=development nodemon --exec babel-node ./server.js",
+    "test": "NODE_ENV=test nodemon --exec babel-node mocha"
+  },
+  "author": "yuri-gagarin",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/polyfill": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/register": "^7.8.3",
+    "eslint": "^6.8.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "mongoose": "^5.8.11"
+  }
+}
