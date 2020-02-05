@@ -3,6 +3,7 @@ import $ from "jquery";
 // component imports //
 import NavbarComponent from "./navbar/NavbarComponent";
 import MainHeaderComponent from "./main_header/MainHeaderComponent";
+import ServicesComponent from "./services/ServicesComponent";
 import ContactForm from "./forms/ContactForm";
 import Footer from "./footer/Footer";
 import BookingForm from "./forms/BookingForm";
@@ -63,6 +64,7 @@ class HomeComponent extends React.Component {
       <NavbarComponent />
       <MainHeaderComponent />
       <BookingForm />
+      <ServicesComponent />
       <ContactForm />
       <Footer />
     </React.Fragment>
