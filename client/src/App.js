@@ -7,6 +7,7 @@ import "./assets/theme/vendor/fontawesome-free/css/all.css";
 //import "./assets/theme/vendor/jquery-easing/jquery.easing.js";
 //import "./assets/theme/js/agency";
 import "./assets/theme/agency.css";
+import "./assets/theme/booking_style.css";
 import './App.css';
 import { Button } from 'react-bootstrap';
 

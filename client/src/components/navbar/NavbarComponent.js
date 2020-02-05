@@ -1,9 +1,9 @@
 import React from "react";
 
 const style = {
-  border: "3px solid green",
+  //border: "3px solid green",
 }
-class NavigationComponent extends React.Component {
+class NavbarComponent extends React.Component {
   constructor (props) {
     super(props); 
   }
@@ -42,4 +42,4 @@ class NavigationComponent extends React.Component {
   }
 };
 
-export default NavigationComponent;
+export default NavbarComponent;

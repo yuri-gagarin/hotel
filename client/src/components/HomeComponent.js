@@ -1,8 +1,12 @@
 import React from "react";
-// component imports //
-import NavigationComponent from "./navigation/NavigationComponent";
-import MainHeaderComponent from "./main_header/MainHeaderComponent";
 import $ from "jquery";
+// component imports //
+import NavbarComponent from "./navbar/NavbarComponent";
+import MainHeaderComponent from "./main_header/MainHeaderComponent";
+import ContactForm from "./forms/ContactForm";
+import Footer from "./footer/Footer";
+import BookingForm from "./forms/BookingForm";
+
 
 class HomeComponent extends React.Component {
   constructor(props) {
@@ -31,7 +35,7 @@ class HomeComponent extends React.Component {
       $('.js-scroll-trigger').click(function() {
         $('.navbar-collapse').collapse('hide');
       });
-      console.log($("body"));
+      // console.log($("body"));
       // Activate scrollspy to add active class to navbar items on scroll
       //$('body').scrollspy({
       //  target: '#mainNav',
@@ -56,8 +60,11 @@ class HomeComponent extends React.Component {
   render() {
     return (
     <React.Fragment>
-      <NavigationComponent />
+      <NavbarComponent />
       <MainHeaderComponent />
+      <BookingForm />
+      <ContactForm />
+      <Footer />
     </React.Fragment>
     );
   }
