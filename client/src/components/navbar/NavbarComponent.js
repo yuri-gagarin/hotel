@@ -10,7 +10,7 @@ const NavbarComponent = (props) => {
 
   const changeLanguage = (e) => {
     console.log(e);
-    //i18n.changeLanguage("uk");
+    i18n.changeLanguage("uk");
   };
 
   return (
@@ -41,19 +41,19 @@ const NavbarComponent = (props) => {
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav text-uppercase ml-auto">
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#services">Reservations</a>
+              <a className="nav-link js-scroll-trigger" href="#services">{t("resTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#portfolio">Services</a>
+              <a className="nav-link js-scroll-trigger" href="#portfolio">{t("servicesTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#about">Our News</a>
+              <a className="nav-link js-scroll-trigger" href="#about">{t("newsTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#team">Contact</a>
+              <a className="nav-link js-scroll-trigger" href="#team">{t("contactTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#contact">About</a>
+              <a className="nav-link js-scroll-trigger" href="#contact">{t("aboutTitle")}</a>
             </li>
           </ul>
         </div>
