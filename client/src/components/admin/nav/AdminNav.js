@@ -3,11 +3,32 @@ import PropTypes from "prop-types";
 import { Menu, Segment } from 'semantic-ui-react';
 import { withRouter } from "react-router-dom";
 
+import { adminRoutes } from "../../../routes/appRoutes";
+
 const AdminNavMenu = (props) =>  {
   const [active, setActiveItem] = useState({ activeItem: "home" })
+  const { history } = props;
+
   const handleMenuClick = (e, { name }) => {
-    console.log(name)
     setActiveItem((state) => {
+      switch (name) {
+        case "home": {
+          history.push(adminRoutes.ADMIN_DASH);
+        };
+        case "messages": {
+          console.log("going to messages")
+          history.push(adminRoutes.ADMIN_MESSAGES);
+        };
+        case "posts": {
+          history.push(adminRoutes.ADMIN_POSTS);
+        };
+        case "regulate users": {
+          history.push(adminRoutes.ADMIN_REGULATE_USERS);
+        };
+        default: {
+          history.push(adminRoutes.ADMIN_DASH);
+        }
+      }
       return { ...state, activeItem: name };
     });
   };

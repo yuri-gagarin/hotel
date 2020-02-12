@@ -8,28 +8,30 @@ import {
 import "./assets/theme/vendor/jquery/jquery";
 import "./assets/theme/vendor/bootstrap/css/bootstrap.min.css";
 import "./assets/theme/vendor/fontawesome-free/css/all.css";
-//import "./assets/theme/vendor/jquery/jquery.js"
-//import "./assets/theme/vendor/jquery-easing/jquery.easing.js";
-//import "./assets/theme/js/agency";
 import "./assets/theme/agency.css";
 import "./assets/theme/booking_style.css";
 import './App.css';
-// import { Button } from 'react-bootstrap';
-
+// client route constants //
+import { adminRoutes, appRoutes } from "./routes/appRoutes";
 import HomeComponent from "./components/HomeComponent";
 import AdminComponent from './components/admin/AdminComponent';
+import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
+
+const AppRoutes = (props) => {
+  return (
+    <Router>
+      <Switch>
+        <Route path={adminRoutes.ADMIN_DASH} exact={true} component={AdminComponent} />
+        <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />
+        <Route path={appRoutes.HOME_ROUTE} exact={true} component={HomeComponent} />
+       </Switch>
+    </Router>
+  );
+}
 
 function App() {
   return (
-  <Router>
-    <Switch>
-      
-       <Route path="/administrator" exact={true} component={AdminComponent} />
-       <Route path="/">
-        <HomeComponent />
-       </Route>
-    </Switch>
-  </Router>
+    <AppRoutes />
   );
 }
 

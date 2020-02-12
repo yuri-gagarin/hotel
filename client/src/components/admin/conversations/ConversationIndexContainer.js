@@ -20,4 +20,4 @@ const ConversationIndexCotainer = (props) => {
   )
 }
 
-export default withRouter(Conv)
+export default withRouter(ConversationIndexCotainer);
