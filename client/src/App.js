@@ -1,5 +1,10 @@
 /* global jQuery, define */
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 import "./assets/theme/vendor/jquery/jquery";
 import "./assets/theme/vendor/bootstrap/css/bootstrap.min.css";
 import "./assets/theme/vendor/fontawesome-free/css/all.css";
@@ -9,13 +14,22 @@ import "./assets/theme/vendor/fontawesome-free/css/all.css";
 import "./assets/theme/agency.css";
 import "./assets/theme/booking_style.css";
 import './App.css';
-import { Button } from 'react-bootstrap';
+// import { Button } from 'react-bootstrap';
 
 import HomeComponent from "./components/HomeComponent";
+import AdminComponent from './components/admin/AdminComponent';
 
 function App() {
   return (
-    <HomeComponent />
+  <Router>
+    <Switch>
+      
+       <Route path="/administrator" exact={true} component={AdminComponent} />
+       <Route path="/">
+        <HomeComponent />
+       </Route>
+    </Switch>
+  </Router>
   );
 }
 
