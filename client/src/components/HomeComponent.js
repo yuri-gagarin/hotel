@@ -6,6 +6,7 @@ import MainHeaderComponent from "./main_header/MainHeaderComponent";
 import ServicesComponent from "./services/ServicesComponent";
 import ContactForm from "./forms/ContactForm";
 import Footer from "./footer/Footer";
+import MessageFormContainer from "./messaging/MessageFormContainer";
 import BookingForm from "./forms/BookingForm";
 
 
@@ -66,6 +67,7 @@ class HomeComponent extends React.Component {
       <BookingForm />
       <ServicesComponent />
       <ContactForm />
+      <MessageFormContainer />
       <Footer />
     </React.Fragment>
     );
