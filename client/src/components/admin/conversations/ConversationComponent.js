@@ -52,9 +52,9 @@ const ConversationComponent = (props) => {
     console.log("danger")
   };
   return (
-      <Comment.Group>
+      <Comment.Group style={{overflow: "scroll", height: "100%", paddingRight: "1em"}}>
         <Header as='h3' style={{textAlign: "center"}}>
-          Conversations
+          Active Conversations
         </Header>
 
         <Comment onClick={handleConvoOpen} style={style.convoContainerStyle}>
@@ -80,7 +80,80 @@ const ConversationComponent = (props) => {
             </Comment.Metadata>
           </Comment.Content>
         </Comment>
+        <Comment onClick={handleConvoOpen} style={style.convoContainerStyle}>
+          <Comment.Content>
+            <DeleteConvoBtn/>
+            <Comment.Author as='a'>Elliot Fu</Comment.Author>
+            <Comment.Content>
+              <p>This has been very useful for my research. Thanks as well!</p>
+            </Comment.Content>
+            <Comment.Metadata>
+              <div>Yesterday at 12:30AM</div>
+            </Comment.Metadata>
+          </Comment.Content>
+        </Comment>
+        <Comment onClick={handleConvoOpen} style={style.convoContainerStyle}>
+          <Comment.Content>
+            <DeleteConvoBtn/>
+            <Comment.Author as='a'>Elliot Fu</Comment.Author>
+            <Comment.Content>
+              <p>This has been very useful for my research. Thanks as well!</p>
+            </Comment.Content>
+            <Comment.Metadata>
+              <div>Yesterday at 12:30AM</div>
+            </Comment.Metadata>
+          </Comment.Content>
+        </Comment>
+        <Comment onClick={handleConvoOpen} style={style.convoContainerStyle}>
+          <Comment.Content>
+            <DeleteConvoBtn/>
+            <Comment.Author as='a'>Elliot Fu</Comment.Author>
+            <Comment.Content>
+              <p>This has been very useful for my research. Thanks as well!</p>
+            </Comment.Content>
+            <Comment.Metadata>
+              <div>Yesterday at 12:30AM</div>
+            </Comment.Metadata>
+          </Comment.Content>
+        </Comment>
+        <Comment onClick={handleConvoOpen} style={style.convoContainerStyle}>
+          <Comment.Content>
+            <DeleteConvoBtn/>
+            <Comment.Author as='a'>Elliot Fu</Comment.Author>
+            <Comment.Content>
+              <p>This has been very useful for my research. Thanks as well!</p>
+            </Comment.Content>
+            <Comment.Metadata>
+              <div>Yesterday at 12:30AM</div>
+            </Comment.Metadata>
+          </Comment.Content>
+        </Comment>
+        <Comment onClick={handleConvoOpen} style={style.convoContainerStyle}>
+          <Comment.Content>
+            <DeleteConvoBtn/>
+            <Comment.Author as='a'>Elliot Fu</Comment.Author>
+            <Comment.Content>
+              <p>This has been very useful for my research. Thanks as well!</p>
+            </Comment.Content>
+            <Comment.Metadata>
+              <div>Yesterday at 12:30AM</div>
+            </Comment.Metadata>
+          </Comment.Content>
+        </Comment>
+        <Comment onClick={handleConvoOpen} style={style.convoContainerStyle}>
+          <Comment.Content>
+            <DeleteConvoBtn/>
+            <Comment.Author as='a'>Elliot Fu</Comment.Author>
+            <Comment.Content>
+              <p>This has been very useful for my research. Thanks as well!</p>
+            </Comment.Content>
+            <Comment.Metadata>
+              <div>Yesterday at 12:30AM</div>
+            </Comment.Metadata>
+          </Comment.Content>
+        </Comment>
       </Comment.Group>
+      
   )
 };
 // PropTypes validation //

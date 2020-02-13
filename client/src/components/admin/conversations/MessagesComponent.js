@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, List } from "semantic-ui-react";
+import { Comment, 
+  Container, 
+  List 
+} from "semantic-ui-react";
 
 const MessagesComponent = (props) => {
   const openConversation = () => {
