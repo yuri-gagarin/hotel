@@ -1,50 +1,62 @@
 import React, {useRef, useState} from "react";
-import { 
-  Form,
-  Button
-} from "react-bootstrap";
-
-import { messageForm } from "./style/styles";
+import PropTypes from "prop-types";
+// styles  and images //
+import { messageForm} from "./style/styles";
+// additional compononets //
+import MessagesInitView from "./MessageInitView";
+import MessageView from "./MessageView";
 
 const MessageForm = (props) => {
   const messageFormRef = useRef(null);
-  const userIsMessaging = useState(false);
+  const [userIsMessaging, setUserIsMessaging] = useState(true);
   const formOpen = useState(false);
+  const { handleFormOpen} = props;
 
-  const handleFormHide = (e) => {
-    //console.log(e.target);
-    console.log(messageFormRef.current.style.display = "none")
-  }
+  const toggleMessageForm = (e) => {
+    handleFormOpen();
+    // maybe animate later //
+    messageFormRef.current.style.display = "none";
+  };
+  const sendInitialMessage = (message) => {
+    setUserIsMessaging(true);
+    console.log(message);
+  };
   return (
-    <div style={messageFormContainer} ref={messageFormRef}>
-      <div>Messaging here</div>
-      <div style={styles.closeMessageForm} onClick={handleFormHide}>
+    <div style={messageForm.formContainer} ref={messageFormRef}>
+      <div style={messageForm.closeMessageForm} onClick={toggleMessageForm}>
         <span>X</span>
       </div>
-      <div style={styles.messagingDisplay}>
-        <ul>
-          <li>Messages here</li>
-        </ul>
+      <div style={messageForm.messageView}>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+        <div>Message</div>
+
       </div>
-      <Form>
-        <Form.Group controlId="formName">
-          <Form.Control type="input" placeholder="your name please" />
-        </Form.Group>
-        <Form.Group controlId="formEmail">
-          <Form.Control type="input" placeholder="email ... optional" />
-        </Form.Group>
-        <Form.Group controlId="formMessageInput">
-          <Form.Control type="input" placeholder="message..." />
-        </Form.Group>
-        <Form.Group controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group>
-        <Button variant="primary">
-          Send
-        </Button>
-      </Form>
+      {
+        userIsMessaging ? <MessageView /> : <MessagesInitView sendInitialMessage={sendInitialMessage}/>
+      }
     </div>
-  );
+  )
+  
+};
+
+MessageForm.propTypes = {
+  handleFormOpen: PropTypes.func.isRequired
 };
 
 export default MessageForm;

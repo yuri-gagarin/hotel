@@ -1,27 +1,57 @@
 import OpenMessageForm from "../OpenMessageForm";
 
-export const messageForm ={
+export const messageForm = {
+  formContainer: {
     backgroundColor: "white",
-    border: "1px solid red",
+    border: "1px solid grey",
+    borderRadius: "5px",
     width: "33%",
-    height: "33",
+    //display: "flex",
+    //flexDirection: "column",
+    //justifyContent: "center",
     position: "fixed",
-    bottom: "50%",
-    right: 0,
+    bottom: "1%",
+    right: "1em",
     padding: "1em",
     zIndex: "999"
-};
-export const closeMessageForm = {
-    border: "1px solid white",
-    height: "50px",
+  },
+  closeMessageForm: {
+    border: "1px solid green",
+    position: "relative",
     width: "50px",
-    position: "absolute",
-    right: "0.5em",
-    top: "0.5em",
-    borderRadius: "25px",
+    left: "85%",
+    borderRadius: "10px",
     textAlign: "center",
     paddingTop: "12px",
     cursor: "pointer"
+  },
+  messageView: {
+    height: "200px",
+    border: "1px solid grey",
+    borderRadius: "5px",
+    marginTop: "1em",
+    marginBottom: "1em",
+    overflow: "scroll"
+  },
+  messagesViewContainer: {
+    //flex: 1,
+    backgroundColor: "white",
+    border: "1px solid red",
+    width: "33%",
+    height: "auto",
+    position: "fixed",
+    bottom: "10%",
+    right: 0,
+    padding: "1em",
+    zIndex: "999"
+  },
+  messagesView: {
+    backgroundColor: "white",
+    width: "100%",
+    height: "300px",
+    overflow: "scroll"
+  }
+
 };
 export const openMessageForm = {
   formContainer: {

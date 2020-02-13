@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, { useState } from "react";
 import { 
   Form,
   Button
@@ -11,19 +11,21 @@ import { messageFormContainer } from "./style/styles";
 
 const MessageFormContainer = (props) => {
  
-  const [formOpen, setFormOpen] = useState(false);
-
-  const handleFormHide = (e) => {
-    //console.log(e.target);
-    console.log(messageFormRef.current.style.display = "none")
+  const [formOpen, setFormOpen] = useState({open: false});
+  const handleFormOpen = (e) => {
+    // toggles between messaging form and back //
+    setFormOpen((state) => {
+      return {open: !state.open};
+    });
   }
-  if (!formOpen) {
+  // render conditionally //
+  if (!formOpen.open) {
     return (
-      <OpenMessageForm />
+      <OpenMessageForm handleFormOpen={handleFormOpen} />
     );
   } else {
     return (
-      <MessageForm />
+      <MessageForm handleFormOpen={handleFormOpen}/>
     );
   }
 };
