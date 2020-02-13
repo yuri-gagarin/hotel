@@ -3,8 +3,15 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import socketIo from 'socket.io';
 
+import combineRoutes from "./routes/combineRoutes";
 const app = express();
+const router = express.Router();
 const PORT = process.env.PORT || 3000;
+
+// Router and routers //
+combineRoutes(router);
+app.use(router);
+// body parser middleware //
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
