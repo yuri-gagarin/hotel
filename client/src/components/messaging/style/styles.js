@@ -19,10 +19,10 @@ export const messageForm = {
     border: "1px solid green",
     position: "relative",
     width: "50px",
-    left: "85%",
-    borderRadius: "10px",
+    left: "2%",
+    borderRadius: "5px",
     textAlign: "center",
-    paddingTop: "12px",
+    //paddingTop: "12px",
     cursor: "pointer"
   },
   messageView: {
