@@ -7,28 +7,34 @@ import { adminRoutes } from "../../../routes/appRoutes";
 
 const AdminNavMenu = (props) =>  {
   const [active, setActiveItem] = useState({ activeItem: "home" })
+  const [loading, setLoading] = useState(false);
   const { history } = props;
 
   const handleMenuClick = (e, { name }) => {
-    setActiveItem((state) => {
-      switch (name) {
-        case "home": {
-          history.push(adminRoutes.ADMIN_DASH);
-        };
-        case "messages": {
-          console.log("going to messages")
-          history.push(adminRoutes.ADMIN_MESSAGES);
-        };
-        case "posts": {
-          history.push(adminRoutes.ADMIN_POSTS);
-        };
-        case "regulate users": {
-          history.push(adminRoutes.ADMIN_REGULATE_USERS);
-        };
-        default: {
-          history.push(adminRoutes.ADMIN_DASH);
-        }
+    
+    switch (name) {
+      case "home": {
+        history.push(adminRoutes.ADMIN_DASH);
+        break;
+      };
+      case "messages": {
+        history.push(adminRoutes.ADMIN_MESSAGES);
+        break;
+      };
+      case "posts": {
+        history.push(adminRoutes.ADMIN_POSTS);
+        break;
+      };
+      case "regulate users": {
+        history.push(adminRoutes.ADMIN_REGULATE_USERS);
+        break;
+      };
+      default: {
+        history.push(adminRoutes.ADMIN_DASH);
       }
+    }
+    setActiveItem((state) => {
+      console.log(state);
       return { ...state, activeItem: name };
     });
   };

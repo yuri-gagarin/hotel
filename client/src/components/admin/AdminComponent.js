@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Grid } from "semantic-ui-react";
-import { withRouter } from "react-router-dom"; 
+import { withRouter, Route } from "react-router-dom"; 
 import AdminNavComponent from "./nav/AdminNav";
 
 import { adminRoutes } from "../../routes/appRoutes";
@@ -9,6 +9,7 @@ import ConversationIndexContainer from "./conversations/ConversationIndexContain
 import AdminDashComponent from "./dash/AdminDashComponent";
 import PostsIndexContainer from "./posts/PostsIndexContainer";
 
+/*
 const DashRendering = ({ history }) => {
   const location = history.location.pathname;
   console.log(location);
@@ -40,6 +41,7 @@ const DashRendering = ({ history }) => {
     }
   };
 };
+*/
 
 const AdminComponent = (props) => {
   const { history } = props;
@@ -50,7 +52,15 @@ const AdminComponent = (props) => {
           <AdminNavComponent />
         </Grid.Column>
       </Grid.Row>
-      <DashRendering history={history} />
+      <Route path="/admin/dashboard">
+        <AdminDashComponent />
+      </Route>
+      <Route path="/admin/messages">
+        <ConversationIndexContainer />
+      </Route>
+      <Route path="/admin/posts">
+        <PostsIndexContainer />
+      </Route>
     </Grid>
   )
 };

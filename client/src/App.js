@@ -21,7 +21,7 @@ const AppRoutes = (props) => {
   return (
     <Router>
       <Switch>
-        <Route path={adminRoutes.ADMIN_DASH} exact={true} component={AdminComponent} />
+        <Route path={adminRoutes.ADMIN} exact={false} component={AdminComponent} />
         <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />
         <Route path={appRoutes.HOME_ROUTE} exact={true} component={HomeComponent} />
        </Switch>
