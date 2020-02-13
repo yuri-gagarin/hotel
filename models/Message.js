@@ -11,9 +11,13 @@ const messageSchema = new Schema({
     type: String,
     required: true,
   },
-  senderIp: {
+  content: {
     type: String,
     required: true
+  },
+  senderIp: {
+    type: String,
+    required: false
   },
   sentAt: {
     type: Date,
