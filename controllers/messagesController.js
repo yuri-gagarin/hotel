@@ -5,9 +5,11 @@ import Message from "../models/Message";
 export default {
   sendMessage: (req, res) => {
     const user = req.user || {};
+    const userId = user._id || mongoose.Types.ObjectId();
+    console.log(userId);
     const messageData = req.body;
     let conversationId = req.body.conversationId;
-    console.info(user);
+    let messageId;
     // validate message later //
     if (!messageData.content) {
       return res.status(400).json({
@@ -24,7 +26,7 @@ export default {
           // create a new conversation first //
           const conversationData = {
             participants: [
-              mongoose.Types.ObjectId()
+              userId
             ]
           }
           return Conversation.create(conversationData);
@@ -41,15 +43,21 @@ export default {
       })
       .then((createdMessage) => {
         // update a conversation with a new message //
-        return Conversation.findByIdAndUpdate(conversationId,
-          { "$push": { "messages": createdMessage._id } }
+        messageId = createdMessage._id;
+        return Conversation.findByIdAndUpdate(
+          conversationId,
+          { "$push": { "unreadMessages": createdMessage._id },
+            "$addToSet": { "participants": userId }
+          }
         );
       })
       .then((conversation) => {
         // assuming everything went fine //
+        console.log(conversation);
         return res.status(200).json({
           message: "Message sent",
-          conversationId: conversation._id
+          messageId: messageId,
+          conversationId: conversationId
         });
       })
       .catch((error) => {
@@ -60,7 +68,8 @@ export default {
       });
   },
   markMessageRead: (req, res) => {
-    
+    const conversationId = req.body.conversationId;
+
   }
 };
 
