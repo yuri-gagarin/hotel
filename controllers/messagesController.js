@@ -7,7 +7,13 @@ export default {
     const user = req.user || {};
     const messageData = req.body;
     let conversationId = req.body.conversationId;
+    console.info(user);
     // validate message later //
+    if (!messageData.content) {
+      return res.status(400).json({
+        message: "Message cannot be blank"
+      });
+    }
     // check for existing conversation create one if necessary //
     return Conversation.findOne({ _id: conversationId })
       .then((conversation) => {
@@ -42,7 +48,8 @@ export default {
       .then((conversation) => {
         // assuming everything went fine //
         return res.status(200).json({
-          message: "Message sent"
+          message: "Message sent",
+          conversationId: conversation._id
         });
       })
       .catch((error) => {

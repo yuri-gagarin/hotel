@@ -23,13 +23,14 @@ mongoose.connection.once("open", () => {
   app.emit("dbReady");
 });
 // end database setup //
+// body parser middleware //
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Router and routers //
 combineRoutes(router);
 app.use(router);
-// body parser middleware //
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+
 
 //app.use()
 app.on("dbReady", () => {
