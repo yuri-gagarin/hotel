@@ -8,7 +8,7 @@ import MessageView from "./MessageView";
 
 const MessageForm = (props) => {
   const messageFormRef = useRef(null);
-  const [userIsMessaging, setUserIsMessaging] = useState(true);
+  const [userIsMessaging, setUserIsMessaging] = useState(false);
   const formOpen = useState(false);
   const { handleFormOpen} = props;
 
@@ -35,17 +35,6 @@ const MessageForm = (props) => {
         <div>Message</div>
         <div>Message</div>
         <div>Message</div>
-        <div>Message</div>
-        <div>Message</div>
-        <div>Message</div>
-        <div>Message</div>
-        <div>Message</div>
-        <div>Message</div>
-        <div>Message</div>
-        <div>Message</div>
-        <div>Message</div>
-        <div>Message</div>
-
       </div>
       {
         userIsMessaging ? <MessageView /> : <MessagesInitView sendInitialMessage={sendInitialMessage}/>

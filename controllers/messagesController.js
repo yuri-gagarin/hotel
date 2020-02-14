@@ -4,10 +4,10 @@ import Message from "../models/Message";
 
 export default {
   sendMessage: (req, res) => {
-    const user = req.user || {};
+    const user = req.user || req.body.user || {};
     const userId = user._id || mongoose.Types.ObjectId();
     console.log(userId);
-    const messageData = req.body;
+    const messageData = req.body.messageData;
     let conversationId = req.body.conversationId;
     let messageId;
     // validate message later //

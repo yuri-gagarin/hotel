@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Button,
@@ -7,11 +7,16 @@ import {
 
 // styles and images //
 import { messageForm } from "./style/styles";
+// additional dependencies //
+import { sendMessage } from "./helpers/messageHelpers";
+import ObjectID from "bson-objectid";
 
 const MessageInitView = (props) => {
   //const { handleFormHide } = props;
   const { sendInitialMessage } = props;
+  const [validated, setValidated] = useState(false);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
   const handleNameChange = (e) => {
@@ -20,23 +25,42 @@ const MessageInitView = (props) => {
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
-
+  /*
+  useEffect(() => {
+    if (name && message) {
+      console.log("form validated");
+      console.log("Should do an API call");
+    }
+  }, [name, message]);
+  */
   const handleInitSubmit = (e) => {
-    //console.info(name);
-    //console.info(message);
-    sendInitialMessage({
-      name: name,
-      message: message
-    });
-    // send message to api and switch form to messageView //
+    if (e.currentTarget.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    setValidated(true)
+    const messageData = {
+      user: {
+        _id: ObjectID.generate(Date.now),
+        firstName: name,
+        email: email,
+      },
+      content: message
+    };
+    console.log(messageData);
 
+    //sendInitialMessage({})
   }
   return (
-    <Form>
+    <Form noValidate validated={validated} onSubmit={handleInitSubmit}>
       <Form.Group controlId="formName">
         <Form.Control 
+          required
           type="input" 
-          placeholder="your name please" 
+          placeholder="your name ..." 
           onChange={handleNameChange}
         />
       </Form.Group>
@@ -45,15 +69,16 @@ const MessageInitView = (props) => {
       </Form.Group>
       <Form.Group controlId="formMessageInput">
         <Form.Control 
+          required
           type="input" 
-          placeholder="message..." 
+          placeholder="message ..." 
           onChange={handleMessageChange}
         />
       </Form.Group>
       <Form.Group controlId="formBasicCheckbox">
         <Form.Check type="checkbox" label="Check me out" />
       </Form.Group>
-      <Button variant="primary" onClick={handleInitSubmit}>
+      <Button variant="primary" type="submit">
         Send
       </Button>
     </Form>
