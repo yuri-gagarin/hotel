@@ -25,14 +25,6 @@ const MessageInitView = (props) => {
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
-  /*
-  useEffect(() => {
-    if (name && message) {
-      console.log("form validated");
-      console.log("Should do an API call");
-    }
-  }, [name, message]);
-  */
   const handleInitSubmit = (e) => {
     if (e.currentTarget.checkValidity() === false) {
       e.preventDefault();
