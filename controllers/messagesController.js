@@ -6,12 +6,10 @@ export default {
   sendMessage: (req, res) => {
     const user = req.user || req.body.user || {};
     const userId = user._id || mongoose.Types.ObjectId();
-    console.log(userId);
-    const messageData = req.body.messageData;
-    let conversationId = req.body.conversationId;
-    let newMessage;
+    const { messageData } = req.body;
+    let newMessage, conversationId;
     // validate message later //
-    if (!messageData.content) {
+    if (!messageData) {
       return res.status(400).json({
         message: "Message cannot be blank"
       });
@@ -37,13 +35,13 @@ export default {
         const newMessage = {
           conversationId: conversation._id,
           sender: user.firstName || "Guest",
-          content: messageData.content,
+          content: messageData,
         }
         return Message.create(newMessage);
       })
       .then((createdMessage) => {
         // update a conversation with a new message //
-        messageId = createdMessage._id;
+        // messageId = createdMessage._id;
         newMessage = createdMessage;
         return Conversation.updateOne(
           { "$push": { "unreadMessages": createdMessage._id },
@@ -60,8 +58,9 @@ export default {
         });
       })
       .catch((error) => {
+        console.error(error.message);
         return res.status(500).json({
-          message: "Oops an error occured",
+          message: "oops an error occured",
           error: error
         });
       });

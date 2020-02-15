@@ -2,12 +2,15 @@ import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import socketIo from 'socket.io';
+import path from "path";
 
 import appConfig from "./config/appConfig";
 import combineRoutes from "./routes/combineRoutes";
+
 const app = express();
 const router = express.Router();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
+
 // database and connection //
 const { dbSettings } = appConfig;
 const mongoOptions = {
@@ -23,14 +26,27 @@ mongoose.connection.once("open", () => {
   app.emit("dbReady");
 });
 // end database setup //
+
 // body parser middleware //
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+// serve the static files from the React app //
+// app.use(express.static(path.join(__dirname, "client/build")));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.resolve(__dirname, "client/build")));
+  app.get("/", () => {
+    res.sendFile(path.resolve(__dirname, "client/dist/index.html"));
+  });
+}
+else {
+  app.use(express.static(path.resolve(__dirname, "client/src")));
+  app.get("/", () => {
+    res.sendFile(path.resolve(__dirname, "client/public/index.html"));
+  });
+}
 // Router and routers //
 combineRoutes(router);
 app.use(router);
-
 
 //app.use()
 app.on("dbReady", () => {

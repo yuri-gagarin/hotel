@@ -42,10 +42,9 @@ const MessageInitView = (props) => {
       },
       content: message
     };
-    console.log(messageData);
-
-    //sendInitialMessage({})
+    sendInitialMessage(messageData)
   }
+  
   return (
     <Form noValidate validated={validated} onSubmit={handleInitSubmit}>
       <Form.Group controlId="formName">

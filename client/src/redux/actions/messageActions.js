@@ -1,4 +1,5 @@
 import axios from "axios";
+import { conversationSuccess } from "./conversationActions";
 import { messageConstants } from "../constants";
 // action constants //
 const {
@@ -10,6 +11,7 @@ const {
 } = messageConstants;
 
 export const messageRequest = (user) => {
+  console.log("dispatching request");
   return {
     type: MESSAGE_REQUEST,
     payload: {
@@ -24,6 +26,7 @@ export const messageRequest = (user) => {
 };
 
 export const messageSuccess = (user, { status, responseMsg, messageContent }) => {
+  console.log("dispatching success");
   return {
     type: MESSAGE_SUCCESS,
     payload: {
@@ -38,6 +41,7 @@ export const messageSuccess = (user, { status, responseMsg, messageContent }) =>
 };
 
 export const messageError = (user, { status, responseMsg, messageContent }) => {
+  console.log("dispatching error");
   return {
     type: MESSAGE_ERROR,
     payload: {
@@ -51,10 +55,10 @@ export const messageError = (user, { status, responseMsg, messageContent }) => {
   };
 };
 
-export const sendMessageRequest = (dispatch, user, { conversationId, messageData }) => {
+export const sendMessageRequest = (dispatch, { user,  conversationId, messageData }) => {
   const requestOptions = {
     method: "post",
-    url: "/api/messages",
+    url: "/api/sendMessage",
     data: {
       user: user,
       messageData: messageData,
@@ -69,6 +73,7 @@ export const sendMessageRequest = (dispatch, user, { conversationId, messageData
       dispatch(messageSuccess(user, { status, responseMsg, conversationId, newMessage}))
     })
     .catch((error) => {
+      console.log(error.response);
       const { status, response } = error;
       dispatch(messageError(user, { status, response }));
     });
