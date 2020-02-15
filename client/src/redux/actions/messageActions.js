@@ -10,7 +10,7 @@ const {
   MESSAGE_ERROR
 } = messageConstants;
 
-export const messageRequest = (user) => {
+export const messageRequest = () => {
   console.log("dispatching request");
   return {
     type: MESSAGE_REQUEST,
@@ -18,14 +18,13 @@ export const messageRequest = (user) => {
       status: null,
       responseMsg: null,
       loading: true,
-      user: { ...user },
       messageContent: "",
       messageError: null
     }
   };
 };
 
-export const messageSuccess = (user, { status, responseMsg, messageContent }) => {
+export const messageSuccess = ({ status, responseMsg, messageContent }) => {
   console.log("dispatching success");
   return {
     type: MESSAGE_SUCCESS,
@@ -33,14 +32,13 @@ export const messageSuccess = (user, { status, responseMsg, messageContent }) =>
       status: status,
       responseMsg: responseMsg,
       loading: false,
-      user: { ...user },
       messageContent: messageContent,
       messageError: null
     }
   };
 };
 
-export const messageError = (user, { status, responseMsg, messageContent }) => {
+export const messageError = ({ status, responseMsg, messageContent }) => {
   console.log("dispatching error");
   return {
     type: MESSAGE_ERROR,
@@ -48,7 +46,6 @@ export const messageError = (user, { status, responseMsg, messageContent }) => {
       status: status,
       responseMsg: responseMsg,
       loading: false,
-      user: { ...user },
       messageContent: messageContent,
       messageError: null
     }
@@ -65,17 +62,18 @@ export const sendMessageRequest = (dispatch, { user,  conversationId, messageDat
       conversationId: conversationId
     }
   };
-  dispatch(messageRequest(user));
+  dispatch(messageRequest());
   return axios(requestOptions) 
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversationId, newMessage } = data;
-      dispatch(messageSuccess(user, { status, responseMsg, conversationId, newMessage}))
+      dispatch(conversationSuccess(conversationId, newMessage));
+      dispatch(messageSuccess({ status, responseMsg, newMessage}))
     })
     .catch((error) => {
       console.log(error.response);
       const { status, response } = error;
-      dispatch(messageError(user, { status, response }));
+      dispatch(messageError({ status, response }));
     });
 };
 

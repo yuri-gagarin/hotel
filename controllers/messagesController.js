@@ -34,7 +34,7 @@ export default {
         conversationId = conversation._id;
         const newMessage = {
           conversationId: conversation._id,
-          sender: user.firstName || "Guest",
+          sender: user.name || "Guest",
           content: messageData,
         }
         return Message.create(newMessage);
@@ -54,7 +54,8 @@ export default {
         return res.status(200).json({
           responseMsg: "Message sent",
           conversationId: conversationId,
-          newMessage: newMessage
+          newMessage: newMessage,
+          user: user
         });
       })
       .catch((error) => {

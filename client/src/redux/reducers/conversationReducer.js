@@ -3,15 +3,14 @@ const {
   OPEN_CONVERASTION,
   CLOSE_CONVERSATION,
   DELETE_CONVERSATION,
-  SEND_MESSAGE,
-  RECEIVE_MESSAGE,
-  MARK_READ,
+  CONVERSATION_SUCCESS
 } = conversationConstants;
 // initial state //
 const initialState = {
+  status: null,
+  responseMsg: "",
   loading: false,
   userMessaging: false,
-  user: {},
   conversationId: null,
   messages: []
 };
@@ -25,7 +24,7 @@ const conversationReducer = (state = initialState, { type, payload }) => {
         conversationId: payload.conversationId,
         messages: [...payload.messages]
       };
-    }
+    };
     case  CLOSE_CONVERSATION: {
       return {
         ...state,
@@ -33,7 +32,16 @@ const conversationReducer = (state = initialState, { type, payload }) => {
         conversationId: payload.conversationId,
         messages: [...payload.messages]
       };
-    }
+    };
+    case CONVERSATION_SUCCESS: {
+      return {
+        ...state,
+        loading: payload.loading,
+        userMessaging: payload.userMessaging,
+        conversationId: payload.conversationId,
+        messages: [...state.messages, payload.message]
+      };
+    };
     case DELETE_CONVERSATION: {
       return {
         ...state,

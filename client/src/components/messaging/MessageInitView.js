@@ -37,8 +37,8 @@ const MessageInitView = (props) => {
     const messageData = {
       user: {
         _id: ObjectID.generate(Date.now),
-        firstName: name,
-        email: email,
+        name: name,
+        email: email
       },
       content: message
     };

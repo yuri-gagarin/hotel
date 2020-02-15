@@ -4,6 +4,7 @@ const {
   CONVERSATION_REQUEST,
   CONVERSATION_ERROR,
   OPEN_CONVERASTION,
+  CONVERSATION_SUCCESS,
   CLOSE_CONVERSATION
 } = conversationConstants;
 
@@ -31,6 +32,18 @@ export const openConversation = ({ conversationId, }) => {
     type: OPEN_CONVERASTION,
     payload: {
       loading: false,
+    }
+  };
+};
+
+export const conversationSuccess = (conversationId, message) => {
+  return {
+    type: CONVERSATION_SUCCESS,
+    payload: {
+      loading: false,
+      userMessaging: true,
+      conversationId: conversationId,
+      message: message
     }
   };
 };

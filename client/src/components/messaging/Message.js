@@ -5,7 +5,7 @@ import {
 } from "semantic-ui-react";
 
 export const Message = (props) => {
-  const { content, read, createdAt, firstName } = props.message;
+  const { content, read, createdAt, firstName } = props;
 
   return (
     <Comment>

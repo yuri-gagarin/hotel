@@ -9,15 +9,19 @@ import Message from "./Message";
 // redux imports // 
 import { connect } from "react-redux";
 import { sendMessageRequest } from "../../redux/actions/messageActions";
+import { setGuestClient } from "../../redux/actions/clientActions";
 
 const MessageForm = (props) => {
   const messageFormRef = useRef(null);
   const [userIsMessaging, setUserIsMessaging] = useState(false);
   const formOpen = useState(false);
-  const { handleFormOpen, handleMessageRequest } = props;
+  const { 
+    handleFormOpen,
+    handleMessageRequest, 
+    clientState ,
+    setClientState
+  } = props;
   const { messages } = props.conversationState;
-
-
   const toggleMessageForm = (e) => {
     handleFormOpen();
     // maybe animate later //
@@ -26,6 +30,10 @@ const MessageForm = (props) => {
   const sendInitialMessage = (messageData) => {
     const { user, content } = messageData;
     handleMessageRequest(user, null, content);
+    if (!clientState.userId) {
+      setClientState({userId: user._id, name: user.name, email: user.email });
+    }
+    console.log(clientState);
   };
   return (
     <div style={messageForm.formContainer} ref={messageFormRef}>
@@ -37,6 +45,7 @@ const MessageForm = (props) => {
             messages.map((message) => {
               return (
                 <Message 
+                  key={message._id}
                   content={message.content}
                   send={message.sender}
                   read={message.read}
@@ -53,23 +62,30 @@ const MessageForm = (props) => {
   );
   
 };
-
+// PropTypes validation //
 MessageForm.propTypes = {
-  handleFormOpen: PropTypes.func.isRequired
+  clientState: PropTypes.object.isRequired,
+  conversationState: PropTypes.object.isRequired,
+  messageState: PropTypes.object.isRequired,
+  handleFormOpen: PropTypes.func.isRequired,
+  handleMessageRequest: PropTypes.func.isRequired,
+  setClientState: PropTypes.func.isRequired
 };
 
 // redux connect //
 const mapStateToProps = (state) => {
   return {
+    clientState: state.clientState,
     conversationState: state.conversationState,
     messageState: state.messageState
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  console.log(67);
-  console.log(dispatch);
   return {
-    handleMessageRequest: (user, conversationId, messageData) => sendMessageRequest(dispatch, { user, conversationId, messageData })
+    handleMessageRequest: (user, conversationId, messageData) => {
+      return sendMessageRequest(dispatch, { user, conversationId, messageData });
+    },
+    setClientState: (userData) => dispatch(setGuestClient(userData))
   }
 };
 

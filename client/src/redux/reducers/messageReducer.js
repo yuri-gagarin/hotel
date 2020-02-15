@@ -20,7 +20,6 @@ const messageReducer = (state = initialState, { type = "", payload = {} }) => {
     status,
     responseMsg,
     loading,
-    user,
     messageContent,
     messageError
   } = payload;
@@ -31,8 +30,7 @@ const messageReducer = (state = initialState, { type = "", payload = {} }) => {
         status: status,
         responseMsg: responseMsg,
         loading: loading,
-        user: { ...user },
-        messageContent:messageContent,
+        messageContent: messageContent,
         messageError: messageError
       };
     };
@@ -42,8 +40,7 @@ const messageReducer = (state = initialState, { type = "", payload = {} }) => {
         status: status,
         responseMsg: responseMsg,
         loading: loading,
-        user: { ...user },
-        messageContent:messageContent,
+        messageContent: messageContent,
         messageError: messageError
       };
     };
@@ -53,8 +50,7 @@ const messageReducer = (state = initialState, { type = "", payload = {} }) => {
         status: status,
         responseMsg: responseMsg,
         loading: loading,
-        user: { ...user },
-        messageContent:messageContent,
+        messageContent: messageContent,
         messageError: messageError
       };
     };
