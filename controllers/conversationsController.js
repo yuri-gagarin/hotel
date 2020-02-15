@@ -32,7 +32,8 @@ export default {
         }
       })
       .then((response) => {
-        return conversationModel.update(
+        return Conversation.findByIdAndUpdate(
+          convId,
           { $pull: { "unreadMessages": { $in: unreadMessages } }, 
             $push: { "readMessages": { $each: unreadMessages } }
           },
