@@ -9,7 +9,7 @@ export default {
     console.log(userId);
     const messageData = req.body.messageData;
     let conversationId = req.body.conversationId;
-    let messageId;
+    let newMessage;
     // validate message later //
     if (!messageData.content) {
       return res.status(400).json({
@@ -44,20 +44,19 @@ export default {
       .then((createdMessage) => {
         // update a conversation with a new message //
         messageId = createdMessage._id;
-        return Conversation.findByIdAndUpdate(
-          conversationId,
+        newMessage = createdMessage;
+        return Conversation.updateOne(
           { "$push": { "unreadMessages": createdMessage._id },
             "$addToSet": { "participants": userId }
           }
         );
       })
-      .then((conversation) => {
+      .then((response) => {
         // assuming everything went fine //
-        console.log(conversation);
         return res.status(200).json({
-          message: "Message sent",
-          messageId: messageId,
-          conversationId: conversationId
+          responseMsg: "Message sent",
+          conversationId: conversationId,
+          newMessage: newMessage
         });
       })
       .catch((error) => {

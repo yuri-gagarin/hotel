@@ -35,18 +35,6 @@ export const openConversation = ({ conversationId, }) => {
   };
 };
 
-export const messageRequest = () => {
-
-};
-
-export const messageSuccess = () => {
-
-};
-
-export const messageError = () => {
-
-};
-
 /**
  * Opens the conversation
  * @param {function} dispatch - Redux {dispatch} function 

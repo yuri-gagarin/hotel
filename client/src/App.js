@@ -20,6 +20,7 @@ import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
 // additional redux imports //
 import store from "./redux/store";
 
+console.log(store.getState());
 const AppRoutes = (props) => {
   return (
   <Provider store={store}>
