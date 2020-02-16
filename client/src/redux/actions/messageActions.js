@@ -1,6 +1,7 @@
 import axios from "axios";
 import { conversationSuccess } from "./conversationActions";
 import { messageConstants } from "../constants";
+import { socket } from "../../App";
 // action constants //
 const {
   SEND_MESSAGE,
@@ -11,7 +12,6 @@ const {
 } = messageConstants;
 
 export const messageRequest = () => {
-  console.log("dispatching request");
   return {
     type: MESSAGE_REQUEST,
     payload: {
@@ -24,22 +24,21 @@ export const messageRequest = () => {
   };
 };
 
-export const messageSuccess = ({ status, responseMsg, messageContent }) => {
-  console.log("dispatching success");
+export const messageSuccess = ({ status, responseMsg, newMessage }) => {
+  console.log(newMessage);
   return {
     type: MESSAGE_SUCCESS,
     payload: {
       status: status,
       responseMsg: responseMsg,
       loading: false,
-      messageContent: messageContent,
+      messageContent: newMessage,
       messageError: null
     }
   };
 };
 
 export const messageError = ({ status, responseMsg, messageContent }) => {
-  console.log("dispatching error");
   return {
     type: MESSAGE_ERROR,
     payload: {
@@ -67,6 +66,7 @@ export const sendMessageRequest = (dispatch, { user,  conversationId, messageDat
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversationId, newMessage } = data;
+      socket.emit("clientMessageSent", {convId: conversationId, message: newMessage});
       dispatch(conversationSuccess(conversationId, newMessage));
       dispatch(messageSuccess({ status, responseMsg, newMessage}))
     })

@@ -34,6 +34,7 @@ const conversationReducer = (state = initialState, { type, payload }) => {
       };
     };
     case CONVERSATION_SUCCESS: {
+      //console.log(payload.conversationId);
       return {
         ...state,
         loading: payload.loading,

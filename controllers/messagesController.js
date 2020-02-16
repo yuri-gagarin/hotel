@@ -1,13 +1,16 @@
 import mongoose, { Mongoose } from "mongoose";
 import Conversation from "../models/Conversation";
 import Message from "../models/Message";
+import io from "../server";
 
 export default {
   sendMessage: (req, res) => {
+    //console.log(global.io);
     const user = req.user || req.body.user || {};
     const userId = user._id || mongoose.Types.ObjectId();
     const { messageData } = req.body;
-    let newMessage, conversationId;
+    let conversationId = req.body.conversationId;
+    let newMessage;
     // validate message later //
     if (!messageData) {
       return res.status(400).json({

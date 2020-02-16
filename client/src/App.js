@@ -1,5 +1,5 @@
 /* global jQuery, define */
-import React from 'react';
+import React, { useEffect, useState }from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -19,9 +19,17 @@ import AdminComponent from './components/admin/AdminComponent';
 import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
 // additional redux imports //
 import store from "./redux/store";
+// socketio //
+import io from "socket.io-client";
+export const socket = io.connect("http://localhost:8080");
 
-console.log(store.getState());
 const AppRoutes = (props) => {
+  const [clientConnected, setClientConnected] = useState(false);
+
+  const sendDisconnectEvent = () => {
+    socket.disconnect();
+  };
+
   return (
   <Provider store={store}>
     <Router>

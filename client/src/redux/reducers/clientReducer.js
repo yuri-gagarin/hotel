@@ -7,9 +7,9 @@ const initialState = {
 };
 
 export const clientReducer = (state = initialState, { type, payload = {} }) => {
-  console.log("calling clinet reducer")
   switch (type) {
     case SET_GUEST_USER: {
+      console.log(payload);
       return {
         ...state,
         _id: payload._id,

@@ -12,12 +12,12 @@ import { sendMessage } from "./helpers/messageHelpers";
 import ObjectID from "bson-objectid";
 
 const MessageInitView = (props) => {
-  //const { handleFormHide } = props;
-  const { sendInitialMessage } = props;
   const [validated, setValidated] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  // redux state //
+    const { sendInitialMessage, clientState } = props;
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -36,7 +36,7 @@ const MessageInitView = (props) => {
     setValidated(true)
     const messageData = {
       user: {
-        _id: ObjectID.generate(Date.now),
+        _id: clientState._id || ObjectID.generate(Date.now),
         name: name,
         email: email
       },

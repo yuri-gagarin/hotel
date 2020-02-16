@@ -9,18 +9,22 @@ import {
 import { messageForm } from "./style/styles";
 
 const MessageView = (props) => {
+  const { sendMessage } = props;
   const [ message, setMessage ] = useState("");
 
   const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
   const handleMessageSend = (e) => {
-    console.log(e.charCode)
+    sendMessage(message);
+    e.target.value = "";
+    setMessage("");
   };
   const handleKeyPress = (e) => {
     if (e.charCode === 13) {
-      console.log("enter pressed")
-      console.log(message);
+      sendMessage(message);
+      e.target.value = "";
+      setMessage("");
     }
   };
   return (
@@ -44,7 +48,7 @@ const MessageView = (props) => {
 };
 // PropTypes validation //
 MessageView.propTypes = {
-  //handleFormHide: PropTypes.func.isRequired
+  sendMessage: PropTypes.func.isRequired
 };
 
 export default MessageView;

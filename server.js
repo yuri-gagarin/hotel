@@ -10,7 +10,7 @@ import combineRoutes from "./routes/combineRoutes";
 const app = express();
 const router = express.Router();
 const PORT = process.env.PORT || 8080;
-
+const clientsMap = new Map();
 // database and connection //
 const { dbSettings } = appConfig;
 const mongoOptions = {
@@ -49,18 +49,26 @@ combineRoutes(router);
 app.use(router);
 
 //app.use()
+//let socket;
 app.on("dbReady", () => {
   const server = app.listen(PORT, () => {
     console.log(`Listening at PORT: ${PORT}`);
   });
-  const IO = socketIo(server);
-  
+  global.io = socketIo.listen(server);
   // IO functionality //
-  IO.on("connection", (socket) => {
-    socket.emit("test_event", { hello: "hello there" });
-    socket.on("response_event", (data) => {
-      console.log(data);
+  io.sockets.on("connection", (socket) => {
+    console.log("connected");
+    socket.on("sendClientCredentials", (user) => {
+      console.log(socket.id);
+      clientsMap[user._id] = socket.id;
     });
+    socket.on("clientMessageSent", (data) => {
+      console.log(data);
+      console.log(socket.id);
+    })
+    socket.once("disconnect", () => {
+      console.log("client disconnected");
+    })
   });
 });
 

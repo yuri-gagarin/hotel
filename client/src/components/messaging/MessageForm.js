@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 // styles  and images //
 import { messageForm} from "./style/styles";
@@ -10,31 +10,42 @@ import Message from "./Message";
 import { connect } from "react-redux";
 import { sendMessageRequest } from "../../redux/actions/messageActions";
 import { setGuestClient } from "../../redux/actions/clientActions";
+// socket io //
+import { socket } from "../../App";
 
 const MessageForm = (props) => {
   const messageFormRef = useRef(null);
-  const [userIsMessaging, setUserIsMessaging] = useState(false);
   const formOpen = useState(false);
   const { 
     handleFormOpen,
     handleMessageRequest, 
-    clientState ,
+    clientState,
+    conversationState,
+    messageState,
     setClientState
   } = props;
-  const { messages } = props.conversationState;
+  const { messages, userMessaging, conversationId } = conversationState;
+
   const toggleMessageForm = (e) => {
     handleFormOpen();
     // maybe animate later //
     messageFormRef.current.style.display = "none";
   };
-  const sendInitialMessage = (messageData) => {
+
+  const handleInitialMessage = (messageData) => {
     const { user, content } = messageData;
+    socket.emit("sendClientCredentials", user);
     handleMessageRequest(user, null, content);
     if (!clientState.userId) {
       setClientState({userId: user._id, name: user.name, email: user.email });
     }
-    console.log(clientState);
   };
+
+  const sendMessage = (content) => {
+    const user = clientState;
+    handleMessageRequest(user, conversationId, content);
+  };
+
   return (
     <div style={messageForm.formContainer} ref={messageFormRef}>
       <div style={messageForm.closeMessageForm} onClick={toggleMessageForm}>
@@ -56,7 +67,15 @@ const MessageForm = (props) => {
           }
       </div>
       {
-        userIsMessaging ? <MessageView /> : <MessagesInitView sendInitialMessage={sendInitialMessage}/>
+        userMessaging ? 
+        <MessageView 
+          sendMessage={sendMessage}
+          clientState={clientState}
+        /> : 
+        <MessagesInitView 
+          sendInitialMessage={handleInitialMessage}
+          clientState={clientState}
+        />
       }
     </div>
   );
