@@ -3,9 +3,10 @@ import { conversationConstants } from "../constants";
 const {
   CONVERSATION_REQUEST,
   CONVERSATION_ERROR,
-  OPEN_CONVERASTION,
   CONVERSATION_SUCCESS,
-  CLOSE_CONVERSATION
+  OPEN_CONVERASTION,
+  CLOSE_CONVERSATION,
+  UPDATE_CONVERSATION
 } = conversationConstants;
 
 export const conversationRequest = () => {
@@ -47,6 +48,20 @@ export const conversationSuccess = (conversationId, message) => {
     }
   };
 };
+
+export const updateConversation = (conversationId, clientSocketId, adminSocketId, message) => {
+  return {
+    type: UPDATE_CONVERSATION,
+    payload: {
+      loading: false,
+      userMessaging: true,
+      conversationId: conversationId,
+      clientSocketId: clientSocketId,
+      adminSocketId: adminSocketId,
+      message: message
+    }
+  }
+}
 
 /**
  * Opens the conversation

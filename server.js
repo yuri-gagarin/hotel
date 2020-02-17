@@ -65,7 +65,11 @@ app.on("dbReady", () => {
     socket.on("clientMessageSent", (data) => {
       console.log(data);
       console.log(socket.id);
+      socket.emit("newClientMessage", { messageData: data, clientSocket: socket.id});
     })
+    socket.on("adminMessageSent", (data) => {
+      socket.broadcast.to(data.socketId).emit("newAdminMessage", data);
+    });
     socket.once("disconnect", () => {
       console.log("client disconnected");
     })

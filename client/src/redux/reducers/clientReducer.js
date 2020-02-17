@@ -1,5 +1,5 @@
 import { clientConstants } from "../constants";
-const { SET_GUEST_USER } = clientConstants;
+const { SET_GUEST_USER, SET_ADMIN } = clientConstants;
 const initialState = {
   _id: "",
   name: "",
@@ -9,7 +9,14 @@ const initialState = {
 export const clientReducer = (state = initialState, { type, payload = {} }) => {
   switch (type) {
     case SET_GUEST_USER: {
-      console.log(payload);
+      return {
+        ...state,
+        _id: payload._id,
+        name: payload.name,
+        email: payload.email
+      };
+    };
+    case SET_ADMIN: {
       return {
         ...state,
         _id: payload._id,

@@ -51,6 +51,17 @@ export const messageError = ({ status, responseMsg, messageContent }) => {
   };
 };
 
+export const reveiveMessage = (socketId, messageData) => {
+  dispatch(conversationSuccess())
+  return {
+    type: RECEIVE_MESSAGE,
+    payload: {
+      loading: false,
+
+    }
+  };
+};
+
 export const sendMessageRequest = (dispatch, { user,  conversationId, messageData }) => {
   const requestOptions = {
     method: "post",

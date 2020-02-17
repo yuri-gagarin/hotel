@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { Grid } from "semantic-ui-react";
 import { withRouter, Route } from "react-router-dom"; 
@@ -8,6 +8,9 @@ import { adminRoutes } from "../../routes/appRoutes";
 import ConversationIndexContainer from "./conversations/ConversationIndexContainer";
 import AdminDashComponent from "./dash/AdminDashComponent";
 import PostsIndexContainer from "./posts/PostsIndexContainer";
+import ObjectID from "bson-objectid";
+import { connect } from "react-redux";
+import { setAdmin } from "../../redux/actions/clientActions";
 
 /*
 const DashRendering = ({ history }) => {
@@ -44,7 +47,16 @@ const DashRendering = ({ history }) => {
 */
 
 const AdminComponent = (props) => {
-  const { history } = props;
+  const { history, clientState } = props;
+  const adminData = {
+    _id: ObjectID.generate(Date.now),
+    name: "Administrator",
+    email: "admin@admin.com"
+  };
+
+  useEffect(() => {
+    setAdmin(adminData);
+  }, []);
   return (
     <Grid stackable padded divided style={{paddingLeft: "1em", paddingRight: "1em"}}>
       <Grid.Row>
@@ -66,7 +78,19 @@ const AdminComponent = (props) => {
 };
 // proptypes checking //
 AdminComponent.propTypes = {
-
+  history: PropTypes.object.isRequired,
+  clientState: PropTypes.object.isRequired
 };
 
-export default withRouter(AdminComponent);
+const mapStateToProps = (state) => {
+  return {
+    clientState: state.clientState
+  }
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAdmin: (adminData) => setAdmin(adminData)
+  }
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminComponent));
