@@ -15,12 +15,11 @@ export const setGuestClient = ({ userId, name, email }) => {
   };
 };
 
-export const setAdmin = ({ userId, name, email }) => {
-  console.log("called set admin");
+export const setAdmin = ({ _id, name, email }) => {
   return {
     type: SET_ADMIN,
     payload: {
-      _id: userId,
+      _id: _id,
       name: name,
       email: email
     }

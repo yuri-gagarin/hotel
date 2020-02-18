@@ -7,6 +7,21 @@ export default {
     // user should be able to create a new conversation  without a registration //
     const messageData = req.body;
   },
+  getAllConversations: (req, res) => {
+    return Conversation.find({})
+      .then((conversations) => {
+        return res.json({
+          responseMsg: "success",
+          conversations: conversations
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          messge: "An error occured",
+          error: error
+        });
+      });
+  },  
   openConversation: (req, res) => {
     // user should open a conversation with new messages //
     // any new messages should be marked as read //

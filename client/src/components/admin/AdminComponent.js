@@ -12,42 +12,8 @@ import ObjectID from "bson-objectid";
 import { connect } from "react-redux";
 import { setAdmin } from "../../redux/actions/clientActions";
 
-/*
-const DashRendering = ({ history }) => {
-  const location = history.location.pathname;
-  console.log(location);
-  switch (location) {
-    case adminRoutes.ADMIN_DASH: {
-      return (
-        <AdminDashComponent />
-      );
-    };
-    case adminRoutes.ADMIN_MESSAGES: {
-      return (
-        <ConversationIndexContainer />
-      );
-    };
-    case adminRoutes.ADMIN_POSTS: {
-      return (
-        <PostsIndexContainer />
-      );
-    };
-    case adminRoutes.ADMIN_REGULATE_USERS: {
-      return (
-        <UsersIndexContainer />
-      );
-    };
-    default: {
-      return (
-        <AdminDashComponent />
-      )
-    }
-  };
-};
-*/
-
 const AdminComponent = (props) => {
-  const { history, clientState } = props;
+  const { history, clientState, setAdmin } = props;
   const adminData = {
     _id: ObjectID.generate(Date.now),
     name: "Administrator",
@@ -89,7 +55,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    setAdmin: (adminData) => setAdmin(adminData)
+    setAdmin: (adminData) => dispatch(setAdmin(adminData))
   }
 };
 

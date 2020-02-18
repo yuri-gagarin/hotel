@@ -8,7 +8,7 @@ const {
   CLOSE_CONVERSATION,
   UPDATE_CONVERSATION
 } = conversationConstants;
-
+import { setAdminConversations } from "./adminConversationActions";
 export const conversationRequest = () => {
   return {
     type: CONVERSATION_REQUEST,
@@ -85,6 +85,28 @@ export const fetchConversation = (dispatch, { conversationId }) => {
 
     })
 };
+
+export const fetchAllConversations = (dispatch) => {
+  let status, data;
+  console.log("calling");
+  dispatch(conversationRequest());
+  const requestOptions = {
+    method: "get",
+    url: "/api/conversations"
+  };
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, conversations } = data;
+      dispatch(conversationSuccess(null, []))
+      dispatch(setAdminConversations({ status, responseMsg }, conversations));
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(conversationError(error));
+    });
+};
+
 
 export const sendMessage = (dispatch, conversationId, { userId, firstName, email }) => {
   dispatch(messageRequest());

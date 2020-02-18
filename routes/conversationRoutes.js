@@ -8,7 +8,14 @@ export default function (router) {
     .route("/api/conversations/:convId")
     .delete(conversationsController.deleteConversation);
   
-  // @route GET /api/conversatins/:convId //
+  // @route GET /api/conversations //
+  // @desc Gets all the converstions in database //
+  // @access PRIVATE //
+  router
+    .route("/api/conversations")
+    .get(conversationsController.getAllConversations);
+    
+  // @route GET /api/conversations/:convId //
   // @desc Opens up a Conversation, marks Message(s) as read //
   // @access PRIVATE //
   router

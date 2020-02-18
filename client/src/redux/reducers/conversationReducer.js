@@ -28,7 +28,7 @@ const conversationReducer = (state = initialState, { type, payload = {} }) => {
     clientSocketId,
     adminSocketId,
     conversationId,
-    messages,
+    messages = [],
     conversationError
   } = payload;
 
