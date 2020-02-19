@@ -13,7 +13,8 @@ export const conversationRequest = () => {
   return {
     type: CONVERSATION_REQUEST,
     payload: {
-      loading: true
+      loading: true,
+      conversationError: null
     }
   };
 };
@@ -28,23 +29,28 @@ export const conversationError = (error) => {
   };
 };
 
-export const openConversation = ({ conversationId, }) => {
+export const openConversation = ({ conversationId, responseMsg, status, messages }) => {
   return {
     type: OPEN_CONVERASTION,
     payload: {
+      status: status,
+      responseMsg: responseMsg,
       loading: false,
+      userMessaging: true,
+      conversationId: conversationId,
+      messages: messages
     }
   };
 };
 
-export const conversationSuccess = (conversationId, message) => {
+export const conversationSuccess = (conversationId, messages) => {
   return {
     type: CONVERSATION_SUCCESS,
     payload: {
       loading: false,
       userMessaging: true,
       conversationId: conversationId,
-      message: message
+      messages: messages
     }
   };
 };
@@ -58,7 +64,7 @@ export const updateConversation = (conversationId, clientSocketId, adminSocketId
       conversationId: conversationId,
       clientSocketId: clientSocketId,
       adminSocketId: adminSocketId,
-      message: message
+      messages: [message]
     }
   }
 }
@@ -79,16 +85,32 @@ export const fetchConversation = (dispatch, { conversationId }) => {
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-
+      const { responseMsg, conversation } = data;
+      const readMessages = conversation.readMessages.map((message) => {
+        return message;
+      });
+      const unreadMessages = conversation.unreadMessages.map((message) => {
+        return message;
+      });
+      const allMessages = [ ...readMessages, ...unreadMessages ];
+      const stateData = {
+        status: status,
+        responseMsg: responseMsg,
+        conversationId: conversationId,
+        messages: allMessages
+      };
+      console.log(stateData);
+      dispatch(openConversation(stateData)); 
     })
     .catch((error) => {
-
-    })
+      console.log("an error occurer");
+      console.log(error);
+      dispatch(conversationError(error));
+    });
 };
 
 export const fetchAllConversations = (dispatch) => {
   let status, data;
-  console.log("calling");
   dispatch(conversationRequest());
   const requestOptions = {
     method: "get",
@@ -106,19 +128,6 @@ export const fetchAllConversations = (dispatch) => {
       dispatch(conversationError(error));
     });
 };
-
-
-export const sendMessage = (dispatch, conversationId, { userId, firstName, email }) => {
-  dispatch(messageRequest());
-  const requestOptions = {};
-  return axios(requestOptions)
-    .then((response) => {
-
-    })
-    .catch((error) => {
-
-    });
-}
 
 export const closeConversation = ({ conversationId }) => {
 

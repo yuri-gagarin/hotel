@@ -4,15 +4,17 @@ import {
 } from "semantic-ui-react";
 // style imports //
 import { messageStyle } from "./styles/style";
-
+// additional dependencies //
+import { formatDate } from "../../helpers/dateHelpers";
 const Message = (props) => {
+  const { message } = props;
   return (
     <Comment style={messageStyle}>
       <Comment.Content>
-        <Comment.Author>Comment Author</Comment.Author>
-        <Comment.Content>Message Content Here</Comment.Content>
-        <Comment.Metadata>Sent At: "Some time Here"</Comment.Metadata>
-        <Comment.Metadata>Read: "boolean here"</Comment.Metadata>
+        <Comment.Author>{message.sender}</Comment.Author>
+        <Comment.Content>{message.content}</Comment.Content>
+        <Comment.Metadata>Sent At: {formatDate(message.sentAt, { military: true })}</Comment.Metadata>
+        <Comment.Metadata>Read</Comment.Metadata>
       </Comment.Content>
     </Comment>
   );

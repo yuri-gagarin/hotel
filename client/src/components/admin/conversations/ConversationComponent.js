@@ -11,31 +11,30 @@ import { withRouter } from "react-router-dom";
 // addiotinal component imports //
 import ConversationHolder from "./ConversationHolder";
 
-const renderConversations = (conversations) => {
+const renderConversations = (conversations, openConversation) => {
+
   return conversations.map((conversation) => {
-    return <ConversationHolder key={conversation._id}/>
+    return (
+      <ConversationHolder 
+        key={conversation._id}
+        conversation={conversation}
+        openConversation={openConversation}
+      />
+    );
   });
 };
 
 const ConversationComponent = (props) => {
-  const { adminConversationState } = props;
+  const { adminConversationState, openConversation } = props;
   const { conversations } =  adminConversationState;
-  console.log(adminConversationState);
-  const messages = props.messages || [];
-  const handleConvoOpen = () => {
-    console.log("clicked");
-  }
-
-  const switchDanger = () => {
-    console.log("danger")
-  };
+  
   return (
       <Comment.Group style={{overflow: "scroll", height: "100%", paddingRight: "1em"}}>
         <Header as='h3' style={{textAlign: "center"}}>
           Active Conversations
         </Header>
         {
-          [...renderConversations(conversations)]
+          [...renderConversations(conversations, openConversation)]
         } 
       </Comment.Group>
       
@@ -43,6 +42,7 @@ const ConversationComponent = (props) => {
 };
 // PropTypes validation //
 ConversationComponent.propTypes = {
+  openConversation: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 };
 

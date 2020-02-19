@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Button,
   Comment,
   Icon
 } from "semantic-ui-react";
-
+// additional dependencies //
+import { formatDate } from "../../helpers/dateHelpers";
 const style = {
   convoContainerStyle: {
     cursor: "pointer", 
@@ -41,17 +42,18 @@ const DeleteConvoBtn = (props) => {
 };
 
 const ConversationHolder = (props) => {
-  const handleConvoOpen = () => {
-
-  };
+  const { conversation, openConversation } = props;
+  const conversationId = conversation._id;
+  const lastMessage = conversation.lastMessage;
+  
   return (
-    <Comment onClick={handleConvoOpen} style={style.convoContainerStyle}>
+    <Comment onClick={() => openConversation(conversationId)} style={style.convoContainerStyle}>
       <Comment.Content style={{paddingTop: "0.5em"}}>
         <DeleteConvoBtn/>
-        <Comment.Author as='a'>Matt</Comment.Author>
-        <Comment.Content>How artistic!</Comment.Content>
+        <Comment.Author as='a'>{lastMessage.sender}</Comment.Author>
+        <Comment.Content>{lastMessage.content}</Comment.Content>
         <Comment.Metadata>
-          <div>Today at 5:42PM</div>
+          <div>Sent at: {formatDate(lastMessage.sentAt, { military: true })}</div>
         </Comment.Metadata>
       </Comment.Content>
     </Comment>

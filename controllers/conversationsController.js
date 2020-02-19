@@ -28,14 +28,13 @@ export default {
     const { convId } = req.params;
     let conversationModel, unreadMessages, customError, statusCode;
     return Conversation.findOne({ _id: convId })
-      .populate("messages")
       .then((conversation) => {
         if (conversation) {
           // set the conversation model and unread messages to mark as read //
           conversationModel = conversation;
           unreadMessages = conversation.unreadMessages;
           // update messages in converastion to read //
-          return Message.update(
+          return Message.updateOne(
             { _id: { $in: unreadMessages } },
             { $set: { read: true } },
             { multi: true }
@@ -53,11 +52,11 @@ export default {
             $push: { "readMessages": { $each: unreadMessages } }
           },
           { new: true }
-        );
+        ).populate("readMessages");
       })
       .then((updatedConversation) => {
         return res.json({
-          message: "Success",
+          responseMsg: "Success",
           conversation: updatedConversation
         });
       })

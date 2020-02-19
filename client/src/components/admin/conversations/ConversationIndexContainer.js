@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Comment,
@@ -8,27 +8,39 @@ import {
 import { withRouter } from "react-router-dom";
 // redux imports  //
 import { connect } from "react-redux";
-import { fetchAllConversations } from "../../../redux/actions/conversationActions";
+import { fetchAllConversations, fetchConversation } from "../../../redux/actions/conversationActions";
 // additional components //
 import ConversationComponent from "./ConversationComponent";
 import Message from "./Message";
 // socket import //
 import { socket } from "../../../App";
 const ConversationIndexCotainer = (props) => {
+  const [message, setMessage] = useState("");
   const { 
     fetchAllConversations,
-    adminConversationState
+    fetchConversation,
+    adminConversationState,
+    conversationState
   } = props;
+  const messages = conversationState.messages;
 
   useEffect(() => {
     socket.on("newClientMessage", (data) => {
       const { socketId, messageData } = data;
         // to do //
         //messageReceived(socketId, messageData); //
+        console.log(data);
     })
     fetchAllConversations();
 
   }, []);
+
+  const openConversation = (conversationId) => {
+    fetchConversation(conversationId);
+  };
+  const handleSendMessage = () => {
+    console.log("clicked ");
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -36,12 +48,10 @@ const ConversationIndexCotainer = (props) => {
       console.log(props);
     }
   };
-  const renderMessages = (props) => {
-    const messages = [];
-    for (let i = 0; i < 20; i++) {
-      messages.push(<Message key={i} />);
-    };
-    return messages;
+  const renderMessages = (messages) => {
+    return messages.map((message) => {
+      return <Message key={message._id} message={message} />
+    })
   };
 
   
@@ -57,18 +67,23 @@ const ConversationIndexCotainer = (props) => {
         <Grid.Column width={6} style={{border: "2px solid red", height: "100vh", paddingLeft: "0.5em", paddingRight: 0}}>
           <ConversationComponent 
             adminConversationState={adminConversationState}
+            openConversation={openConversation}
             fetchAllConversations={fetchAllConversations}
            />
         </Grid.Column>
         <Grid.Column width={10} style={{border: "2px solid green", height: "100vh"}}>
           <Comment.Group style={{overflow: "scroll", height: "100%", paddingRight: "1em", paddingBottom: "50px"}}>
           {
-           [...renderMessages()]
+           [...renderMessages(messages)]
           }
           </Comment.Group>
           
           <Input 
-            action='Send' 
+            action={{
+              icon: "send",
+              content: "Send",
+              onClick: handleSendMessage
+            }}
             placeholder='message...' 
             style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
             onKeyPress={handleKeyPress}
@@ -80,19 +95,24 @@ const ConversationIndexCotainer = (props) => {
 };
 // PropTypes validation //
 ConversationIndexCotainer.propTypes = {
+  fetchAllConversations: PropTypes.func.isRequired,
+  fetchConversation: PropTypes.func.isRequired,
   adminConversationState: PropTypes.object.isRequired,
+  conversationState: PropTypes.object.isRequired,
   clientState: PropTypes.object.isRequired
 };
 // connect functions //
 const mapStateToProps = (state) => {
   return {
     adminConversationState: state.adminConvState,
+    conversationState: state.conversationState,
     clientState: state.clientState
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchAllConversations: () => fetchAllConversations(dispatch)
+    fetchAllConversations: () => fetchAllConversations(dispatch),
+    fetchConversation: (conversationId) => fetchConversation(dispatch, { conversationId })
   };
 };  
 

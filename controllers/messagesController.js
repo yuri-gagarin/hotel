@@ -47,8 +47,16 @@ export default {
         // messageId = createdMessage._id;
         newMessage = createdMessage;
         return Conversation.updateOne(
-          { "$push": { "unreadMessages": createdMessage._id },
-            "$addToSet": { "participants": userId }
+          { _id: conversationId },
+          { 
+            "$push": { "unreadMessages": createdMessage._id },
+            "$addToSet": { "participants": userId },
+            "$set": { "lastMessage": { 
+              _id: createdMessage._id,
+              sender: createdMessage.sender,
+              content: createdMessage.content,
+              sentAt: createdMessage.sentAt
+            } }
           }
         );
       })

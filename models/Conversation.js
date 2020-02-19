@@ -15,6 +15,20 @@ const conversationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Message"
   }],
+  lastMessage: {
+    _id: {
+      type: Schema.Types.ObjectId,
+    },
+    sender: {
+      type: String,
+    },
+    content: {
+      type: String,
+    },
+    sentAt: {
+      type: Date,
+    }
+  },
   createdAt: {
     type: Date,
     required: true,
