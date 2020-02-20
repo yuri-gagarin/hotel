@@ -16,6 +16,11 @@ const adminConverstionsReducer = (state = initialState, { type, payload = {} }) 
         conversations: [...payload.conversations]
       };
     }; 
+    case "HANLE_NEW_MESSAGE": {
+      return {
+        
+      }
+    }
     default: {
       return state;
     };

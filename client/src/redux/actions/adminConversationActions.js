@@ -11,3 +11,13 @@ export const setAdminConversations = ({ status, responseMsg }, conversations = [
   };
 };
 
+export const handleNewClientMessage = (data) => {
+  const { conversationId, clientSocketId } = data;
+  return {
+    type: "HANDLE_NEW_MESSAGE",
+    payload: {
+      responseMsg: "New Message",
+    }
+  }
+};
+

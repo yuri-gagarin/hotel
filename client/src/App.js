@@ -26,6 +26,12 @@ export const socket = io.connect("http://localhost:8080");
 const AppRoutes = (props) => {
   const [clientConnected, setClientConnected] = useState(false);
 
+  useEffect(() => {
+    console.log("called mount")
+    socket.on("hello", (data) => {
+      console.log("hello")
+    })
+  }, []);
   const sendDisconnectEvent = () => {
     socket.disconnect();
   };

@@ -57,15 +57,13 @@ app.on("dbReady", () => {
   global.io = socketIo.listen(server);
   // IO functionality //
   io.sockets.on("connection", (socket) => {
-    console.log("connected");
+    //console.log("connected");
     socket.on("sendClientCredentials", (user) => {
-      console.log(socket.id);
+      //console.log(socket.id);
       clientsMap[user._id] = socket.id;
     });
     socket.on("clientMessageSent", (data) => {
-      console.log(data);
-      console.log(socket.id);
-      socket.emit("newClientMessage", { messageData: data, clientSocket: socket.id});
+      socket.broadcast.emit("newClientMessage", { messageData: data, clientSocket: socket.id});
     })
     socket.on("adminMessageSent", (data) => {
       socket.broadcast.to(data.socketId).emit("newAdminMessage", data);
@@ -73,6 +71,8 @@ app.on("dbReady", () => {
     socket.once("disconnect", () => {
       console.log("client disconnected");
     })
+    socket.emit("hello", "hello there");
+
   });
 });
 

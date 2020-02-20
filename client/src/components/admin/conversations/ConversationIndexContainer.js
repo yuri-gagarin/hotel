@@ -23,13 +23,18 @@ const ConversationIndexCotainer = (props) => {
     conversationState
   } = props;
   const messages = conversationState.messages;
+  const handleNewClientMessage = () =>{
 
+  };
+  
   useEffect(() => {
     socket.on("newClientMessage", (data) => {
       const { socketId, messageData } = data;
         // to do //
         //messageReceived(socketId, messageData); //
+        console.log("new message")
         console.log(data);
+        handleNewClientMessage()
     })
     fetchAllConversations();
 

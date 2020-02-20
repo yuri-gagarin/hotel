@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import { useTranslation } from "react-i18next";
+ 
 const BookingForm = (props) => {
 
   const [guests, setGuestCount] = useState(1);
@@ -7,6 +8,7 @@ const BookingForm = (props) => {
   const [checkInDate, setCheckInDate] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
   const [todaysDate, setTodaysDate] = useState(null);
+  const [t, i18n] = useTranslation();
 
   const handleGuestChange = (e) => {
     const guestNumber = (e.target[e.target.selectedIndex].getAttribute("data-value"));
@@ -36,14 +38,14 @@ const BookingForm = (props) => {
         <div className="container">
           <div className="row">
             <div className="booking-cta">
-              <h1>Make Your Reservation</h1>
+              <h1>{t("checkAvail")}</h1>
             </div>
             <div className="booking-form">
               <form>
                 <div className="row">
                 <div className="col-md-2">
                   <div className="form-group">
-                    <span className="form-label">Guests</span>
+                    <span className="form-label">{t("guestCount")}</span>
                     <select className="form-control" onChange={handleGuestChange}>
                       <option data-value="1">1</option>
                       <option data-value="2">2</option>
@@ -56,7 +58,7 @@ const BookingForm = (props) => {
                 </div>
                 <div className="col-md-2">
                   <div className="form-group">
-                    <span className="form-label">Children</span>
+                    <span className="form-label">{t("kidCount")}</span>
                     <select className="form-control" onChange={handleChildrenChange}>
                       <option data-value="0">0</option>
                       <option data-value="1">1</option>
@@ -70,19 +72,19 @@ const BookingForm = (props) => {
                 </div>
                 <div className="col-md-4">
                   <div className="form-group">
-                    <span className="form-label">Check In</span>
+                    <span className="form-label">{t("checkIn")}</span>
                     <input className="form-control" type="date" onChange={handleCheckInChange} required />
                   </div>
                 </div>
                 <div className="col-md-4">
                   <div className="form-group">
-                    <span className="form-label">Check out</span>
+                    <span className="form-label">{t("checkOut")}</span>
                     <input className="form-control" type="date" onChange={handleCheckoutChange} required />
                   </div>
                 </div>
                 <div className="col-md-4">
                   <div className="form-btn">
-                    <button className="submit-btn" onClick={submitReservationInfo}>Check availability</button>
+                    <button className="submit-btn" onClick={submitReservationInfo}>{t("checkAvail")}</button>
                   </div>
                 </div>
                 </div>

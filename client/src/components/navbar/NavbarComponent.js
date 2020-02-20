@@ -9,8 +9,21 @@ const NavbarComponent = (props) => {
   const [t, i18n] = useTranslation();
 
   const changeLanguage = (e) => {
-    console.log(e);
-    i18n.changeLanguage("uk");
+    const language = (e.target.text);
+    switch (language) {
+      case "EN": {
+        i18n.changeLanguage("en");
+        break;
+      };
+      case "UA": {
+        i18n.changeLanguage("uk");
+        break;
+      };
+      case "RU": {
+        i18n.changeLanguage("ru");
+        break;
+      };
+    }
   };
 
   return (

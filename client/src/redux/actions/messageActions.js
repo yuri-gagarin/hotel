@@ -77,11 +77,12 @@ export const sendMessageRequest = (dispatch, { user,  conversationId, messageDat
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversationId, newMessage } = data;
-      socket.emit("clientMessageSent", {convId: conversationId, message: newMessage});
-      dispatch(conversationSuccess(conversationId, newMessage));
+      socket.emit("clientMessageSent", { convId: conversationId, message: newMessage });
+      dispatch(conversationSuccess(conversationId, [newMessage]));
       dispatch(messageSuccess({ status, responseMsg, newMessage}))
     })
     .catch((error) => {
+      console.log(error);
       console.log(error.response);
       const { status, response } = error;
       dispatch(messageError({ status, response }));
