@@ -63,7 +63,9 @@ app.on("dbReady", () => {
       clientsMap[user._id] = socket.id;
     });
     socket.on("clientMessageSent", (data) => {
-      socket.broadcast.emit("newClientMessage", { messageData: data, clientSocket: socket.id});
+      const { conversationId, newMessage } = data;
+      const clientSocket = socket.id;
+      socket.broadcast.emit("newClientMessage", { conversationId: conversationId, clientSocket: clientSocket, newMessage: newMessage });
     })
     socket.on("adminMessageSent", (data) => {
       socket.broadcast.to(data.socketId).emit("newAdminMessage", data);

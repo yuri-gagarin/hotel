@@ -27,9 +27,7 @@ const AppRoutes = (props) => {
   const [clientConnected, setClientConnected] = useState(false);
 
   useEffect(() => {
-    console.log("called mount")
     socket.on("hello", (data) => {
-      console.log("hello")
     })
   }, []);
   const sendDisconnectEvent = () => {

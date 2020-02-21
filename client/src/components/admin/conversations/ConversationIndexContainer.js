@@ -9,6 +9,7 @@ import { withRouter } from "react-router-dom";
 // redux imports  //
 import { connect } from "react-redux";
 import { fetchAllConversations, fetchConversation } from "../../../redux/actions/conversationActions";
+import { handleNewClientMessage } from "../../../redux/actions/adminConversationActions"; 
 // additional components //
 import ConversationComponent from "./ConversationComponent";
 import Message from "./Message";
@@ -19,6 +20,7 @@ const ConversationIndexCotainer = (props) => {
   const { 
     fetchAllConversations,
     fetchConversation,
+    newClientMessage,
     adminConversationState,
     conversationState
   } = props;
@@ -29,12 +31,8 @@ const ConversationIndexCotainer = (props) => {
   
   useEffect(() => {
     socket.on("newClientMessage", (data) => {
-      const { socketId, messageData } = data;
-        // to do //
-        //messageReceived(socketId, messageData); //
-        console.log("new message")
-        console.log(data);
-        handleNewClientMessage()
+        const { conversationId, clientSocket, newMessage } = data;
+        newClientMessage({ conversationId: conversationId, clientSocketId: clientSocket });
     })
     fetchAllConversations();
 
@@ -117,7 +115,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAllConversations: () => fetchAllConversations(dispatch),
-    fetchConversation: (conversationId) => fetchConversation(dispatch, { conversationId })
+    fetchConversation: (conversationId) => fetchConversation(dispatch, { conversationId }),
+    newClientMessage: (messageData, currentConversations) => handleNewClientMessage(dispatch, messageData, currentConversations)
   };
 };  
 

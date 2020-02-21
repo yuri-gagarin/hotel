@@ -25,7 +25,6 @@ export const messageRequest = () => {
 };
 
 export const messageSuccess = ({ status, responseMsg, newMessage }) => {
-  console.log(newMessage);
   return {
     type: MESSAGE_SUCCESS,
     payload: {
@@ -77,7 +76,7 @@ export const sendMessageRequest = (dispatch, { user,  conversationId, messageDat
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversationId, newMessage } = data;
-      socket.emit("clientMessageSent", { convId: conversationId, message: newMessage });
+      socket.emit("clientMessageSent", { conversationId: conversationId, newMessage: newMessage });
       dispatch(conversationSuccess(conversationId, [newMessage]));
       dispatch(messageSuccess({ status, responseMsg, newMessage}))
     })

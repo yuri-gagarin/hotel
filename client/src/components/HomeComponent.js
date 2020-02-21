@@ -34,6 +34,7 @@ class HomeComponent extends React.Component {
     (function() {
       "use strict"; // Start of use strict
       // Smooth scrolling using jQuery easing
+      /*
       $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
         if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
           var target = $(this.hash);
@@ -46,10 +47,11 @@ class HomeComponent extends React.Component {
           }
         }
       });
+      */
       // Closes responsive menu when a scroll trigger link is clicked
-      $('.js-scroll-trigger').click(function() {
-        $('.navbar-collapse').collapse('hide');
-      });
+      //$('.js-scroll-trigger').click(function() {
+       // $('.navbar-collapse').collapse('hide');
+      //});
       // Collapse Navbar
       var navbarCollapse = function() {
         if ($("#mainNav").offset().top > 100) {

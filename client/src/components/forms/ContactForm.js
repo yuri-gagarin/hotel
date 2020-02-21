@@ -7,7 +7,7 @@ const ContactForm = (props) => {
   const elementRef = useRef(null);
   useEffect(() => {
     console.log(elementRef.current.draggable);
-  }, [])
+  }, []);
   
   return (
     <section className="page-section" id="contact" ref={elementRef}>
