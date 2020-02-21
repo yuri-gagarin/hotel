@@ -76,8 +76,6 @@ export const sendMessageRequest = (dispatch, { user,  conversationId, clientSock
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversationId, newMessage } = data;
-      console.log(79)
-      console.log(clientSocketId);
       if (clientSocketId) {
         const messageData = {
           clientSocketId: clientSocketId,

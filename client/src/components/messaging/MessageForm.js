@@ -35,6 +35,8 @@ const MessageForm = (props) => {
       updateConversation({clientSocketId: clientSocketId, conversationId: newMessage.conversationId,
                           message: newMessage, adminSocketId: null });
     });
+    if (localStorage.getItem("conversationId")) {
+    }
   }, []);
 
   const toggleMessageForm = (e) => {
@@ -55,6 +57,17 @@ const MessageForm = (props) => {
   const sendMessage = (content) => {
     const user = clientState;
     handleMessageRequest(user, conversationId, content);
+    localStorage.setItem("conversationId", conversationId);
+  };
+
+  const renderMessages = (messages) => {
+    return messages.map((message) => {
+      return <Message 
+        key={message._id}
+        message={message}
+        clientState={clientState}
+       />
+    });
   };
 
   return (
@@ -64,17 +77,7 @@ const MessageForm = (props) => {
       </div>
       <div style={messageForm.messageView}>
           { 
-            messages.map((message) => {
-              return (
-                <Message 
-                  key={message._id}
-                  content={message.content}
-                  send={message.sender}
-                  read={message.read}
-                  createdAt={message.createdAt}
-                />
-              );
-            })
+           [ ...renderMessages(messages) ]
           }
       </div>
       {

@@ -24,8 +24,10 @@ export const conversationError = (error) => {
   return {
     type: CONVERSATION_ERROR,
     payload: {
+      responseMsg: "An error occured",
       loading: false,
-      error: error
+      conversations: [],
+      error: error.response
     }
   };
 };
@@ -73,6 +75,40 @@ export const updateConversation = ({ conversationId, clientSocketId, adminSocket
 }
 
 /**
+ * 
+ * @param {function} dispatch 
+ * @param {string} conversationId 
+ */
+export const fetchClientConversation = (dispatch, conversationId) => {
+  dispatch(conversationRequest());
+  const requestOptions = {
+    method : "get",
+    url: `/api/conversations/${conversationId}`
+  };
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, conversation } = data;
+      const readMessages = conversation.readMessages.map((message) => {
+        return message;
+      });
+      const unreadMessages = conversation.unreadMessages.map((message) => {
+        return message;
+      });
+      const allMessages = [ ...readMessages, ...unreadMessages ];
+      const stateData = {
+        status: status,
+        responseMsg: responseMsg,
+        conversationId: conversationId,
+        messages: allMessages,
+      };
+      dispatch(conversationSuccess(conversationId, allMessages));
+    })
+    .catch((error) => {
+      dispatch(conversationError(error));
+    });
+}
+/**
  * Opens the conversation
  * @param {function} dispatch - Redux {dispatch} function 
  * @param {Object} requestData - Reqest data for Conversation
@@ -100,7 +136,6 @@ export const fetchConversation = (dispatch, { conversationId }) => {
       const clientSocketId = adminConversationState.conversations.filter((convo) => {
         return convo._id == conversation._id
       })[0].clientSocketId;
-
       const stateData = {
         status: status,
         responseMsg: responseMsg,

@@ -25,10 +25,14 @@ export const socket = io.connect("http://localhost:8080");
 
 const AppRoutes = (props) => {
   const [clientConnected, setClientConnected] = useState(false);
-
+  const cleanUpState = () => {
+    // some cleanup here //
+    localStorage.removeItem("conversationId");
+  }
   useEffect(() => {
     socket.on("hello", (data) => {
     })
+    return cleanUpState();
   }, []);
   const sendDisconnectEvent = () => {
     socket.disconnect();

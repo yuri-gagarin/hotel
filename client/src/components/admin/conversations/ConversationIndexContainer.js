@@ -50,7 +50,6 @@ const ConversationIndexCotainer = (props) => {
   };
   const handleSendMessage = () => {
     // first get the user informatin //
-    console.log("triggered");
     const messageData = {
       user: clientState,
       messageData: message,
@@ -68,7 +67,7 @@ const ConversationIndexCotainer = (props) => {
   };
   const renderMessages = (messages) => {
     return messages.map((message) => {
-      return <Message key={message._id} message={message} />
+      return <Message key={message._id} message={message} clientState={clientState} />
     })
   };
 
