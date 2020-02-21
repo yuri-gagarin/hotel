@@ -6,20 +6,28 @@ import {
 import { formatDate } from "../helpers/dateHelpers";
 
 export const messageStyle = {
-  border: "1px solid grey",
   borderRadius: "5px",
+  color: "white",
+  backgroundColor: "rgb(3, 161, 252)",
+  margin: "0.5em",
+  minWidth: "50%",
+  maxWidth: "75%",
   float: "right",
   padding: "1em",
-  width: "50%",
+  width: "auto",
   clear: "both"
 }
 
 export const responseStyle = {
-  border: "1px solid yellow",
   borderRadius: "5px",
+  color: "white",
+  backgroundColor: "rgb(25, 140, 52)",
+  margin: "0.5em",
+  minWidth: "50%",
+  maxWidth: "75%",
   float: "left",
   padding: "1em",
-  width: "50%",
+  width: "auto",
   clear: "both"
 }
 

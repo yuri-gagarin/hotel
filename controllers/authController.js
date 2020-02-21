@@ -84,5 +84,10 @@ export default {
   },
   logoutUser: (req, res) => {
 
+  },
+  testLogin: (req, res) => {
+    res.json({
+      message: "A ok"
+    })
   }
 }

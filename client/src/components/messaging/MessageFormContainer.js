@@ -18,7 +18,6 @@ const MessageFormContainer = (props) => {
   const  { handleOldConversation } = props;
   useEffect(() => {
     if (conversationId) {
-      console.log("should do an api call");
       handleOldConversation(conversationId);
     }
   }, []);

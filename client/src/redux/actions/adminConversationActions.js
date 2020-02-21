@@ -1,5 +1,7 @@
 import axios from "axios";
 import store from '../../redux/store';
+import { conversationConstants } from "../constants";
+const { UPDATE_CONVERSATION } = conversationConstants;
 
 export const setAdminConversations = ({ status, responseMsg }, conversations = []) => {
   console.log("called");
@@ -45,9 +47,11 @@ export const removeAdminConversation = (conversationId, responseMsg) => {
 
 
 export const handleNewClientMessage = (dispatch, data) => {
-  const { conversationId, clientSocketId } = data;
+  const { conversationId, clientSocketId, newMessage } = data;
   // do an api call for an update conversation ? //
   const adminConversationState = store.getState().adminConvState;
+  const conversationState = store.getState().conversationState;
+
   const oldConversations = adminConversationState.conversations;
 
   const requestOptions = {
@@ -90,6 +94,20 @@ export const handleNewClientMessage = (dispatch, data) => {
           error: null
         }
       });
+      if (conversationState.conversationId == conversationId) {
+        // update the window open //
+        console.log("need to update converdsation");
+        dispatch({
+          type: UPDATE_CONVERSATION,
+          payload: {
+            status: status,
+            responseMsg: responseMsg,
+            conversationId: conversationId,
+            loading: false,
+            messages: [newMessage]
+          }
+        })
+      }
     })
     .catch((error) => {
       console.error(error);

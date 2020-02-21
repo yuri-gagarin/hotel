@@ -36,6 +36,9 @@ const MessageForm = (props) => {
                           message: newMessage, adminSocketId: null });
     });
     if (localStorage.getItem("conversationId")) {
+      console.log("we have messages!");
+      console.log(localStorage.getItem("clientId"));
+      console.log(localStorage.getItem("conversationId"));
     }
   }, []);
 

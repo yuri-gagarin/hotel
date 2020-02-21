@@ -62,6 +62,8 @@ export const reveiveMessage = (socketId, messageData) => {
 };
 
 export const sendMessageRequest = (dispatch, { user,  conversationId, clientSocketId,  messageData }) => {
+  console.log(conversationId);
+  console.log(clientSocketId);
   const requestOptions = {
     method: "post",
     url: "/api/sendMessage",

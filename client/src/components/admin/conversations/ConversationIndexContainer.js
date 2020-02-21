@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import {
   Comment,
@@ -16,7 +16,12 @@ import ConversationComponent from "./ConversationComponent";
 import Message from "./Message";
 // socket import //
 import { socket } from "../../../App";
+
+const scrollToRef = (ref) => {
+  //window.scrollTo(0, ref.current.offsetTop);
+}
 const ConversationIndexCotainer = (props) => {
+  
   const [message, setMessage] = useState("");
   const { 
     sendMessageRequest,
@@ -29,14 +34,13 @@ const ConversationIndexCotainer = (props) => {
     conversationState
   } = props;
   const messages = conversationState.messages;
-  const handleNewClientMessage = () =>{
+  const bottomMessageRef = useRef(null);
 
-  };
-  
   useEffect(() => {
     socket.on("newClientMessage", (data) => {
         const { conversationId, clientSocket, newMessage } = data;
-        newClientMessage({ conversationId: conversationId, clientSocketId: clientSocket });
+        newClientMessage({ conversationId: conversationId, clientSocketId: clientSocket, newMessage: newMessage });
+        //scrollToRef(bottomMessageRef);
     })
     fetchAllConversations();
 
@@ -48,29 +52,37 @@ const ConversationIndexCotainer = (props) => {
   const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
-  const handleSendMessage = () => {
+  const handleSendMessage = (e) => {
     // first get the user informatin //
     const messageData = {
       user: clientState,
       messageData: message,
       conversationId: conversationState.conversationId,
       clientSocketId: conversationState.clientSocketId
-    }
+    };
     sendMessageRequest(messageData);
+    e.target.value = "";
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       // handle messages submission here //
-      console.log(props);
-    }
+      const messageData = {
+        user: clientState,
+        messageData: message,
+        conversationId: conversationState.conversationId,
+        clientSocketId: conversationState.clientSocketId
+      };
+      sendMessageRequest(messageData);
+      e.target.value = "";
+    };
   };
   const renderMessages = (messages) => {
     return messages.map((message) => {
       return <Message key={message._id} message={message} clientState={clientState} />
     })
   };
-
+  
   const deleteConversation = (conversationId) => {
     handleDeleteConversation(conversationId);
   };
@@ -81,11 +93,11 @@ const ConversationIndexCotainer = (props) => {
     <React.Fragment>
       <Grid.Row>
         <Grid.Column width={16}>
-          <h5 style={{textAlign: "center"}}>Conversation With "Name Here"</h5>
+          <h5 style={{textAlign: "center"}}>Conversation With {"conversationState"}</h5>
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
-        <Grid.Column width={6} style={{border: "2px solid red", height: "100vh", paddingLeft: "0.5em", paddingRight: 0}}>
+        <Grid.Column width={6} style={{ height: "100vh", paddingLeft: "0.5em", paddingRight: 0 }}>
           <ConversationComponent 
             adminConversationState={adminConversationState}
             openConversation={openConversation}
@@ -93,11 +105,14 @@ const ConversationIndexCotainer = (props) => {
             deleteConversation={deleteConversation}
            />
         </Grid.Column>
-        <Grid.Column width={10} style={{border: "2px solid green", height: "100vh"}}>
-          <Comment.Group style={{overflow: "scroll", height: "100%", paddingRight: "1em", paddingBottom: "50px"}}>
+        <Grid.Column width={10} style={{ height: "100vh" }}>
+          <Comment.Group style={{overflow: "scroll", height: "100%", paddingRight: "1em", paddingBottom: "50px", paddingRight: 0 }}>
           {
            [...renderMessages(messages)]
           }
+          <div style={{ float:"left", clear: "both" }}
+             ref={bottomMessageRef}>
+          </div>
           </Comment.Group>
           
           <Input 

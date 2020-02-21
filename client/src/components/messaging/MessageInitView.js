@@ -17,10 +17,15 @@ const MessageInitView = (props) => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   // redux state //
-    const { sendInitialMessage, clientState } = props;
-
+  const { sendInitialMessage, clientState } = props;
+  useEffect(() => {
+    localStorage.setItem("clientId", clientState._id);
+  }, []);
   const handleNameChange = (e) => {
     setName(e.target.value);
+  };
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
@@ -33,10 +38,12 @@ const MessageInitView = (props) => {
     }
     e.preventDefault();
     e.stopPropagation();
-    setValidated(true)
+    setValidated(true);
+
+    const clientId = localStorage.getItem("clientId");
     const messageData = {
       user: {
-        _id: clientState._id || ObjectID.generate(Date.now),
+        _id: clientId,
         name: name,
         email: email
       },
@@ -56,7 +63,11 @@ const MessageInitView = (props) => {
         />
       </Form.Group>
       <Form.Group controlId="formEmail">
-        <Form.Control type="input" placeholder="email ... optional" />
+        <Form.Control 
+          type="input" 
+          placeholder="email ... optional" 
+          onChange={handleEmailChange}
+          />
       </Form.Group>
       <Form.Group controlId="formMessageInput">
         <Form.Control 

@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import socketIo from 'socket.io';
 import path from "path";
-
+import passport from "passport";
+import session from "express-session";
+import passportSrategy from "./controllers/helpers/authHelper";
 import appConfig from "./config/appConfig";
 import combineRoutes from "./routes/combineRoutes";
 
@@ -31,6 +33,14 @@ mongoose.connection.once("open", () => {
 // body parser middleware //
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+// passport middleware //
+app.use(session({
+  ...appConfig.session
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passportSrategy(passport);
+
 // serve the static files from the React app //
 // app.use(express.static(path.join(__dirname, "client/build")));
 if (process.env.NODE_ENV === "production") {

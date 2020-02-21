@@ -66,6 +66,10 @@ class HomeComponent extends React.Component {
       $(window).scroll(navbarCollapse);
     })();
   }
+  componentWillUnmount() {
+    localStorage.removeItem("clientId");
+    localStorage.removeItem("conversationId");
+  }
   render () {
     return (
       <React.Fragment>
