@@ -1,3 +1,4 @@
+import store from "../../redux/store";
 import axios from "axios";
 import { conversationConstants } from "../constants";
 const {
@@ -8,7 +9,7 @@ const {
   CLOSE_CONVERSATION,
   UPDATE_CONVERSATION
 } = conversationConstants;
-import { setAdminConversations } from "./adminConversationActions";
+import { setAdminConversations, removeAdminConversation } from "./adminConversationActions";
 export const conversationRequest = () => {
   return {
     type: CONVERSATION_REQUEST,
@@ -29,7 +30,7 @@ export const conversationError = (error) => {
   };
 };
 
-export const openConversation = ({ conversationId, responseMsg, status, messages }) => {
+export const openConversation = ({ conversationId, responseMsg, status, messages, clientSocketId }) => {
   return {
     type: OPEN_CONVERASTION,
     payload: {
@@ -38,7 +39,9 @@ export const openConversation = ({ conversationId, responseMsg, status, messages
       loading: false,
       userMessaging: true,
       conversationId: conversationId,
-      messages: messages
+      clientSocketId: clientSocketId,
+      messages: messages,
+      conversationError: null
     }
   };
 };
@@ -55,7 +58,7 @@ export const conversationSuccess = (conversationId, messages) => {
   };
 };
 
-export const updateConversation = (conversationId, clientSocketId, adminSocketId, message) => {
+export const updateConversation = ({ conversationId, clientSocketId, adminSocketId, message }) => {
   return {
     type: UPDATE_CONVERSATION,
     payload: {
@@ -77,6 +80,7 @@ export const updateConversation = (conversationId, clientSocketId, adminSocketId
  */
 export const fetchConversation = (dispatch, { conversationId }) => {
   let status, data;
+  const adminConversationState = store.getState().adminConvState;
   dispatch(conversationRequest());
   const requestOptions = {
     method : "get",
@@ -93,18 +97,22 @@ export const fetchConversation = (dispatch, { conversationId }) => {
         return message;
       });
       const allMessages = [ ...readMessages, ...unreadMessages ];
+      const clientSocketId = adminConversationState.conversations.filter((convo) => {
+        return convo._id == conversation._id
+      })[0].clientSocketId;
+
       const stateData = {
         status: status,
         responseMsg: responseMsg,
         conversationId: conversationId,
-        messages: allMessages
+        messages: allMessages,
+        clientSocketId: clientSocketId
       };
-      console.log(stateData);
+
       dispatch(openConversation(stateData)); 
     })
     .catch((error) => {
-      console.log("an error occurer");
-      console.log(error);
+      console.log(error.response);
       dispatch(conversationError(error));
     });
 };
@@ -132,3 +140,23 @@ export const fetchAllConversations = (dispatch) => {
 export const closeConversation = ({ conversationId }) => {
 
 };
+
+export const deleteConversation = (dispatch, conversationId) => {
+  let status, data;
+  dispatch(conversationRequest());
+  const requestOptions = {
+    method: "delete",
+    url: "/api/conversations/" + conversationId
+  };
+  return axios(requestOptions)
+    .then((response) => {
+      status = response.status;
+      const { responseMsg, conversationId } = response.data;
+      // remove active conversation from the admin dash //
+      dispatch(removeAdminConversation(conversationId, responseMsg));
+    })
+    .catch((error) => {
+      console.log(152)
+      dispatch(conversationError(error));
+    });
+}

@@ -26,13 +26,29 @@ export const adminConversationsError = (error) => {
   }
 }
 
+export const removeAdminConversation = (conversationId, responseMsg) => {
+  const adminConversationState = store.getState().adminConvState;
+  const updatedConversations = adminConversationState.conversations.filter((conversation) => {
+    return conversation._id != conversationId;
+  });
+  return {
+    type: "REMOVE_ADMIN_CONVERSATION",
+    payload: {
+      status: "ok",
+      responseMsg: responseMsg,
+      loading: false,
+      conversations: [...updatedConversations],
+      error: null
+    }
+  };
+};
+
+
 export const handleNewClientMessage = (dispatch, data) => {
   const { conversationId, clientSocketId } = data;
   // do an api call for an update conversation ? //
   const adminConversationState = store.getState().adminConvState;
   const oldConversations = adminConversationState.conversations;
-
-  console.log(oldConversations);
 
   const requestOptions = {
     method: "get",
@@ -47,8 +63,7 @@ export const handleNewClientMessage = (dispatch, data) => {
       const newConvo = oldConversations.filter((oldConvo) => conversation._id == oldConvo._id);
       let newConversations;
       if (newConvo.length === 0) {
-        console.log("it's a new conversation");
-        newConversations =  [...oldConversations, conversation]
+        newConversations =  [...oldConversations,  { ...conversation, clientSocketId: clientSocketId} ]
       } else {
         newConversations = oldConversations.map((oldConvo) => {
           if (conversation._id == oldConvo._id) {
@@ -78,7 +93,6 @@ export const handleNewClientMessage = (dispatch, data) => {
     })
     .catch((error) => {
       console.error(error);
-      console.log("an error occured");
       dispatch(adminConversationsError(error));
     })
 };

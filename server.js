@@ -16,6 +16,7 @@ const { dbSettings } = appConfig;
 const mongoOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: dbSettings.useFindAndModify,
   user: dbSettings.username,
   pass: dbSettings.password
 };
@@ -62,14 +63,20 @@ app.on("dbReady", () => {
       //console.log(socket.id);
       clientsMap[user._id] = socket.id;
     });
+    // client is messaging //
     socket.on("clientMessageSent", (data) => {
       const { conversationId, newMessage } = data;
       const clientSocket = socket.id;
       socket.broadcast.emit("newClientMessage", { conversationId: conversationId, clientSocket: clientSocket, newMessage: newMessage });
-    })
-    socket.on("adminMessageSent", (data) => {
-      socket.broadcast.to(data.socketId).emit("newAdminMessage", data);
     });
+    // end client messaging //
+    // admin response messaging //
+    socket.on("adminResponseSent", (data) => {
+      const { clientSocketId, newMessage } = data;
+      console.log(data);
+      socket.broadcast.to(clientSocketId).emit("newAdminMessage", data);
+    });
+    // end admin response 
     socket.once("disconnect", () => {
       console.log("client disconnected");
     })

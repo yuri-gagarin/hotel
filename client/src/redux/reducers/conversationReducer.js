@@ -40,7 +40,8 @@ const conversationReducer = (state = initialState, { type, payload = {} }) => {
         responseMsg: responseMsg,
         loading: loading,
         conversationId: conversationId,
-        messages: [...state.messages, ...messages],
+        clientSocketId: clientSocketId,
+        messages: [...messages],
         conversationError: conversationError
       };
     };

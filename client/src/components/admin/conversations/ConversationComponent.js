@@ -11,7 +11,7 @@ import { withRouter } from "react-router-dom";
 // addiotinal component imports //
 import ConversationHolder from "./ConversationHolder";
 
-const renderConversations = (conversations, openConversation) => {
+const renderConversations = (conversations, openConversation, deleteConversation) => {
 
   return conversations.map((conversation) => {
     return (
@@ -19,13 +19,14 @@ const renderConversations = (conversations, openConversation) => {
         key={conversation._id}
         conversation={conversation}
         openConversation={openConversation}
+        deleteConversation={deleteConversation}
       />
     );
   });
 };
 
 const ConversationComponent = (props) => {
-  const { adminConversationState, openConversation } = props;
+  const { adminConversationState, openConversation, deleteConversation } = props;
   const { conversations } =  adminConversationState;
   
   return (
@@ -34,7 +35,7 @@ const ConversationComponent = (props) => {
           Active Conversations
         </Header>
         {
-          [...renderConversations(conversations, openConversation)]
+          [...renderConversations(conversations, openConversation, deleteConversation)]
         } 
       </Comment.Group>
       

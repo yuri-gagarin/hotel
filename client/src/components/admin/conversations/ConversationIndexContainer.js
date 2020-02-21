@@ -8,7 +8,8 @@ import {
 import { withRouter } from "react-router-dom";
 // redux imports  //
 import { connect } from "react-redux";
-import { fetchAllConversations, fetchConversation } from "../../../redux/actions/conversationActions";
+import { sendMessageRequest } from "../../../redux/actions/messageActions";
+import { fetchAllConversations, fetchConversation, deleteConversation } from "../../../redux/actions/conversationActions";
 import { handleNewClientMessage } from "../../../redux/actions/adminConversationActions"; 
 // additional components //
 import ConversationComponent from "./ConversationComponent";
@@ -18,10 +19,13 @@ import { socket } from "../../../App";
 const ConversationIndexCotainer = (props) => {
   const [message, setMessage] = useState("");
   const { 
+    sendMessageRequest,
     fetchAllConversations,
     fetchConversation,
+    handleDeleteConversation,
     newClientMessage,
     adminConversationState,
+    clientState,
     conversationState
   } = props;
   const messages = conversationState.messages;
@@ -41,8 +45,19 @@ const ConversationIndexCotainer = (props) => {
   const openConversation = (conversationId) => {
     fetchConversation(conversationId);
   };
+  const handleInputChange = (e) => {
+    setMessage(e.target.value);
+  };
   const handleSendMessage = () => {
-    console.log("clicked ");
+    // first get the user informatin //
+    console.log("triggered");
+    const messageData = {
+      user: clientState,
+      messageData: message,
+      conversationId: conversationState.conversationId,
+      clientSocketId: conversationState.clientSocketId
+    }
+    sendMessageRequest(messageData);
   };
 
   const handleKeyPress = (e) => {
@@ -55,6 +70,10 @@ const ConversationIndexCotainer = (props) => {
     return messages.map((message) => {
       return <Message key={message._id} message={message} />
     })
+  };
+
+  const deleteConversation = (conversationId) => {
+    handleDeleteConversation(conversationId);
   };
 
   
@@ -72,6 +91,7 @@ const ConversationIndexCotainer = (props) => {
             adminConversationState={adminConversationState}
             openConversation={openConversation}
             fetchAllConversations={fetchAllConversations}
+            deleteConversation={deleteConversation}
            />
         </Grid.Column>
         <Grid.Column width={10} style={{border: "2px solid green", height: "100vh"}}>
@@ -87,6 +107,7 @@ const ConversationIndexCotainer = (props) => {
               content: "Send",
               onClick: handleSendMessage
             }}
+            onChange={handleInputChange}
             placeholder='message...' 
             style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
             onKeyPress={handleKeyPress}
@@ -114,8 +135,10 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
+    sendMessageRequest: (messageData) => sendMessageRequest(dispatch, messageData),
     fetchAllConversations: () => fetchAllConversations(dispatch),
     fetchConversation: (conversationId) => fetchConversation(dispatch, { conversationId }),
+    handleDeleteConversation: (conversationId) => deleteConversation(dispatch, conversationId),
     newClientMessage: (messageData, currentConversations) => handleNewClientMessage(dispatch, messageData, currentConversations)
   };
 };  

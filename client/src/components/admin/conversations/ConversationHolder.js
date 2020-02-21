@@ -24,10 +24,12 @@ const style = {
 };
 
 const DeleteConvoBtn = (props) => {
-  const confirmDeleteConversation = () => {
+  const { deleteConversation, conversationId } = props;
+  const confirmDeleteConversation = (e) => {
+    e.stopPropagation();
     alert("Are You Sure?");
+    deleteConversation(conversationId);
   };
-
   return(
     <Button 
       icon 
@@ -42,14 +44,14 @@ const DeleteConvoBtn = (props) => {
 };
 
 const ConversationHolder = (props) => {
-  const { conversation, openConversation } = props;
+  const { conversation, openConversation, deleteConversation } = props;
   const conversationId = conversation._id;
   const lastMessage = conversation.lastMessage;
   
   return (
     <Comment onClick={() => openConversation(conversationId)} style={style.convoContainerStyle}>
       <Comment.Content style={{paddingTop: "0.5em"}}>
-        <DeleteConvoBtn/>
+        <DeleteConvoBtn deleteConversation={deleteConversation} conversationId={conversationId} />
         <Comment.Author as='a'>{lastMessage.sender}</Comment.Author>
         <Comment.Content>{lastMessage.content}</Comment.Content>
         <Comment.Metadata>
@@ -59,5 +61,9 @@ const ConversationHolder = (props) => {
     </Comment>
   );
 };  
+
+ConversationHolder.propTypes = {
+
+};
 
 export default ConversationHolder;

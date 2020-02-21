@@ -84,7 +84,8 @@ export default {
       })
       .then((response) => {
         return res.status(200).json({
-          message: "Conversation deleted"
+          responseMsg: "Conversation deleted",
+          conversationId: conversationId
         });
       })
       .catch((error) => {

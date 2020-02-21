@@ -9,6 +9,7 @@ import Message from "./Message";
 // redux imports // 
 import { connect } from "react-redux";
 import { sendMessageRequest } from "../../redux/actions/messageActions";
+import { updateConversation } from "../../redux/actions/conversationActions";
 import { setGuestClient } from "../../redux/actions/clientActions";
 // socket io //
 import { socket } from "../../App";
@@ -22,9 +23,19 @@ const MessageForm = (props) => {
     clientState,
     conversationState,
     messageState,
+    updateConversation,
     setClientState
   } = props;
   const { messages, userMessaging, conversationId } = conversationState;
+
+  useEffect(() => {
+    socket.on("newAdminMessage", (data) => {
+      // listen for new incoming messages from admin //
+      const { clientSocketId, newMessage } = data;
+      updateConversation({clientSocketId: clientSocketId, conversationId: newMessage.conversationId,
+                          message: newMessage, adminSocketId: null });
+    });
+  }, []);
 
   const toggleMessageForm = (e) => {
     handleFormOpen();
@@ -104,7 +115,8 @@ const mapDispatchToProps = (dispatch) => {
     handleMessageRequest: (user, conversationId, messageData) => {
       return sendMessageRequest(dispatch, { user, conversationId, messageData });
     },
-    setClientState: (userData) => dispatch(setGuestClient(userData))
+    setClientState: (userData) => dispatch(setGuestClient(userData)),
+    updateConversation: (conversationData) => dispatch(updateConversation(conversationData))
   }
 };
 

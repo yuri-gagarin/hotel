@@ -61,7 +61,7 @@ export const reveiveMessage = (socketId, messageData) => {
   };
 };
 
-export const sendMessageRequest = (dispatch, { user,  conversationId, messageData }) => {
+export const sendMessageRequest = (dispatch, { user,  conversationId, clientSocketId,  messageData }) => {
   const requestOptions = {
     method: "post",
     url: "/api/sendMessage",
@@ -76,6 +76,15 @@ export const sendMessageRequest = (dispatch, { user,  conversationId, messageDat
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversationId, newMessage } = data;
+      console.log(79)
+      console.log(clientSocketId);
+      if (clientSocketId) {
+        const messageData = {
+          clientSocketId: clientSocketId,
+          newMessage: newMessage
+        };
+        socket.emit("adminResponseSent",  messageData);
+      }
       socket.emit("clientMessageSent", { conversationId: conversationId, newMessage: newMessage });
       dispatch(conversationSuccess(conversationId, [newMessage]));
       dispatch(messageSuccess({ status, responseMsg, newMessage}))
