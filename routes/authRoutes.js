@@ -27,7 +27,7 @@ export default function (router) {
   
   router  
     .route("/api/logout")
-    .post(authController.logoutUser);
+    .delete(authController.logoutUser);
   
   router  
     .route("/api/register")

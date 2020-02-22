@@ -4,23 +4,46 @@ import { Grid } from "semantic-ui-react";
 import { withRouter, Route } from "react-router-dom"; 
 import AdminNavComponent from "./nav/AdminNav";
 
-import { adminRoutes } from "../../routes/appRoutes";
 import ConversationIndexContainer from "./conversations/ConversationIndexContainer";
 import AdminDashComponent from "./dash/AdminDashComponent";
 import PostsIndexContainer from "./posts/PostsIndexContainer";
-import ObjectID from "bson-objectid";
+// redux imports //
 import { connect } from "react-redux";
-import { setAdmin } from "../../redux/actions/clientActions";
+import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
+
+const setUserCredentials = (userData) => {
+  const adminState = JSON.stringify(userData);
+  localStorage.setItem("hotelAdminState", adminState);
+};
+const cleanUserState = () => {
+
+};
 
 const AdminComponent = (props) => {
-  const { history, clientState, setAdmin } = props;
+  const { history, clientState, adminState, handleLogout } = props;
  
-  
+  useEffect(() => {
+    // set the localStoreage state  so the app can reload //
+    if (!localStorage.getItem("hotelAdminState")) {
+      console.log("need to set");
+      setUserCredentials(adminState);
+    } else {
+      const savedState = JSON.parse(localStorage.getItem("hotelAdminState"));
+      // set admin state on refresh //
+      console.log("there is a saved admin")
+      setAdmin(savedState);
+    }
+  }, []); 
+
+  const logoutUser = (e) => {
+    handleLogout(history);
+  };
+
   return (
     <Grid stackable padded divided style={{paddingLeft: "1em", paddingRight: "1em"}}>
       <Grid.Row>
         <Grid.Column width={16}>
-          <AdminNavComponent />
+          <AdminNavComponent logoutUser={logoutUser} />
         </Grid.Column>
       </Grid.Row>
       <Route path="/admin/dashboard">
@@ -38,19 +61,21 @@ const AdminComponent = (props) => {
 // proptypes checking //
 AdminComponent.propTypes = {
   history: PropTypes.object.isRequired,
-  clientState: PropTypes.object.isRequired
+  clientState: PropTypes.object.isRequired,
+  adminState: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
     clientState: state.clientState,
     adminState: state.adminState
-  }
+  };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    setAdmin: (adminData) => dispatch(setAdmin(adminData))
-  }
+    setAdmin: (adminData) => dispatch(setAdmin(adminData)),
+    handleLogout: (history) => logOutUser(dispatch, history)
+  };
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminComponent));

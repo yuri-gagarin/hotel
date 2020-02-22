@@ -55,6 +55,32 @@ const logOutAdmin = () => {
   };
 };
 
+export const setAdmin = (adminData) => {
+  const {
+    loggedIn,
+    loading,
+    admin,
+    email,
+    firstName,
+    lastName,
+    phoneNumber,
+    error
+  } = adminData
+  return {
+    type: SET_ADMIN,
+    payload: {
+      loggedIn: loggedIn,
+      loading: loading,
+      admin: admin,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      error: error
+    }
+  }
+}
+
 export const loginUser = (dispatch, userCredentials, history) => {
   const { email, password } = userCredentials;
   const requestOptions = {
@@ -70,18 +96,16 @@ export const loginUser = (dispatch, userCredentials, history) => {
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, admin, user } = data;
-      dispatch({
-        type: SET_ADMIN,
-        payload: {
-          loggedIn: true,
-          loading: false,
-          admin: admin,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          phoneNumber: user.phoneNumber
-        }
-      });
+      const adminData = {
+        loggedIn: true,
+        loading: false,
+        admin: admin,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.lastName
+      }
+      dispatch(setAdmin(adminData));
       history.push("/admin/dashboard");
     })
     .catch((error) => {
@@ -90,15 +114,21 @@ export const loginUser = (dispatch, userCredentials, history) => {
     });
 };
 
-export const logOutUser = (dispatch) => {
-  dispatch(loginRequest);
+export const logOutUser = (dispatch, history) => {
+  const requestOptions = {
+    method: "delete",
+    url: "/api/logout"
+  };
+  dispatch(loginRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, admin, user } = data;
+      localStorage.removeItem("hotelAdminState");
+      history.push("/login/admin")
       dispatch(logOutAdmin());
     })
     .catch((error) => {
       dispatch(loginError(error));
     })
-}
+};

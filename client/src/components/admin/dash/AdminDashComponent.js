@@ -5,7 +5,7 @@ import { Grid } from "semantic-ui-react";
 import MessagesComponent from "../conversations/MessagesComponent";
 
 const AdminDashComponent = (props) => {
-
+  const { adminState, logoutUser } = props;
   return (
     <React.Fragment>
       <Grid.Row>
@@ -30,7 +30,7 @@ const AdminDashComponent = (props) => {
 };
 // Proptypes Validations //
 AdminDashComponent.propTypes = {
-
+  //logoutUser: PropTypes.func.isRequired
 };
 
 export default AdminDashComponent;

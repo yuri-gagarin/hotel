@@ -7,8 +7,7 @@ import { adminRoutes } from "../../../routes/appRoutes";
 
 const AdminNavMenu = (props) =>  {
   const [active, setActiveItem] = useState({ activeItem: "home" })
-  const { history } = props;
-  console.log(history);
+  const { history, logoutUser } = props;
 
   const handleMenuClick = (e, { name }) => {
     
@@ -38,8 +37,9 @@ const AdminNavMenu = (props) =>  {
       return { ...state, activeItem: name };
     });
   };
-  const handleLogout = () => {
+  const _logoutUser = (e) => {
     // todo for logout functionality //
+    logoutUser(e)
   };
 
   return (
@@ -68,7 +68,7 @@ const AdminNavMenu = (props) =>  {
         <Menu.Item
           name='logout'
           active={active.activeItem === 'logout'}
-          onClick={handleLogout}
+          onClick={_logoutUser}
         />
       </Menu.Menu>
     </Menu>   
@@ -77,7 +77,8 @@ const AdminNavMenu = (props) =>  {
 
 // PropTypes validation //
 AdminNavMenu.propTypes = {
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func.isRequired
 };
 
 export default withRouter(AdminNavMenu);
