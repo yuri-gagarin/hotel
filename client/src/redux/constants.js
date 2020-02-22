@@ -1,6 +1,7 @@
 export const clientConstants = {
   SET_GUEST_USER: "SET_GUEST_USER",
-  SET_ADMIN: "SET_ADMIN"
+  SET_ADMIN: "SET_ADMIN",
+  LOG_OUT_ADMIN: "LOG_OUT_ADMIN"
 };
 
 export const conversationConstants = {

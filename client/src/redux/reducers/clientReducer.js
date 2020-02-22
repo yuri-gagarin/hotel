@@ -16,14 +16,6 @@ export const clientReducer = (state = initialState, { type, payload = {} }) => {
         email: payload.email
       };
     };
-    case SET_ADMIN: {
-      return {
-        ...state,
-        _id: payload._id,
-        name: payload.name,
-        email: payload.email
-      };
-    };
     default: {
       return {
         ...state

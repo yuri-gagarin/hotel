@@ -82,12 +82,14 @@ export default {
   loginUser: (req, res) => {
     const user = req.user;
     if (user) {
-      return res.json({
-        ...user
+      return res.status(200).json({
+        responseMsg: "Successful Login",
+        admin: true,
+        user: user
       });
     } else {
       return res.json({
-        message: "no user"
+        responseMsg: "no user"
       });
     }
   },

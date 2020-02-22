@@ -14,12 +14,6 @@ import { setAdmin } from "../../redux/actions/clientActions";
 
 const AdminComponent = (props) => {
   const { history, clientState, setAdmin } = props;
-  const adminData = {
-    _id: ObjectID.generate(Date.now),
-    name: "Administrator",
-    email: "admin@admin.com"
-  };
-
   useEffect(() => {
     setAdmin(adminData);
   }, []);
@@ -50,7 +44,8 @@ AdminComponent.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    clientState: state.clientState
+    clientState: state.clientState,
+    adminState: state.adminState
   }
 };
 const mapDispatchToProps = (dispatch) => {
