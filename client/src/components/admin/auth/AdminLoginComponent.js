@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { 
   Button,
   Container,
@@ -9,6 +10,7 @@ import {
 import { withRouter } from "react-router-dom";
 // redux //
 import { connect } from "react-redux"; 
+import { loginUser } from "../../../redux/actions/apiActions";
 
 const loginPageStyle = {
   container: {
@@ -33,6 +35,7 @@ const AdminLoginComponent = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [typing, setTyping] = useState(false);
+  const { history, handleUserLogin } = props;
 
   const handleEmailInut = (e) => {
     setEmail(e.target.value);
@@ -51,10 +54,13 @@ const AdminLoginComponent = (props) => {
   const handlePasswordError = () => {
 
   }
-  const handleLogin = () => {
+  const _handleUserLogin = () => {
     // api call to log in an administrator //
-    console.log(email);
-    console.log(password);
+    const userData = {
+      email: email,
+      password: password
+    };
+    handleUserLogin(userData, history);
   };
   return (
     <Grid style={loginPageStyle.container}>
@@ -84,7 +90,7 @@ const AdminLoginComponent = (props) => {
             label='Password'
             placeholder='...password'
           />
-          <Button onClick={handleLogin}>
+          <Button onClick={_handleUserLogin}>
             Login
           </Button>
         </Form>
@@ -96,16 +102,21 @@ const AdminLoginComponent = (props) => {
     </Grid>
   )
 };
-
+// PropTypes validations //
+AdminLoginComponent.propTypes = {
+  history: PropTypes.object.isRequired,
+  handleUserLogin:  PropTypes.func.isRequired
+};
+// redux mapState and mapDispatch //
 const mapStateToProps = (state) => {
   return {
-    
-  }
+    adminState: state.adminState
+  };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-
-  }
-}
+    handleUserLogin: (userData, history) => loginUser(dispatch, userData, history)
+  };
+};
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminLoginComponent));

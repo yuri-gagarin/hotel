@@ -14,9 +14,8 @@ import { setAdmin } from "../../redux/actions/clientActions";
 
 const AdminComponent = (props) => {
   const { history, clientState, setAdmin } = props;
-  useEffect(() => {
-    setAdmin(adminData);
-  }, []);
+ 
+  
   return (
     <Grid stackable padded divided style={{paddingLeft: "1em", paddingRight: "1em"}}>
       <Grid.Row>

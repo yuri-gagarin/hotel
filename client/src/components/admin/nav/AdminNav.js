@@ -7,8 +7,8 @@ import { adminRoutes } from "../../../routes/appRoutes";
 
 const AdminNavMenu = (props) =>  {
   const [active, setActiveItem] = useState({ activeItem: "home" })
-  const [loading, setLoading] = useState(false);
   const { history } = props;
+  console.log(history);
 
   const handleMenuClick = (e, { name }) => {
     
