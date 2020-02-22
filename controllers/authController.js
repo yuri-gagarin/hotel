@@ -32,7 +32,7 @@ export default {
       });
     } else {
       // hash a password first //
-      return hashPassword(password, SALT_ROUNDS)
+      return hashPassword(userData.password, SALT_ROUNDS)
         .then((hashedPassword) => {
           return User.create({ ...userData, password: hashedPassword });
         })
@@ -80,14 +80,21 @@ export default {
       });
   },
   loginUser: (req, res) => {
-
+    const user = req.user;
+    if (user) {
+      return res.json({
+        ...user
+      });
+    } else {
+      return res.json({
+        message: "no user"
+      });
+    }
   },
   logoutUser: (req, res) => {
-
+    req.logout();
+    return res.status(200).json({
+      message: "Successfully logged out"
+    });
   },
-  testLogin: (req, res) => {
-    res.json({
-      message: "A ok"
-    })
-  }
 }

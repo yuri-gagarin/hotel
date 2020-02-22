@@ -37,9 +37,9 @@ app.use(bodyParser.json());
 app.use(session({
   ...appConfig.session
 }));
+passportSrategy(passport);
 app.use(passport.initialize());
 app.use(passport.session());
-passportSrategy(passport);
 
 // serve the static files from the React app //
 // app.use(express.static(path.join(__dirname, "client/build")));

@@ -13,6 +13,18 @@ export const isEmpty = (value) => {
 };
 
 /**
+  * Validates user email input.
+  * 
+  * @param {string} user email
+  * @return {boolean} result tested against regex
+  */
+ export const  emailValidator = (email) => {
+   const regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+
+   return regex.test(String(email).toLowerCase());
+ };
+
+/**
  * Validates new user data
  * @param {Object} userData - An {Object} containing data for new User model
  * @returns {Object} An {Object} which contains any errors and .isValid property
