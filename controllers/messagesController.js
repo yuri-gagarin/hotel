@@ -37,7 +37,7 @@ export default {
         conversationId = conversation._id;
         const newMessage = {
           conversationId: conversation._id,
-          sender: user.name || "Guest",
+          sender: user.firstName || "Guest",
           content: messageData,
         }
         return Message.create(newMessage);

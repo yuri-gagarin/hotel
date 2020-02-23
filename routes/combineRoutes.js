@@ -7,5 +7,5 @@ export default function (router) {
   authRoutes(router);
   conversationRoutes(router);
   messageRoutes(router);
-  testRoutes(router);
+  //testRoutes(router);
 };

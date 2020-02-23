@@ -1,4 +1,5 @@
 import conversationsController from "../controllers/conversationsController";
+import { isLoggedIn } from "./helpers/routeHelpers";
 
 export default function (router) {
   // @route DELETE /api/conversations/:convId //
@@ -6,7 +7,7 @@ export default function (router) {
   // @access PRIVATE //
   router
     .route("/api/conversations/:convId")
-    .delete(conversationsController.deleteConversation);
+    .delete(isLoggedIn, conversationsController.deleteConversation);
   
   // @route GET /api/conversations //
   // @desc Gets all the converstions in database //

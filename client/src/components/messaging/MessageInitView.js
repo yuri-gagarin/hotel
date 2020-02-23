@@ -9,7 +9,6 @@ import {
 import { messageForm } from "./style/styles";
 // additional dependencies //
 import { sendMessage } from "./helpers/messageHelpers";
-import ObjectID from "bson-objectid";
 
 const MessageInitView = (props) => {
   const [validated, setValidated] = useState(false);
@@ -44,7 +43,7 @@ const MessageInitView = (props) => {
     const messageData = {
       user: {
         _id: clientId,
-        name: name,
+        firstName: name,
         email: email
       },
       content: message

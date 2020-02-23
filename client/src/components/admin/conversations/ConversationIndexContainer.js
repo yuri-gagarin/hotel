@@ -17,9 +17,6 @@ import Message from "./Message";
 // socket import //
 import { socket } from "../../../App";
 
-const scrollToRef = (ref) => {
-  //window.scrollTo(0, ref.current.offsetTop);
-}
 const ConversationIndexCotainer = (props) => {
   
   const [message, setMessage] = useState("");
@@ -29,8 +26,8 @@ const ConversationIndexCotainer = (props) => {
     fetchConversation,
     handleDeleteConversation,
     newClientMessage,
+    adminState,
     adminConversationState,
-    clientState,
     conversationState
   } = props;
   const messages = conversationState.messages;
@@ -54,8 +51,9 @@ const ConversationIndexCotainer = (props) => {
   };
   const handleSendMessage = (e) => {
     // first get the user informatin //
+    console.log(adminState);
     const messageData = {
-      user: clientState,
+      user: adminState,
       messageData: message,
       conversationId: conversationState.conversationId,
       clientSocketId: conversationState.clientSocketId
@@ -68,7 +66,7 @@ const ConversationIndexCotainer = (props) => {
     if (e.key === "Enter") {
       // handle messages submission here //
       const messageData = {
-        user: clientState,
+        user: adminState,
         messageData: message,
         conversationId: conversationState.conversationId,
         clientSocketId: conversationState.clientSocketId
@@ -79,7 +77,7 @@ const ConversationIndexCotainer = (props) => {
   };
   const renderMessages = (messages) => {
     return messages.map((message) => {
-      return <Message key={message._id} message={message} clientState={clientState} />
+      return <Message key={message._id} message={message} adminState={adminState} />
     })
   };
   
@@ -137,14 +135,14 @@ ConversationIndexCotainer.propTypes = {
   fetchConversation: PropTypes.func.isRequired,
   adminConversationState: PropTypes.object.isRequired,
   conversationState: PropTypes.object.isRequired,
-  clientState: PropTypes.object.isRequired
+  adminState: PropTypes.object.isRequired
 };
 // connect functions //
 const mapStateToProps = (state) => {
   return {
     adminConversationState: state.adminConvState,
+    adminState: state.adminState,
     conversationState: state.conversationState,
-    clientState: state.clientState
   };
 };
 const mapDispatchToProps = (dispatch) => {

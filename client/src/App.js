@@ -18,10 +18,35 @@ import HomeComponent from "./components/HomeComponent";
 import AdminComponent from './components/admin/AdminComponent';
 import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
 // additional redux imports //
+import { connect } from "react-redux";
+import { setAdmin } from "./redux/actions/apiActions";
 import store from "./redux/store";
 // socketio //
 import io from "socket.io-client";
 export const socket = io.connect("http://localhost:8080");
+import axios from "axios";
+
+
+const AuthorizedRoute = ({ loggedIn, component, path }) => {
+  if (loggedIn) {
+    return (
+      <Route 
+        path={path}
+        exact={true}
+        component={component}
+      />
+    );
+  } else {
+    return (
+      <Route
+        path={path}
+        exact={true}
+        component={AdminLoginComponent}
+      />
+    );
+  }
+ };
+
 
 const AppRoutes = (props) => {
   const [clientConnected, setClientConnected] = useState(false);
@@ -34,27 +59,67 @@ const AppRoutes = (props) => {
     })
     return cleanUpState();
   }, []);
-  const sendDisconnectEvent = () => {
-    socket.disconnect();
-  };
+  
 
   return (
-  <Provider store={store}>
     <Router>
       <Switch>
-        <Route path={adminRoutes.ADMIN} exact={false} component={AdminComponent} />
+        <AuthorizedRoute path={adminRoutes.ADMIN_DASH} loggedIn={props.loggedIn} component={AdminComponent} />
         <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />
         <Route path={appRoutes.HOME_ROUTE} exact={true} component={HomeComponent} />
        </Switch>
     </Router>
-  </Provider> 
   );
 }
 
-function App() {
-  return (
-    <AppRoutes />
-  );
-}
+class App extends React.Component {
+  constructor (props) {
+    super(props);
+  }
+  checkLogin = () => {
+    // checks for user login //
+    const requestParams = {
+      method: "get",
+      url: "/api/logged_in"
+    }
+    return axios(requestParams)
+      .then((response) => {
+        const { status } = response;
+        if (status === 200) {
+          // user is logged in still //
+          const savedState = JSON.parse(localStorage.getItem("hotelAdminState"));
+          this.props.setAdmin({ ...savedState, loggedIn: true })
+        } else {
+          // not a status code 200 //
+          this.props.setAdmin({ ...savedState, loggedIn: false })
+        }
+      })
+      .catch((error) => {
+        const savedState = JSON.parse(localStorage.getItem("hotelAdminState"));
+        this.props.setAdmin({ ...savedState, loggedIn: false })
+      });
+  }
+  componentDidMount() {
+    this.checkLogin()
+  }
+  render() {
+    const { loggedIn } = store.getState().adminState;
+    console.log(loggedIn);
+    return (
+      <AppRoutes loggedIn={loggedIn} />
+    );
+  }
+};
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    adminState: state.adminState
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAdmin: (adminData) => dispatch(setAdmin(adminData))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

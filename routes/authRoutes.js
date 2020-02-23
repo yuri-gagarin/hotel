@@ -14,9 +14,9 @@ function isLoggedIn (req, res, next) {
 export default function (router) {
   
   router
-    .route("/api/test")
+    .route("/api/logged_in")
     .get(isLoggedIn, (req, res) => {
-      return res.json({
+      return res.status(200).json({
         message: "A ok"
       });
   });

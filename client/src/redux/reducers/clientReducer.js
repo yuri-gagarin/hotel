@@ -2,7 +2,7 @@ import { clientConstants } from "../constants";
 const { SET_GUEST_USER, SET_ADMIN } = clientConstants;
 const initialState = {
   _id: "",
-  name: "",
+  firstName: "",
   email: ""
 };
 
@@ -12,7 +12,7 @@ export const clientReducer = (state = initialState, { type, payload = {} }) => {
       return {
         ...state,
         _id: payload._id,
-        name: payload.name,
+        firstName: payload.firstName,
         email: payload.email
       };
     };

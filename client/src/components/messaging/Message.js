@@ -34,7 +34,7 @@ export const responseStyle = {
 export const Message = (props) => {
   const { content, read, sender, sentAt } = props.message;
   const { clientState } = props;
-  if (clientState.name === sender) {
+  if (clientState.firstName === sender) {
     return (
       <Comment style={messageStyle}>
         <Comment.Content>

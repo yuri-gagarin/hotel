@@ -11,6 +11,8 @@ import PostsIndexContainer from "./posts/PostsIndexContainer";
 import { connect } from "react-redux";
 import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
 
+
+
 const setUserCredentials = (userData) => {
   const adminState = JSON.stringify(userData);
   localStorage.setItem("hotelAdminState", adminState);
@@ -20,17 +22,19 @@ const cleanUserState = () => {
 };
 
 const AdminComponent = (props) => {
-  const { history, clientState, adminState, handleLogout } = props;
+  const { 
+    history, 
+    adminState, 
+    setAdmin,
+    handleLogout } = props;
  
   useEffect(() => {
     // set the localStoreage state  so the app can reload //
     if (!localStorage.getItem("hotelAdminState")) {
-      console.log("need to set");
       setUserCredentials(adminState);
     } else {
       const savedState = JSON.parse(localStorage.getItem("hotelAdminState"));
       // set admin state on refresh //
-      console.log("there is a saved admin")
       setAdmin(savedState);
     }
   }, []); 
@@ -47,7 +51,7 @@ const AdminComponent = (props) => {
         </Grid.Column>
       </Grid.Row>
       <Route path="/admin/dashboard">
-        <AdminDashComponent />
+        <AdminDashComponent adminState={adminState}/>
       </Route>
       <Route path="/admin/messages">
         <ConversationIndexContainer />
@@ -61,7 +65,6 @@ const AdminComponent = (props) => {
 // proptypes checking //
 AdminComponent.propTypes = {
   history: PropTypes.object.isRequired,
-  clientState: PropTypes.object.isRequired,
   adminState: PropTypes.object.isRequired
 };
 

@@ -106,6 +106,8 @@ export const loginUser = (dispatch, userCredentials, history) => {
         phoneNumber: user.lastName
       }
       dispatch(setAdmin(adminData));
+      // set admin data in local storage //
+      localStorage.setItem("hotelAdminState", JSON.stringify(adminData));
       history.push("/admin/dashboard");
     })
     .catch((error) => {

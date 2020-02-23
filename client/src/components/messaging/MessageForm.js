@@ -53,7 +53,7 @@ const MessageForm = (props) => {
     socket.emit("sendClientCredentials", user);
     handleMessageRequest(user, null, content);
     if (!clientState.userId) {
-      setClientState({userId: user._id, name: user.name, email: user.email });
+      setClientState({userId: user._id, firstName: user.firstName, email: user.email });
     }
   };
 

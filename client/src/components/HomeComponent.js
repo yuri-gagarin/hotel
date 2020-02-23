@@ -24,8 +24,8 @@ class HomeComponent extends React.Component {
     super(props);
     this.props.handleClient({
       userId: ObjectID.generate(Date.now),
-      name: "Guest",
-      emaul: null
+      firstName: "Guest",
+      email: null
     });
   }
   

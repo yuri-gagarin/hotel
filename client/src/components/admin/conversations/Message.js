@@ -7,8 +7,8 @@ import { messageStyle, responseStyle } from "./styles/style";
 // additional dependencies //
 import { formatDate } from "../../helpers/dateHelpers";
 const Message = (props) => {
-  const { message, clientState } = props;
-  if (message.sender === clientState.name) {
+  const { message, adminState } = props;
+  if (message.sender === adminState.firstName) {
     return (
       <Comment style={messageStyle}>
         <Comment.Content>
