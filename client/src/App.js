@@ -5,7 +5,14 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import { Provider } from "react-redux";
+// additional redux imports //
+import { connect } from "react-redux";
+import { setAdmin } from "./redux/actions/apiActions";
+import store from "./redux/store";
+// socketio //
+import io from "socket.io-client";
+// axios //
+import axios from "axios";
 import "./assets/theme/vendor/jquery/jquery";
 import "./assets/theme/vendor/bootstrap/css/bootstrap.min.css";
 import "./assets/theme/vendor/fontawesome-free/css/all.css";
@@ -14,17 +21,12 @@ import "./assets/theme/booking_style.css";
 import './App.css';
 // client route constants //
 import { adminRoutes, appRoutes } from "./routes/appRoutes";
+// additional components //
 import HomeComponent from "./components/HomeComponent";
 import AdminComponent from './components/admin/AdminComponent';
 import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
-// additional redux imports //
-import { connect } from "react-redux";
-import { setAdmin } from "./redux/actions/apiActions";
-import store from "./redux/store";
-// socketio //
-import io from "socket.io-client";
+import RoomsIndexContainer from './components/rooms/RoomsIndexContainer';
 export const socket = io.connect("http://localhost:8080");
-import axios from "axios";
 
 
 const AuthorizedRoute = ({ loggedIn, component, path }) => {
@@ -32,14 +34,13 @@ const AuthorizedRoute = ({ loggedIn, component, path }) => {
     return (
       <Route 
         path={path}
-        exact={true}
         component={component}
       />
     );
   } else {
     return (
       <Route
-        path={path}
+        path={"/login/admin"}
         exact={true}
         component={AdminLoginComponent}
       />
@@ -47,16 +48,12 @@ const AuthorizedRoute = ({ loggedIn, component, path }) => {
   }
  };
 
-
 const AppRoutes = (props) => {
-  const [clientConnected, setClientConnected] = useState(false);
   const cleanUpState = () => {
     // some cleanup here //
     localStorage.removeItem("conversationId");
   }
   useEffect(() => {
-    socket.on("hello", (data) => {
-    })
     return cleanUpState();
   }, []);
   
@@ -64,8 +61,9 @@ const AppRoutes = (props) => {
   return (
     <Router>
       <Switch>
-        <AuthorizedRoute path={adminRoutes.ADMIN_DASH} loggedIn={props.loggedIn} component={AdminComponent} />
+        <AuthorizedRoute path={"/admin/*"} loggedIn={props.loggedIn} component={AdminComponent} />
         <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />
+        <Route path={"/rooms"} exact={true} component={RoomsIndexContainer} />
         <Route path={appRoutes.HOME_ROUTE} exact={true} component={HomeComponent} />
        </Switch>
     </Router>
@@ -104,7 +102,6 @@ class App extends React.Component {
   }
   render() {
     const { loggedIn } = store.getState().adminState;
-    console.log(loggedIn);
     return (
       <AppRoutes loggedIn={loggedIn} />
     );
