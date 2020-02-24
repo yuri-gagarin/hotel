@@ -61,7 +61,7 @@ const AppRoutes = (props) => {
   return (
     <Router>
       <Switch>
-        <AuthorizedRoute path={"/admin/*"} loggedIn={props.loggedIn} component={AdminComponent} />
+        <AuthorizedRoute path={"/admin/*"} loggedIn={true} component={AdminComponent} />
         <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />
         <Route path={"/rooms"} exact={true} component={RoomsIndexContainer} />
         <Route path={appRoutes.HOME_ROUTE} exact={true} component={HomeComponent} />
