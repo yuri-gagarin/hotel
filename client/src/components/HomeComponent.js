@@ -11,7 +11,8 @@ import MessageFormContainer from "./messaging/MessageFormContainer";
 import BookingForm from "./forms/BookingForm";
 // redux imports //
 import { connect } from "react-redux";
-
+// react router //
+import { withRouter } from "react-router-dom";
 // additional imports //
 import ObjectID from "bson-objectid";
 import { setGuestClient } from "../redux/actions/clientActions";
@@ -71,12 +72,13 @@ class HomeComponent extends React.Component {
     localStorage.removeItem("conversationId");
   }
   render () {
+    const { history } = this.props;
     return (
       <React.Fragment>
         <NavbarComponent />
         <MainHeaderComponent />
         <BookingForm />
-        <ServicesComponent />
+        <ServicesComponent history={history} />
         <ContactForm />
         <MessageFormContainer />
         <Footer />
@@ -100,4 +102,4 @@ const mapDispatchToProps = (dispatch) => {
     handleClient: (userData) => dispatch(setGuestClient(userData))
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(HomeComponent);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeComponent));
