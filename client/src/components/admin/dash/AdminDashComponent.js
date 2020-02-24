@@ -5,6 +5,16 @@ import { Button, Form, Grid, Input, Select, TextArea, Icon } from "semantic-ui-r
 import MessagesComponent from "../conversations/MessagesComponent";
 import Axios from "axios";
 
+const style = {
+  uploadBtn: {
+    backgroundColor: "green",
+    height: "40px",
+    width: "75px",
+    marginBottom: "20px"
+  }
+}
+const { uploadBtn } = style;
+
 const FileInput = (props) => {
   const [ file, setFile ] = useState(null);
   const inputRef = useRef(null);
@@ -18,7 +28,7 @@ const FileInput = (props) => {
     ref.current.click();
   };
   const uploadFile = () => {
-    console.log(file);
+    if (!file) return;
     let data = new FormData();
     const config = {
       headers: {
@@ -42,10 +52,11 @@ const FileInput = (props) => {
               icon="file" type="button">
       </Button>
       <input type="file" id="file" hidden onChange={onChange} />
-      <Button content="Upload File"
-              labelPosition="left"
-              onClick={uploadFile}>
-      </Button>
+      <Button
+        primary
+        content="Upload File"
+        onClick={uploadFile} 
+      />
     </div>
    
   )

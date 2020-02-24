@@ -25,4 +25,11 @@ export const messageConstants = {
   MARK_READ: "MARK_READ"
 };
 
+export const roomConstants = {
+  ROOM_IMG_REQUEST: "ROOM_IMG_REQUEST",
+  ROOM_IMG_UPLOADED: "ROOM_IMG_UPLOADED",
+  ROOM_IMG_DELETED: "ROOM_IMG_DELETED",
+  ROOM_IMG_ERROR: "ROOM_IMG_ERROR"
+};
+
 
