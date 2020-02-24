@@ -26,6 +26,7 @@ const AdminNavMenu = (props) =>  {
       };
       case "rooms": {
         history.push("/admin/rooms");
+        break;
       }
       case "posts": {
         history.push(adminRoutes.ADMIN_POSTS);

@@ -35,6 +35,7 @@ const roomSchema = new Schema({
     balcony: { type: Boolean },
     terrace: { type: Boolean },
     mountainView: { type: Boolean },
+    streetView: { type: Boolean },
     riverView: { type: Boolean },
     tv: { type: Boolean },
     wifi: { type: Boolean },
