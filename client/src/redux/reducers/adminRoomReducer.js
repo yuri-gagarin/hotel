@@ -8,7 +8,7 @@ const {
 const initialState = {
   status: status,
   loading: false,
-  responseMsg: responseMsg,
+  responseMsg: "",
   roomData: {},
   roomImages: [],
   error: null

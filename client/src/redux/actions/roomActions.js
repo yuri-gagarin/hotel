@@ -67,5 +67,5 @@ export const uploadRoomImage = (dispatch, file) => {
     .catch((error) => {
       console.error(error);
       dispatch(roomImgUploadError(error));
-    })
-}
+    });
+};

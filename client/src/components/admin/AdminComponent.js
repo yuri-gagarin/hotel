@@ -7,6 +7,7 @@ import AdminNavComponent from "./nav/AdminNav";
 import ConversationIndexContainer from "./conversations/ConversationIndexContainer";
 import AdminDashComponent from "./dash/AdminDashComponent";
 import PostsIndexContainer from "./posts/PostsIndexContainer";
+import RoomsIndexContainer from "./rooms/RoomsIndexContainer";
 // redux imports //
 import { connect } from "react-redux";
 import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
@@ -24,7 +25,8 @@ const cleanUserState = () => {
 const AdminComponent = (props) => {
   const { 
     history, 
-    adminState, 
+    adminState,
+    adminRoomState, 
     setAdmin,
     handleLogout } = props;
  
@@ -56,22 +58,28 @@ const AdminComponent = (props) => {
       <Route path="/admin/messages">
         <ConversationIndexContainer />
       </Route>
+      <Route path="/admin/rooms">
+        <RoomsIndexContainer adminState={adminState} adminRoomState={adminRoomState} />
+      </Route>
       <Route path="/admin/posts">
         <PostsIndexContainer />
       </Route>
+      
     </Grid>
   )
 };
 // proptypes checking //
 AdminComponent.propTypes = {
   history: PropTypes.object.isRequired,
-  adminState: PropTypes.object.isRequired
+  adminState: PropTypes.object.isRequired,
+  adminRoomState: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
     clientState: state.clientState,
-    adminState: state.adminState
+    adminState: state.adminState,
+    adminRoomState: state.adminRoomState
   };
 };
 const mapDispatchToProps = (dispatch) => {
