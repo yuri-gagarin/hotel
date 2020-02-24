@@ -6,16 +6,9 @@ const roomSchema = new Schema({
     type: String,
     required: true
   },
-  description: {
-    type: String,
-    required: true
-  },
   area: {
     type: Number,
     required: true
-  },
-  images: {
-    type: [String]
   },
   sleeps: {
     type: Number
@@ -28,6 +21,13 @@ const roomSchema = new Schema({
   },
   couches: {
     type: Number
+  },
+  images: {
+    type: [String]
+  },
+  description: {
+    type: String,
+    required: true
   },
   options: {
     privateBathroom: { type: Boolean },

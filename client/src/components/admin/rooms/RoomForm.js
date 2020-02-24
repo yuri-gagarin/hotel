@@ -42,11 +42,67 @@ const FileInput = (props) => {
 };
 
 const RoomForm = (props) => {
+  const [roomDetails, setRoomDetails] = useState({});
   const [roomOptions, setRoomOptions] = useState({});
-
-  const handleFormSubmit = () => {
-    console.log(roomOptions);
+  // text input handlers //
+  const handleRoomType = (e, data) => {
+    setRoomDetails((state) => {
+      return {
+        ...state,
+        roomType: data.value
+      };
+    });
   };
+  const handleRoomArea = (e, data) => {
+    setRoomDetails((state) => {
+      return {
+        ...state,
+        area: data.value
+      };
+    });
+  };
+  const handleSleeps = (e, data) => {
+    setRoomDetails((state) => {
+      return {
+        ...state,
+        sleeps: data.value
+      };
+    });
+  };
+  const handlePrice = (e, data) => {
+    setRoomDetails((state) => {
+      return {
+        ...state,
+        price: data.value
+      };
+    });
+  };
+  const handleBeds = (e, data) => {
+    setRoomDetails((state) => {
+      return {
+        ...state,
+        beds: data.value
+      };
+    });
+  };
+  const handleCouches = (e, data) => {
+    setRoomDetails((state) => {
+      return {
+        ...state,
+        couches: data.value
+      };
+    });
+  };
+  const handleDescriptionChange = (e, data) => {
+    setRoomDetails((state) => {
+      return {
+        ...state,
+        description: data.value
+      };
+    });
+  };
+  // END text input handlers //
+  // checkbox handler //
   const handleCheckbox = (e,  data) => {
     const { label, checked } = data;
     switch(label) {
@@ -111,38 +167,61 @@ const RoomForm = (props) => {
         break;
       }
     };
-  } 
+  };
+  // END checkbox handler //
+  const handleFormSubmit = () => {
+    console.log(roomOptions);
+    console.log(roomDetails);
+  };  
 
   return (
     <Form>
       <Form.Group widths='equal'>
         <Form.Field
           control={Input}
-          label='First name'
-          placeholder='First name'
+          label='Room Type'
+          placeholder='...type of room'
+          onChange={handleRoomType}
         />
         <Form.Field
           control={Input}
-          label='Last name'
-          placeholder='Last name'
+          label='Area'
+          placeholder='...only numbers please'
+          onChange={handleRoomArea}
         />
         <Form.Field
           control={Input}
-          label="Price"
-          placeholder='Price...'
+          label="Sleeps"
+          placeholder='...how many people it sleeps'
+          onChange={handleSleeps}
+        />
+      </Form.Group>
+      <Form.Group widths='equal'>
+        <Form.Field
+          control={Input}
+          label='Price from'
+          placeholder='...price from (optional)'
+          onChange={handlePrice}
+        />
+        <Form.Field
+          control={Input}
+          label='Beds'
+          placeholder='...number of beds'
+          onChange={handleBeds}
+        />
+        <Form.Field
+          control={Input}
+          label="Couches"
+          placeholder='...number of couches'
+          onChange={handleCouches}
         />
       </Form.Group>
       <Form.Field
         id='form-textarea-control-opinion'
         control={TextArea}
-        label='Opinion'
-        placeholder='Opinion'
-      />
-      <Form.Field
-        id='form-input-control-error-email'
-        control={Input}
-        label='Email'
-        placeholder='joe@schmoe.com'
+        label='Description of the Room'
+        placeholder='...description of the room here'
+        onChange={handleDescriptionChange}
       />
        <Form.Field>
         <Checkbox label='Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} />
