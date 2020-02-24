@@ -1,4 +1,5 @@
 import Room from "../models/Room";
+import RoomImage from "../models/RoomImage";
 
 export default {
   getRooms: (req, res) => {
@@ -43,5 +44,29 @@ export default {
   },
   deleteRoom: (req, res) => {
 
+  },
+  uploadImage: (req, res) => {
+    const imageUploadResult = req.locals.roomImageUpload;
+    if (imageUploadResult.success) {
+      return RoomImage.create({
+        path: imageUploadResult.imagePath
+      })
+      .then((roomImage) => {
+        return res.status(200).json({
+          responseMsg: "Uploaded an image",
+          newImage: roomImage
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          responseMsg: "A database error occured",
+          error: error
+        });
+      });
+    } else {
+      return res.status(500).json({
+        responseMsg: "Upload not successful"
+      });
+    }
   }
 };
