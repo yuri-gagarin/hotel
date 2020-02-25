@@ -1,5 +1,11 @@
+import axios from "axios";
 import { roomConstants } from "../constants";
 const {
+  ROOM_REQUEST,
+  ROOM_CREATED,
+  ROOM_UPDATED,
+  ROOM_DELETED,
+  ROOM_ERROR,
   ROOM_IMG_REQUEST,
   ROOM_IMG_UPLOADED,
   ROOM_IMG_DELETED,
@@ -41,6 +47,42 @@ export const roomImgUploadError = (error) => {
   };
 };
 
+export const roomRequest = () => {
+  return {
+    type: ROOM_REQUEST,
+    payload: {
+      status: null,
+      loading: true,
+      error: null
+    }
+  };
+};
+
+export const roomCreated = (stateData) => {
+  return {
+    type: ROOM_CREATED,
+    payload: stateData
+  };
+};
+
+export const roomUpdated = (stateData) => {
+
+};
+
+export const roomDeleted = (stateData) => {
+
+};
+
+export const roomError = (error) => {
+  return {
+    type: ROOM_ERROR,
+    payload: {
+      status: 500,
+      error: error
+    }
+  };
+};
+
 export const uploadRoomImage = (dispatch, file) => {
   const requestOptions = {
     method: "post",
@@ -67,5 +109,33 @@ export const uploadRoomImage = (dispatch, file) => {
     .catch((error) => {
       console.error(error);
       dispatch(roomImgUploadError(error));
+    });
+};
+
+export const handleNewRoom = (dispatch, roomData) => {
+  const requestOptions = {
+    method: "post",
+    url: "/api/createRoom",
+    data: {
+      roomData: roomData,
+    }
+  };
+  dispatch(roomRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, newRoom } = data;
+      const stateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        roomData: newRoom,
+        roomImages: newRoom.images,
+        error: null
+      };
+      dispatch(roomSuccess(stateData))
+    })
+    .catch((error) => {
+      dispatch(roomError(error));
     });
 };

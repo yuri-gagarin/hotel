@@ -7,12 +7,20 @@ import {
   Input,
   TextArea
 } from "semantic-ui-react";
+// additional component imports  //
+import RoomImageThumb from "./RoomImages";
+// redux imports  //
+import { connect } from "react-redux";
+import { uploadRoomImage, handleNewRoom } from "../../../redux/actions/roomActions";
 
 const FileInput = (props) => {
-  const [ file, setFile ] = useState(null);
-
+  const { uploadRoomImage, handleNewRoom } = props;
+  const [ file, setFile ] = useState({});
   const onChange = (e) => {
-    setFile(e.target.files[0]);
+    setFile(() => {
+      return e.target.files[0];
+    });
+    console.log(typeof e.target.files[0])
   }
   const clickInput = (ref) => {
     // ref.current.click(); //
@@ -23,6 +31,7 @@ const FileInput = (props) => {
     if (!file) return;
     let data = new FormData();
     data.append("roomImage", file);
+    return uploadRoomImage(data);
   };
 
   return (
@@ -36,14 +45,19 @@ const FileInput = (props) => {
         content="Upload File"
         onClick={uploadFile} 
       />
+      <span style={{marginLeft: "1em"}}>{file.name}</span>
     </div>
    
   )
 };
 
 const RoomForm = (props) => {
-  const [roomDetails, setRoomDetails] = useState({});
+  const { adminRoomState, uploadRoomImage, handleNewRoom } = props;
+  const { roomData, roomImages } = adminRoomState;
+  const [roomDetails, setRoomDetails] = useState(roomData);
   const [roomOptions, setRoomOptions] = useState({});
+
+  
   // text input handlers //
   const handleRoomType = (e, data) => {
     setRoomDetails((state) => {
@@ -172,6 +186,16 @@ const RoomForm = (props) => {
   const handleFormSubmit = () => {
     console.log(roomOptions);
     console.log(roomDetails);
+    const { roomId } = adminRoomState; 
+    const roomImages = adminRoomState.roomImages.map((img) => img._id );
+    const roomData = {
+      ...roomDetails,
+      options: {
+        ...roomOptions
+      },
+      images: roomImages
+    }
+    handleNewRoom(roomData);
   };  
 
   return (
@@ -236,7 +260,8 @@ const RoomForm = (props) => {
         <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} />
 
       </Form.Field>
-      <FileInput />
+      <FileInput uploadRoomImage={uploadRoomImage} />
+      { roomImages.map((roomImage) => <RoomImageThumb roomImage={roomImage} />)}
       <Form.Field style={{marginTop: "0.5em"}}
         id='form-button-control-public'
         control={Button}
@@ -248,5 +273,18 @@ const RoomForm = (props) => {
   )
 };
 
-export default RoomForm;
+// redux functionality //
+const mapStateToProps = (state) => {
+  return {
+    adminRoomState: state.adminRoomState
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uploadRoomImage: (imageData) => uploadRoomImage(dispatch, imageData),
+    handleNewRoom: (roomData) => handleNewRoom(dispatch, roomData)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RoomForm);
 

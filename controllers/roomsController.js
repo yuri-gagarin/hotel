@@ -1,12 +1,15 @@
 import Room from "../models/Room";
 import RoomImage from "../models/RoomImage";
+// helpers //
+import { deleteFile } from "./helpers/apiHelpers";
 
 export default {
   getRooms: (req, res) => {
 
   },
   createRoom: (req, res) => {
-    const roomData = req.body;
+    const  { roomData } = req.body;
+    console.log(roomData);
     return Room.create(roomData)
       .then((room) => {
         return res.status(200).json({
@@ -15,11 +18,13 @@ export default {
         });
       })
       .catch((error) => {
+        console.error(error)
         return res.status(500).json({
           responseMsg: "It seems an error occured",
           error: error
         })
       }); 
+      
   },
   editRoom: (req, res) => {
     let status;
@@ -68,5 +73,17 @@ export default {
         responseMsg: "Upload not successful"
       });
     }
+  },
+  deleteImage: (req, res) => {
+    const { imageId } = req.params;
+    return RoomImage.findOneAndDelete({ _id: imageId })
+      .then((deletedImg) => {
+        if (deletedImg) {
+          // remove from the files //
+          
+        } else {
+          return Promise.reject(new Error("No Image was found"));
+        }
+      })
   }
 };

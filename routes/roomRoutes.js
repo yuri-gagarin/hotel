@@ -7,5 +7,5 @@ export default function (router) {
   // @access PRIVATE
   router
     .route("/api/createRoom")
-    .post(isLoggedIn, roomsController.createRoom);
+    .post(roomsController.createRoom);
 };  

@@ -1,5 +1,10 @@
 import { roomConstants } from "../constants";
 const {
+  ROOM_REQUEST,
+  ROOM_CREATED,
+  ROOM_UPDATED,
+  ROOM_DELETED,
+  ROOM_ERROR,
   ROOM_IMG_REQUEST,
   ROOM_IMG_UPLOADED,
   ROOM_IMG_DELETED,
@@ -16,6 +21,33 @@ const initialState = {
 
 const adminRoomReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case ROOM_REQUEST: {
+      return {
+        ...state,
+        status: payload.status,
+        loading: payload.loading,
+        error: payload.error
+      };
+    };
+    case ROOM_CREATED: {
+      return {
+        ...state,
+        status: payload.status,
+        loading: payload.loading,
+        responseMsg: payload.responseMsg,
+        roomData: { ...payload.roomData },
+        roomImages: [ ...payload.roomImages],
+        error: payload.error
+      };
+    };
+    case ROOM_ERROR: {
+      return {
+        ...state,
+        status: payload.status,
+        loading: payload.loading,
+        error: payload.error
+      }
+    }
     case ROOM_IMG_REQUEST: {
       return {
         ...state,

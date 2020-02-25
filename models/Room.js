@@ -23,7 +23,8 @@ const roomSchema = new Schema({
     type: Number
   },
   images: {
-    type: [String]
+    type: [Schema.Types.ObjectId],
+    ref: "RoomImage"
   },
   description: {
     type: String,
