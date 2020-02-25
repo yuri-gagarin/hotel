@@ -8,4 +8,13 @@ export default function (router) {
   router
     .route("/api/createRoom")
     .post(roomsController.createRoom);
+    
+  // @route "/api/rooms" //
+  // @description Fetches the rooms //
+  // @access PRIVATE //
+  router  
+    .route("/api/rooms")
+    .get(roomsController.getRooms);
+
+    
 };  

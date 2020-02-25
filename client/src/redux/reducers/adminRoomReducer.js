@@ -8,7 +8,8 @@ const {
   ROOM_IMG_REQUEST,
   ROOM_IMG_UPLOADED,
   ROOM_IMG_DELETED,
-  ROOM_IMG_ERROR
+  ROOM_IMG_ERROR,
+  ADD_NEW_ROOM
 } = roomConstants;
 const initialState = {
   status: status,
@@ -16,11 +17,28 @@ const initialState = {
   responseMsg: "",
   roomData: {},
   roomImages: [],
+  createdRooms: [],
   error: null
 }
 
 const adminRoomReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case ADD_NEW_ROOM: {
+      return {
+        ...state,
+        createdRooms: [ ...state.createdRooms, payload.newRoom ]
+      };
+    };
+    case SET_ROOMS: {
+      return {
+        ...state,
+        status: payload.status,
+        loading: payload.loading,
+        responseMsg: payload.responseMsg,
+        createdRooms: [ ...payload.rooms ],
+        error: payload.error
+      };
+    };
     case ROOM_REQUEST: {
       return {
         ...state,

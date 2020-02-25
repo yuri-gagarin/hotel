@@ -9,9 +9,14 @@ import {
 import RoomHolder from "./RoomHolder";
 import RoomDisplay from "./RoomDisplay";
 import RoomForm from "./RoomForm";
+// redux imports //
+import { connect } from "react-redux"; 
 
 const RoomsIndexContainer = (props) => {
   const [newRoomFormOpen, setNewRoomFormOpen] = useState(false);
+  useEffect(() => {
+   fetchRooms();
+  })
   const openNewRoomForm = () => {
     setNewRoomFormOpen(true);
   };
@@ -66,6 +71,17 @@ const RoomsIndexContainer = (props) => {
       </React.Fragment>
     );
   } 
+};
+
+const mapStateToProps = (state) => {
+  return {
+
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+  };
 };
 
 export default RoomsIndexContainer;

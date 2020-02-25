@@ -1,6 +1,7 @@
 import axios from "axios";
 import { roomConstants } from "../constants";
 const {
+  UPDATE_STATE,
   ROOM_REQUEST,
   ROOM_CREATED,
   ROOM_UPDATED,
@@ -9,8 +10,11 @@ const {
   ROOM_IMG_REQUEST,
   ROOM_IMG_UPLOADED,
   ROOM_IMG_DELETED,
-  ROOM_IMG_ERROR
+  ROOM_IMG_ERROR,
+  ADD_NEW_ROOM,
+  SET_ROOMS
 } = roomConstants;
+import history from "../history";
 
 export const uploadRequest = () => {
   return {
@@ -59,8 +63,25 @@ export const roomRequest = () => {
 };
 
 export const roomCreated = (stateData) => {
+  history.push("/admin/dash");
   return {
     type: ROOM_CREATED,
+    payload: stateData
+  };
+};
+
+export const addNewRoom = (roomState) => {
+  return {
+    type: ADD_NEW_ROOM,
+    payload: {
+      newRoom: roomState
+    }
+  };
+};   
+
+export const setRooms = (stateData) => {
+  return {
+    type: SET_ROOMS,
     payload: stateData
   };
 };
@@ -133,9 +154,37 @@ export const handleNewRoom = (dispatch, roomData) => {
         roomImages: newRoom.images,
         error: null
       };
-      dispatch(roomSuccess(stateData))
+      dispatch(roomCreated(stateData));
+      dispatch(addNewroom(newRoom));
     })
     .catch((error) => {
+      console.error(error);
       dispatch(roomError(error));
     });
 };
+
+export const fetchRooms = (dispatch) => {
+  const requestOptions = {
+    method: "get",
+    url: "/api/rooms"
+  };
+  dispatch(roomRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, rooms } = data;
+      const stateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        createdRooms: rooms,
+        error: null
+      };
+      dispatch(setRooms(stateData))
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(roomError(error));
+    });
+};
+
