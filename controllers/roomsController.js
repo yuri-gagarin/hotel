@@ -6,7 +6,9 @@ import { deleteFile } from "./helpers/apiHelpers";
 export default {
   getRooms: (req, res) => {
     return Room.find({})
+      .populate("images", ["_id", "path"])
       .then((rooms) => {
+        console.log(rooms);
         return res.status(200).json({
           responseMsg: "Success",
           rooms: rooms
@@ -21,10 +23,8 @@ export default {
   },
   createRoom: (req, res) => {
     const  { roomData } = req.body;
-    console.log(roomData);
     return Room.create(roomData)
       .then((room) => {
-        console.log("a ok")
         return res.status(200).json({
           responseMsg: "Room created",
           newRoom: room

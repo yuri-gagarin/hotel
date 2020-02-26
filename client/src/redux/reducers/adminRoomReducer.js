@@ -9,6 +9,7 @@ const {
   ROOM_IMG_UPLOADED,
   ROOM_IMG_DELETED,
   ROOM_IMG_ERROR,
+  SET_ROOMS,
   ADD_NEW_ROOM
 } = roomConstants;
 const initialState = {
@@ -35,7 +36,7 @@ const adminRoomReducer = (state = initialState, { type, payload }) => {
         status: payload.status,
         loading: payload.loading,
         responseMsg: payload.responseMsg,
-        createdRooms: [ ...payload.rooms ],
+        createdRooms: [ ...payload.createdRooms ],
         error: payload.error
       };
     };

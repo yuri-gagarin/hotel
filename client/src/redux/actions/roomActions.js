@@ -14,7 +14,7 @@ const {
   ADD_NEW_ROOM,
   SET_ROOMS
 } = roomConstants;
-import history from "../history";
+//import history from "../history";
 
 export const uploadRequest = () => {
   return {
@@ -173,6 +173,7 @@ export const fetchRooms = (dispatch) => {
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, rooms } = data;
+      console.log(rooms);
       const stateData = {
         status: status,
         loading: false,

@@ -22,10 +22,10 @@ const roomSchema = new Schema({
   couches: {
     type: Number
   },
-  images: {
-    type: [Schema.Types.ObjectId],
+  images: [{
+    type: Schema.Types.ObjectId,
     ref: "RoomImage"
-  },
+  }],
   description: {
     type: String,
     required: true

@@ -55,7 +55,7 @@ else {
     res.sendFile(path.resolve(__dirname, "client/public/index.html"));
   });
 }
-app.use(express.static(path.resolve(__dirname,  "public")));
+app.use(express.static(path.resolve(__dirname,  "public"))); 
 // Router and routers //
 combineRoutes(router);
 app.use(router);

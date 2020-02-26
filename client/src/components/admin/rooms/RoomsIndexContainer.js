@@ -11,12 +11,17 @@ import RoomDisplay from "./RoomDisplay";
 import RoomForm from "./RoomForm";
 // redux imports //
 import { connect } from "react-redux"; 
+import { fetchRooms } from "../../../redux/actions/roomActions";
+
 
 const RoomsIndexContainer = (props) => {
+  const { fetchRooms, adminRoomState } = props;
+  const { createdRooms } = adminRoomState;
+  console.log(createdRooms.length);
   const [newRoomFormOpen, setNewRoomFormOpen] = useState(false);
   useEffect(() => {
    fetchRooms();
-  })
+  }, []);
   const openNewRoomForm = () => {
     setNewRoomFormOpen(true);
   };
@@ -38,7 +43,9 @@ const RoomsIndexContainer = (props) => {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={5}>
-            <RoomHolder />
+            {
+              createdRooms.map((room) => <RoomHolder key={room._id} room={room}/>)
+            }
           </Grid.Column>
           <Grid.Column width={11}> 
             <RoomDisplay />
@@ -75,13 +82,13 @@ const RoomsIndexContainer = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-
+    adminRoomState: state.adminRoomState
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    fetchRooms: () => fetchRooms(dispatch)
   };
 };
 
-export default RoomsIndexContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(RoomsIndexContainer);
