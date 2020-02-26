@@ -11,13 +11,13 @@ import RoomDisplay from "./RoomDisplay";
 import RoomForm from "./RoomForm";
 // redux imports //
 import { connect } from "react-redux"; 
-import { fetchRooms } from "../../../redux/actions/roomActions";
+import { fetchRooms, openRoom } from "../../../redux/actions/roomActions";
 
 
 const RoomsIndexContainer = (props) => {
-  const { fetchRooms, adminRoomState } = props;
+  const { fetchRooms, handleRoomOpen, adminRoomState } = props;
   const { createdRooms } = adminRoomState;
-  console.log(createdRooms.length);
+  const [roomInfoOpen, setRoomInfoOpen] = useState(false);
   const [newRoomFormOpen, setNewRoomFormOpen] = useState(false);
   useEffect(() => {
    fetchRooms();
@@ -27,7 +27,14 @@ const RoomsIndexContainer = (props) => {
   };
   const closeNewRoomForm = () => {
     setNewRoomFormOpen(false);
-  }
+  };
+  const openRoom = (roomId) => {
+    handleRoomOpen(createdRooms, roomId);
+    setRoomInfoOpen(true);
+  };
+  const deleteRoom = () => {
+    console.log("delete");
+  };
   if (!newRoomFormOpen) {
     return (
       <React.Fragment>
@@ -44,11 +51,22 @@ const RoomsIndexContainer = (props) => {
         <Grid.Row>
           <Grid.Column width={5}>
             {
-              createdRooms.map((room) => <RoomHolder key={room._id} room={room}/>)
+              createdRooms.map((room) => {
+                return ( 
+                  <RoomHolder 
+                    key={room._id} 
+                    room={room}
+                    openRoom={openRoom}
+                    deleteRoom={deleteRoom}
+                  />
+                );
+              })
             }
           </Grid.Column>
           <Grid.Column width={11}> 
-            <RoomDisplay />
+            {
+              roomInfoOpen ? <RoomDisplay room={adminRoomState.roomData} /> : null 
+            }
           </Grid.Column>
         </Grid.Row>
       </React.Fragment>
@@ -87,7 +105,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchRooms: () => fetchRooms(dispatch)
+    fetchRooms: () => fetchRooms(dispatch),
+    handleRoomOpen: (rooms, roomId) => dispatch(openRoom(rooms, roomId))
   };
 };
 

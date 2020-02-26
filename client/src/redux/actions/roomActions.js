@@ -12,7 +12,9 @@ const {
   ROOM_IMG_DELETED,
   ROOM_IMG_ERROR,
   ADD_NEW_ROOM,
-  SET_ROOMS
+  SET_ROOMS,
+  OPEN_ROOM,
+  CLOSE_ROOM
 } = roomConstants;
 //import history from "../history";
 
@@ -100,6 +102,18 @@ export const roomError = (error) => {
     payload: {
       status: 500,
       error: error
+    }
+  };
+};
+
+export const openRoom = (rooms, roomId) => {
+  const roomData = rooms.filter((room) => room._id == roomId)[0];
+  return {
+    type: OPEN_ROOM,
+    payload: {
+      loading: false,
+      roomData: roomData,
+      error: null
     }
   };
 };

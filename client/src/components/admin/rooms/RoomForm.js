@@ -184,8 +184,6 @@ const RoomForm = (props) => {
   };
   // END checkbox handler //
   const handleFormSubmit = () => {
-    console.log(roomOptions);
-    console.log(roomDetails);
     const { roomId } = adminRoomState; 
     const roomImages = adminRoomState.roomImages.map((img) => img._id );
     const roomData = {
