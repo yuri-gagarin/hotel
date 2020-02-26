@@ -44,7 +44,6 @@ export default {
     const roomId = req.params.roomId;
     const { roomData, roomImages } = req.body;
     const updatedImages = roomImages.currentImages.map((img) => `${img._id}` );
-
     return Room.findOneAndUpdate(
       { _id: roomId },
       {
@@ -62,9 +61,10 @@ export default {
       },
       { new: true }
     ).then((updatedRoom) => {
-      return updatedRoom.populate("images", [ "_id", "path" ])
+      return Room.populate(updatedRoom, { path: "images", model: "RoomImage" });
     })
     .then((room) => {
+      console.log(room);
       return res.status(200).json({
         responseMsg: "Room Updated",
         updatedRoom: room

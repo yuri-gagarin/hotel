@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Button, Grid, Image, Item, Segment, Container
 } from "semantic-ui-react";
 // additional component imports //
 import RoomForm from "./RoomForm";
+import EditRoomDisplay from "./EditRoomDisplay";
 
 const style = {
   metaStyle: {
@@ -46,6 +47,15 @@ const RoomDisplay = (props) => {
   const { room } = props;
   const { options, images } = room;
 
+  useEffect(() => {
+    // will scroll down the document when edit room form is open //
+    if (formOpen) {
+      window.scrollTo(0,document.body.scrollHeight);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [formOpen]);
+
   const openForm = () => {
     setFormOpen(!formOpen);
   };
@@ -68,7 +78,7 @@ const RoomDisplay = (props) => {
           <h4>Room Options</h4>
           <div>
             <div style={metaStyle}>Private Bathroom: {options.privateBathroom ? "Yes" : "No"}</div>
-            <div style={metaStyle}>Suite Bathroom: {options.suiteBathoptions ? "Yes" : "No"}</div>
+            <div style={metaStyle}>Suite Bathroom: {options.suiteBathroom ? "Yes" : "No"}</div>
             <div style={metaStyle}>Balcony: {options.balcony ? "Yes" : "No"}</div>
             <div style={metaStyle}>Terrace: {options.terrace ? "Yes" : "No"}</div>
             <div style={metaStyle}>Street View: {options.streetView ? "Yes" : "No"}</div>
@@ -86,9 +96,9 @@ const RoomDisplay = (props) => {
           }
       </div>
       {
-        formOpen ? <Button style={formButton} onClick={openForm}>Cancel</Button> : <Button style={formButton} onClick={openForm}>Edit Room</Button>
+        formOpen ? <Button style={formButton} onClick={openForm}>Close</Button> : <Button style={formButton} onClick={openForm}>Edit Room</Button>
       }
-      { formOpen ? <RoomForm room={room} /> : null }
+      { formOpen ? <EditRoomDisplay room={room} /> : null }
     </Grid.Column>
   );
 };

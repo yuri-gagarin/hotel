@@ -87,6 +87,17 @@ const adminRoomReducer = (state = initialState, { type, payload }) => {
         error: payload.error
       };
     };
+    case ROOM_UPDATED: {
+      return {
+        ...state,
+        status: payload.status,
+        loading: payload.loading,
+        responseMsg: payload.responseMsg,
+        roomData: { ...payload.roomData },
+        roomImages: [ ...payload.roomImages ],
+        error: payload.error
+      };
+    };
     case ROOM_ERROR: {
       return {
         ...state,
@@ -110,10 +121,17 @@ const adminRoomReducer = (state = initialState, { type, payload }) => {
         responseMsg: payload.responseMsg,
         roomImages: [ ...state.roomImages, payload.newImage ],
         error: payload.error
-      }
+      };
     };  
     case ROOM_IMG_DELETED: {
-      return state;
+      return {
+        ...state,
+        status: payload.status,
+        loading: payload.loading,
+        responseMsg: payload.responseMsg,
+        roomImages: [ ...payload.roomImages ],
+        error: payload.error
+      };
     };
     case ROOM_IMG_ERROR: {
       return {

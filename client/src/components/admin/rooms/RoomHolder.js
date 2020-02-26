@@ -4,10 +4,14 @@ import { Button, Card, Image } from 'semantic-ui-react'
 const RoomHolder = (props) => {
   const { room, openRoom, deleteRoom } = props;
   const roomId = room._id;
-  const firstRoomimagePath = room.images[0].path;
-  const imgSourcePath = firstRoomimagePath.split("/");
-  const imgPath = "/" + imgSourcePath[1] + "/" + imgSourcePath[2] + "/" + imgSourcePath[3];
-
+  let firstRoomimagePath, imgSourcePath, imgPath;
+  if (room.images[0]) {
+    firstRoomimagePath = room.images[0].path;
+    imgSourcePath = firstRoomimagePath.split("/");
+    imgPath = "/" + imgSourcePath[1] + "/" + imgSourcePath[2] + "/" + imgSourcePath[3];
+  } else {
+    imgPath = "/assets/images/roomStock1.jpeg";
+  }
  
   return (
     <Card.Group>

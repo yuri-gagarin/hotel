@@ -93,7 +93,7 @@ export const setRooms = (stateData) => {
 export const roomUpdated = (stateData) => {
   return {
     type: ROOM_UPDATED,
-    payload: null
+    payload: stateData
   };
 };
 
@@ -175,6 +175,32 @@ export const uploadRoomImage = (dispatch, file) => {
     });
 };
 
+export const deleteRoomImage = (dispatch, imageId, oldImageState = []) => {
+  const requestOptions = {
+    method: "delete",
+    url: "/api/deleteRoomImage/" + imageId
+  };
+  dispatch(uploadRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg } = data;
+      const newImageState = oldImageState.filter((image) => imageId != image._id)
+      const stateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        roomImages: newImageState,
+        error: null
+      };
+      dispatch(roomImgDeleteSuccess(stateData));
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(roomImgUploadError(error));
+    });
+}
+
 export const handleNewRoom = (dispatch, roomData) => {
   const requestOptions = {
     method: "post",
@@ -245,8 +271,16 @@ export const updateRoom = (dispatch, roomData, roomImages = {}) => {
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, rooms } = data;
-      dispatch(roomUpdated());
+      const { responseMsg, updatedRoom } = data;
+      const roomStateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        roomData: updatedRoom,
+        roomImages: updatedRoom.images,
+        error: null
+      };
+      dispatch(roomUpdated(roomStateData));
     })
     .catch((error) => {
       console.error(error);

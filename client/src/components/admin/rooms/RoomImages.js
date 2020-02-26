@@ -21,7 +21,7 @@ const deleteIconStyle = {
 };
 
 const RoomImageThumb = (props) => {
-  const { roomImage } = props;
+  const { roomImage, handleImageDelete } = props;
 
   // 
   const normalizePath = (uploadPath) => {
@@ -29,13 +29,9 @@ const RoomImageThumb = (props) => {
     return  "/" + imgSourcePath[1] + "/" + imgSourcePath[2] + "/" + imgSourcePath[3];
   };
   //
-  const handleImageDelete = () => {
-
-  };
-
   return (
     <div style={roomImageThumbStyle}>
-      <Icon name="trash" style={deleteIconStyle} onClick={handleImageDelete}></Icon>
+      <Icon name="trash" style={deleteIconStyle} onClick={() => handleImageDelete(roomImage._id)}></Icon>
       <Image src={normalizePath(roomImage.path)} size="small"></Image>
     </div>
   )

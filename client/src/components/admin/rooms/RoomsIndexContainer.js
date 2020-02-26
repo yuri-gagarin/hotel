@@ -84,7 +84,7 @@ const RoomsIndexContainer = (props) => {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={16}>
-            <Button onClick={closeNewRoomForm}>Cancel</Button>
+            <Button onClick={closeNewRoomForm}>Close</Button>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>

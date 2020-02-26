@@ -13,25 +13,22 @@ import RoomImageThumb from "./RoomImages";
 import { connect } from "react-redux";
 import { 
   uploadRoomImage,
-   handleNewRoom,
-    updateRoom, 
-    setPreviewImages 
+  deleteRoomImage,
+  handleNewRoom,
+  updateRoom, 
+  setPreviewImages 
 } from "../../../redux/actions/roomActions";
 
 const FileInput = (props) => {
   const { uploadRoomImage } = props;
   const [ file, setFile ] = useState({});
   const onChange = (e) => {
+    console.log(e.target);
     setFile(() => {
       return e.target.files[0];
     });
-    console.log(typeof e.target.files[0])
   }
-  const clickInput = (ref) => {
-    // ref.current.click(); //
-    console.log(ref);
-    ref.current.click();
-  };
+  
   const uploadFile = () => {
     if (!file) return;
     let data = new FormData();
@@ -60,6 +57,7 @@ const RoomForm = (props) => {
   const { 
     adminRoomState, 
     uploadRoomImage, 
+    deleteRoomImage,
     handleNewRoom, 
     updateRoom, 
     setPreviewImages
@@ -226,6 +224,16 @@ const RoomForm = (props) => {
     }
   };  
 
+  const handleImageDelete = (imageId) => {
+    const { roomImages } = adminRoomState;
+    const confirm = window.confirm("Are you Sure?");
+    if (confirm) {
+      deleteRoomImage(imageId, roomImages);
+    } else {
+      return;
+    }
+  };
+
   return (
     <Form>
       <Form.Group widths='equal'>
@@ -299,7 +307,17 @@ const RoomForm = (props) => {
 
       </Form.Field>
       <FileInput uploadRoomImage={uploadRoomImage} />
-      { roomImages.map((roomImage) => <RoomImageThumb key={roomImage._id} roomImage={roomImage} />)}
+      { 
+        roomImages.map((roomImage) => {
+          return (
+            <RoomImageThumb 
+              key={roomImage._id} 
+              roomImage={roomImage} 
+              handleImageDelete={handleImageDelete} 
+            />
+          );
+        })
+      }
       <Form.Field style={{marginTop: "0.5em"}}
         id='form-button-control-public'
         control={Button}
@@ -322,7 +340,8 @@ const mapDispatchToProps = (dispatch) => {
     uploadRoomImage: (imageData) => uploadRoomImage(dispatch, imageData),
     setPreviewImages: (previewImages) => dispatch(setPreviewImages(previewImages)),
     handleNewRoom: (roomData) => handleNewRoom(dispatch, roomData),
-    updateRoom: (roomData, roomImages) => updateRoom(dispatch, roomData, roomImages)
+    updateRoom: (roomData, roomImages) => updateRoom(dispatch, roomData, roomImages),
+    deleteRoomImage: (imageId, oldImageState) => deleteRoomImage(dispatch, imageId, oldImageState)
   };
 };
 
