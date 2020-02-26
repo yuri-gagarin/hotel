@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Button,
@@ -11,7 +11,7 @@ import {
 import RoomImageThumb from "./RoomImages";
 // redux imports  //
 import { connect } from "react-redux";
-import { uploadRoomImage, handleNewRoom } from "../../../redux/actions/roomActions";
+import { uploadRoomImage, handleNewRoom, setPreviewImages } from "../../../redux/actions/roomActions";
 
 const FileInput = (props) => {
   const { uploadRoomImage, handleNewRoom } = props;
@@ -52,11 +52,18 @@ const FileInput = (props) => {
 };
 
 const RoomForm = (props) => {
-  const { adminRoomState, uploadRoomImage, handleNewRoom } = props;
+  const { adminRoomState, uploadRoomImage, handleNewRoom, setPreviewImages} = props;
   const { roomData, roomImages } = adminRoomState;
-  const [roomDetails, setRoomDetails] = useState(roomData);
-  const [roomOptions, setRoomOptions] = useState({});
 
+  const [roomDetails, setRoomDetails] = useState(roomData);
+  const [roomOptions, setRoomOptions] = useState(roomData.options || {});
+
+  useEffect(() => {
+    if (roomData && roomData.images) {
+      // set the images array //
+      setPreviewImages(roomData.images);
+    }
+  }, []);
   
   // text input handlers //
   const handleRoomType = (e, data) => {
@@ -204,18 +211,21 @@ const RoomForm = (props) => {
           label='Room Type'
           placeholder='...type of room'
           onChange={handleRoomType}
+          value={roomDetails.roomType}
         />
         <Form.Field
           control={Input}
           label='Area'
           placeholder='...only numbers please'
           onChange={handleRoomArea}
+          value={roomDetails.area}
         />
         <Form.Field
           control={Input}
           label="Sleeps"
           placeholder='...how many people it sleeps'
           onChange={handleSleeps}
+          value={roomDetails.sleeps}
         />
       </Form.Group>
       <Form.Group widths='equal'>
@@ -224,18 +234,23 @@ const RoomForm = (props) => {
           label='Price from'
           placeholder='...price from (optional)'
           onChange={handlePrice}
+          value={roomDetails.price}
+
         />
         <Form.Field
           control={Input}
           label='Beds'
           placeholder='...number of beds'
           onChange={handleBeds}
+          value={roomDetails.beds}
+
         />
         <Form.Field
           control={Input}
           label="Couches"
           placeholder='...number of couches'
           onChange={handleCouches}
+          value={roomDetails.couches}
         />
       </Form.Group>
       <Form.Field
@@ -244,18 +259,20 @@ const RoomForm = (props) => {
         label='Description of the Room'
         placeholder='...description of the room here'
         onChange={handleDescriptionChange}
+        value={roomDetails.description}
+
       />
        <Form.Field>
-        <Checkbox label='Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} />
-        <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} />
-        <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} />
-        <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} />
-        <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} />
-        <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} />
-        <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} />
-        <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} />
-        <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} />
-        <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} />
+        <Checkbox label='Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.privateBathroom}/>
+        <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.suiteBathroom} />
+        <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.balcony} />
+        <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.terrace} />
+        <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.mountainView}/>
+        <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.streetView}/>
+        <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.riverView}/>
+        <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.tv}/>
+        <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.airConditioning}/>
+        <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.wifi}/>
 
       </Form.Field>
       <FileInput uploadRoomImage={uploadRoomImage} />
@@ -263,7 +280,7 @@ const RoomForm = (props) => {
       <Form.Field style={{marginTop: "0.5em"}}
         id='form-button-control-public'
         control={Button}
-        content='Confirm'
+        content='Save All'
         onClick={handleFormSubmit}
       />
      
@@ -280,6 +297,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     uploadRoomImage: (imageData) => uploadRoomImage(dispatch, imageData),
+    setPreviewImages: (previewImages) => dispatch(setPreviewImages(previewImages)),
     handleNewRoom: (roomData) => handleNewRoom(dispatch, roomData)
   };
 };

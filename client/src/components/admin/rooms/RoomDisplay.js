@@ -82,7 +82,7 @@ const RoomDisplay = (props) => {
             <div>Room Images</div>
           <hr />
           {
-            images.map((img) => <Image style={roomImage} size='medium' src={normalizePath(img.path)} />)
+            images.map((img) => <Image key={img._id} style={roomImage} size='medium' src={normalizePath(img.path)} />)
           }
       </div>
       {

@@ -10,6 +10,7 @@ const {
   ROOM_IMG_DELETED,
   ROOM_IMG_ERROR,
   SET_ROOMS,
+  SET_PREVIEW_IMAGES,
   ADD_NEW_ROOM,
   OPEN_ROOM
 } = roomConstants;
@@ -39,6 +40,14 @@ const adminRoomReducer = (state = initialState, { type, payload }) => {
         responseMsg: payload.responseMsg,
         createdRooms: [ ...payload.createdRooms ],
         error: payload.error
+      };
+    };
+    case SET_PREVIEW_IMAGES: {
+      return {
+        ...state,
+        loading: payload.loading,
+        roomImages: [ ...payload.roomImages ],
+        error: null
       };
     };
     case OPEN_ROOM: {

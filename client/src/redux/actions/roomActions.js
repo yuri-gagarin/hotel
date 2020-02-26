@@ -13,6 +13,7 @@ const {
   ROOM_IMG_ERROR,
   ADD_NEW_ROOM,
   SET_ROOMS,
+  SET_PREVIEW_IMAGES,
   OPEN_ROOM,
   CLOSE_ROOM
 } = roomConstants;
@@ -113,6 +114,17 @@ export const openRoom = (rooms, roomId) => {
     payload: {
       loading: false,
       roomData: roomData,
+      error: null
+    }
+  };
+};
+
+export const setPreviewImages = (roomImages = []) => {
+  return {
+    type: SET_PREVIEW_IMAGES,
+    payload: {
+      loading: false,
+      roomImages: roomImages,
       error: null
     }
   };
