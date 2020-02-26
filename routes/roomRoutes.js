@@ -17,4 +17,10 @@ export default function (router) {
     .get(roomsController.getRooms);
 
     
+  // @route "/api/rooms/:roomId" //
+  // @description Updates a room and all of its corresponding images //
+  // @access PRIVATE //
+  router
+    .route("/api/rooms/:roomId")
+    .patch(roomsController.updateRoom);
 };  

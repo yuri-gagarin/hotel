@@ -2,6 +2,7 @@ import axios from "axios";
 import { roomConstants } from "../constants";
 const {
   UPDATE_STATE,
+  CLEAR_ROOM_DATA,
   ROOM_REQUEST,
   ROOM_CREATED,
   ROOM_UPDATED,
@@ -90,7 +91,10 @@ export const setRooms = (stateData) => {
 };
 
 export const roomUpdated = (stateData) => {
-
+  return {
+    type: ROOM_UPDATED,
+    payload: null
+  };
 };
 
 export const roomDeleted = (stateData) => {
@@ -125,6 +129,18 @@ export const setPreviewImages = (roomImages = []) => {
     payload: {
       loading: false,
       roomImages: roomImages,
+      error: null
+    }
+  };
+};
+
+export const clearRoomData = () => {
+  return {
+    type: CLEAR_ROOM_DATA,
+    payload: {
+      loading: false,
+      roomData: {},
+      roomImages: [],
       error: null
     }
   };
@@ -213,5 +229,28 @@ export const fetchRooms = (dispatch) => {
       console.error(error);
       dispatch(roomError(error));
     });
+};
+
+export const updateRoom = (dispatch, roomData, roomImages = {}) => {
+  const roomId = roomData._id
+  const requestOptions = {
+    method: "patch",
+    url: "/api/rooms/" + roomId,
+    data: {
+      roomData: roomData,
+      roomImages: roomImages
+    }
+  }
+  dispatch(roomRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, rooms } = data;
+      dispatch(roomUpdated());
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(roomError(error));
+    })
 };
 

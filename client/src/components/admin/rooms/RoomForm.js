@@ -11,10 +11,15 @@ import {
 import RoomImageThumb from "./RoomImages";
 // redux imports  //
 import { connect } from "react-redux";
-import { uploadRoomImage, handleNewRoom, setPreviewImages } from "../../../redux/actions/roomActions";
+import { 
+  uploadRoomImage,
+   handleNewRoom,
+    updateRoom, 
+    setPreviewImages 
+} from "../../../redux/actions/roomActions";
 
 const FileInput = (props) => {
-  const { uploadRoomImage, handleNewRoom } = props;
+  const { uploadRoomImage } = props;
   const [ file, setFile ] = useState({});
   const onChange = (e) => {
     setFile(() => {
@@ -52,11 +57,18 @@ const FileInput = (props) => {
 };
 
 const RoomForm = (props) => {
-  const { adminRoomState, uploadRoomImage, handleNewRoom, setPreviewImages} = props;
+  const { 
+    adminRoomState, 
+    uploadRoomImage, 
+    handleNewRoom, 
+    updateRoom, 
+    setPreviewImages
+  } = props;
   const { roomData, roomImages } = adminRoomState;
 
   const [roomDetails, setRoomDetails] = useState(roomData);
-  const [roomOptions, setRoomOptions] = useState(roomData.options || {});
+  const [roomOptions = {}, setRoomOptions] = useState(roomData.options);
+  console.log(roomOptions);
 
   useEffect(() => {
     if (roomData && roomData.images) {
@@ -191,7 +203,8 @@ const RoomForm = (props) => {
   };
   // END checkbox handler //
   const handleFormSubmit = () => {
-    const { roomId } = adminRoomState; 
+    const roomId = adminRoomState.roomData._id;
+
     const roomImages = adminRoomState.roomImages.map((img) => img._id );
     const roomData = {
       ...roomDetails,
@@ -200,7 +213,17 @@ const RoomForm = (props) => {
       },
       images: roomImages
     }
-    handleNewRoom(roomData);
+    if (!roomId) {
+      console.log("make a new room");
+      // new room being created //
+      handleNewRoom(roomData)
+    } else {
+      // existing room being edited with existing data //
+      console.log("update a room");
+      //handleNewRoom(roomData);
+      const roomImages = { currentImages: adminRoomState.roomImages };
+      updateRoom({ ...roomData, _id: roomId }, roomImages);
+    }
   };  
 
   return (
@@ -267,16 +290,16 @@ const RoomForm = (props) => {
         <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.suiteBathroom} />
         <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.balcony} />
         <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.terrace} />
-        <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.mountainView}/>
-        <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.streetView}/>
-        <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.riverView}/>
-        <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.tv}/>
-        <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.airConditioning}/>
-        <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} cchecked={roomOptions.wifi}/>
+        <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.mountainView}/>
+        <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.streetView}/>
+        <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.riverView}/>
+        <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.tv}/>
+        <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.airConditioning}/>
+        <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.wifi}/>
 
       </Form.Field>
       <FileInput uploadRoomImage={uploadRoomImage} />
-      { roomImages.map((roomImage) => <RoomImageThumb roomImage={roomImage} />)}
+      { roomImages.map((roomImage) => <RoomImageThumb key={roomImage._id} roomImage={roomImage} />)}
       <Form.Field style={{marginTop: "0.5em"}}
         id='form-button-control-public'
         control={Button}
@@ -298,7 +321,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     uploadRoomImage: (imageData) => uploadRoomImage(dispatch, imageData),
     setPreviewImages: (previewImages) => dispatch(setPreviewImages(previewImages)),
-    handleNewRoom: (roomData) => handleNewRoom(dispatch, roomData)
+    handleNewRoom: (roomData) => handleNewRoom(dispatch, roomData),
+    updateRoom: (roomData, roomImages) => updateRoom(dispatch, roomData, roomImages)
   };
 };
 

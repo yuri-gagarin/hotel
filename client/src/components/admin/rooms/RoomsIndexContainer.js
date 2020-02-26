@@ -11,11 +11,11 @@ import RoomDisplay from "./RoomDisplay";
 import RoomForm from "./RoomForm";
 // redux imports //
 import { connect } from "react-redux"; 
-import { fetchRooms, openRoom } from "../../../redux/actions/roomActions";
+import { fetchRooms, openRoom, clearRoomData } from "../../../redux/actions/roomActions";
 
 
 const RoomsIndexContainer = (props) => {
-  const { fetchRooms, handleRoomOpen, adminRoomState } = props;
+  const { fetchRooms, handleRoomOpen, clearRoomData, adminRoomState } = props;
   const { createdRooms } = adminRoomState;
   const [roomInfoOpen, setRoomInfoOpen] = useState(false);
   const [newRoomFormOpen, setNewRoomFormOpen] = useState(false);
@@ -23,9 +23,12 @@ const RoomsIndexContainer = (props) => {
    fetchRooms();
   }, []);
   const openNewRoomForm = () => {
+    clearRoomData();
     setNewRoomFormOpen(true);
+    setRoomInfoOpen(false);
   };
   const closeNewRoomForm = () => {
+    clearRoomData();
     setNewRoomFormOpen(false);
   };
   const openRoom = (roomId) => {
@@ -106,6 +109,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchRooms: () => fetchRooms(dispatch),
+    clearRoomData: () => dispatch(clearRoomData()),
     handleRoomOpen: (rooms, roomId) => dispatch(openRoom(rooms, roomId))
   };
 };
