@@ -20,9 +20,24 @@ import { socket } from "../../../App";
 
 const MessagesSplashScreen = (props) => {
   return (
-    <Grid.Column>
-      <div className="colorAnimation">
-        <h3>Messages View Here</h3>
+    <Grid.Column width={10}>
+      <div className="messageArea">
+        <div className="messageAreaTitle">
+          <h1>Hotel Instant Messaging</h1>
+          <p>Open a message to access a conversation</p>
+        </div>
+        <ul className="circles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+         </ul>
       </div>
     </Grid.Column>
   )
@@ -70,12 +85,20 @@ const ConversationIndexCotainer = (props) => {
     <React.Fragment>
       <Grid.Row>
         <Grid.Column width={14}>
-          <h5 style={{textAlign: "center"}}>Live Conversations{"conversationState"}</h5>
-          <Button style={ closeConvoButton } onClick={closeConversation}>Close Conversation</Button>
+          <h5 style={{textAlign: "center"}}>Live Conversations</h5>
+          {
+            conversationOpen ? 
+              <Button 
+                style={ closeConvoButton } 
+                onClick={closeConversation}
+              >
+                Close Conversation
+              </Button>
+              : null
+          }
         </Grid.Column>
       </Grid.Row>
-      <div className="ui divider"></div>
-      <Grid.Row>
+      <Grid.Row style={{borderTop: "1px solid grey", borderBottom: "1px solid grey" }}>
         <Grid.Column width={4} style={{ height: "100vh", paddingLeft: "0.5em", paddingRight: 0 }}>
           <ConversationComponent 
             adminConversationState={adminConversationState}
@@ -84,11 +107,16 @@ const ConversationIndexCotainer = (props) => {
             deleteConversation={deleteConversation}
            />
         </Grid.Column>
-        <MessagesView 
-          adminState={adminState}
-          messages={conversationState.messages}
-          sendMessageRequest={sendMessageRequest}
-        />
+        {
+          conversationOpen ? 
+            <MessagesView 
+              adminState={adminState}
+              messages={conversationState.messages}
+              sendMessageRequest={sendMessageRequest}
+            /> :
+            <MessagesSplashScreen />
+        }
+        
       </Grid.Row>
       <Grid.Row>
         <div className="ui divider"></div>

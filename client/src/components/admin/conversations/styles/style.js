@@ -34,5 +34,5 @@ export const conversationTitle = {
 export const closeConvoButton = {
   position: "absolute",
   right: "5%",
-  top: "5%"
+  top: "-25%"
 };
