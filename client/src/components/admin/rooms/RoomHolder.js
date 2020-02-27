@@ -14,7 +14,7 @@ const RoomHolder = (props) => {
   }
  
   return (
-    <Card>
+    <Card >
       <Card.Content>
         <Card.Header>{room.roomType}</Card.Header>
         <Image

@@ -43,7 +43,7 @@ const normalizePath = (uploadPath) => {
 };
 
 const RoomDisplay = (props) => {
-  const { room } = props;
+  const { room, history } = props;
   const [formOpen, setFormOpen] = useState(false);
   const { options, images } = room;
 
@@ -66,7 +66,7 @@ const RoomDisplay = (props) => {
   };
 
   return (
-    <Grid.Column width={12}>
+    <Grid.Column width={14}>
       <div>
           <h1>{room.roomType}</h1>
           <h4>Room Details</h4>
@@ -103,9 +103,15 @@ const RoomDisplay = (props) => {
       {
         formOpen ? <Button style={formButton} onClick={openForm}>Close</Button> : <Button style={formButton} onClick={openForm}>Edit Room</Button>
       }
-      { formOpen ? <EditRoomDisplay room={room} /> : null }
+      { formOpen ? <EditRoomDisplay history={history} room={room} /> : null }
     </Grid.Column>
   );
 };
+// PropTypes validations //
+RoomDisplay.propTypes = {
+  room: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
+};
+
 
 export default RoomDisplay;

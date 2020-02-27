@@ -55,18 +55,18 @@ const RoomsIndexContainer = (props) => {
   return (
     <React.Fragment>
       <Grid.Row>
-        <Grid.Column width={16}>
+        <Grid.Column width={14}>
           <h5>Current Rooms in Hotel</h5>
         </Grid.Column>
       </Grid.Row>
       <Route path={"/admin/rooms"} exact={true}>
         <Grid.Row>
-          <Grid.Column width={16}>
+          <Grid.Column width={14}>
             <Button onClick={openNewRoomForm}>Add New Room</Button>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={16}>
+          <Grid.Column width={14}>
             <Card.Group>
             {
               createdRooms.map((room) => {
@@ -87,23 +87,23 @@ const RoomsIndexContainer = (props) => {
       </Route>
       <Route path={"/admin/rooms/new"}>
         <Grid.Row>
-          <Grid.Column width={16}>
+          <Grid.Column width={14}>
             <Button onClick={goBackToRooms}>Back</Button>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={16}>
-            <RoomForm />
+          <Grid.Column width={14}>
+            <RoomForm history={history} />
           </Grid.Column>
         </Grid.Row>
       </Route>
       <Route path={"/admin/rooms/edit"}>
         <Grid.Row>
-          <Grid.Column width={16}>
+          <Grid.Column width={14}>
             <Button onClick={goBackToRooms}>Back</Button>
           </Grid.Column>
         </Grid.Row>
-        <RoomDisplay room={adminRoomState.roomData} />
+        <RoomDisplay room={adminRoomState.roomData} history={history} />
       </Route>
     </React.Fragment>
   );

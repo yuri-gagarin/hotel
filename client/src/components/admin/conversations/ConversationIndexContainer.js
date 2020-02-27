@@ -75,27 +75,21 @@ const ConversationIndexCotainer = (props) => {
       e.target.value = "";
     };
   };
-  const renderMessages = (messages) => {
-    return messages.map((message) => {
-      return <Message key={message._id} message={message} adminState={adminState} />
-    })
-  };
-  
+
   const deleteConversation = (conversationId) => {
     handleDeleteConversation(conversationId);
   };
 
-  
-
   return (
     <React.Fragment>
       <Grid.Row>
-        <Grid.Column width={16}>
+        <Grid.Column width={14}>
           <h5 style={{textAlign: "center"}}>Conversation With {"conversationState"}</h5>
         </Grid.Column>
       </Grid.Row>
+      <div className="ui divider"></div>
       <Grid.Row>
-        <Grid.Column width={6} style={{ height: "100vh", paddingLeft: "0.5em", paddingRight: 0 }}>
+        <Grid.Column width={4} style={{ height: "100vh", paddingLeft: "0.5em", paddingRight: 0 }}>
           <ConversationComponent 
             adminConversationState={adminConversationState}
             openConversation={openConversation}
@@ -103,10 +97,12 @@ const ConversationIndexCotainer = (props) => {
             deleteConversation={deleteConversation}
            />
         </Grid.Column>
-        <Grid.Column width={10} style={{ height: "100vh" }}>
-          <Comment.Group style={{overflow: "scroll", height: "100%", paddingRight: "1em", paddingBottom: "50px", paddingRight: 0 }}>
+        <Grid.Column width={10} style={{ height: "100vh", padding: 0 }}>
+          <Comment.Group style={{overflow: "scroll", height: "100%", maxWidth: "none", paddingBottom: "50px"}}>
           {
-           [...renderMessages(messages)]
+            messages.map((message) => {
+              return <Message key={message._id} message={message} adminState={adminState} />
+            })
           }
           <div style={{ float:"left", clear: "both" }}
              ref={bottomMessageRef}>
@@ -125,6 +121,9 @@ const ConversationIndexCotainer = (props) => {
             onKeyPress={handleKeyPress}
             />
         </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <div className="ui divider"></div>
       </Grid.Row>
     </React.Fragment>
   );

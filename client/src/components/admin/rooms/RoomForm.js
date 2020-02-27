@@ -33,21 +33,30 @@ const FileInput = (props) => {
     if (!file) return;
     let data = new FormData();
     data.append("roomImage", file);
-    return uploadRoomImage(data);
+    return uploadRoomImage(data)
+      .then((success) => {
+        if (success) {
+          // clear the input //
+          document.getElementById("fileInput").value = "";
+          setFile(() => {
+            return {};
+          })
+        }
+      });
   };
 
   return (
     <div>
-      <Button as="label" htmlFor="file"
+      <Button as="label" htmlFor="fileInput"
               icon="file" type="button">
       </Button>
-      <input type="file" id="file" hidden onChange={onChange} />
+      <input type="file" id="fileInput" hidden onChange={onChange} />
       <Button
         primary
         content="Upload File"
         onClick={uploadFile} 
       />
-      <span style={{marginLeft: "1em"}}>{file.name}</span>
+      <span style={{marginLeft: "1em"}}>{file.name ? file.name : "No file"}</span>
     </div>
    
   )
@@ -56,6 +65,7 @@ const FileInput = (props) => {
 const RoomForm = (props) => {
   const { 
     adminRoomState, 
+    history,
     uploadRoomImage, 
     deleteRoomImage,
     handleNewRoom, 
@@ -214,7 +224,7 @@ const RoomForm = (props) => {
     }
     if (!roomId) {
       // new room being created //
-      handleNewRoom(roomData)
+      handleNewRoom(roomData, history)
     } else {
       // existing room being edited with existing data //
       const roomImages = { currentImages: adminRoomState.roomImages };
@@ -327,6 +337,16 @@ const RoomForm = (props) => {
   )
 };
 
+RoomForm.propTypes = {
+  history: PropTypes.object.isRequired,
+  adminRoomState: PropTypes.object.isRequired,
+  uploadRoomImage: PropTypes.func.isRequired,
+  deleteRoomImage: PropTypes.func.isRequired,
+  setPreviewImages: PropTypes.func.isRequired,
+  handleNewRoom: PropTypes.func.isRequired,
+  updateRoom: PropTypes.func.isRequired
+}
+
 // redux functionality //
 const mapStateToProps = (state) => {
   return {
@@ -337,7 +357,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     uploadRoomImage: (imageData) => uploadRoomImage(dispatch, imageData),
     setPreviewImages: (previewImages) => dispatch(setPreviewImages(previewImages)),
-    handleNewRoom: (roomData) => handleNewRoom(dispatch, roomData),
+    handleNewRoom: (roomData, history) => handleNewRoom(dispatch, roomData, history),
     updateRoom: (roomData, roomImages, currentRooms) => {
       return updateRoom(dispatch, roomData, roomImages, currentRooms);
     },

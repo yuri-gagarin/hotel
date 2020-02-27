@@ -12,7 +12,7 @@ const {
   ROOM_IMG_UPLOADED,
   ROOM_IMG_DELETED,
   ROOM_IMG_ERROR,
-  ADD_NEW_ROOM,
+  ADD_ROOM_TO_STATE,
   SET_ROOMS,
   SET_PREVIEW_IMAGES,
   OPEN_ROOM,
@@ -75,7 +75,7 @@ export const roomCreated = (stateData) => {
 
 export const addNewRoom = (roomState) => {
   return {
-    type: ADD_NEW_ROOM,
+    type: ADD_ROOM_TO_STATE,
     payload: {
       newRoom: roomState
     }
@@ -171,10 +171,12 @@ export const uploadRoomImage = (dispatch, file) => {
         error: null
       };
       dispatch(roomImgUploadSucess(stateData));
+      return Promise.resolve(true);
     })
     .catch((error) => {
       console.error(error);
       dispatch(roomImgUploadError(error));
+      return Promise.resolve(false);
     });
 };
 
@@ -204,7 +206,7 @@ export const deleteRoomImage = (dispatch, imageId, oldImageState = []) => {
     });
 }
 
-export const handleNewRoom = (dispatch, roomData) => {
+export const handleNewRoom = (dispatch, roomData, history) => {
   const requestOptions = {
     method: "post",
     url: "/api/createRoom",
@@ -227,6 +229,7 @@ export const handleNewRoom = (dispatch, roomData) => {
       };
       dispatch(roomCreated(stateData));
       dispatch(addNewRoom(newRoom));
+      history.push("/admin/rooms");
     })
     .catch((error) => {
       console.error(error);

@@ -46,7 +46,7 @@ const AdminComponent = (props) => {
   };
 
   return (
-    <Grid stackable padded divided style={{paddingLeft: "1em", paddingRight: "1em"}}>
+    <Grid stackable padded divided centered style={{paddingLeft: "1em", paddingRight: "1em"}}>
       <Grid.Row>
         <Grid.Column width={16}>
           <AdminNavComponent logoutUser={logoutUser} />
