@@ -22,3 +22,17 @@ export const responseStyle = {
   width: "auto",
   clear: "both"
 }
+
+export const conversationTitle = {
+  width: "50%",
+  border: "1px solid grey",
+  borderRadius: "10px",
+  margin: "auto",
+  padding: "1em",
+};
+
+export const closeConvoButton = {
+  position: "absolute",
+  right: "5%",
+  top: "5%"
+};

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import {
-  Comment,
+  Button,
   Grid, 
-  Input
 } from "semantic-ui-react";
+// styles imports //
+import { closeConvoButton } from "./styles/style";
 import { withRouter } from "react-router-dom";
 // redux imports  //
 import { connect } from "react-redux";
@@ -13,13 +14,24 @@ import { fetchAllConversations, fetchConversation, deleteConversation } from "..
 import { handleNewClientMessage } from "../../../redux/actions/adminConversationActions"; 
 // additional components //
 import ConversationComponent from "./ConversationComponent";
-import Message from "./Message";
+import MessagesView from "./MessagesView";
 // socket import //
 import { socket } from "../../../App";
 
+const MessagesSplashScreen = (props) => {
+  return (
+    <Grid.Column>
+      <div className="colorAnimation">
+        <h3>Messages View Here</h3>
+      </div>
+    </Grid.Column>
+  )
+};
+
 const ConversationIndexCotainer = (props) => {
   
-  const [message, setMessage] = useState("");
+  const [conversationOpen, setConversationOpen] = useState(false);
+
   const { 
     sendMessageRequest,
     fetchAllConversations,
@@ -30,8 +42,6 @@ const ConversationIndexCotainer = (props) => {
     adminConversationState,
     conversationState
   } = props;
-  const messages = conversationState.messages;
-  const bottomMessageRef = useRef(null);
 
   useEffect(() => {
     socket.on("newClientMessage", (data) => {
@@ -45,36 +55,12 @@ const ConversationIndexCotainer = (props) => {
 
   const openConversation = (conversationId) => {
     fetchConversation(conversationId);
-  };
-  const handleInputChange = (e) => {
-    setMessage(e.target.value);
-  };
-  const handleSendMessage = (e) => {
-    // first get the user informatin //
-    console.log(adminState);
-    const messageData = {
-      user: adminState,
-      messageData: message,
-      conversationId: conversationState.conversationId,
-      clientSocketId: conversationState.clientSocketId
-    };
-    sendMessageRequest(messageData);
-    e.target.value = "";
+    setConversationOpen(true);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      // handle messages submission here //
-      const messageData = {
-        user: adminState,
-        messageData: message,
-        conversationId: conversationState.conversationId,
-        clientSocketId: conversationState.clientSocketId
-      };
-      sendMessageRequest(messageData);
-      e.target.value = "";
-    };
-  };
+  const closeConversation = () => {
+    setConversationOpen(false);
+  }
 
   const deleteConversation = (conversationId) => {
     handleDeleteConversation(conversationId);
@@ -84,7 +70,8 @@ const ConversationIndexCotainer = (props) => {
     <React.Fragment>
       <Grid.Row>
         <Grid.Column width={14}>
-          <h5 style={{textAlign: "center"}}>Conversation With {"conversationState"}</h5>
+          <h5 style={{textAlign: "center"}}>Live Conversations{"conversationState"}</h5>
+          <Button style={ closeConvoButton } onClick={closeConversation}>Close Conversation</Button>
         </Grid.Column>
       </Grid.Row>
       <div className="ui divider"></div>
@@ -97,30 +84,11 @@ const ConversationIndexCotainer = (props) => {
             deleteConversation={deleteConversation}
            />
         </Grid.Column>
-        <Grid.Column width={10} style={{ height: "100vh", padding: 0 }}>
-          <Comment.Group style={{overflow: "scroll", height: "100%", maxWidth: "none", paddingBottom: "50px"}}>
-          {
-            messages.map((message) => {
-              return <Message key={message._id} message={message} adminState={adminState} />
-            })
-          }
-          <div style={{ float:"left", clear: "both" }}
-             ref={bottomMessageRef}>
-          </div>
-          </Comment.Group>
-          
-          <Input 
-            action={{
-              icon: "send",
-              content: "Send",
-              onClick: handleSendMessage
-            }}
-            onChange={handleInputChange}
-            placeholder='message...' 
-            style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
-            onKeyPress={handleKeyPress}
-            />
-        </Grid.Column>
+        <MessagesView 
+          adminState={adminState}
+          messages={conversationState.messages}
+          sendMessageRequest={sendMessageRequest}
+        />
       </Grid.Row>
       <Grid.Row>
         <div className="ui divider"></div>
