@@ -1,26 +1,39 @@
-import React from "react";
+import React, { useState, useRef, useReducer } from "react";
 import PropTypes from "prop-types";
-import { Grid } from "semantic-ui-react";
+import { Button, Form, Grid, Input, Select, TextArea, Icon } from "semantic-ui-react";
 
 import MessagesComponent from "../conversations/MessagesComponent";
 
-const AdminDashComponent = (props) => {
+const style = {
+  uploadBtn: {
+    backgroundColor: "green",
+    height: "40px",
+    width: "75px",
+    marginBottom: "20px"
+  }
+}
+const { uploadBtn } = style;
 
+
+
+const AdminDashComponent = (props) => {
+  const { adminState } = props;
+  const { firstName } = adminState;
   return (
     <React.Fragment>
       <Grid.Row>
         <Grid.Column width={16}>
-          <h4>Admin Dashboard</h4>
+          <h4>Hello {firstName}</h4>
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={4}>
           <h3>Dash Column</h3>
         </Grid.Column>
-        <Grid.Column width={9}>
-          <h3>Main Column</h3>
+        <Grid.Column width={10}>
+         
         </Grid.Column>
-        <Grid.Column width={3}>
+        <Grid.Column width={2}>
           <MessagesComponent />
         </Grid.Column>
       </Grid.Row>
@@ -30,7 +43,7 @@ const AdminDashComponent = (props) => {
 };
 // Proptypes Validations //
 AdminDashComponent.propTypes = {
-
+  adminState: PropTypes.object.isRequired
 };
 
 export default AdminDashComponent;

@@ -1,25 +1,31 @@
-
 import User from "../../models/User";
-import passportJwt from "passport-jwt";
-import jsonwebtoken from "jsonwebtoken";
-const { ExtractJwt, Strategy: JwtStrategy } = passportJwt;
+import passportLocal from "passport-local";
+import bcrypt from "bcrypt";
+const { Strategy: LocalStrategy } = passportLocal;
 
-const SECRET_KEY = "secret";
-const options = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: SECRET_KEY
-};
-export const makeToken = () => {
-  return new Promise((resolve, reject) => {
-
-  })
-}
 export default function (passport) {
-  passport.use(new JwtStrategy(options, (jwtPayload, done) => {
-    return User.findById(jwtPayload.sub)
+  passport.use(new LocalStrategy({ usernameField: "email", passwordField: "password"}, (email, password, done) => {
+    return User.findOne({ email: email})
       .then((user) => {
         if (user) {
-          return done(null, user);
+          // check user credentials //
+          return bcrypt.compare(password, user.password)
+            .then((same) => {
+              if (same) {
+                return done(null, {
+                  _id: user._id,
+                  email: user.email,
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                  phoneNumber: user.phoneNumber
+                });
+              } else {
+                return done(null, false);
+              }
+            })
+            .catch((error) => {
+              return done(error, false);
+            });
         } else {
           return done(null, false);
         }
@@ -28,4 +34,16 @@ export default function (passport) {
         return done(error, false);
       });
   }));
-};
+  passport.serializeUser((user, done) => {
+    return done(null, user._id);
+  });
+  passport.deserializeUser((id, done) => {
+    return User.findById(id)
+      .then((user) => {
+        return done(null, user);
+      })
+      .catch((error) => {
+        return done(error, false);
+      });
+  });
+}

@@ -8,9 +8,39 @@ const NavbarComponent = (props) => {
   
   const [t, i18n] = useTranslation();
 
+  const goToBooking = (e) => {
+    let bookingForm = document.getElementById("booking");
+    let rect = bookingForm.getBoundingClientRect();
+    let offsetTop = window.pageYOffset;
+    let scrollAmount = rect.top - offsetTop;
+    window.scrollBy({
+      top: scrollAmount,
+      left: 0,
+      behavior: "smooth"
+    });
+  };
+
+  const goToServices =(e) => {
+    let servicesView = document.getElementById("portfolio");
+    servicesView.scrollIntoView({ behavior: "smooth "});
+  };
+
   const changeLanguage = (e) => {
-    console.log(e);
-    i18n.changeLanguage("uk");
+    const language = (e.target.text);
+    switch (language) {
+      case "EN": {
+        i18n.changeLanguage("en");
+        break;
+      };
+      case "UA": {
+        i18n.changeLanguage("uk");
+        break;
+      };
+      case "RU": {
+        i18n.changeLanguage("ru");
+        break;
+      };
+    }
   };
 
   return (
@@ -41,19 +71,19 @@ const NavbarComponent = (props) => {
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav text-uppercase ml-auto">
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#services">{t("resTitle")}</a>
+              <a className="nav-link js-scroll-trigger" onClick={goToBooking}>{t("resTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#portfolio">{t("servicesTitle")}</a>
+              <a className="nav-link js-scroll-trigger" onClick={goToServices}>{t("servicesTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#about">{t("newsTitle")}</a>
+              <a className="nav-link js-scroll-trigger">{t("newsTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#team">{t("contactTitle")}</a>
+              <a className="nav-link js-scroll-trigger">{t("contactTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href="#contact">{t("aboutTitle")}</a>
+              <a className="nav-link js-scroll-trigger">{t("aboutTitle")}</a>
             </li>
           </ul>
         </div>

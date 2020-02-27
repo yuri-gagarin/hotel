@@ -3,7 +3,18 @@ import roomDefault from "../../static_images/services_images/room_default.jpg";
 import restaurantDefault from "../../static_images/services_images/restaurant_default.jpg";
 
 const ServicesComponent = (props) => {
-
+  const { history } = props;
+  const handleRoomsClick = (e) => {
+    // console.log(e);
+    history.push("/rooms");
+    return true;
+  };
+  const handleRestaurantClick = (e) => {
+    console.log(e);
+  };
+  const handleExtrasClick = (e) => {
+    console.log(e);
+  };
   return (
     <section className="bg-light page-section" id="portfolio">
       <div className="container">
@@ -15,7 +26,7 @@ const ServicesComponent = (props) => {
         </div>
         <div className="row">
           <div className="col-md-4 col-sm-6 portfolio-item">
-            <a className="portfolio-link" data-toggle="modal" href="#portfolioModal1">
+            <a className="portfolio-link" data-toggle="modal" href="#portfolioModal1" onClick={handleRoomsClick}> 
               <div className="portfolio-hover">
                 <div className="portfolio-hover-content">
                   <i className="fas fa-plus fa-3x"></i>
@@ -29,7 +40,7 @@ const ServicesComponent = (props) => {
             </div>
           </div>
           <div className="col-md-4 col-sm-6 portfolio-item">
-            <a className="portfolio-link" data-toggle="modal" href="#portfolioModal2">
+            <a className="portfolio-link" data-toggle="modal" href="#portfolioModal2" onClick={handleRestaurantClick}>
               <div className="portfolio-hover">
                 <div className="portfolio-hover-content">
                   <i className="fas fa-plus fa-3x"></i>
@@ -43,7 +54,7 @@ const ServicesComponent = (props) => {
             </div>
           </div>
           <div className="col-md-4 col-sm-6 portfolio-item">
-          <a className="portfolio-link" data-toggle="modal" href="#portfolioModal3">
+          <a className="portfolio-link" data-toggle="modal" href="#portfolioModal3" onClick={handleExtrasClick}>
             <div className="portfolio-hover">
               <div className="portfolio-hover-content">
                 <i className="fas fa-plus fa-3x"></i>

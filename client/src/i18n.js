@@ -7,6 +7,8 @@ const resources = {
   en: {
     translation: {
       title: "Hotel",
+      welcome: "Podil Plaza Kyiv",
+      more: "Tell Me More",
       menu: "Menu",
       bookBtn: "Book Now",
       resTitle: "Reservations",
@@ -38,6 +40,8 @@ const resources = {
   uk: {
     translation: {
       title: "Готель",
+      welcome: "Поділь Плаза Київ",
+      more: "Дізнатись Більше",
       menu: "Меню",
       bookBtn: "Резервувати",
       resTitle: "Резервації",

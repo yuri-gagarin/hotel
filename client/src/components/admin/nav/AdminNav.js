@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Menu, Segment } from 'semantic-ui-react';
 import { withRouter } from "react-router-dom";
@@ -7,8 +7,11 @@ import { adminRoutes } from "../../../routes/appRoutes";
 
 const AdminNavMenu = (props) =>  {
   const [active, setActiveItem] = useState({ activeItem: "home" })
-  const [loading, setLoading] = useState(false);
-  const { history } = props;
+  const { history, logoutUser } = props;
+
+  useEffect(() => {
+    history.push(adminRoutes.ADMIN_DASH);
+  }, []);
 
   const handleMenuClick = (e, { name }) => {
     
@@ -21,6 +24,10 @@ const AdminNavMenu = (props) =>  {
         history.push(adminRoutes.ADMIN_MESSAGES);
         break;
       };
+      case "rooms": {
+        history.push("/admin/rooms");
+        break;
+      }
       case "posts": {
         history.push(adminRoutes.ADMIN_POSTS);
         break;
@@ -34,12 +41,12 @@ const AdminNavMenu = (props) =>  {
       }
     }
     setActiveItem((state) => {
-      console.log(state);
       return { ...state, activeItem: name };
     });
   };
-  const handleLogout = () => {
+  const _logoutUser = (e) => {
     // todo for logout functionality //
+    logoutUser(e)
   };
 
   return (
@@ -52,6 +59,11 @@ const AdminNavMenu = (props) =>  {
       <Menu.Item
         name='messages'
         active={active.activeItem === 'messages'}
+        onClick={handleMenuClick}
+      />
+      <Menu.Item
+        name='rooms'
+        active={active.activeItem === 'rooms'}
         onClick={handleMenuClick}
       />
       <Menu.Item
@@ -68,7 +80,7 @@ const AdminNavMenu = (props) =>  {
         <Menu.Item
           name='logout'
           active={active.activeItem === 'logout'}
-          onClick={handleLogout}
+          onClick={_logoutUser}
         />
       </Menu.Menu>
     </Menu>   
@@ -77,7 +89,8 @@ const AdminNavMenu = (props) =>  {
 
 // PropTypes validation //
 AdminNavMenu.propTypes = {
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func.isRequired
 };
 
 export default withRouter(AdminNavMenu);

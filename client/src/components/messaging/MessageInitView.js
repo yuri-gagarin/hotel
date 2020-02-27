@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Button,
@@ -7,53 +7,79 @@ import {
 
 // styles and images //
 import { messageForm } from "./style/styles";
+// additional dependencies //
+import { sendMessage } from "./helpers/messageHelpers";
 
 const MessageInitView = (props) => {
-  //const { handleFormHide } = props;
-  const { sendInitialMessage } = props;
+  const [validated, setValidated] = useState(false);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-
+  // redux state //
+  const { sendInitialMessage, clientState } = props;
+  useEffect(() => {
+    localStorage.setItem("clientId", clientState._id);
+  }, []);
   const handleNameChange = (e) => {
     setName(e.target.value);
+  };
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
-
   const handleInitSubmit = (e) => {
-    //console.info(name);
-    //console.info(message);
-    sendInitialMessage({
-      name: name,
-      message: message
-    });
-    // send message to api and switch form to messageView //
+    if (e.currentTarget.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    setValidated(true);
 
+    const clientId = localStorage.getItem("clientId");
+    const messageData = {
+      user: {
+        _id: clientId,
+        firstName: name,
+        email: email
+      },
+      content: message
+    };
+    sendInitialMessage(messageData)
   }
+  
   return (
-    <Form>
+    <Form noValidate validated={validated} onSubmit={handleInitSubmit}>
       <Form.Group controlId="formName">
         <Form.Control 
+          required
           type="input" 
-          placeholder="your name please" 
+          placeholder="your name ..." 
           onChange={handleNameChange}
         />
       </Form.Group>
       <Form.Group controlId="formEmail">
-        <Form.Control type="input" placeholder="email ... optional" />
+        <Form.Control 
+          type="input" 
+          placeholder="email ... optional" 
+          onChange={handleEmailChange}
+          />
       </Form.Group>
       <Form.Group controlId="formMessageInput">
         <Form.Control 
+          required
           type="input" 
-          placeholder="message..." 
+          placeholder="message ..." 
           onChange={handleMessageChange}
         />
       </Form.Group>
       <Form.Group controlId="formBasicCheckbox">
         <Form.Check type="checkbox" label="Check me out" />
       </Form.Group>
-      <Button variant="primary" onClick={handleInitSubmit}>
+      <Button variant="primary" type="submit">
         Send
       </Button>
     </Form>

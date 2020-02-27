@@ -1,57 +1,153 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import {
-  Comment,
+  Button,
   Grid, 
-  Input
 } from "semantic-ui-react";
+// styles imports //
+import { closeConvoButton } from "./styles/style";
 import { withRouter } from "react-router-dom";
+// redux imports  //
+import { connect } from "react-redux";
+import { sendMessageRequest } from "../../../redux/actions/messageActions";
+import { fetchAllConversations, fetchConversation, deleteConversation } from "../../../redux/actions/conversationActions";
+import { handleNewClientMessage } from "../../../redux/actions/adminConversationActions"; 
 // additional components //
 import ConversationComponent from "./ConversationComponent";
-import Message from "./Message";
+import MessagesView from "./MessagesView";
+// socket import //
+import { socket } from "../../../App";
+
+const MessagesSplashScreen = (props) => {
+  return (
+    <Grid.Column width={10}>
+      <div className="messageArea">
+        <div className="messageAreaTitle">
+          <h1>Hotel Instant Messaging</h1>
+          <p>Open a message to access a conversation</p>
+        </div>
+        <ul className="circles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+         </ul>
+      </div>
+    </Grid.Column>
+  )
+};
 
 const ConversationIndexCotainer = (props) => {
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      // handle messages submission here //
-    }
+  
+  const [conversationOpen, setConversationOpen] = useState(false);
+
+  const { 
+    sendMessageRequest,
+    fetchAllConversations,
+    fetchConversation,
+    handleDeleteConversation,
+    newClientMessage,
+    adminState,
+    adminConversationState,
+    conversationState
+  } = props;
+
+  useEffect(() => {
+    socket.on("newClientMessage", (data) => {
+        const { conversationId, clientSocket, newMessage } = data;
+        newClientMessage({ conversationId: conversationId, clientSocketId: clientSocket, newMessage: newMessage });
+        //scrollToRef(bottomMessageRef);
+    })
+    fetchAllConversations();
+
+  }, []);
+
+  const openConversation = (conversationId) => {
+    fetchConversation(conversationId);
+    setConversationOpen(true);
   };
-  const renderMessages = (props) => {
-    const messages = [];
-    for (let i = 0; i < 20; i++) {
-      messages.push(<Message key={i} />);
-    };
-    return messages;
+
+  const closeConversation = () => {
+    setConversationOpen(false);
+  }
+
+  const deleteConversation = (conversationId) => {
+    handleDeleteConversation(conversationId);
   };
 
   return (
     <React.Fragment>
       <Grid.Row>
-        <Grid.Column width={16}>
-          <h5 style={{textAlign: "center"}}>Conversation With "Name Here"</h5>
+        <Grid.Column width={14}>
+          <h5 style={{textAlign: "center"}}>Live Conversations</h5>
+          {
+            conversationOpen ? 
+              <Button 
+                style={closeConvoButton} 
+                onClick={closeConversation}
+              >
+                Close Conversation
+              </Button>
+              : null
+          }
         </Grid.Column>
       </Grid.Row>
+      <Grid.Row style={{borderTop: "1px solid grey", borderBottom: "1px solid grey" }}>
+        <Grid.Column width={4} style={{ height: "100vh", paddingLeft: "0.5em", paddingRight: 0 }}>
+          <ConversationComponent 
+            adminConversationState={adminConversationState}
+            openConversation={openConversation}
+            fetchAllConversations={fetchAllConversations}
+            deleteConversation={deleteConversation}
+           />
+        </Grid.Column>
+        {
+          conversationOpen ? 
+            <MessagesView 
+              adminState={adminState}
+              messages={conversationState.messages}
+              sendMessageRequest={sendMessageRequest}
+            /> :
+            <MessagesSplashScreen />
+        }
+        
+      </Grid.Row>
       <Grid.Row>
-        <Grid.Column width={6} style={{border: "2px solid red", height: "100vh", paddingLeft: "0.5em", paddingRight: 0}}>
-          <ConversationComponent />
-        </Grid.Column>
-        <Grid.Column width={10} style={{border: "2px solid green", height: "100vh"}}>
-          <Comment.Group style={{overflow: "scroll", height: "100%", paddingRight: "1em", paddingBottom: "50px"}}>
-          {
-           [...renderMessages()]
-          }
-          </Comment.Group>
-          
-          <Input 
-            action='Send' 
-            placeholder='message...' 
-            style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
-            onKeyPress={handleKeyPress}
-            />
-        </Grid.Column>
+        <div className="ui divider"></div>
       </Grid.Row>
     </React.Fragment>
   );
 };
+// PropTypes validation //
+ConversationIndexCotainer.propTypes = {
+  fetchAllConversations: PropTypes.func.isRequired,
+  fetchConversation: PropTypes.func.isRequired,
+  adminConversationState: PropTypes.object.isRequired,
+  conversationState: PropTypes.object.isRequired,
+  adminState: PropTypes.object.isRequired
+};
+// connect functions //
+const mapStateToProps = (state) => {
+  return {
+    adminConversationState: state.adminConvState,
+    adminState: state.adminState,
+    conversationState: state.conversationState,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    sendMessageRequest: (messageData) => sendMessageRequest(dispatch, messageData),
+    fetchAllConversations: () => fetchAllConversations(dispatch),
+    fetchConversation: (conversationId) => fetchConversation(dispatch, { conversationId }),
+    handleDeleteConversation: (conversationId) => deleteConversation(dispatch, conversationId),
+    newClientMessage: (messageData, currentConversations) => handleNewClientMessage(dispatch, messageData, currentConversations)
+  };
+};  
 
-export default withRouter(ConversationIndexCotainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ConversationIndexCotainer));

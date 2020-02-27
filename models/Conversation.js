@@ -3,14 +3,32 @@ const Schema = mongoose.Schema;
 
 const conversationSchema = new Schema({
   participants: [{
-    type: Schema.ObjectId,
+    type: Schema.Types.ObjectId,
     required: true,
     ref: "User"
   }],
-  messages: [{
-    type: Schema.ObjectId,
+  readMessages: [{
+    type: Schema.Types.ObjectId,
     ref: "Message"
   }],
+  unreadMessages: [{
+    type: Schema.Types.ObjectId,
+    ref: "Message"
+  }],
+  lastMessage: {
+    _id: {
+      type: Schema.Types.ObjectId,
+    },
+    sender: {
+      type: String,
+    },
+    content: {
+      type: String,
+    },
+    sentAt: {
+      type: Date,
+    }
+  },
   createdAt: {
     type: Date,
     required: true,

@@ -3,19 +3,35 @@ import {
   Comment
 } from "semantic-ui-react";
 // style imports //
-import { messageStyle } from "./styles/style";
-
+import { messageStyle, responseStyle } from "./styles/style";
+// additional dependencies //
+import { formatDate } from "../../helpers/dateHelpers";
 const Message = (props) => {
-  return (
-    <Comment style={messageStyle}>
-      <Comment.Content>
-        <Comment.Author>Comment Author</Comment.Author>
-        <Comment.Content>Message Content Here</Comment.Content>
-        <Comment.Metadata>Sent At: "Some time Here"</Comment.Metadata>
-        <Comment.Metadata>Read: "boolean here"</Comment.Metadata>
-      </Comment.Content>
-    </Comment>
-  );
+  const { message, adminState } = props;
+  if (message.sender === adminState.firstName) {
+    return (
+      <Comment style={messageStyle}>
+        <Comment.Content>
+          <Comment.Author>{message.sender}</Comment.Author>
+          <Comment.Content>{message.content}</Comment.Content>
+          <Comment.Metadata>Sent At: {formatDate(message.sentAt, { military: true })}</Comment.Metadata>
+          <Comment.Metadata>Read</Comment.Metadata>
+        </Comment.Content>
+      </Comment>
+    );
+  } else {
+    return(
+      <Comment style={responseStyle}>
+        <Comment.Content>
+          <Comment.Author>{message.sender}</Comment.Author>
+          <Comment.Content>{message.content}</Comment.Content>
+          <Comment.Metadata>Sent At: {formatDate(message.sentAt, { military: true })}</Comment.Metadata>
+          <Comment.Metadata>Read</Comment.Metadata>
+        </Comment.Content>
+      </Comment>
+    );
+  }
+  
 };
 
 export default Message;

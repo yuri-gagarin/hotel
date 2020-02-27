@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import $ from "jquery";
 // component imports //
 import NavbarComponent from "./navbar/NavbarComponent";
@@ -8,18 +9,33 @@ import ContactForm from "./forms/ContactForm";
 import Footer from "./footer/Footer";
 import MessageFormContainer from "./messaging/MessageFormContainer";
 import BookingForm from "./forms/BookingForm";
+// redux imports //
+import { connect } from "react-redux";
+// react router //
+import { withRouter } from "react-router-dom";
+// additional imports //
+import ObjectID from "bson-objectid";
+import { setGuestClient } from "../redux/actions/clientActions";
+import { socket } from "../App";
 
 
 class HomeComponent extends React.Component {
-  constructor(props) {
+  //const [client, setClient] = useState(setUser(handleClient));
+  constructor (props) {
     super(props);
+    this.props.handleClient({
+      userId: ObjectID.generate(Date.now),
+      firstName: "Guest",
+      email: null
+    });
   }
-
+  
   componentDidMount() {
+    //setUser();
     (function() {
       "use strict"; // Start of use strict
-    
       // Smooth scrolling using jQuery easing
+      /*
       $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
         if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
           var target = $(this.hash);
@@ -32,19 +48,11 @@ class HomeComponent extends React.Component {
           }
         }
       });
-    
+      */
       // Closes responsive menu when a scroll trigger link is clicked
-      $('.js-scroll-trigger').click(function() {
-        $('.navbar-collapse').collapse('hide');
-      });
-      // console.log($("body"));
-      // Activate scrollspy to add active class to navbar items on scroll
-      //$('body').scrollspy({
-      //  target: '#mainNav',
-      //  offset: 56
+      //$('.js-scroll-trigger').click(function() {
+       // $('.navbar-collapse').collapse('hide');
       //});
-    
-    
       // Collapse Navbar
       var navbarCollapse = function() {
         if ($("#mainNav").offset().top > 100) {
@@ -59,19 +67,39 @@ class HomeComponent extends React.Component {
       $(window).scroll(navbarCollapse);
     })();
   }
-  render() {
+  componentWillUnmount() {
+    localStorage.removeItem("clientId");
+    localStorage.removeItem("conversationId");
+  }
+  render () {
+    const { history } = this.props;
     return (
-    <React.Fragment>
-      <NavbarComponent />
-      <MainHeaderComponent />
-      <BookingForm />
-      <ServicesComponent />
-      <ContactForm />
-      <MessageFormContainer />
-      <Footer />
-    </React.Fragment>
+      <React.Fragment>
+        <NavbarComponent />
+        <MainHeaderComponent />
+        <BookingForm />
+        <ServicesComponent history={history} />
+        <ContactForm />
+        <MessageFormContainer />
+        <Footer />
+      </React.Fragment>
     );
   }
 };
+// PropTypes validation //
+HomeComponent.propTypes = {
+  //socket: PropTypes.object.isRequired
+};
 
-export default HomeComponent;
+// redux mapping functions //
+const mapStateToProps = (state) => {
+  return {
+    clientState: state.clientState
+  }
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleClient: (userData) => dispatch(setGuestClient(userData))
+  };
+};
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeComponent));

@@ -1,19 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
+import { useTranslation } from "react-i18next";
 
 const ContactForm = (props) => {
+  const [t, i18n] = useTranslation();
   const elementRef = useRef(null);
   useEffect(() => {
     console.log(elementRef.current.draggable);
-  }, [])
+  }, []);
   
   return (
     <section className="page-section" id="contact" ref={elementRef}>
       <div className="container">
         <div className="row">
           <div className="col-lg-12 text-center">
-            <h2 className="section-heading text-uppercase">Contact Us</h2>
-            <h3 className="section-subheading text-muted">Please send us a message and we will contact you</h3>
+            <h2 className="section-heading text-uppercase">{t("contactTitle")}</h2>
+            <h3 className="section-subheading text-muted">{t("contactDesc")}</h3>
           </div>
         </div>
         <div className="row">
@@ -43,7 +45,7 @@ const ContactForm = (props) => {
                 <div className="clearfix"></div>
                 <div className="col-lg-12 text-center">
                   <div id="success"></div>
-                  <button id="sendMessageButton" className="btn btn-primary btn-xl text-uppercase" type="submit">Send Message</button>
+                    <button id="sendMessageButton" className="btn btn-primary btn-xl text-uppercase" type="submit">{t("sendMsg")}</button>
                 </div>
               </div>
             </form>
