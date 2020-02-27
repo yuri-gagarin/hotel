@@ -25,9 +25,12 @@ export default {
     const  { roomData } = req.body;
     return Room.create(roomData)
       .then((room) => {
+        return Room.populate(room, { path: "images", model: "RoomImage"});
+      })
+      .then((newRoom) => {
         return res.status(200).json({
           responseMsg: "Room created",
-          newRoom: room
+          newRoom: newRoom
         });
       })
       .catch((error) => {
@@ -81,13 +84,16 @@ export default {
   deleteRoom: (req, res) => {
     const roomId = req.params.roomId;
     const { roomData, roomImages } = req.body;
-    const imagePaths = roomImages.currentImages.map((img) => `${img.path}`);
-    const imageIds = roomImages.currentImages.map((img) => `${img._id}`);
+    let deletedRoom;
+    // console.log(req.body);
+    const imagePaths = roomImages.map((img) => `${img.path}`);
+    const imageIds = roomImages.map((img) => `${img._id}`);
 
     return Room.findOneAndDelete({ _id: roomId })
       .then((room) => {
+        deletedRoom = room;
         // delete the corresponding room images from the uploads folder //
-        const deletePromises = imagePaths.map((filePath) => deleteFile([filePath]))
+        const deletePromises = imagePaths.map((filePath) => deleteFile(filePath))
         return Promise.all(deletePromises);
       })
       .then((deleteArray) => {
@@ -97,8 +103,9 @@ export default {
       })
       .then((response) => {
         console.log(response);
-        return response.status(200).json({
-          responseMsg: "Successfully Deleted"
+        return res.status(200).json({
+          responseMsg: "Successfully Deleted",
+          deletedRoom: deletedRoom
         });
       })
       .catch((error) => {

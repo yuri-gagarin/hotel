@@ -25,8 +25,12 @@ const RoomImageThumb = (props) => {
 
   // 
   const normalizePath = (uploadPath) => {
-    const imgSourcePath = uploadPath.split("/");
-    return  "/" + imgSourcePath[1] + "/" + imgSourcePath[2] + "/" + imgSourcePath[3];
+    if (uploadPath) {
+      const imgSourcePath = uploadPath.split("/");
+      return  "/" + imgSourcePath[1] + "/" + imgSourcePath[2] + "/" + imgSourcePath[3];
+    } else {
+      return "";
+    }
   };
   //
   return (

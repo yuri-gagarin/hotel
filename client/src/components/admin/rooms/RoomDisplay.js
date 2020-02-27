@@ -43,9 +43,14 @@ const normalizePath = (uploadPath) => {
 };
 
 const RoomDisplay = (props) => {
-  const [formOpen, setFormOpen] = useState(false);
   const { room } = props;
+  const [formOpen, setFormOpen] = useState(false);
   const { options, images } = room;
+
+  useEffect(() => {
+    // close the room form on state change //
+    setFormOpen(false);
+  }, [room]);
 
   useEffect(() => {
     // will scroll down the document when edit room form is open //

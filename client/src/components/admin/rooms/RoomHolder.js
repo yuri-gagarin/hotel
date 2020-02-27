@@ -14,30 +14,28 @@ const RoomHolder = (props) => {
   }
  
   return (
-    <Card.Group>
-      <Card>
-        <Card.Content>
-          <Card.Header>{room.roomType}</Card.Header>
-          <Image
-            size='small'
-            src={imgPath}
-          />
-          <Card.Description>
-            {room.description}
-          </Card.Description>
-        </Card.Content>
-        <Card.Content extra>
-          <div className='ui two buttons'>
-            <Button basic color='green' onClick={() => openRoom(roomId)}>
-              Open
-            </Button>
-            <Button basic color='red' onClick={() => deleteRoom(roomId)}>
-              Delete
-            </Button>
-          </div>
-        </Card.Content>
-      </Card>
-    </Card.Group>
+    <Card>
+      <Card.Content>
+        <Card.Header>{room.roomType}</Card.Header>
+        <Image
+          size='small'
+          src={imgPath}
+        />
+        <Card.Description>
+          {room.description}
+        </Card.Description>
+      </Card.Content>
+      <Card.Content extra>
+        <div className='ui two buttons'>
+          <Button basic color='green' onClick={() => openRoom(roomId)}>
+            Open
+          </Button>
+          <Button basic color='red' onClick={() => deleteRoom(roomId)}>
+            Delete
+          </Button>
+        </div>
+      </Card.Content>
+    </Card>
   );
 };
 

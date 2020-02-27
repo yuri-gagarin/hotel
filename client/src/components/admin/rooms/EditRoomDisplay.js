@@ -8,7 +8,7 @@ const EditRoomDisplay = (props) => {
     <div>
       <hr />
       <h3>Editing {room.roomType ? room.roomType : "No Name"}</h3>
-      <RoomForm/>
+        <RoomForm />
       <hr />
     </div>
   )

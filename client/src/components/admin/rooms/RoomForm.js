@@ -66,13 +66,13 @@ const RoomForm = (props) => {
 
   const [roomDetails, setRoomDetails] = useState(roomData);
   const [roomOptions = {}, setRoomOptions] = useState(roomData.options);
-  console.log(roomOptions);
 
   useEffect(() => {
     if (roomData && roomData.images) {
       // set the images array //
       setPreviewImages(roomData.images);
     }
+    console.log("form rendered");
   }, []);
   
   // text input handlers //
@@ -202,6 +202,7 @@ const RoomForm = (props) => {
   // END checkbox handler //
   const handleFormSubmit = () => {
     const roomId = adminRoomState.roomData._id;
+    const createdRooms = adminRoomState.createdRooms;
 
     const roomImages = adminRoomState.roomImages.map((img) => img._id );
     const roomData = {
@@ -212,15 +213,12 @@ const RoomForm = (props) => {
       images: roomImages
     }
     if (!roomId) {
-      console.log("make a new room");
       // new room being created //
       handleNewRoom(roomData)
     } else {
       // existing room being edited with existing data //
-      console.log("update a room");
-      //handleNewRoom(roomData);
       const roomImages = { currentImages: adminRoomState.roomImages };
-      updateRoom({ ...roomData, _id: roomId }, roomImages);
+      updateRoom({ ...roomData, _id: roomId }, roomImages, createdRooms);
     }
   };  
 
@@ -340,7 +338,9 @@ const mapDispatchToProps = (dispatch) => {
     uploadRoomImage: (imageData) => uploadRoomImage(dispatch, imageData),
     setPreviewImages: (previewImages) => dispatch(setPreviewImages(previewImages)),
     handleNewRoom: (roomData) => handleNewRoom(dispatch, roomData),
-    updateRoom: (roomData, roomImages) => updateRoom(dispatch, roomData, roomImages),
+    updateRoom: (roomData, roomImages, currentRooms) => {
+      return updateRoom(dispatch, roomData, roomImages, currentRooms);
+    },
     deleteRoomImage: (imageId, oldImageState) => deleteRoomImage(dispatch, imageId, oldImageState)
   };
 };

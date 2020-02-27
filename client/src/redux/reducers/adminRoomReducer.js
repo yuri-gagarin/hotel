@@ -94,7 +94,20 @@ const adminRoomReducer = (state = initialState, { type, payload }) => {
         loading: payload.loading,
         responseMsg: payload.responseMsg,
         roomData: { ...payload.roomData },
+        createdRooms: [ ...payload.createdRooms ],
         roomImages: [ ...payload.roomImages ],
+        error: payload.error
+      };
+    };
+    case ROOM_DELETED: {
+      return {
+        ...state,
+        status: payload.status,
+        loading: payload.loading,
+        responseMsg: payload.responseMsg,
+        roomData: { ...payload.roomData },
+        roomImages: [ ...payload.roomImages ],
+        createdRooms: [ ...payload.createdRooms ],
         error: payload.error
       };
     };

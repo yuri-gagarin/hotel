@@ -64,7 +64,6 @@ const AdminComponent = (props) => {
       <Route path="/admin/posts">
         <PostsIndexContainer />
       </Route>
-      
     </Grid>
   )
 };

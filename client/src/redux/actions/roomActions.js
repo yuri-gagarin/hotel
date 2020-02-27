@@ -67,7 +67,6 @@ export const roomRequest = () => {
 };
 
 export const roomCreated = (stateData) => {
-  history.push("/admin/dash");
   return {
     type: ROOM_CREATED,
     payload: stateData
@@ -98,10 +97,14 @@ export const roomUpdated = (stateData) => {
 };
 
 export const roomDeleted = (stateData) => {
-
+  return {
+    type: ROOM_DELETED,
+    payload: stateData
+  };
 };
 
 export const roomError = (error) => {
+  console.error(error);
   return {
     type: ROOM_ERROR,
     payload: {
@@ -223,7 +226,7 @@ export const handleNewRoom = (dispatch, roomData) => {
         error: null
       };
       dispatch(roomCreated(stateData));
-      dispatch(addNewroom(newRoom));
+      dispatch(addNewRoom(newRoom));
     })
     .catch((error) => {
       console.error(error);
@@ -241,7 +244,6 @@ export const fetchRooms = (dispatch) => {
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, rooms } = data;
-      console.log(rooms);
       const stateData = {
         status: status,
         loading: false,
@@ -257,7 +259,7 @@ export const fetchRooms = (dispatch) => {
     });
 };
 
-export const updateRoom = (dispatch, roomData, roomImages = {}) => {
+export const updateRoom = (dispatch, roomData, roomImages = {}, currentRooms = []) => {
   const roomId = roomData._id
   const requestOptions = {
     method: "patch",
@@ -272,12 +274,22 @@ export const updateRoom = (dispatch, roomData, roomImages = {}) => {
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, updatedRoom } = data;
+      const updatedRooms = currentRooms.map((room) => {
+        if (room._id == updatedRoom._id) {
+          return {
+            ...updatedRoom
+          };
+        } else {
+          return room;
+        }
+      })
       const roomStateData = {
         status: status,
         loading: false,
         responseMsg: responseMsg,
         roomData: updatedRoom,
         roomImages: updatedRoom.images,
+        createdRooms: updatedRooms,
         error: null
       };
       dispatch(roomUpdated(roomStateData));
@@ -286,5 +298,38 @@ export const updateRoom = (dispatch, roomData, roomImages = {}) => {
       console.error(error);
       dispatch(roomError(error));
     })
+};
+
+export const deleteRoom = (dispatch, roomId, currentRooms = []) => {
+  const roomImages = currentRooms.filter((room) => roomId == room._id)[0].images;
+  const requestOptions = {
+    method: "delete",
+    url: "/api/rooms/" + roomId,
+    data: {
+      roomImages: roomImages
+    }
+  };
+  dispatch(roomRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, deletedRoom } = data;
+      const updatedRooms = currentRooms.filter((room) => {
+        return deletedRoom._id != room._id;
+      });
+      const roomStateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        roomData: {},
+        roomImages: [],
+        createdRooms: updatedRooms,
+        error: null
+      };
+      dispatch(roomDeleted(roomStateData));
+    })
+    .catch((error) => {
+      dispatch(roomError(error));
+    });
 };
 
