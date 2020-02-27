@@ -89,7 +89,7 @@ const ConversationIndexCotainer = (props) => {
           {
             conversationOpen ? 
               <Button 
-                style={ closeConvoButton } 
+                style={closeConvoButton} 
                 onClick={closeConversation}
               >
                 Close Conversation
