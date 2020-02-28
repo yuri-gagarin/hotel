@@ -49,4 +49,10 @@ export const roomConstants = {
   CLEAR_ROOM_DATA: "CLEAR_ROOM_DATA"
 };
 
+export const appErrorConstants = {
+  SET_APP_ERROR: "SET_APP_ERROR",
+  CLEAR_APP_ERROR: "CLEAR_APP_ERROR"
+};
+
+
 
