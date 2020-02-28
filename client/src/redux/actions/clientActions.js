@@ -26,3 +26,4 @@ export const setAdmin = ({ _id, name, email }) => {
   };
 };
 
+
