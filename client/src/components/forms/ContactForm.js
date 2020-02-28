@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 // redux imports //
 import { connect } from "react-redux";
-import { } from "./" 
+import { sendContactFormData } from "./../../redux/actions/contactPostActions"; 
 
 const ContactForm = (props) => {
+  const { contactPostState, sendContactFormData } = props;
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -44,14 +45,22 @@ const ContactForm = (props) => {
   const handleContactFormSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setFormState({
-      ...formState,
-      name: "",
-      email: "",
-      phoneNumber: "",
-      content: ""
-    });
+   
     // api call to send the contact form to the server //
+    return sendContactFormData(formState)
+      .then((success) => {
+        if (success) {
+          setFormState({
+            ...formState,
+            name: "",
+            email: "",
+            phoneNumber: "",
+            content: ""
+          });
+        } else {
+          // we should show an error component //
+        }
+      });
   }
   
   return (
@@ -139,5 +148,21 @@ const ContactForm = (props) => {
     </section>
   );
 };
+// PropTypes validation //
+ContactForm.propTypes = {
+  contactPostState: PropTypes.object.isRequired,
+  sendContactFormData: PropTypes.func.isRequired
+};
 
-export default ContactForm;
+const mapStateToProps = (state) => {
+  return {
+    contactPostState: state.contactPostState
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    sendContactFormData: (formData) => sendContactFormData(dispatch, formData)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

@@ -57,9 +57,11 @@ export const sendContactFormData = (dispatch, formData) => {
         status: status,
         responseMsg: responseMsg
       })); 
+      return true;
     })
     .catch((error) => {
       console.error(error);
       dispatch(sendContactError(error)); 
+      return false;
     });
 };  
