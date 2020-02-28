@@ -1,0 +1,38 @@
+#successComponent {
+  width: auto;
+  height: 100px;
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: red;
+  z-index: 999;
+  animation-name: move;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+#errorComponent {
+  width: auto;
+  height: 100px;
+  position: fixed;
+  top: 200px;
+  left: 50%;
+  transform: translateX(-50%);  
+  /*
+  z-index: 999;
+  animation-name: move;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  */
+}
+
+@keyframes move {
+  from {
+    background-color: red;
+  }
+  to {
+    background-color: yellow;
+    transform: translateY(50vh) translateX(-50%);
+  }  
+}

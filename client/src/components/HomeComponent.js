@@ -9,6 +9,8 @@ import ContactForm from "./forms/ContactForm";
 import Footer from "./footer/Footer";
 import MessageFormContainer from "./messaging/MessageFormContainer";
 import BookingForm from "./forms/BookingForm";
+import SuccessComponent from "./display_components/SuccessComponent";
+import ErrorComponent from "./display_components/ErrorComponent";
 // redux imports //
 import { connect } from "react-redux";
 // react router //
@@ -75,6 +77,8 @@ class HomeComponent extends React.Component {
     const { history } = this.props;
     return (
       <React.Fragment>
+        <SuccessComponent />
+        <ErrorComponent />
         <NavbarComponent />
         <MainHeaderComponent />
         <BookingForm />
