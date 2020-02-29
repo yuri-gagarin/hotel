@@ -13,14 +13,13 @@ import SuccessComponent from "./display_components/SuccessComponent";
 import ErrorComponent from "./display_components/ErrorComponent";
 // redux imports //
 import { connect } from "react-redux";
-import { clearAppError } from "../redux/actions/appErrorActions";
+import { clearAppError } from "../redux/actions/appGeneralActions";
 import store from "../redux/store";
 // react router //
 import { withRouter } from "react-router-dom";
 // additional imports //
 import ObjectID from "bson-objectid";
 import { setGuestClient } from "../redux/actions/clientActions";
-import { socket } from "../App";
 
 
 class HomeComponent extends React.Component {
@@ -36,8 +35,8 @@ class HomeComponent extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { appErrorState } = nextProps;
-    const { error } = appErrorState;
+    const { appGeneralState } = nextProps;
+    const { error } = appGeneralState
     let errorTimeout;
     if (error) {
       errorTimeout = setTimeout(() => {
@@ -72,11 +71,11 @@ class HomeComponent extends React.Component {
     localStorage.removeItem("conversationId");
   }
   render () {
-    const { history, appErrorState, clearAppError } = this.props;
+    const { history, appGeneralState, clearAppError } = this.props;
     return (
       <React.Fragment>
         <SuccessComponent/>
-        <ErrorComponent appErrorState={appErrorState} clearAppError={clearAppError} />
+        <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
         <NavbarComponent />
         <MainHeaderComponent />
         <BookingForm />
@@ -97,7 +96,7 @@ HomeComponent.propTypes = {
 const mapStateToProps = (state) => {
   return {
     clientState: state.clientState,
-    appErrorState: state.appErrorState
+    appGeneralState: state.appGeneralState
   };
 };
 const mapDispatchToProps = (dispatch) => {

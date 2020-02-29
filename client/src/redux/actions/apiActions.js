@@ -1,6 +1,6 @@
 import axios from "axios";
 import { clientConstants } from "../constants";
-import { setAppError } from "./appErrorActions";
+import { setAppError } from "./appGeneralActions";
 const {
   LOGIN_REQUEST,
   LOGIN_ERROR,

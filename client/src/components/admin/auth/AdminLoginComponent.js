@@ -13,7 +13,7 @@ import { withRouter } from "react-router-dom";
 // redux //
 import { connect } from "react-redux"; 
 import { loginUser } from "../../../redux/actions/apiActions";
-import { clearAppError } from "../../../redux/actions/appErrorActions";
+import { clearAppError } from "../../../redux/actions/appGeneralActions";
 
 const loginPageStyle = {
   container: {
@@ -35,7 +35,8 @@ const loginPageStyle = {
 const { titleRow, formRow } = loginPageStyle;
 
 const AdminLoginComponent = (props) => {
-  const { history, appErrorState, handleUserLogin, clearAppError } = props;
+  const { history, appGeneralState, handleUserLogin, clearAppError } = props;
+  console.log(appGeneralState);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,7 +44,7 @@ const AdminLoginComponent = (props) => {
 
   useEffect(() => {
     // to automatically clear error and close error comopnent //
-    const { error } = appErrorState;
+    const { error } = appGeneralState;
     let errorTimeout;
     if (error) {
       errorTimeout = setTimeout(() => {
@@ -53,7 +54,7 @@ const AdminLoginComponent = (props) => {
     if (!error && errorTimeout) {
       clearTimeout(errorTimeout);
     }
-  }, [appErrorState]);
+  }, [appGeneralState]);
 
   const handleEmailInut = (e) => {
     setEmail(e.target.value);
@@ -82,7 +83,7 @@ const AdminLoginComponent = (props) => {
   };
   return (
     <Grid style={loginPageStyle.container}>
-      <ErrorComponent appErrorState={appErrorState} clearAppError={clearAppError} />
+      <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
       <Grid.Row style={titleRow}>
         <Grid.Column width={16}>
           <h3>Login</h3>
@@ -130,7 +131,7 @@ AdminLoginComponent.propTypes = {
 const mapStateToProps = (state) => {
   return {
     adminState: state.adminState,
-    appErrorState: state.appErrorState
+    appGeneralState: state.appGeneralState
   };
 };
 const mapDispatchToProps = (dispatch) => {

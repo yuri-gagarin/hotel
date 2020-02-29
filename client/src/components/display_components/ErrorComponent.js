@@ -6,8 +6,8 @@ import {
 } from "semantic-ui-react";
 
 const ErrorComponent = (props) => {
-  const { appErrorState, clearAppError } = props;
-  const { status, responseMsg, error } = appErrorState;
+  const { appGeneralState, clearAppError } = props;
+  const { status, responseMsg, error } = appGeneralState;
   const componentRef = useRef(null);
 
   const handleClose = () => {
@@ -36,7 +36,7 @@ const ErrorComponent = (props) => {
 };
 // PropTypes validations //
 ErrorComponent.propTypes = {
-  appErrorState:  PropTypes.object.isRequired,
+  appGeneralState:  PropTypes.object.isRequired,
   clearAppError: PropTypes.func.isRequired
 };
 
