@@ -13,7 +13,7 @@ import SuccessComponent from "./display_components/SuccessComponent";
 import ErrorComponent from "./display_components/ErrorComponent";
 // redux imports //
 import { connect } from "react-redux";
-import { clearAppError } from "../redux/actions/appGeneralActions";
+import { clearAppError, clearSuccessState } from "../redux/actions/appGeneralActions";
 import store from "../redux/store";
 // react router //
 import { withRouter } from "react-router-dom";
@@ -71,10 +71,10 @@ class HomeComponent extends React.Component {
     localStorage.removeItem("conversationId");
   }
   render () {
-    const { history, appGeneralState, clearAppError } = this.props;
+    const { history, appGeneralState, clearAppError, clearSuccessState } = this.props;
     return (
       <React.Fragment>
-        <SuccessComponent/>
+        <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={clearSuccessState} />
         <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
         <NavbarComponent />
         <MainHeaderComponent />
@@ -102,7 +102,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleClient: (userData) => dispatch(setGuestClient(userData)),
-    clearAppError: () => dispatch(clearAppError())
+    clearAppError: () => dispatch(clearAppError()),
+    clearSuccessState: () => dispatch(clearSuccessState())
   };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeComponent));

@@ -1,4 +1,5 @@
 import ContactPost from "../models/ContactPost";
+import { validateContactPost } from "./helpers/validationHelpers";
 
 export default {
   getContactPosts: (req, res) => {
@@ -20,7 +21,17 @@ export default {
   sendContactPost: (req, res) => {
     // create a post from client and send to the database //
     // maybe create a mailing system later to automatically mail the contents //
-    const { name, email, phoneNumber = "", content } = req.body;
+    const { formData } = req.body;
+    const { isValid, errors } = validateContactPost(formData);
+    if (!isValid) {
+      return Promise.resolve(errors)
+        .then((errors) => {
+          return res.status(400).json({
+            responseMsg: "Error! Not sent...",
+            error: errors
+          });
+        });
+    }
     const newContactPost = {
       name: name,
       email: email,

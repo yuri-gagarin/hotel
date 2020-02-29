@@ -8,9 +8,12 @@ import ConversationIndexContainer from "./conversations/ConversationIndexContain
 import AdminDashComponent from "./dash/AdminDashComponent";
 import PostsIndexContainer from "./posts/PostsIndexContainer";
 import RoomsIndexContainer from "./rooms/RoomsIndexContainer";
+import SuccessComponent from "./../display_components/SuccessComponent";
+import ErrorComponent from "./../display_components/ErrorComponent";
 // redux imports //
 import { connect } from "react-redux";
 import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
+import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
 
 
 
@@ -28,7 +31,11 @@ const AdminComponent = (props) => {
     adminState,
     adminRoomState, 
     setAdmin,
-    handleLogout } = props;
+    handleLogout,
+    appGeneralState,
+    clearAppError,
+    clearSuccessState
+  } = props;
  
   useEffect(() => {
     // set the localStoreage state  so the app can reload //
@@ -47,6 +54,8 @@ const AdminComponent = (props) => {
 
   return (
     <Grid stackable padded divided centered style={{paddingLeft: "1em", paddingRight: "1em"}}>
+      <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={clearSuccessState} />
+      <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
       <Grid.Row>
         <Grid.Column width={16}>
           <AdminNavComponent logoutUser={logoutUser} />
@@ -78,13 +87,16 @@ const mapStateToProps = (state) => {
   return {
     clientState: state.clientState,
     adminState: state.adminState,
-    adminRoomState: state.adminRoomState
+    adminRoomState: state.adminRoomState,
+    appGeneralState: state.appGeneralState,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     setAdmin: (adminData) => dispatch(setAdmin(adminData)),
-    handleLogout: (history) => logOutUser(dispatch, history)
+    handleLogout: (history) => logOutUser(dispatch, history),
+    clearAppError: () => dispatch(clearAppError()),
+    clearSuccessState: () => dispatch(clearSuccessState())
   };
 };
 

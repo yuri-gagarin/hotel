@@ -10,6 +10,7 @@ const {
 const initialState = {
   status: "",
   responseMsg: "",
+  errorMessages: [],
   loading: false,
   successComponentOpen: false,
   error: null
@@ -31,7 +32,7 @@ const errorReducer = (state = initialState, { type, payload }) => {
         status: payload.status,
         responseMsg: payload.responseMsg,
         loading: payload.loading,
-        successComponentOpen: successComponentOpen,
+        successComponentOpen: payload.successComponentOpen,
         error: payload.error
       };
     };
@@ -40,6 +41,7 @@ const errorReducer = (state = initialState, { type, payload }) => {
         ...state,
         status: payload.status,
         responseMsg: payload.responseMsg,
+        errorMessages: [ ...payload.errorMessages ],
         loading: payload.loading,
         error: payload.error
       };
@@ -49,6 +51,7 @@ const errorReducer = (state = initialState, { type, payload }) => {
         ...status,
         payload: payload.status,
         responseMsg: payload.responseMsg,
+        errorMessages: [ ...payload.errorMessages ],
         loading: payload.loading,
         error: payload.error
       };

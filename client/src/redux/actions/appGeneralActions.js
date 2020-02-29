@@ -26,18 +26,19 @@ export const clearSuccessState = () => {
       status: "",
       responseMsg: "",
       loading: false,
-      succesComponentOpen: false,
+      successComponentOpen: false,
       error: null
     }
   };
 };
 
-export const setAppError = ({ status, responseMsg, error }) => {
+export const setAppError = ({ status, responseMsg, error, errorMessages = [] }) => {
   return {
     type: SET_APP_ERROR,
     payload: {
       status: status,
       responseMsg: responseMsg,
+      errorMessages: errorMessages,
       loading: false,
       error: error
     }
@@ -50,6 +51,7 @@ export const clearAppError = () => {
     payload: {
       status: "",
       responseMsg: "",
+      errorMessages: [],
       loading: false,
       error: null
     }

@@ -7,7 +7,7 @@ import {
 
 const ErrorComponent = (props) => {
   const { appGeneralState, clearAppError } = props;
-  const { status, responseMsg, error } = appGeneralState;
+  const { status, responseMsg, error, errorMessages } = appGeneralState;
   const componentRef = useRef(null);
 
   const handleClose = () => {
@@ -22,6 +22,13 @@ const ErrorComponent = (props) => {
           <Card.Description style={{fontWeight: "bold", color: "red"}}>
             {responseMsg}
           </Card.Description>
+        </Card.Content>
+        <Card.Content>
+          <ul style={{ color: "orange", fontWeight: "bold" }}>  
+          { 
+            errorMessages.map((errorMessage, index) => <li key={index}>{errorMessage}</li>)
+          }
+          </ul>
         </Card.Content>
         <Card.Content extra textAlign="center">
           <Button basic color='red' onClick={handleClose}>

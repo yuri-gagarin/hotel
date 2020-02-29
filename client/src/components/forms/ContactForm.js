@@ -52,8 +52,6 @@ const ContactForm = (props) => {
       error: new Error("An error here")
     }
     setAppError(errorData);
-    // api call to send the contact form to the server //
-    /*
     return sendContactFormData(formState)
       .then((success) => {
         if (success) {
@@ -64,12 +62,8 @@ const ContactForm = (props) => {
             phoneNumber: "",
             content: ""
           });
-        } else {
-          // we should show an error component //
         }
-        
       });
-      */
   }
   
   return (

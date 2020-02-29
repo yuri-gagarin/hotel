@@ -5,10 +5,9 @@
   top: -200px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: red;
   z-index: 999;
   animation-name: move;
-  animation-duration: 2s;
+  animation-duration: 0.5s;
   animation-fill-mode: forwards;
 }
 

@@ -1,5 +1,7 @@
 import axios from "axios";
+import { operationSuccessful, setAppError } from "./appGeneralActions";
 import { contactPostActions } from "../constants";
+import { normalizeErrorMessages } from "./helpers/errorHelpers";
 
 const {
   CONTACT_POST_REQUEST,
@@ -57,11 +59,15 @@ export const sendContactFormData = (dispatch, formData) => {
         status: status,
         responseMsg: responseMsg
       })); 
+      dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
       return true;
     })
-    .catch((error) => {
-      console.error(error);
+    .catch((err) => {
+      const { status, data } = err.response;
+      const { responseMsg, error } = data;
+      const errorMessages = normalizeErrorMessages(data);
       dispatch(sendContactError(error)); 
+      dispatch(setAppError({ status: status, responseMsg: responseMsg, errorMessages: errorMessages, error: error }));
       return false;
     });
 };  

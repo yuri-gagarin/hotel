@@ -8,6 +8,7 @@ import {
 } from "semantic-ui-react";
 // additional components //
 import ErrorComponent from "../../display_components/ErrorComponent";
+import SuccessComponent from "../../display_components/SuccessComponent";
 // react router //
 import { withRouter } from "react-router-dom";
 // redux //
@@ -36,7 +37,6 @@ const { titleRow, formRow } = loginPageStyle;
 
 const AdminLoginComponent = (props) => {
   const { history, appGeneralState, handleUserLogin, clearAppError } = props;
-  console.log(appGeneralState);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,6 +54,8 @@ const AdminLoginComponent = (props) => {
     if (!error && errorTimeout) {
       clearTimeout(errorTimeout);
     }
+    // clean up if unmounted //
+    return errorTimeout ? clearTimeout(error) : null;
   }, [appGeneralState]);
 
   const handleEmailInut = (e) => {
@@ -84,6 +86,7 @@ const AdminLoginComponent = (props) => {
   return (
     <Grid style={loginPageStyle.container}>
       <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
+      <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={"ok"} />
       <Grid.Row style={titleRow}>
         <Grid.Column width={16}>
           <h3>Login</h3>

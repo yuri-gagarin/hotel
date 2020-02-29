@@ -70,3 +70,36 @@ export const validateUser = (userData) => {
     isValid: isEmpty(errors)
   };
 };
+
+export const validateContactPost = (postData) => {
+  const errors = {};
+  // validate contact post name //
+  if (postData.name) {
+    if (postData.name.length < 2) {
+      errors.name = "Name should be at least 2 characters";
+    }
+  } else {
+    errors.name = "Name field is required";
+  }
+  // validate contact post email //
+  if (postData.email) {
+    if (!emailValidator(postData.email)) {
+      errors.email = "Invalid email";
+    } 
+  } else {
+    errors.email = "We need your email to contact you";
+  }
+  // validate contact post content //
+  if (postData.content) {
+    if (postData.content.length <  10) {
+      errors.content = "Give us at least 10 letters...";
+    }
+  } else {
+    errors.content = "Content field is required.";
+  }
+
+  return {
+    errors: errors,
+    isValid: isEmpty(errors)
+  };
+};
