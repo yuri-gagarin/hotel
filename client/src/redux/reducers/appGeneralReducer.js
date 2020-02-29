@@ -22,6 +22,7 @@ const errorReducer = (state = initialState, { type, payload }) => {
       return {
         status: payload.status,
         responseMsg: payload.responseMsg,
+        errorMessages: [ ...payload.errorMessages ],
         loading: payload.loading,
         successComponentOpen: payload.successComponentOpen,
         error: payload.error
@@ -31,6 +32,7 @@ const errorReducer = (state = initialState, { type, payload }) => {
       return {
         status: payload.status,
         responseMsg: payload.responseMsg,
+        errorMessages: [ ...payload.errorMessages ],
         loading: payload.loading,
         successComponentOpen: payload.successComponentOpen,
         error: payload.error
@@ -38,21 +40,21 @@ const errorReducer = (state = initialState, { type, payload }) => {
     };
     case SET_APP_ERROR: {
       return {
-        ...state,
         status: payload.status,
         responseMsg: payload.responseMsg,
         errorMessages: [ ...payload.errorMessages ],
         loading: payload.loading,
+        successComponentOpen: payload.successComponentOpen,
         error: payload.error
       };
     };
     case CLEAR_APP_ERROR: {
       return {
-        ...status,
-        payload: payload.status,
+        sttus: payload.status,
         responseMsg: payload.responseMsg,
         errorMessages: [ ...payload.errorMessages ],
         loading: payload.loading,
+        successComponentOpen: payload.successComponentOpen,
         error: payload.error
       };
     };

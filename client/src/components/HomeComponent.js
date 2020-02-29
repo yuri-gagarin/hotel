@@ -26,7 +26,10 @@ class HomeComponent extends React.Component {
   //const [client, setClient] = useState(setUser(handleClient));
   constructor (props) {
     super(props);
-    this.state = {};
+    this.state = {
+      errorTimeout: null,
+      successTimeout: null
+    };
     this.props.handleClient({
       userId: ObjectID.generate(Date.now),
       firstName: "Guest",
@@ -36,15 +39,33 @@ class HomeComponent extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { appGeneralState } = nextProps;
-    const { error } = appGeneralState
-    let errorTimeout;
+    const { error, successComponentOpen } = appGeneralState
+    const { errorTimeout, successTimeout } = prevState;
+   
     if (error) {
-      errorTimeout = setTimeout(() => {
-        store.dispatch(clearAppError());
-      }, 5000)
+      return {
+        errorTimeout: setTimeout(() => {
+          store.dispatch(clearAppError());
+        }, 5000)
+      };
     }
     if (!error && errorTimeout) {
-      clearTimeout(errorTimeout);
+      return {
+        errorTimeout: clearTimeout(prevState.errorTimeout)
+      };
+    }
+    if (successComponentOpen) {
+      return {
+        successTimeout: setTimeout(() => {
+          store.dispatch(clearSuccessState());
+        }, 5000)
+      };
+    }
+    if (!successComponentOpen && successTimeout) {
+      console.log("clearing success timeout")
+      return {
+        successTimeout: clearTimeout(prevState.successTimeout)
+      };
     }
     return prevState;
   }

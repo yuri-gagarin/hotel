@@ -46,12 +46,6 @@ const ContactForm = (props) => {
   const handleContactFormSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const errorData = {
-      status: 500,
-      responseMsg: "An error occured",
-      error: new Error("An error here")
-    }
-    setAppError(errorData);
     return sendContactFormData(formState)
       .then((success) => {
         if (success) {

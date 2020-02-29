@@ -13,7 +13,7 @@ const contactPostSchema = new Schema({
   },
   phoneNumber: {
     type: String,
-    required: true
+    required: false
   },
   content: {
     type: String,

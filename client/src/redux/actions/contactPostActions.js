@@ -54,7 +54,8 @@ export const sendContactFormData = (dispatch, formData) => {
   dispatch(sendContactRequest());
   return axios(requestOptions)
     .then((response) => {
-      const { status, responseMsg } = response;
+      const { status, data } = response;
+      const { responseMsg } = data;
       dispatch(sendContactSuccess({
         status: status,
         responseMsg: responseMsg
@@ -66,6 +67,7 @@ export const sendContactFormData = (dispatch, formData) => {
       const { status, data } = err.response;
       const { responseMsg, error } = data;
       const errorMessages = normalizeErrorMessages(data);
+      console.log(70);
       dispatch(sendContactError(error)); 
       dispatch(setAppError({ status: status, responseMsg: responseMsg, errorMessages: errorMessages, error: error }));
       return false;

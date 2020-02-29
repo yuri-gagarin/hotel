@@ -33,11 +33,12 @@ export default {
         });
     }
     const newContactPost = {
-      name: name,
-      email: email,
-      phoneNumber: phoneNumber,
-      content: content
+      name: formData.name,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      content: formData.content
     };
+  
     return ContactPost.create(newContactPost)
       .then((contactPost) => {
         return res.status(200).json({

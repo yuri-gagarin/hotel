@@ -24,7 +24,7 @@ const ErrorComponent = (props) => {
           </Card.Description>
         </Card.Content>
         <Card.Content>
-          <ul style={{ color: "orange", fontWeight: "bold" }}>  
+          <ul style={{ color: "red", fontWeight: "bold" }}>  
           { 
             errorMessages.map((errorMessage, index) => <li key={index}>{errorMessage}</li>)
           }

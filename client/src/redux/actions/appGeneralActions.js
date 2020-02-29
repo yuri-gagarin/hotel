@@ -7,11 +7,13 @@ const {
 } = appGeneralConstants
 
 export const operationSuccessful = ({ status, responseMsg }) => {
+  console.log(responseMsg);
   return {
     type: OPERATION_SUCCESSFUL,
     payload: {
       status: status,
       responseMsg: responseMsg,
+      errorMessages: [],
       loading: false,
       successComponentOpen: true,
       error: null
@@ -25,6 +27,7 @@ export const clearSuccessState = () => {
     payload: {
       status: "",
       responseMsg: "",
+      errorMessages: [],
       loading: false,
       successComponentOpen: false,
       error: null
@@ -40,6 +43,7 @@ export const setAppError = ({ status, responseMsg, error, errorMessages = [] }) 
       responseMsg: responseMsg,
       errorMessages: errorMessages,
       loading: false,
+      successComponentOpen: false,
       error: error
     }
   };
@@ -53,6 +57,7 @@ export const clearAppError = () => {
       responseMsg: "",
       errorMessages: [],
       loading: false,
+      successComponentOpen: false,
       error: null
     }
   };

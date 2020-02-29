@@ -6,7 +6,7 @@ import {
 
 const SuccessComponent = (props) => {
   const { appGeneralState, clearSuccessState } = props;
-  const { status, responseMsg = "Ok", successComponentOpen } = appGeneralState;
+  const { status, responseMsg = "All Ok", successComponentOpen } = appGeneralState;
   const handleClose = () => {
     clearSuccessState();
   };
@@ -14,15 +14,15 @@ const SuccessComponent = (props) => {
   return ( 
     successComponentOpen ?
     <div id="successComponent" >
-      <Card>
+      <Card style={{ border: "1px solid rgb(66, 132, 245)"}}>
         <Card.Content textAlign="center">
-          <Card.Description style={{fontWeight: "bold", color: "blue"}}>
-            {responseMsg}
+          <Card.Description style={{fontWeight: "bold", color: "rgb(66, 132, 245)"}}>
+            {"all ok is fine"}
           </Card.Description>
         </Card.Content>
         <Card.Content extra textAlign="center">
-          <Button basic color='green' onClick={handleClose}>
-            Dismisss
+          <Button basic color="blue" onClick={handleClose}>
+            Ok
           </Button>
         </Card.Content>
       </Card>
