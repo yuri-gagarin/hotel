@@ -1,30 +1,26 @@
-import React, { useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   Button,
   Card
 } from "semantic-ui-react";
 
 const ErrorComponent = (props) => {
-  let shouldOpen = true;
+  const { appErrorState, clearAppError } = props;
+  const { status, responseMsg, error } = appErrorState;
   const componentRef = useRef(null);
 
-  useEffect(() => {
-    //setTimeout(() => {
-    // componentRef.current.style.display = "none";
-    //}, 3000);
-  }, []);
-
   const handleClose = () => {
-    componentRef.current.style.display = "none";
+    clearAppError();
   };
 
   return ( 
-    shouldOpen ?
+    error ?
     <div ref={componentRef} id="errorComponent" >
       <Card style={{border: "2px solid red"}}>
         <Card.Content textAlign="center">
           <Card.Description style={{fontWeight: "bold", color: "red"}}>
-            An Error Occured
+            {responseMsg}
           </Card.Description>
         </Card.Content>
         <Card.Content extra textAlign="center">
@@ -37,6 +33,11 @@ const ErrorComponent = (props) => {
     :
     <div></div>
   );
+};
+// PropTypes validations //
+ErrorComponent.propTypes = {
+  appErrorState:  PropTypes.object.isRequired,
+  clearAppError: PropTypes.func.isRequired
 };
 
 export default ErrorComponent;

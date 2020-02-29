@@ -1,13 +1,13 @@
 import { appErrorConstants } from "../constants";
 const { SET_APP_ERROR, CLEAR_APP_ERROR } = appErrorConstants;
 
-export const setAppError = ({ status, responseMsg, }) => {
+export const setAppError = ({ status, responseMsg, error }) => {
   return {
     type: SET_APP_ERROR,
     payload: {
-      status: errorData.status,
-      responseMsg: errorData.responseMsg,
-      error: errorData.error
+      status: status,
+      responseMsg: responseMsg,
+      error: error
     }
   };
 };  

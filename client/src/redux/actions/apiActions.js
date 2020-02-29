@@ -1,5 +1,6 @@
 import axios from "axios";
 import { clientConstants } from "../constants";
+import { setAppError } from "./appErrorActions";
 const {
   LOGIN_REQUEST,
   LOGIN_ERROR,
@@ -111,8 +112,8 @@ export const loginUser = (dispatch, userCredentials, history) => {
       history.push("/admin/dashboard");
     })
     .catch((error) => {
-      console.error(error.response);
       dispatch(loginError(error));
+      dispatch(setAppError({ status: 500, responseMsg: "Please check email or password", error: error }));
     });
 };
 
@@ -132,5 +133,6 @@ export const logOutUser = (dispatch, history) => {
     })
     .catch((error) => {
       dispatch(loginError(error));
-    })
+      dispatch(setAppError({ status: 500, responseMsg: "Logout error", error: error }));
+    });
 };

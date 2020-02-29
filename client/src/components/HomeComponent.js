@@ -13,6 +13,8 @@ import SuccessComponent from "./display_components/SuccessComponent";
 import ErrorComponent from "./display_components/ErrorComponent";
 // redux imports //
 import { connect } from "react-redux";
+import { clearAppError } from "../redux/actions/appErrorActions";
+import store from "../redux/store";
 // react router //
 import { withRouter } from "react-router-dom";
 // additional imports //
@@ -25,36 +27,32 @@ class HomeComponent extends React.Component {
   //const [client, setClient] = useState(setUser(handleClient));
   constructor (props) {
     super(props);
+    this.state = {};
     this.props.handleClient({
       userId: ObjectID.generate(Date.now),
       firstName: "Guest",
       email: null
     });
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { appErrorState } = nextProps;
+    const { error } = appErrorState;
+    let errorTimeout;
+    if (error) {
+      errorTimeout = setTimeout(() => {
+        store.dispatch(clearAppError());
+      }, 5000)
+    }
+    if (!error && errorTimeout) {
+      clearTimeout(errorTimeout);
+    }
+    return prevState;
+  }
   
   componentDidMount() {
-    //setUser();
+    // automatic form clear for error //
     (function() {
-      "use strict"; // Start of use strict
-      // Smooth scrolling using jQuery easing
-      /*
-      $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-          var target = $(this.hash);
-          target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-          if (target.length) {
-            $('html, body').animate({
-              scrollTop: (target.offset().top - 54)
-            }, 1000, "easeInOutExpo");
-            return false;
-          }
-        }
-      });
-      */
-      // Closes responsive menu when a scroll trigger link is clicked
-      //$('.js-scroll-trigger').click(function() {
-       // $('.navbar-collapse').collapse('hide');
-      //});
       // Collapse Navbar
       var navbarCollapse = function() {
         if ($("#mainNav").offset().top > 100) {
@@ -74,11 +72,11 @@ class HomeComponent extends React.Component {
     localStorage.removeItem("conversationId");
   }
   render () {
-    const { history } = this.props;
+    const { history, appErrorState, clearAppError } = this.props;
     return (
       <React.Fragment>
-        <SuccessComponent />
-        <ErrorComponent />
+        <SuccessComponent/>
+        <ErrorComponent appErrorState={appErrorState} clearAppError={clearAppError} />
         <NavbarComponent />
         <MainHeaderComponent />
         <BookingForm />
@@ -98,12 +96,14 @@ HomeComponent.propTypes = {
 // redux mapping functions //
 const mapStateToProps = (state) => {
   return {
-    clientState: state.clientState
-  }
+    clientState: state.clientState,
+    appErrorState: state.appErrorState
+  };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClient: (userData) => dispatch(setGuestClient(userData))
+    handleClient: (userData) => dispatch(setGuestClient(userData)),
+    clearAppError: () => dispatch(clearAppError())
   };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeComponent));

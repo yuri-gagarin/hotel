@@ -4,9 +4,10 @@ import { useTranslation } from "react-i18next";
 // redux imports //
 import { connect } from "react-redux";
 import { sendContactFormData } from "./../../redux/actions/contactPostActions"; 
+import { setAppError } from "./../../redux/actions/appErrorActions";
 
 const ContactForm = (props) => {
-  const { contactPostState, sendContactFormData } = props;
+  const { contactPostState, sendContactFormData, setAppError } = props;
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -45,8 +46,14 @@ const ContactForm = (props) => {
   const handleContactFormSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
-   
+    const errorData = {
+      status: 500,
+      responseMsg: "An error occured",
+      error: new Error("An error here")
+    }
+    setAppError(errorData);
     // api call to send the contact form to the server //
+    /*
     return sendContactFormData(formState)
       .then((success) => {
         if (success) {
@@ -60,7 +67,9 @@ const ContactForm = (props) => {
         } else {
           // we should show an error component //
         }
+        
       });
+      */
   }
   
   return (
@@ -161,7 +170,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    sendContactFormData: (formData) => sendContactFormData(dispatch, formData)
+    sendContactFormData: (formData) => sendContactFormData(dispatch, formData),
+    setAppError: (errorData) => dispatch(setAppError(errorData))
   };
 };
 

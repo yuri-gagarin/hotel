@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { 
   Button,
@@ -6,11 +6,14 @@ import {
   Grid,
   Form
 } from "semantic-ui-react";
+// additional components //
+import ErrorComponent from "../../display_components/ErrorComponent";
 // react router //
 import { withRouter } from "react-router-dom";
 // redux //
 import { connect } from "react-redux"; 
 import { loginUser } from "../../../redux/actions/apiActions";
+import { clearAppError } from "../../../redux/actions/appErrorActions";
 
 const loginPageStyle = {
   container: {
@@ -32,10 +35,25 @@ const loginPageStyle = {
 const { titleRow, formRow } = loginPageStyle;
 
 const AdminLoginComponent = (props) => {
+  const { history, appErrorState, handleUserLogin, clearAppError } = props;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [typing, setTyping] = useState(false);
-  const { history, handleUserLogin } = props;
+
+  useEffect(() => {
+    // to automatically clear error and close error comopnent //
+    const { error } = appErrorState;
+    let errorTimeout;
+    if (error) {
+      errorTimeout = setTimeout(() => {
+        clearAppError();
+      }, 5000);
+    }
+    if (!error && errorTimeout) {
+      clearTimeout(errorTimeout);
+    }
+  }, [appErrorState]);
 
   const handleEmailInut = (e) => {
     setEmail(e.target.value);
@@ -64,6 +82,7 @@ const AdminLoginComponent = (props) => {
   };
   return (
     <Grid style={loginPageStyle.container}>
+      <ErrorComponent appErrorState={appErrorState} clearAppError={clearAppError} />
       <Grid.Row style={titleRow}>
         <Grid.Column width={16}>
           <h3>Login</h3>
@@ -110,12 +129,14 @@ AdminLoginComponent.propTypes = {
 // redux mapState and mapDispatch //
 const mapStateToProps = (state) => {
   return {
-    adminState: state.adminState
+    adminState: state.adminState,
+    appErrorState: state.appErrorState
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleUserLogin: (userData, history) => loginUser(dispatch, userData, history)
+    handleUserLogin: (userData, history) => loginUser(dispatch, userData, history),
+    clearAppError: () => dispatch(clearAppError())
   };
 };
 
