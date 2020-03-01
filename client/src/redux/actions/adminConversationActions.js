@@ -1,17 +1,21 @@
 import axios from "axios";
 import store from '../../redux/store';
 import { conversationConstants } from "../constants";
-const { UPDATE_CONVERSATION } = conversationConstants;
+const { 
+  SET_ADMIN_CONVERSATIONS, ADMIN_CONVERSATIONS_ERROR, 
+  REMOVE_ADMIN_CONVERSATION, HANDLE_NEW_MESSAGE
+} = conversationConstants;
 
 export const setAdminConversations = ({ status, responseMsg }, conversations = []) => {
-  console.log("called");
   return {
-    type: "SET_ADMIN_CONVERSATIONS",
+    type: SET_ADMIN_CONVERSATIONS,
     payload: {
       status: status,
       responseMsg: responseMsg,
+      currentConversationId: "",
       loading: false,
       conversations: [...conversations],
+      numberOfConversations: conversations.length,
       error: null
     }
   };
@@ -19,7 +23,7 @@ export const setAdminConversations = ({ status, responseMsg }, conversations = [
 
 export const adminConversationsError = (error) => {
   return {
-    type: "ADMIN_CONVERSATIONS_ERROR",
+    type: ADMIN_CONVERSATIONS_ERROR,
     payload: {
       responseMsg: "an error occurred",
       loading: false,
@@ -34,7 +38,7 @@ export const removeAdminConversation = (conversationId, responseMsg) => {
     return conversation._id != conversationId;
   });
   return {
-    type: "REMOVE_ADMIN_CONVERSATION",
+    type: REMOVE_ADMIN_CONVERSATION,
     payload: {
       status: "ok",
       responseMsg: responseMsg,
@@ -85,7 +89,7 @@ export const handleNewClientMessage = (dispatch, data) => {
       }
      
       dispatch({
-        type: "HANDLE_NEW_MESSAGE",
+        type: HANDLE_NEW_MESSAGE,
         payload: {
           status: status,
           responseMsg: responseMsg,
@@ -96,7 +100,6 @@ export const handleNewClientMessage = (dispatch, data) => {
       });
       if (conversationState.conversationId == conversationId) {
         // update the window open //
-        console.log("need to update converdsation");
         dispatch({
           type: UPDATE_CONVERSATION,
           payload: {
@@ -114,4 +117,25 @@ export const handleNewClientMessage = (dispatch, data) => {
       dispatch(adminConversationsError(error));
     })
 };
+
+export const fetchAllConversations = (dispatch) => {
+  let status, data;
+  dispatch(conversationRequest());
+  const requestOptions = {
+    method: "get",
+    url: "/api/conversations"
+  };
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, conversations } = data;
+      dispatch(conversationSuccess(null, []))
+      dispatch(setAdminConversations({ status, responseMsg }, conversations));
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(conversationError(error));
+    });
+};
+
 
