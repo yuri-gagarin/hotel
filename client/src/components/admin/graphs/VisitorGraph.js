@@ -38,7 +38,7 @@ const VisitorGraph = (props) => {
     detailElement.style.display = "none";
     setDataPointValue({});
   };
-
+  // this should be coming from a database eventually //
   return (
     <React.Fragment>
       <GraphDetail dataPointValue={dataPointValue} />

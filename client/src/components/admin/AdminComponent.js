@@ -23,19 +23,18 @@ const setUserCredentials = (userData) => {
 };
 
 const AdminComponent = (props) => {
+  // redux state objects //
   const { 
-    history, 
-    adminState,
-    adminRoomState, 
-    setAdmin,
-    handleLogout,
-    appGeneralState,
-    clearAppError,
-    clearSuccessState
+    history, adminState, adminConvState,
+    adminRoomState, appGeneralState,
+    contactPostState
   } = props;
- 
+  // redux action functions //
+  const {
+    clearAppError, clearSuccessState, handleLogout, setAdmin
+  } = props; 
+  // set the localStoreage state  so the app can reload //
   useEffect(() => {
-    // set the localStoreage state  so the app can reload //
     if (!localStorage.getItem("hotelAdminState")) {
       setUserCredentials(adminState);
     } else {
@@ -44,7 +43,7 @@ const AdminComponent = (props) => {
       setAdmin(savedState);
     }
   }, []); 
-
+  // logout user functionality //
   const logoutUser = (e) => {
     handleLogout(history);
   };
@@ -59,7 +58,13 @@ const AdminComponent = (props) => {
         </Grid.Column>
       </Grid.Row>
       <Route path="/admin/dashboard">
-        <AdminDashComponent adminState={adminState}/>
+        <AdminDashComponent 
+          adminState={adminState}
+          adminConvState={adminConvState}
+          adminRoomState={adminRoomState}
+          appGeneralState={appGeneralState}
+          contactPostState={contactPostState}
+        />
       </Route>
       <Route path="/admin/messages">
         <ConversationIndexContainer />
@@ -79,8 +84,10 @@ AdminComponent.propTypes = {
   adminConvState: PropTypes.object.isRequired,
   adminState: PropTypes.object.isRequired,
   adminRoomState: PropTypes.object.isRequired,
+  appGeneralState: PropTypes.object.isRequired,
+  contactPostState: PropTypes.object.isRequired
 };
-
+// redux mapping functions //
 const mapStateToProps = (state) => {
   return {
     adminConvState: state.adminConvState,
@@ -98,5 +105,5 @@ const mapDispatchToProps = (dispatch) => {
     clearSuccessState: () => dispatch(clearSuccessState())
   };
 };
-
+// export default component with dependencies //
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminComponent));

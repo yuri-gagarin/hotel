@@ -65,9 +65,8 @@ const InformationHolder = (props) => {
 const AdminDashComponent = (props) => {
   const { 
     adminState, 
-    contactPostState, 
     adminRoomState, 
-    conversationState 
+    contactPostState, 
   } = props;
   const {fetchContactPosts, fetchRooms, fetchAllConversations } = props;
   const { firstName } = adminState;
@@ -77,7 +76,6 @@ const AdminDashComponent = (props) => {
     fetchContactPosts();
     fetchRooms();
     fetchAllConversations();
-
   }, [])
 
   return (
@@ -139,12 +137,15 @@ const AdminDashComponent = (props) => {
 };
 // Proptypes Validations //
 AdminDashComponent.propTypes = {
-  adminState: PropTypes.object.isRequired
+  adminState: PropTypes.object.isRequired,
+  adminConvState: PropTypes.object.isRequired,
+  adminRoomState: PropTypes.object.isRequired,
+  appGeneralState: PropTypes.object.isRequired,
+  contactPostState: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
-
   };
 };
 const mapDispatchToProps = (dispatch) => {
