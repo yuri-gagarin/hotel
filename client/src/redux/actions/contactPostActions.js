@@ -6,6 +6,7 @@ import { normalizeErrorMessages } from "./helpers/errorHelpers";
 const {
   CONTACT_POST_REQUEST,
   CONTACT_POST_SUCCESS,
+  SET_CONTACT_POSTS,
   CONTACT_POST_ERROR
 } = contactPostActions;
 
@@ -43,6 +44,20 @@ export const sendContactError = (error) => {
   };
 };
 
+export const setContactPosts = ({ status, responseMsg, contactPosts = [] }) => {
+  return {
+    type: SET_CONTACT_POSTS,
+    payload: {
+      status: status,
+      loading: false,
+      responseMsg: responseMsg,
+      contactPost: {},
+      createdPosts: contactPosts,
+      error: null
+    }
+  };
+};
+
 export const sendContactFormData = (dispatch, formData) => {
   const requestOptions = {
     method: "post",
@@ -72,4 +87,26 @@ export const sendContactFormData = (dispatch, formData) => {
       dispatch(setAppError({ status: status, responseMsg: responseMsg, errorMessages: errorMessages, error: error }));
       return false;
     });
-};  
+};
+
+export const fetchContactPosts = (dispatch) => {
+  const requestOptions = {
+    method: "get",
+    url: "/api/contactPosts",
+  }
+  dispatch(sendContactRequest());
+  return axios(requestOptions) 
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg } = data;
+      const stateData = {
+        status: status,
+        responseMsg: responseMsg,
+        contactPosts: data.contactPosts
+      };
+      dispatch(setContactPosts(stateData))
+    })
+    .catch((error) => {
+      dispatch(sendContactError(error));
+    });
+};

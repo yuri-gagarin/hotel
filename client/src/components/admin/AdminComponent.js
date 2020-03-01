@@ -21,9 +21,6 @@ const setUserCredentials = (userData) => {
   const adminState = JSON.stringify(userData);
   localStorage.setItem("hotelAdminState", adminState);
 };
-const cleanUserState = () => {
-
-};
 
 const AdminComponent = (props) => {
   const { 
@@ -79,16 +76,18 @@ const AdminComponent = (props) => {
 // proptypes checking //
 AdminComponent.propTypes = {
   history: PropTypes.object.isRequired,
+  adminConvState: PropTypes.object.isRequired,
   adminState: PropTypes.object.isRequired,
-  adminRoomState: PropTypes.object.isRequired
+  adminRoomState: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
-    clientState: state.clientState,
-    adminState: state.adminState,
+    adminConvState: state.adminConvState,
     adminRoomState: state.adminRoomState,
+    adminState: state.adminState,
     appGeneralState: state.appGeneralState,
+    contactPostState: state.contactPostState
   };
 };
 const mapDispatchToProps = (dispatch) => {

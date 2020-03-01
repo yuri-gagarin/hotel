@@ -3,6 +3,7 @@ import { contactPostActions } from "../constants";
 const {
   CONTACT_POST_REQUEST,
   CONTACT_POST_SUCCESS,
+  SET_CONTACT_POSTS,
   CONTACT_POST_ERROR
 } = contactPostActions;
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   loading: false,
   responseMsg: "",
   contactPost: {},
+  createdPosts: [],
   error: null
 };
 
@@ -31,6 +33,16 @@ const contactPostReducer = (state = initialState, { type, payload }) => {
         error: payload.error
       };
     };
+    case SET_CONTACT_POSTS: {
+      return {
+        status: payload.status,
+        loading: payload.loading,
+        responseMsg: payload.responseMsg,
+        contactPost: { ... payload.contactPost },
+        createdPosts: [ ...payload.createdPosts ],
+        error: payload.error
+      }
+    }
     case CONTACT_POST_ERROR: {
       return {
         ...state,
