@@ -13,12 +13,12 @@ import { fetchRooms } from "./../../../redux/actions/roomActions";
 import { fetchAllConversations } from "./../../../redux/actions/conversationActions";
 // aditional component imports //
 import VisitorGraph from "../graphs/VisitorGraph";
+import BookingGraph from "../graphs/BookingsGraph";
 
 
 
 const InformationHolder = (props) => {
   const { number = 0 } = props;
-  console.log(number)
   return (
   <div style={{ display: "flex" }}>
     <div style={informationHolder}>
@@ -64,7 +64,7 @@ const AdminDashComponent = (props) => {
             <h4>Information Requests</h4>
             <p>New Information Requests</p>
           </div>
-          <InformationHolder />
+          <InformationHolder number={contactPostState.numberOfPosts} />
           <Button basic color="green" style={infoButton}>Show Requests</Button>
         </Grid.Column>
         <Grid.Column width={4} style={infoColumn}>
@@ -97,10 +97,11 @@ const AdminDashComponent = (props) => {
           <InformationHolder />
           <Button basic color="green" style={infoButton}>Open Posts</Button>
         </Grid.Column>
-        <Grid.Column width={4}>
+        <Grid.Column width={8}>
+          <div style={{ textAlign: "center" }}>Bookings</div>
+          <BookingGraph />
         </Grid.Column>
-        <Grid.Column width={4} style={{border: "2px solid red"}}>
-        </Grid.Column>
+        
 
 
       </Grid.Row>

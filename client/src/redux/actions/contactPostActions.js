@@ -53,6 +53,7 @@ export const setContactPosts = ({ status, responseMsg, contactPosts = [] }) => {
       responseMsg: responseMsg,
       contactPost: {},
       createdPosts: contactPosts,
+      numberOfPosts: contactPosts.length,
       error: null
     }
   };

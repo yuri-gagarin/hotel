@@ -12,6 +12,7 @@ const initialState = {
   responseMsg: "",
   contactPost: {},
   createdPosts: [],
+  numberOfPosts: 0,
   error: null
 };
 
@@ -40,6 +41,7 @@ const contactPostReducer = (state = initialState, { type, payload }) => {
         responseMsg: payload.responseMsg,
         contactPost: { ... payload.contactPost },
         createdPosts: [ ...payload.createdPosts ],
+        numberOfPosts: payload.numberOfPosts,
         error: payload.error
       }
     }

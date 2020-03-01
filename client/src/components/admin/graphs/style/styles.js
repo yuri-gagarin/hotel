@@ -5,10 +5,11 @@ export const graphDetail = {
   backgroundColor: "rgb(50, 125, 168)",
   position: "fixed",
   textAlign: "center",
+  zIndex: "999",
   display: "none",
 }
 export const graphDetailText = {
   color: "white",
   fontWeight: "bold",
-  padding: "0.5em"
+  padding: "0.5em",
 }
