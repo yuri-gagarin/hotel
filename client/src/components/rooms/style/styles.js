@@ -60,11 +60,20 @@ export const roomStyle = {
     fontSize: "15px",
     fontFamily: "Montserrat",
   },
-  roomOptions: {
+  roomDetails: {
+    border: "1px solid grey",
     display: "inline-block",
     margin: "0.5em",
     padding: "0.5em",
-    border: "1px solid #2c3531",
+    color: "rgb(38, 42, 51)"
+  },
+  roomOptionsHolder: {
+
+  },
+  roomOptions: {
+    display: "inline-block",
+    margin: "0.5em",
+    color: "rgb(87, 139, 235)"
   },
   bookButton: {
     clear: "both"
