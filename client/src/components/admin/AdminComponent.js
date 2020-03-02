@@ -26,7 +26,7 @@ const AdminComponent = (props) => {
   // redux state objects //
   const { 
     history, adminState, adminConvState,
-    adminRoomState, appGeneralState,
+    roomState, appGeneralState,
     contactPostState
   } = props;
   // redux action functions //
@@ -61,7 +61,7 @@ const AdminComponent = (props) => {
         <AdminDashComponent 
           adminState={adminState}
           adminConvState={adminConvState}
-          adminRoomState={adminRoomState}
+          roomState={roomState}
           appGeneralState={appGeneralState}
           contactPostState={contactPostState}
         />
@@ -70,7 +70,7 @@ const AdminComponent = (props) => {
         <ConversationIndexContainer />
       </Route>
       <Route path="/admin/rooms">
-        <RoomsIndexContainer adminState={adminState} adminRoomState={adminRoomState} />
+        <RoomsIndexContainer adminState={adminState} roomState={roomState} />
       </Route>
       <Route path="/admin/posts">
         <PostsIndexContainer />
@@ -83,7 +83,7 @@ AdminComponent.propTypes = {
   history: PropTypes.object.isRequired,
   adminConvState: PropTypes.object.isRequired,
   adminState: PropTypes.object.isRequired,
-  adminRoomState: PropTypes.object.isRequired,
+  roomState: PropTypes.object.isRequired,
   appGeneralState: PropTypes.object.isRequired,
   contactPostState: PropTypes.object.isRequired
 };
@@ -91,7 +91,7 @@ AdminComponent.propTypes = {
 const mapStateToProps = (state) => {
   return {
     adminConvState: state.adminConvState,
-    adminRoomState: state.adminRoomState,
+    roomState: state.roomState,
     adminState: state.adminState,
     appGeneralState: state.appGeneralState,
     contactPostState: state.contactPostState

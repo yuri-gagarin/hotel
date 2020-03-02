@@ -34,7 +34,7 @@ const InformationHolder = (props) => {
 const AdminDashComponent = (props) => {
   // admin states //
   const { 
-    adminState, adminConvState, adminRoomState,  appGeneralState,
+    adminState, adminConvState, roomState,  appGeneralState,
     contactPostState
   } = props;
   // admin redux functions //
@@ -113,7 +113,7 @@ const AdminDashComponent = (props) => {
 AdminDashComponent.propTypes = {
   adminState: PropTypes.object.isRequired,
   adminConvState: PropTypes.object.isRequired,
-  adminRoomState: PropTypes.object.isRequired,
+  roomState: PropTypes.object.isRequired,
   appGeneralState: PropTypes.object.isRequired,
   contactPostState: PropTypes.object.isRequired
 };

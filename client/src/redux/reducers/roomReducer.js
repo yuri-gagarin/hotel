@@ -25,7 +25,7 @@ const initialState = {
   error: null
 }
 
-const adminRoomReducer = (state = initialState, { type, payload }) => {
+const roomReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case ADD_ROOM_TO_STATE: {
       return {
@@ -160,4 +160,4 @@ const adminRoomReducer = (state = initialState, { type, payload }) => {
   };
 };
 
-export default adminRoomReducer;
+export default roomReducer;

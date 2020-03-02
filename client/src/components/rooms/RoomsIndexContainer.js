@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+// semantic ui components //
 import {
   Button,
   Col,
@@ -6,7 +8,12 @@ import {
   Carousel,
   Row
 } from "react-bootstrap";
-import NavbarComponent from "../navbar/NavbarComponent"
+import NavbarComponent from "../navbar/NavbarComponent";
+// redux imports //
+import { connect } from "react-redux";
+import { fetchRooms } from "../../redux/actions/roomActions";
+import Room from "./Room";
+
 const style = {
   background: {
     //backgroundColor: "#2c3531"
@@ -58,10 +65,13 @@ const {
 } = style
 
 const RoomsIndexContainer = (props) => {
-  const { rooms } = props;
+  const { roomState , fetchRooms } = props;
+  const { createdRooms } = roomState;
+
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(null);
   useEffect(() => {
+    // Navbar collapse implementation // 
     $("#mainNav").css("backgroundColor", "#2c3531");
     (function (){
       // Collapse Navbar
@@ -77,15 +87,14 @@ const RoomsIndexContainer = (props) => {
       // Collapse the navbar when page is scrolled
       $(window).scroll(navbarCollapse);
     }());
+    // END Navbar collapse implementation //
+    // fetch the rooms from the server //
+    fetchRooms();
   }, [])
   const bookButton = () => {
 
   };
-  const handleSelect = (selectedIndex, e) => {
-    setIndex(selectedIndex);
-    setDirection(e.direction);
-  };
-
+ 
   return (
     <div style={background}>
       <NavbarComponent/>
@@ -94,104 +103,30 @@ const RoomsIndexContainer = (props) => {
           <Col style={headerStyle}>Our Rooms</Col>
         </Row>
         <hr />
-        <Row>
-          <Col>
-            <div style={roomTitle}>Standard Double Room</div>
-            <Carousel activeIndex={index} direction={direction} onSelect={handleSelect} style={carouselStyle}>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="/assets/images/standard/premierStandard1.jpg"
-                  alt="First slide"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="/assets/images/standard/premierStandard2.jpg"
-                  alt="Second slide"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="/assets/images/standard/premierStandard3.jpg"
-                  alt="Third slide"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="/assets/images/standard/premierStandard4.jpg"
-                  alt="Third slide"
-                />
-              </Carousel.Item>
-            </Carousel>
-            <div style={roomsDescription}>
-              <p>All the Room description here, All the Room description here,All the Room description here,All the Room description here,All the Room description here,All the Room description here,All the Room description here,All the Room description here,All the Room description here,</p>
-              <span style={roomOptions}><i className="fas fa-chart-area"></i> 20 m<sup>2</sup></span>
-              <span style={roomOptions}><i className="fas fa-mountain"></i> Inner Courtyard View</span>
-              <span style={roomOptions}><i className="fas fa-umbrella-beach"></i> Patio</span>
-              <span style={roomOptions}><i className="fas fa-bath"></i>  Private Bathroom</span>
-              <span style={roomOptions}><i className="fas fa-wifi"></i> Free Wifi</span>
-
-
-            </div>
-            <Button onClick={bookButton}>Book Now</Button>
-          </Col>
-        </Row>  
-        <hr />
-        <Row>
-          <Col>
-            <div style={roomTitle}>Superior Double Room</div>
-            <Carousel activeIndex={index} direction={direction} onSelect={handleSelect} style={carouselStyle}>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="/assets/images/superior/premierSuperior1.jpg"
-                  alt="First slide"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="/assets/images/superior/premierSuperior2.jpg"
-                  alt="Second slide"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="/assets/images/superior/premierSuperior3.jpg"
-                  alt="Third slide"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="/assets/images/superior/premierSuperior4.jpg"
-                  alt="Third slide"
-                />
-              </Carousel.Item>
-            </Carousel>
-            <div style={roomsDescription}>
-              <p>All the Room description here, All the Room description here,All the Room description here,All the Room description here,All the Room description here,All the Room description here,All the Room description here,All the Room description here,All the Room description here,</p>
-              <span style={roomOptions}><i className="fas fa-chart-area"></i> 25 m<sup>2</sup></span>
-              <span style={roomOptions}><i className="fas fa-mountain"></i> Mountain View</span>
-              <span style={roomOptions}><i className="fas fa-water"></i> River View</span>
-              <span style={roomOptions}><i className="fas fa-umbrella-beach"></i> Patio</span>
-              <span style={roomOptions}><i className="fas fa-bath"></i>  Private Bathroom</span>
-              <span style={roomOptions}><i className="fas fa-wifi"></i> Free Wifi</span>
-
-
-            </div>
-            <Button onClick={bookButton}>Book Now</Button>
-          </Col>
-        </Row>  
-        <hr />        
+        {
+          createdRooms.map((room) => {
+            return <Room key={room._id} room={room} images={room.images} />
+          })
+        } 
       </Container>
     </div>
   );
 };
+// PropTypes validation //
+RoomsIndexContainer.propTypes = {
+  roomState: PropTypes.object.isRequired
+};
 
-export default RoomsIndexContainer;
+// redux mapping functions //
+const mapStateToProps = (state) => {
+  return {
+    roomState: state.roomState
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchRooms: () => fetchRooms(dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RoomsIndexContainer);

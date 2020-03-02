@@ -23,9 +23,9 @@ const RoomsIndexContainer = (props) => {
     handleRoomOpen, 
     handleRoomDelete, 
     clearRoomData, 
-    adminRoomState 
+    roomState
   } = props;
-  const { createdRooms } = adminRoomState;
+  const { createdRooms } = roomState;
   const [roomInfoOpen, setRoomInfoOpen] = useState(false);
   const [newRoomFormOpen, setNewRoomFormOpen] = useState(false);
 
@@ -103,7 +103,7 @@ const RoomsIndexContainer = (props) => {
             <Button onClick={goBackToRooms}>Back</Button>
           </Grid.Column>
         </Grid.Row>
-        <RoomDisplay room={adminRoomState.roomData} history={history} />
+        <RoomDisplay room={roomState.roomData} history={history} />
       </Route>
     </React.Fragment>
   );
@@ -111,7 +111,7 @@ const RoomsIndexContainer = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    adminRoomState: state.adminRoomState
+
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -123,4 +123,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RoomsIndexContainer));
+export default withRouter(connect(null, mapDispatchToProps)(RoomsIndexContainer));
