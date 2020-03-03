@@ -8,6 +8,9 @@ import {
 import { roomStyle } from "./style/styles";
 // helper functions //
 import { setUploadedImgPath } from "./../helpers/displayHelpers";
+// translations //
+import { useTranslation } from "react-i18next";
+
 
 const {
   roomTitle, carouselStyle, carouselImgStyle,
@@ -21,6 +24,8 @@ const Room = (props) => {
   const { options } = room;
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(null);
+  const [t, i18n]= useTranslation();
+
 
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
@@ -29,15 +34,16 @@ const Room = (props) => {
   const roomImagePaths = room.images.map((image) => image.path);
 
   const handleOpenModal = (e) => {
-    console.log(e.target.dataset)
-    openPictureModal(e.target.src, roomImagePaths);
+    const index = e.target.dataset;
+    console.log(e.target.src)
+    openPictureModal(e.target.src, roomImagePaths, index);
   };
 
   return (
     <React.Fragment>
       <Row>
         <Col>
-          <div style={roomTitle}>{room.roomType}</div>
+          <div style={roomTitle}>{t("rooms.type") + " - " + room.roomType}</div>
         </Col>
       </Row>
       <Row>
@@ -95,60 +101,60 @@ const Room = (props) => {
         </Col>
         <Col xs="12" lg="6" style={{padding: 0}}>
           <div>
-            <span style={roomDetails}><i className="fas fa-store-alt"></i> Area: {room.area} m<sup>2</sup></span>
-            <span style={roomDetails}><i className="fas fa-users"></i> Sleeps: {room.sleeps}</span>
-            <span style={roomDetails}><i className="fas fa-bed"></i> Beds: {room.beds}</span>
-            <span style={roomDetails}><i className="fas fa-couch"></i> Couches: {room.couches}</span>
+            <span style={roomDetails}><i className="fas fa-store-alt"></i> {t("rooms.area")}: {room.area} m<sup>2</sup></span>
+            <span style={roomDetails}><i className="fas fa-users"></i> {t("rooms.sleeps")}: {room.sleeps}</span>
+            <span style={roomDetails}><i className="fas fa-bed"></i> {t("rooms.beds")}: {room.beds}</span>
+            <span style={roomDetails}><i className="fas fa-couch"></i> {t("rooms.couches")}: {room.couches}</span>
           </div>
           <div style={roomOptionsHolder}>
             { 
               options.privateBathroom 
-              ? <span style={roomOptions}><i className="fas fa-toilet"></i> Private Bathroom</span> 
+              ? <span style={roomOptions}><i className="fas fa-toilet"></i> {t("rooms.bathRoom")}</span> 
               : null
             }
             {
               options.suiteBathroom 
-              ? <span style={roomOptions}><i className="fas fa-bath"></i> Suite Bathroom</span>
+              ? <span style={roomOptions}><i className="fas fa-bath"></i> {t("rooms.shower")}</span>
               : null
             }
             { 
               options.wifi
-              ? <span style={roomOptions}><i className="fas fa-wifi"></i> Free WiFi</span> 
+              ? <span style={roomOptions}><i className="fas fa-wifi"></i> {t("rooms.wifi")}</span> 
               : null
             }
             {
               options.balcony 
-              ? <span style={roomOptions}><i className="fas fa-warehouse"></i> Balcony</span>
+              ? <span style={roomOptions}><i className="fas fa-warehouse"></i> {t("rooms.balcony")}</span>
               : null
             }
             { 
               options.terrace
-              ? <span style={roomOptions}><i className="fas fa-campground"></i> Terrace</span>
+              ? <span style={roomOptions}><i className="fas fa-campground"></i> {t("rooms.terrace")}</span>
               : null
             }
             { 
               options.mountainView
-              ? <span style={roomOptions}><i className="fas fa-mountain"></i> Mountain View</span>
+              ? <span style={roomOptions}><i className="fas fa-mountain"></i> {t("rooms.mtnView")}</span>
               : null
             }
             { 
               options.streetView
-              ? <span style={roomOptions}><i className="fas fa-road"></i> Street View</span>
+              ? <span style={roomOptions}><i className="fas fa-road"></i> {t("rooms.streetView")}</span>
               : null
             } 
             { 
               options.riverView
-              ? <span style={roomOptions}><i className="fas fa-water"></i> River View</span>
+              ? <span style={roomOptions}><i className="fas fa-water"></i> {t("rooms.riverView")}</span>
               : null
             } 
             { 
               options.tv
-              ? <span style={roomOptions}><i className="fas fa-tv"></i> TV</span>
+              ? <span style={roomOptions}><i className="fas fa-tv"></i> {t("rooms.tv")}</span>
               : null
             }
             {
               options.airConditioning
-              ? <span style={roomOptions}><i className="fas fa-wind"></i> Air Conditioning</span>
+              ? <span style={roomOptions}><i className="fas fa-wind"></i> {t("rooms.ac")}</span>
               : null
             }
            

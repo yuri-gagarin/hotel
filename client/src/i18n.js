@@ -33,8 +33,25 @@ const resources = {
       contactPhone: "Your Phone Number *",
       contactMsg: "Your Message *",
       sendMsg: "Send Message",
-      aboutTitle: "About Us"
-
+      aboutTitle: "About Us",
+      rooms: {
+        type: "Room Type",
+        area: "Area",
+        sleeps: "Sleeps",
+        price: "Price",
+        beds: "Beds",
+        couches: "Couches",
+        bathRoom: "Private Bathroom",
+        shower: "Suite Bathroom",
+        wifi: "Free WiFi",
+        balcony: "Balcony",
+        terrace: "Terrace",
+        mtnView: "Mountain View",
+        riverView: "River View",
+        streetView: "Street View",
+        tv: "TV",
+        ac: "Air Conditioning"
+      }    
     }
   },
   uk: {
@@ -66,7 +83,25 @@ const resources = {
       contactPhone: "Ваш Телефон *",
       contactMsg: "Ваше Повідомлення *",
       sendMsg: "Відіслатати",
-      aboutTitle: "Про Нас"    
+      aboutTitle: "Про Нас",
+      rooms: {
+        type: "Номер",
+        area: "Площа",
+        sleeps: "Вміщає",
+        price: "Ціна",
+        beds: "Ліжка",
+        couches: "Дивани",
+        bathRoom: "Туалет і Душ",
+        shower: "Ванна",
+        wifi: "Інтернет",
+        balcony: "Балкон",
+        terrace: "Тераса",
+        mtnView: "Вид на гори",
+        riverView: "Вид на річку",
+        streetView: "Вид на вулицю",
+        tv: "ТВ",
+        ac: "Кондиціонер"
+      }    
     }
   }
 };
@@ -77,7 +112,7 @@ i18n
     resources,
     lng: "en",
 
-    keySeparator: false, // we do not use keys in form messages.welcome //
+    // keySeparator: false, // we do not use keys in form messages.welcome //
 
     interpolation: {
       escapeValue: false // react already safe from xss //

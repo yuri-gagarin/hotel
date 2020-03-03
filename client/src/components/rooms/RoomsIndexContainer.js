@@ -71,8 +71,7 @@ const RoomsIndexContainer = (props) => {
   const { roomState , fetchRooms } = props;
   const { createdRooms } = roomState;
 
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(null);
+  const [imageIndex, setImageIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [clickedImg, setClickedImg] = useState("");
   const [imagePaths, setImagePaths] = useState([]);
@@ -99,10 +98,11 @@ const RoomsIndexContainer = (props) => {
     fetchRooms();
   }, []);
   // picture modal togglers //
-  const openPictureModal = (imgPath, roomImagePaths = {}) => {
+  const openPictureModal = (imgPath, roomImagePaths = [], index) => {
     //setImgSource(imgPath);
     setClickedImg(imgPath);
     setImagePaths([...roomImagePaths]);
+    setImageIndex(index);
     setShowModal(true);
   };
   const closePictureModal = () => {
@@ -120,7 +120,7 @@ const RoomsIndexContainer = (props) => {
         show={showModal} 
         closePictureModal={closePictureModal}
         paths={imagePaths} 
-        clickedImg={clickedImg}
+        imageIndex={imageIndex}
       />
       <Container style={containerStyle}>
         <Row>

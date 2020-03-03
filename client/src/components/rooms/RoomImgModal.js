@@ -15,15 +15,14 @@ const pictureModal = {
 };
 
 const RoomImgModal = (props) => {
-  const { show, closePictureModal, paths, clickedImg } = props;
-
-  const [index, setIndex] = useState(0);
+  const { show, closePictureModal, paths, imageIndex } = props;
+  const [index, setIndex] = useState(imageIndex)
   const [direction, setDirection] = useState(null);
   
   // set the initial image to one clicked on //
   useEffect(() => {
-    console.log(paths);
-    console.log(simplifyPath(clickedImg));
+    if (paths.length )
+    setIndex(imageIndex.index);
   }, [show]);
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
@@ -35,11 +34,11 @@ const RoomImgModal = (props) => {
     <React.Fragment>
       <Modal style={pictureModal} show={show} onHide={closePictureModal} centered >
         <Modal.Body style={{padding: 0}}>
-          <Carousel activeIndex={index} direction={direction} onSelect={handleSelect}>
+          <Carousel activeIndex={index} direction={direction} onSelect={handleSelect} interval={0}>
             {
-              paths.map((path, index) => {
+              paths.map((path, i) => {
                 return (
-                  <Carousel.Item key={index}>
+                  <Carousel.Item key={i}>
                     <img
                       src={setUploadedImgPath(path)}
                       alt="First slide"

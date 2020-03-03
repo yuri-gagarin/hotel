@@ -33,8 +33,8 @@ export const roomStyle = {
   },
   sideImg: {
     objectFit: "cover",
-    minWidth: "100%",
-    minHeight: "100%"
+    //minWidth: "100%",
+    height: "200px"
   },
   headerStyle: {
     marginTop: "2em",
