@@ -58,7 +58,7 @@ const AdminDashComponent = (props) => {
     history.push("/admin/rooms");
   }
   const goToMessenger = () => {
-    history.push("/amdin/messages");
+    history.push("/admin/messages");
   }
 
   return (

@@ -32,6 +32,10 @@ const AdminNavMenu = (props) =>  {
         history.push(adminRoutes.ADMIN_POSTS);
         break;
       };
+      case "cnontactRequests": {
+        history.push("/admin/contactPosts");
+        break;
+      }
       case "regulate users": {
         history.push(adminRoutes.ADMIN_REGULATE_USERS);
         break;
@@ -69,6 +73,11 @@ const AdminNavMenu = (props) =>  {
       <Menu.Item
         name='posts'
         active={active.activeItem === 'posts'}
+        onClick={handleMenuClick}
+      />
+      <Menu.Item 
+        name='contactRequests'
+        active={active.activeItem === "contactRequests"}
         onClick={handleMenuClick}
       />
       <Menu.Menu position='right'>

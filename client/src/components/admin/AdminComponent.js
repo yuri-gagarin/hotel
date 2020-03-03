@@ -14,7 +14,7 @@ import ErrorComponent from "./../display_components/ErrorComponent";
 import { connect } from "react-redux";
 import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
-import ContactPostContainer from "./contact/ContactPostContaier";
+import ContactPostContainer from "./contact/ContactPostContainer";
 
 
 
