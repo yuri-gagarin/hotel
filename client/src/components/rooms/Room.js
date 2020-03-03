@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 // semantic ui imports //
 import {
-  Col, Image, Row, Carousel, Button
+  Col, Row, Carousel, Button
 } from "react-bootstrap"
 // styles //
 import { roomStyle } from "./style/styles";
@@ -17,15 +17,22 @@ const {
 } = roomStyle;
 
 const Room = (props) => {
-  const { room = {}, images = [] } = props;
+  const { room, openPictureModal } = props;
   const { options } = room;
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(null);
+
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
     setDirection(e.direction);
   };
   const roomImagePaths = room.images.map((image) => image.path);
+
+  const handleOpenModal = (e) => {
+    console.log(e.target.dataset)
+    openPictureModal(e.target.src, roomImagePaths);
+  };
+
   return (
     <React.Fragment>
       <Row>
@@ -44,6 +51,8 @@ const Room = (props) => {
                       style={carouselImgStyle}
                       src={setUploadedImgPath(imgPath)}
                       alt="First slide"
+                      onClick={handleOpenModal}
+                      data-index={index}
                     />
                   </Carousel.Item>
                 )
@@ -53,13 +62,28 @@ const Room = (props) => {
         </Col>
         <Col xs="12" lg="6" style={{padding: 0}}>
           <div style={sideImgHolder}>
-            <img style={sideImg} src={setUploadedImgPath(roomImagePaths[1])}/>
+            <img 
+              style={sideImg} 
+              src={setUploadedImgPath(roomImagePaths[1])} 
+              onClick={handleOpenModal}
+              data-index={1}
+            />
           </div>
           <div style={sideImgHolder}>
-            <img style={sideImg} src={setUploadedImgPath(roomImagePaths[2])}/>
+            <img 
+              style={sideImg}
+              src={setUploadedImgPath(roomImagePaths[2])} 
+              onClick={handleOpenModal}
+              data-index={2}
+            />
           </div>
           <div style={sideImgHolder}>
-            <img style={sideImg} src={setUploadedImgPath(roomImagePaths[3])}/>
+            <img 
+              style={sideImg} 
+              src={setUploadedImgPath(roomImagePaths[3])} 
+              onClick={handleOpenModal}
+              data-index={3}
+            />
           </div>
         </Col>
       </Row>  
@@ -144,7 +168,8 @@ const Room = (props) => {
 };
 // PropTypes validation //
 Room.propTypes = {
-
+  room: PropTypes.object.isRequired,
+  openPictureModal: PropTypes.func.isRequired
 };
 
 export default Room;

@@ -13,7 +13,8 @@ export const roomStyle = {
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
-    backgroundSize: "cover"
+    backgroundSize: "cover",
+    cursor: "pointer"
   },
   carouselImgStyle: {
     flexShrink: 0,
@@ -27,7 +28,8 @@ export const roomStyle = {
     height: "200px",
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden"
+    overflow: "hidden",
+    cursor: "pointer"
   },
   sideImg: {
     objectFit: "cover",
@@ -48,7 +50,7 @@ export const roomStyle = {
     marginBottom: "0.5em",
     textAlign: "center",
     fontSize: "2em",
-    fontFamily: "Lobster",
+    fontFamily: "Montserrat",
     fontWeight:  "bold"
   },
   roomsDescription: {

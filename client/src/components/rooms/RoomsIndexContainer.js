@@ -6,9 +6,12 @@ import {
   Col,
   Container,
   Carousel,
+  Modal,
   Row
 } from "react-bootstrap";
+// additional components //
 import NavbarComponent from "../navbar/NavbarComponent";
+import RoomImgModal from "./RoomImgModal";
 // redux imports //
 import { connect } from "react-redux";
 import { fetchRooms } from "../../redux/actions/roomActions";
@@ -70,6 +73,10 @@ const RoomsIndexContainer = (props) => {
 
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [clickedImg, setClickedImg] = useState("");
+  const [imagePaths, setImagePaths] = useState([]);
+
   useEffect(() => {
     // Navbar collapse implementation // 
     $("#mainNav").css("backgroundColor", "#2c3531");
@@ -90,7 +97,18 @@ const RoomsIndexContainer = (props) => {
     // END Navbar collapse implementation //
     // fetch the rooms from the server //
     fetchRooms();
-  }, [])
+  }, []);
+  // picture modal togglers //
+  const openPictureModal = (imgPath, roomImagePaths = {}) => {
+    //setImgSource(imgPath);
+    setClickedImg(imgPath);
+    setImagePaths([...roomImagePaths]);
+    setShowModal(true);
+  };
+  const closePictureModal = () => {
+    setShowModal(false);
+  };
+  // 
   const bookButton = () => {
 
   };
@@ -98,6 +116,12 @@ const RoomsIndexContainer = (props) => {
   return (
     <div style={background}>
       <NavbarComponent/>
+      <RoomImgModal 
+        show={showModal} 
+        closePictureModal={closePictureModal}
+        paths={imagePaths} 
+        clickedImg={clickedImg}
+      />
       <Container style={containerStyle}>
         <Row>
           <Col style={headerStyle}>Our Rooms</Col>
@@ -105,7 +129,14 @@ const RoomsIndexContainer = (props) => {
         <hr />
         {
           createdRooms.map((room) => {
-            return <Room key={room._id} room={room} images={room.images} />
+            return (
+              <Room 
+                key={room._id} 
+                room={room} 
+                images={room.images} 
+                openPictureModal={openPictureModal}
+              />
+            );
           })
         } 
       </Container>
