@@ -69,7 +69,7 @@ const NavbarComponent = (props) => {
           </ul>
         </div>
         <div className="collapse navbar-collapse" id="navbarResponsive">
-          <ul className="navbar-nav text-uppercase ml-auto">
+          <ul className="navbar-nav text-uppercase ml-auto" style={{ cursor: "pointer "}}>
             <li className="nav-item">
               <a className="nav-link js-scroll-trigger" onClick={goToBooking}>{t("resTitle")}</a>
             </li>

@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import roomDefault from "../../static_images/services_images/room_default.jpg";
 import restaurantDefault from "../../static_images/services_images/restaurant_default.jpg";
+import { useTranslation } from "react-i18next";
+
 
 const ServicesComponent = (props) => {
   const { history } = props;
+  const [t, i18n] = useTranslation();
+
   const handleRoomsClick = (e) => {
     // console.log(e);
     history.push("/rooms");
@@ -20,8 +24,8 @@ const ServicesComponent = (props) => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12 text-center">
-            <h2 className="section-heading text-uppercase">Services</h2>
-            <h3 className="section-subheading text-muted">A little about our hotel</h3>
+            <h2 className="section-heading text-uppercase">{t("servicesTitle")}</h2>
+            <h3 className="section-subheading text-muted">{t("servicesDesc")}</h3>
           </div>
         </div>
         <div className="row">
@@ -35,8 +39,8 @@ const ServicesComponent = (props) => {
               <img className="img-fluid" src={roomDefault} alt="" />
             </a>
             <div className="portfolio-caption">
-              <h4>Rooms</h4>
-              <p className="text-muted">Rooms in our hotel</p>
+              <h4>{t("roomsTitle")}</h4>
+              <p className="text-muted">{t("roomsDesc")}</p>
             </div>
           </div>
           <div className="col-md-4 col-sm-6 portfolio-item">
@@ -49,8 +53,8 @@ const ServicesComponent = (props) => {
               <img className="img-fluid" src={restaurantDefault} alt="" />
             </a>
             <div className="portfolio-caption">
-              <h4>Restaurant</h4>
-              <p className="text-muted">Breakfast, Lunch and Dinner menus</p>
+              <h4>{t("restaurant")}</h4>
+              <p className="text-muted">{t("restDesc")}</p>
             </div>
           </div>
           <div className="col-md-4 col-sm-6 portfolio-item">
@@ -63,8 +67,8 @@ const ServicesComponent = (props) => {
             <img className="img-fluid" src={roomDefault} alt="" />
           </a>
           <div className="portfolio-caption">
-            <h4>Extras</h4>
-            <p className="text-muted">Pool And Sauna</p>
+            <h4>{t("extras")}</h4>
+            <p className="text-muted">{t("extrasDesc")}</p>
           </div>
         </div>
       </div>
