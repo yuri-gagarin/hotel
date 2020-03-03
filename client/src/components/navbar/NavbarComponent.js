@@ -10,19 +10,17 @@ const NavbarComponent = (props) => {
 
   const goToBooking = (e) => {
     let bookingForm = document.getElementById("booking");
-    let rect = bookingForm.getBoundingClientRect();
-    let offsetTop = window.pageYOffset;
-    let scrollAmount = rect.top - offsetTop;
-    window.scrollBy({
-      top: scrollAmount,
-      left: 0,
-      behavior: "smooth"
-    });
+    bookingForm.scrollIntoView();
   };
 
   const goToServices =(e) => {
     let servicesView = document.getElementById("portfolio");
-    servicesView.scrollIntoView({ behavior: "smooth "});
+    servicesView.scrollIntoView();
+  };
+
+  const goToContactForm = (e) => {
+   let contactForm = document.getElementById("contact");
+   contactForm.scrollIntoView();
   };
 
   const changeLanguage = (e) => {
@@ -80,7 +78,7 @@ const NavbarComponent = (props) => {
               <a className="nav-link js-scroll-trigger">{t("newsTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger">{t("contactTitle")}</a>
+              <a className="nav-link js-scroll-trigger" onClick={goToContactForm}>{t("contactTitle")}</a>
             </li>
             <li className="nav-item">
               <a className="nav-link js-scroll-trigger">{t("aboutTitle")}</a>
