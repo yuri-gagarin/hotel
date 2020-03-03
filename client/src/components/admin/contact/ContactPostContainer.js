@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 // semantic ui imports //
 import {
-  Button, Card, Container, Grid, GridColumn
+  Button, Card, Container, Grid, 
 } from "semantic-ui-react";
 // text editor //
 import CKEditor from '@ckeditor/ckeditor5-react';
@@ -14,15 +14,11 @@ import { openContactPost, deleteContactPost } from "../../../redux/actions/conta
 import { formatDate } from "../../helpers/dateHelpers";
 
 const ContactPostHolder = (props) => {
-  const { post } = props;
+  const { post, handleOpenPost, handleDeletePost } = props;
   const { name, email, phoneNumber, content, createdAt } = post;
+ 
 
-  const handleOpenPost = () => {
-
-  };
-  const handleDeletePost = () => {
-
-  }
+ 
   return (
     <Card>
       <Card.Content>
@@ -35,10 +31,10 @@ const ContactPostHolder = (props) => {
       </Card.Content>
       <Card.Content extra>
         <div className='ui two buttons'>
-          <Button basic color='green'>
+          <Button basic color='green' onClick={() => handleOpenPost(post._id)}>
             Open
           </Button>
-          <Button basic color='red'>
+          <Button basic color='red' onClick={() => handleDeletePost(post._id)}>
             Delete
           </Button>
         </div>
@@ -47,36 +43,73 @@ const ContactPostHolder = (props) => {
   );
 }
 const ContactPostView = (props) => {
+  const { postOpen } = props;
 
-  return (
-    <Container>
-     <h2>Using CKEditor 5 build in React</h2>
-      <CKEditor
-        editor={ ClassicEditor }
-        data="<p>Hello from CKEditor 5!</p>"
-        onInit={ editor => {
-            // You can store the "editor" and use when it is needed.
-            console.log( 'Editor is ready to use!', editor );
-        } }
-        onChange={ ( event, editor ) => {
-            const data = editor.getData();
-            console.log( { event, editor, data } );
-        } }
-        onBlur={ ( event, editor ) => {
-            console.log( 'Blur.', editor );
-        } }
-        onFocus={ ( event, editor ) => {
-            console.log( 'Focus.', editor );
-        } }
-      />
-    </Container>
-  )
+  if (postOpen) {
+    return (
+      <React.Fragment>
+        <Container>
+          <Grid.Row>
+            <Grid.Column>
+              Message from: {post.name}
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={8}>
+              Email: somemail
+            </Grid.Column>
+            <Grid.Column width={8}>
+              Phone: "some phone here"
+            </Grid.Column>
+          </Grid.Row>
+        </Container>
+        <Container>
+        <h2>Using CKEditor 5 build in React</h2>
+          <CKEditor
+            editor={ ClassicEditor }
+            data="<p>Hello from CKEditor 5!</p>"
+            onInit={ editor => {
+                // You can store the "editor" and use when it is needed.
+                console.log( 'Editor is ready to use!', editor );
+            } }
+            onChange={ ( event, editor ) => {
+                const data = editor.getData();
+                console.log( { event, editor, data } );
+            } }
+            onBlur={ ( event, editor ) => {
+                console.log( 'Blur.', editor );
+            } }
+            onFocus={ ( event, editor ) => {
+                console.log( 'Focus.', editor );
+            } }
+          />
+        </Container>
+
+      </React.Fragment>
+      
+    )
+  } else {
+    return (
+      <div></div>
+    );
+  }
+  
 }
 
 const ContactPostContainer = (props) => {
   const { contactPostState } = props;
   const { createdPosts } = contactPostState;
-  console.log(contactPostState);
+  // local state //
+  const [postOpen, setPostOpen] = useState(false);
+
+  const handleOpenPost = (contactPostId) => {
+    console.log(contactPostId);
+    setPostOpen(true);
+  };
+  const handleDeletePost = (contactPostId) => {
+    console.log(contactPostId);
+  };
+
   return (
     <React.Fragment>
       <Grid.Row>
@@ -93,6 +126,8 @@ const ContactPostContainer = (props) => {
                 <ContactPostHolder 
                   key={post._id}
                   post={post}
+                  handleOpenPost={handleOpenPost}
+                  handleDeletePost={handleDeletePost}
                 />
               );
             })
@@ -101,7 +136,7 @@ const ContactPostContainer = (props) => {
           
         </Grid.Column>
         <Grid.Column width={11}>  
-          <ContactPostView />
+          <ContactPostView postOpen={postOpen} />
         </Grid.Column>
       </Grid.Row>
       

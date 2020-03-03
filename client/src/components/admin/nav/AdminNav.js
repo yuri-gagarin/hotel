@@ -14,7 +14,7 @@ const AdminNavMenu = (props) =>  {
   }, []);
 
   const handleMenuClick = (e, { name }) => {
-    
+    //console.log(name);
     switch (name) {
       case "home": {
         history.push(adminRoutes.ADMIN_DASH);
@@ -32,7 +32,7 @@ const AdminNavMenu = (props) =>  {
         history.push(adminRoutes.ADMIN_POSTS);
         break;
       };
-      case "cnontactRequests": {
+      case "contactRequests": {
         history.push("/admin/contactPosts");
         break;
       }

@@ -7,6 +7,9 @@ const {
   CONTACT_POST_REQUEST,
   CONTACT_POST_SUCCESS,
   SET_CONTACT_POSTS,
+  OPEN_CONTACT_POST,
+  CLOSE_CONTACT_POST,
+  DELETE_CONTACT_POST,
   CONTACT_POST_ERROR
 } = contactPostActions;
 
@@ -54,6 +57,46 @@ export const setContactPosts = ({ status, responseMsg, contactPosts = [] }) => {
       contactPost: {},
       createdPosts: contactPosts,
       numberOfPosts: contactPosts.length,
+      error: null
+    }
+  };
+};
+
+export const openContactPost = (postId, contactPosts = []) => {
+  const contactPost = contactPosts.filter((contactPost) => contactPost._id == postId)[0];
+  return {
+    type: OPEN_CONTACT_POST,
+    payload: {
+      loading: false,
+      responseMsg: "Post Opened",
+      contactPost: contactPost,
+      error: null
+    }
+  };
+};
+
+export const closeContactPost = (postId) => {
+  return {
+    type: CLOSE_CONTACT_POST,
+    payload: {
+      loading: false,
+      responseMsg: "Close contact post",
+      contactPost: {},
+      error: null
+    }
+  };
+};
+
+export const deleteContactPost = ({ status, responseMsg, createdPosts }) => {
+  return {
+    type: DELETE_CONTACT_POST,
+    payload: {
+      status: status,
+      loading: false,
+      responseMsg: responseMsg,
+      contactPost: {},
+      createdPosts: createdPosts,
+      numberOfPosts: createdPosts.length,
       error: null
     }
   };
