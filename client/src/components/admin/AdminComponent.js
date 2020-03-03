@@ -14,6 +14,7 @@ import ErrorComponent from "./../display_components/ErrorComponent";
 import { connect } from "react-redux";
 import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
+import ContactPostContainer from "./contact/ContactPostContaier";
 
 
 
@@ -59,6 +60,7 @@ const AdminComponent = (props) => {
       </Grid.Row>
       <Route path="/admin/dashboard">
         <AdminDashComponent 
+          history={history}
           adminState={adminState}
           adminConvState={adminConvState}
           roomState={roomState}
@@ -74,6 +76,9 @@ const AdminComponent = (props) => {
       </Route>
       <Route path="/admin/posts">
         <PostsIndexContainer />
+      </Route>
+      <Route path="/admin/contactPosts">
+        <ContactPostContainer contactPostState={contactPostState} />
       </Route>
     </Grid>
   )

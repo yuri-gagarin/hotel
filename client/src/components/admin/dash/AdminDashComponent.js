@@ -35,7 +35,7 @@ const AdminDashComponent = (props) => {
   // admin states //
   const { 
     adminState, adminConvState, roomState,  appGeneralState,
-    contactPostState
+    contactPostState, history
   } = props;
   // admin redux functions //
   const {
@@ -49,7 +49,17 @@ const AdminDashComponent = (props) => {
     fetchContactPosts();
     fetchRooms();
     fetchAllConversations();
-  }, [])
+  }, []);
+  // navigational buttons //
+  const goToContactPosts = () => {
+    history.push("/admin/contactPosts");
+  };
+  const goToRooms = () => {
+    history.push("/admin/rooms");
+  }
+  const goToMessenger = () => {
+    history.push("/amdin/messages");
+  }
 
   return (
     <React.Fragment>
@@ -65,7 +75,7 @@ const AdminDashComponent = (props) => {
             <p>New Information Requests</p>
           </div>
           <InformationHolder number={contactPostState.numberOfPosts} />
-          <Button basic color="green" style={infoButton}>Show Requests</Button>
+          <Button basic color="green" style={infoButton} onClick={goToContactPosts}>Show Requests</Button>
         </Grid.Column>
         <Grid.Column width={4} style={infoColumn}>
           <div style={informationHeader}>
@@ -73,7 +83,7 @@ const AdminDashComponent = (props) => {
             <p>How many different types of rooms displayed to clients</p>
           </div>
           <InformationHolder />
-          <Button basic color="green" style={infoButton}>Show Hotel Rooms</Button>
+          <Button basic color="green" style={infoButton} onClick={goToRooms}>Show Hotel Rooms</Button>
         </Grid.Column>
         <Grid.Column width={8}>
           <div style={{textAlign: "center"}}>Visitor Count</div>
@@ -87,7 +97,7 @@ const AdminDashComponent = (props) => {
               <p>Live conversations with visiting clients</p>
             </div>
             <InformationHolder number={adminConvState.numberOfConversations} />
-            <Button basic color="green" style={infoButton}>Open Messenger</Button>
+            <Button basic color="green" style={infoButton} onClick={goToMessenger}>Open Messenger</Button>
           </Grid.Column>
         <Grid.Column width={4} style={infoColumn}>
           <div style={informationHeader}>
@@ -111,6 +121,7 @@ const AdminDashComponent = (props) => {
 };
 // Proptypes Validations //
 AdminDashComponent.propTypes = {
+  history: PropTypes.object.isRequired,
   adminState: PropTypes.object.isRequired,
   adminConvState: PropTypes.object.isRequired,
   roomState: PropTypes.object.isRequired,
