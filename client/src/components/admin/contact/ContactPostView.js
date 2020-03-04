@@ -7,22 +7,10 @@ import {
 // ck editor imports //
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
-const contactFrom = {
-  border: "1px solid grey",
-  padding: "0.5em",
-  marginBottom: "0.5em"
-};
-const contactEmail = {
-  border: "1px solid grey",
-  padding: "0.5em",
-  marginBottom: "0.5em"
-};
-const contactPhone = {
-  border: "1px solid grey",
-  padding: "0.5em",
-  marginBottom: "0.5em"
-};
+// style imports //
+import {
+  backgroundStyle, contactForm, contactEmail, contactPhone
+} from "./style/styles";
 
 const ContactPostView = (props) => {
   const { postOpen, post, handleClosePost } = props;
@@ -42,7 +30,7 @@ const ContactPostView = (props) => {
     return (
       <React.Fragment>
         <Container fluid>
-          <div style={contactFrom}>
+          <div style={contactForm}>
             <i className="fas fa-envelope-square"></i>
             <span>  Message from: {post.name}</span>
           </div>
@@ -80,7 +68,9 @@ const ContactPostView = (props) => {
     )
   } else {
     return (
-      <div style={{ height: "100%", width: "100%", backgroundImage: "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)"}}></div>
+      <div 
+        style={backgroundStyle}>
+      </div>
     );
   }
 };

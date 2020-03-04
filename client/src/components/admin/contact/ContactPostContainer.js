@@ -12,13 +12,10 @@ import { connect } from "react-redux";
 import { 
   openContactPost, closeContactPost, handleContactPostDelete, fetchContactPosts
 } from "../../../redux/actions/contactPostActions";
-
-
-const columnStyle = {
-  border: "1px solid red"
-}
-
-
+// style imports //
+import {
+  contactScreenStyle
+} from "./style/styles";
 
 const ContactPostContainer = (props) => {
   const { contactPostState } = props;
@@ -51,14 +48,14 @@ const ContactPostContainer = (props) => {
 
   return (
     <React.Fragment>
-      <Grid.Row>
-        <Grid.Column width={14}>
+      <Grid.Row style={contactScreenStyle.headerRow}>
+        <Grid.Column width={16} textAlign="center" style={contactScreenStyle.headerText}>
           Contact Information Requests
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
-        <Grid.Column width={5} style={{ height: "90vh", overflow: "scroll" }}>
-          <Card.Group>
+        <Grid.Column width={5} style={contactScreenStyle.cardColumn}>
+          <Card.Group style={contactScreenStyle.cardGroup}>
           {
             createdPosts.map((post) => {
               return (
@@ -74,7 +71,7 @@ const ContactPostContainer = (props) => {
           </Card.Group>
           
         </Grid.Column>
-        <Grid.Column width={11}>  
+        <Grid.Column width={11} style={{ padding: 0 }}>  
           <ContactPostView 
             postOpen={postOpen} 
             post={contactPostState.contactPost} 
