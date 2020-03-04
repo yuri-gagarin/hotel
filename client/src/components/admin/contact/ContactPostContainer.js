@@ -1,114 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // semantic ui imports //
 import {
-  Button, Card, Container, Grid, 
+  Card, Grid
 } from "semantic-ui-react";
-// text editor //
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// additional components //
+import ContactPostHolder from "./ContactPostHolder";
+import ContactPostView from "./ContactPostView";
 // redux imports //
 import { connect } from "react-redux";
-import { openContactPost, deleteContactPost } from "../../../redux/actions/contactPostActions";
-// helper functions //
-import { formatDate } from "../../helpers/dateHelpers";
+import { 
+  openContactPost, closeContactPost, handleContactPostDelete, fetchContactPosts
+} from "../../../redux/actions/contactPostActions";
 
-const ContactPostHolder = (props) => {
-  const { post, handleOpenPost, handleDeletePost } = props;
-  const { name, email, phoneNumber, content, createdAt } = post;
- 
 
- 
-  return (
-    <Card>
-      <Card.Content>
-      <Card.Header>{post.name}</Card.Header>
-        <Card.Meta as={"a"}>Email: {email}</Card.Meta>
-        <Card.Meta>Sent: {formatDate(createdAt, { military: true })}</Card.Meta>
-        <Card.Description>
-          {content}
-        </Card.Description>
-      </Card.Content>
-      <Card.Content extra>
-        <div className='ui two buttons'>
-          <Button basic color='green' onClick={() => handleOpenPost(post._id)}>
-            Open
-          </Button>
-          <Button basic color='red' onClick={() => handleDeletePost(post._id)}>
-            Delete
-          </Button>
-        </div>
-      </Card.Content>
-    </Card>
-  );
+const columnStyle = {
+  border: "1px solid red"
 }
-const ContactPostView = (props) => {
-  const { postOpen } = props;
 
-  if (postOpen) {
-    return (
-      <React.Fragment>
-        <Container>
-          <Grid.Row>
-            <Grid.Column>
-              Message from: {post.name}
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column width={8}>
-              Email: somemail
-            </Grid.Column>
-            <Grid.Column width={8}>
-              Phone: "some phone here"
-            </Grid.Column>
-          </Grid.Row>
-        </Container>
-        <Container>
-        <h2>Using CKEditor 5 build in React</h2>
-          <CKEditor
-            editor={ ClassicEditor }
-            data="<p>Hello from CKEditor 5!</p>"
-            onInit={ editor => {
-                // You can store the "editor" and use when it is needed.
-                console.log( 'Editor is ready to use!', editor );
-            } }
-            onChange={ ( event, editor ) => {
-                const data = editor.getData();
-                console.log( { event, editor, data } );
-            } }
-            onBlur={ ( event, editor ) => {
-                console.log( 'Blur.', editor );
-            } }
-            onFocus={ ( event, editor ) => {
-                console.log( 'Focus.', editor );
-            } }
-          />
-        </Container>
 
-      </React.Fragment>
-      
-    )
-  } else {
-    return (
-      <div></div>
-    );
-  }
-  
-}
 
 const ContactPostContainer = (props) => {
   const { contactPostState } = props;
+  // reducer functions //
+  const { 
+    fetchContactPosts, openContactPost, 
+    closeContactPost, handleContactPostDelete
+  } = props
   const { createdPosts } = contactPostState;
   // local state //
   const [postOpen, setPostOpen] = useState(false);
+  // load posts on component mount //
+  useEffect(() => {
+    fetchContactPosts();
+  }, []);
 
   const handleOpenPost = (contactPostId) => {
-    console.log(contactPostId);
+    const { createdPosts } = contactPostState;
+    openContactPost(contactPostId, createdPosts);
     setPostOpen(true);
   };
   const handleDeletePost = (contactPostId) => {
-    console.log(contactPostId);
+    const  { createdPosts } = contactPostState;
+    handleContactPostDelete(contactPostId, createdPosts);
   };
+  const handleClosePost = (contactPostId) => {
+    closeContactPost(contactPostId);
+    setPostOpen(false);
+  }
 
   return (
     <React.Fragment>
@@ -136,7 +75,11 @@ const ContactPostContainer = (props) => {
           
         </Grid.Column>
         <Grid.Column width={11}>  
-          <ContactPostView postOpen={postOpen} />
+          <ContactPostView 
+            postOpen={postOpen} 
+            post={contactPostState.contactPost} 
+            handleClosePost={handleClosePost} 
+          />
         </Grid.Column>
       </Grid.Row>
       
@@ -147,7 +90,32 @@ const ContactPostContainer = (props) => {
 };
 // PropTypes validation //
 ContactPostContainer.propTypes = {
-  contactPostState: PropTypes.object.isRequired
+  contactPostState: PropTypes.object.isRequired,
+  openContactPost: PropTypes.func.isRequired,
+  closeContactPost: PropTypes.func.isRequired,
+  handleContactPostDelete: PropTypes.func.isRequired
+};
+// redux mapping functions //
+const mapStateToProps = (state) => {
+  return {
+
+  }
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchContactPosts: () => {
+      return fetchContactPosts(dispatch);
+    },
+    openContactPost: (postId, createdPosts) => {
+      return dispatch(openContactPost(postId, createdPosts));
+    },
+    closeContactPost: (postId) => {
+      return dispatch(closeContactPost(postId));
+    },
+    handleContactPostDelete: (postId, createdPosts) => {
+      return handleContactPostDelete(dispatch, postId, createdPosts);
+    }
+  };
 };
 
-export default ContactPostContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(ContactPostContainer);

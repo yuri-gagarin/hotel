@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.ck-editor .ck-editor__main .ck-content {
+  min-height: 400px;
+}
