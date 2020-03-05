@@ -21,5 +21,5 @@ export default function (router) {
   // @access PRIVATE //
   router
     .route("/api/contactPosts/:contactPostId")
-    .post(contactPostsController.deleteContactPost);
+    .delete(contactPostsController.deleteContactPost);
 };

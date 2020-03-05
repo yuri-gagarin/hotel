@@ -7,6 +7,9 @@ const {
   CONTACT_POST_REQUEST,
   CONTACT_POST_SUCCESS,
   SET_CONTACT_POSTS,
+  OPEN_CONTACT_POST,
+  CLOSE_CONTACT_POST,
+  DELETE_CONTACT_POST,
   CONTACT_POST_ERROR
 } = contactPostActions;
 
@@ -59,6 +62,47 @@ export const setContactPosts = ({ status, responseMsg, contactPosts = [] }) => {
   };
 };
 
+export const openContactPost = (postId, contactPosts = []) => {
+  const contactPost = contactPosts.filter((contactPost) => contactPost._id == postId)[0];
+  console.log(postId);
+  return {
+    type: OPEN_CONTACT_POST,
+    payload: {
+      loading: false,
+      responseMsg: "Post Opened",
+      contactPost: contactPost,
+      error: null
+    }
+  };
+};
+
+export const closeContactPost = (postId) => {
+  return {
+    type: CLOSE_CONTACT_POST,
+    payload: {
+      loading: false,
+      responseMsg: "Close contact post",
+      contactPost: {},
+      error: null
+    }
+  };
+};
+
+export const deleteContactPost = ({ status, responseMsg, createdPosts }) => {
+  return {
+    type: DELETE_CONTACT_POST,
+    payload: {
+      status: status,
+      loading: false,
+      responseMsg: responseMsg,
+      contactPost: {},
+      createdPosts: createdPosts,
+      numberOfPosts: createdPosts.length,
+      error: null
+    }
+  };
+};
+
 export const sendContactFormData = (dispatch, formData) => {
   const requestOptions = {
     method: "post",
@@ -83,7 +127,6 @@ export const sendContactFormData = (dispatch, formData) => {
       const { status, data } = err.response;
       const { responseMsg, error } = data;
       const errorMessages = normalizeErrorMessages(data);
-      console.log(70);
       dispatch(sendContactError(error)); 
       dispatch(setAppError({ status: status, responseMsg: responseMsg, errorMessages: errorMessages, error: error }));
       return false;
@@ -94,7 +137,8 @@ export const fetchContactPosts = (dispatch) => {
   const requestOptions = {
     method: "get",
     url: "/api/contactPosts",
-  }
+  };
+
   dispatch(sendContactRequest());
   return axios(requestOptions) 
     .then((response) => {
@@ -111,3 +155,30 @@ export const fetchContactPosts = (dispatch) => {
       dispatch(sendContactError(error));
     });
 };
+
+export const handleContactPostDelete = (dispatch, postId, createdPosts = []) => {
+  const requestOptions = {
+    method: "delete",
+    url: "/api/contactPosts/" + postId
+  };
+  
+  dispatch(sendContactRequest());
+  return axios(requestOptions) 
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, deletedContactPost } = data;
+      const updatedPosts = createdPosts.filter((post) => post._id != deletedContactPost._id );
+
+      const stateData = {
+        status: status,
+        responseMsg: responseMsg,
+        createdPosts: updatedPosts,
+      }
+      dispatch(deleteContactPost(stateData));
+      dispatch(operationSuccessful(responseMsg));
+    })
+    .catch((error) => {
+      dispatch(sendContactError(error));
+    });
+};
+

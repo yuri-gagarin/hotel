@@ -9,9 +9,9 @@ const NavbarComponent = (props) => {
   const { history } = props;
   const [t, i18n] = useTranslation();
 
-  const goToHome = () => {
-    history.push("/");
-    console.log("clicked");
+  const goToBooking = (e) => {
+    let bookingForm = document.getElementById("booking");
+    bookingForm.scrollIntoView();
   };
   // navbar handlers //
   const goToBooking = () => {
@@ -22,9 +22,10 @@ const NavbarComponent = (props) => {
     let servicesView = document.getElementById("portfolio");
     servicesView.scrollIntoView();
   };
+
   const goToContactForm = (e) => {
-    let contactForm = document.getElementById("contact");
-    contactForm.scrollIntoView();
+   let contactForm = document.getElementById("contact");
+   contactForm.scrollIntoView();
   };
 
   const changeLanguage = (e) => {
@@ -77,7 +78,7 @@ const NavbarComponent = (props) => {
           </ul>
         </div>
         <div className="collapse navbar-collapse" id="navbarResponsive">
-          <ul className="navbar-nav text-uppercase ml-auto" style={{cursor: "pointer"}}>
+          <ul className="navbar-nav text-uppercase ml-auto" style={{ cursor: "pointer "}}>
             <li className="nav-item">
               <a className="nav-link js-scroll-trigger" onClick={goToBooking}>{t("resTitle")}</a>
             </li>

@@ -55,7 +55,7 @@ export default {
   
   deleteContactPost: (req, res) => {
     const contactPostId = req.params.contactPostId;
-    return ContactPost.deleteOne({ _id: contactPostId })
+    return ContactPost.findOneAndDelete({ _id: contactPostId })
       .then((deletedContactPost) => {
         return res.status(200).json({
           responseMsg: "Deleted the contact post",

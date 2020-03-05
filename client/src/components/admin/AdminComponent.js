@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Grid } from "semantic-ui-react";
 import { withRouter, Route } from "react-router-dom"; 
@@ -14,6 +14,7 @@ import ErrorComponent from "./../display_components/ErrorComponent";
 import { connect } from "react-redux";
 import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
+import ContactPostContainer from "./contact/ContactPostContainer";
 
 
 
@@ -33,6 +34,9 @@ const AdminComponent = (props) => {
   const {
     clearAppError, clearSuccessState, handleLogout, setAdmin
   } = props; 
+  // error and success states //
+  const [successTimeout, setSuccessTimeout] = useState(null);
+  const [errorTimeout, setErrorTimeout] = useState(null);
   // set the localStoreage state  so the app can reload //
   useEffect(() => {
     if (!localStorage.getItem("hotelAdminState")) {
@@ -43,6 +47,28 @@ const AdminComponent = (props) => {
       setAdmin(savedState);
     }
   }, []); 
+  // timeouts for the error and success components //
+  useEffect(() => {
+    const { error, successComponentOpen } = appGeneralState;
+    if (error) {
+      setErrorTimeout(setTimeout(() => {
+        clearAppError();
+      }, 5000));
+    }
+    if (!error && errorTimeout) {
+      clearTimeout(errorTimeout);
+      setErrorTimeout(null);
+    }
+    if (successComponentOpen) {
+      setSuccessTimeout(setTimeout(() =>{
+        clearSuccessState();
+      }, 5000))
+    }
+    if (!successComponentOpen && successTimeout) {
+      clearTimeout(successTimeout);
+      setSuccessTimeout(null);
+    }
+  }, [appGeneralState]);
   // logout user functionality //
   const logoutUser = (e) => {
     handleLogout(history);
@@ -59,6 +85,7 @@ const AdminComponent = (props) => {
       </Grid.Row>
       <Route path="/admin/dashboard">
         <AdminDashComponent 
+          history={history}
           adminState={adminState}
           adminConvState={adminConvState}
           roomState={roomState}
@@ -74,6 +101,9 @@ const AdminComponent = (props) => {
       </Route>
       <Route path="/admin/posts">
         <PostsIndexContainer />
+      </Route>
+      <Route path="/admin/contactPosts">
+        <ContactPostContainer contactPostState={contactPostState} />
       </Route>
     </Grid>
   )

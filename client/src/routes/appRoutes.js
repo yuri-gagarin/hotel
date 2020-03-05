@@ -4,6 +4,8 @@ export const adminRoutes = {
   ADMIN_DASH: "/admin/dashboard",
   ADMIN_MESSAGES: "/admin/messages",
   ADMIN_POSTS: "/admin/posts",
+  ADMIN_ROOMS: "/admin/rooms",
+  ADMIN_CONTACT_POSTS: "/admin/contactPosts",
   ADMIN_REGULATE_USERS: "/admin/regulate_users"
 };
 
