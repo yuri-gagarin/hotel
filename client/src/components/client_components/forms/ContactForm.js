@@ -78,7 +78,7 @@ const ContactForm = (props) => {
                     <input 
                       className="form-control" 
                       id="name" type="text" 
-                      placeholder="Your Name *" 
+                      placeholder={t("contactName")}
                       required="required" 
                       data-validation-required-message="Please enter your name." 
                       value={formState.name}
@@ -90,7 +90,7 @@ const ContactForm = (props) => {
                     <input 
                       className="form-control" 
                       id="email" type="email" 
-                      placeholder="Your Email *" 
+                      placeholder={t("contactEmail")}
                       required="required" 
                       data-validation-required-message="Please enter your email address."
                       value={formState.email}
@@ -103,7 +103,7 @@ const ContactForm = (props) => {
                       className="form-control" 
                       id="phone" 
                       type="tel" 
-                      placeholder="Your Phone *" 
+                      placeholder={t("contactPhone")}
                       value={formState.phoneNumber}
                       onChange={handlePhoneNumber}
                     />
@@ -115,7 +115,7 @@ const ContactForm = (props) => {
                     <textarea 
                       className="form-control" 
                       id="message" 
-                      placeholder="Your Message *" 
+                      placeholder={t("contactMsg")}
                       required="required" 
                       data-validation-required-message="Please enter a message."
                       value={formState.content}
