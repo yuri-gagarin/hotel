@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import { 
   openContactPost, closeContactPost, handleContactPostDelete, fetchContactPosts
 } from "../../../redux/actions/contactPostActions";
+import { operationSuccessful, setAppError } from "./../../../redux/actions/appGeneralActions";
 // style imports //
 import {
   contactScreenStyle
@@ -22,7 +23,8 @@ const ContactPostContainer = (props) => {
   // reducer functions //
   const { 
     fetchContactPosts, openContactPost, 
-    closeContactPost, handleContactPostDelete
+    closeContactPost, handleContactPostDelete,
+    operationSuccessful, setAppError
   } = props
   const { createdPosts } = contactPostState;
   // local state //
@@ -44,7 +46,10 @@ const ContactPostContainer = (props) => {
   const handleClosePost = (contactPostId) => {
     closeContactPost(contactPostId);
     setPostOpen(false);
-  }
+  };
+  const sendContactReply = (postData) => {
+    operationSuccessful({ status: "200", responseMsg: "Reply sent" });
+  };
 
   return (
     <React.Fragment>
@@ -75,7 +80,8 @@ const ContactPostContainer = (props) => {
           <ContactPostView 
             postOpen={postOpen} 
             post={contactPostState.contactPost} 
-            handleClosePost={handleClosePost} 
+            handleClosePost={handleClosePost}
+            sendContactReply={sendContactReply}
           />
         </Grid.Column>
       </Grid.Row>
@@ -111,6 +117,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     handleContactPostDelete: (postId, createdPosts) => {
       return handleContactPostDelete(dispatch, postId, createdPosts);
+    },
+    operationSuccessful: (status, responseMsg) =>  {
+      return dispatch(operationSuccessful(status, responseMsg));
+    },
+    setAppError: (status, responseMsg) => {
+      return dispatch(setAppError(status, responseMsg));
     }
   };
 };

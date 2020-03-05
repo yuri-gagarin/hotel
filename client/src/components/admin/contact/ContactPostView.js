@@ -25,17 +25,20 @@ const setInitialMessage = (post) => {
   );
 }
 const ContactPostView = (props) => {
-  const { postOpen, post, handleClosePost } = props;
+  const { 
+    postOpen, post, 
+    handleClosePost, sendContactReply 
+  } = props;
   const [data, setData] = useState(setInitialMessage(post));
 
   const handleInit = (e, editor) => {
    
   };
   const handleEditorChange = (e, editor) =>{
-    console.log(editor.getData())
+    setData(editor.getData());
   };
   const handleSend = () => {
-    console.log(data);
+    sendContactReply(data);
   };
 
 
@@ -79,7 +82,7 @@ const ContactPostView = (props) => {
           />
         </Container>
         <Container style={{ marginTop: "1em" }}>
-          <Button onClick={handleSend}>Send Reply</Button>
+          <Button onClick={sendContactReply}>Send Reply</Button>
           <Button onClick={() => handleClosePost(post._id)}>Close Screen</Button>
         </Container>
       </React.Fragment>

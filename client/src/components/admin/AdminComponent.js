@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Grid } from "semantic-ui-react";
 import { withRouter, Route } from "react-router-dom"; 
@@ -49,6 +49,7 @@ const AdminComponent = (props) => {
   }, []); 
   // timeouts for the error and success components //
   useEffect(() => {
+    const { error, successComponentOpen } = appGeneralState;
     if (error) {
       setErrorTimeout(setTimeout(() => {
         clearAppError();
@@ -58,12 +59,12 @@ const AdminComponent = (props) => {
       clearTimeout(errorTimeout);
       setErrorTimeout(null);
     }
-    if (succcessComponentOpen) {
+    if (successComponentOpen) {
       setSuccessTimeout(setTimeout(() =>{
         clearSuccessState();
       }, 5000))
     }
-    if (successComponentOpen && successTimeout) {
+    if (!successComponentOpen && successTimeout) {
       clearTimeout(successTimeout);
       setSuccessTimeout(null);
     }
