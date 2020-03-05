@@ -16,7 +16,7 @@ const {
   roomTitle, carouselStyle, carouselImgStyle,
   roomsDescription, roomOptions, bookButton,
   roomDetails, roomOptionsHolder,
-  sideImgHolder, sideImg
+  sideImgHolder, sideImg, descriptionHolder, strikeThrough
 } = roomStyle;
 
 const Room = (props) => {
@@ -67,8 +67,11 @@ const Room = (props) => {
   return (
     <React.Fragment>
       <Row ref={roomTitleRef} className="animatedRoomRow">
-        <Col>
-          <div style={roomTitle}>{t("rooms.type") + " - " + room.roomType}</div>
+        <Col textAlign="center">
+          <div style={{ position: "relative", width: "100%", height: "50px", marginBottom: "1em" }}>
+            <div style={roomTitle}>{room.roomType}</div>
+            <div style={strikeThrough}></div>
+          </div>
         </Col>
       </Row>
       <Row ref={roomPicturesRef} className="animatedRoomRow">
@@ -91,7 +94,7 @@ const Room = (props) => {
             }
           </Carousel>
         </Col>
-        <Col xs="12" lg="6" style={{padding: 0}}>
+        <Col xs="12" lg="6" style={{padding: 0, borderTop: "4px solid rgb(252, 219, 3)", }}>
           <div style={sideImgHolder}>
             <img 
               style={sideImg} 
@@ -118,7 +121,7 @@ const Room = (props) => {
           </div>
         </Col>
       </Row>  
-      <Row style={{ marginTop: "10px" }} ref={roomDescRef} className="animatedRoomRow">`}>
+      <Row style={descriptionHolder} ref={roomDescRef} className="animatedRoomRow">
         <Col xs="12" lg="6" style={{padding: 0}}>
           <div style={roomsDescription}>
             <p>{room.description}</p>
@@ -188,8 +191,8 @@ const Room = (props) => {
           
         </Col>
       </Row>
-      <Row>
-        <Col>
+      <Row style={{ marginTop: "10px" }}>
+        <Col style={{ padding: 0 }}>
           <Button style={bookButton}>Book Now</Button>
         </Col>
       </Row>

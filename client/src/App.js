@@ -2,8 +2,7 @@
 import React, { useEffect, useState }from 'react';
 import {
   BrowserRouter as Router,
-  Switch,
-  Route
+  Switch, Route, useLocation
 } from "react-router-dom";
 // additional redux imports //
 import { connect } from "react-redux";
@@ -51,6 +50,15 @@ const AuthorizedRoute = ({ loggedIn, component, path }) => {
   }
  };
 
+export const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  console.log("called");
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 const AppRoutes = (props) => {
   const cleanUpState = () => {
     // some cleanup here //
@@ -63,6 +71,7 @@ const AppRoutes = (props) => {
 
   return (
     <Router>
+      <ScrollToTop />
       <Switch>
         <AuthorizedRoute path={"/admin/*"} loggedIn={true} component={AdminComponent} />
         <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />

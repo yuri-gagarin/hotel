@@ -16,50 +16,9 @@ import RoomImgModal from "./RoomImgModal";
 import { connect } from "react-redux";
 import { fetchRooms } from "../../../redux/actions/roomActions";
 import Room from "./Room";
+// styles //
+import { roomStyle as style } from "./style/styles";
 
-const style = {
-  background: {
-    //backgroundColor: "#2c3531"
-  },
-  containerStyle: {
-    marginTop: "90px",
-  },
-  carouselStyle: {
-    border: "4px solid #2c3531",
-    borderRadius: "5px"
-  },
-  headerStyle: {
-    marginTop: "2em",
-    marginBottom: "0.5em",
-    textAlign: "center",
-    fontSize: "3.5em",
-    fontFamily: "Playfair Display",
-    fontWeight: "bold",
-    //fontStyle: "italic"
-  },
-  roomTitle: {
-    marginTop: "1em",
-    marginBottom: "0.5em",
-    textAlign: "center",
-    fontSize: "2em",
-    fontFamily: "Lobster",
-    fontWeight:  "bold"
-  },
-  roomsDescription: {
-    marginTop: "0.5em",
-    marginBottom: "1em",
-    padding: "1em",
-    border: "1px solid #2c3531",
-    borderRadius: "5px",
-    fontSize: "15px",
-    fontFamily: "Montserrat"
-  },
-  roomOptions: {
-    margin: "0.5em",
-    padding: "0.5em",
-    border: "1px solid #2c3531",
-  } 
-}
 const {
   background, carouselStyle,
   containerStyle, headerStyle,
