@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import roomDefault from "../../static_images/services_images/room_default.jpg";
-import restaurantDefault from "../../static_images/services_images/restaurant_default.jpg";
+import roomDefault from "./../../../static_images/services_images/room_default.jpg";
+import restaurantDefault from "./../../../static_images/services_images/restaurant_default.jpg";
 
 const ServicesComponent = (props) => {
   const { history } = props;

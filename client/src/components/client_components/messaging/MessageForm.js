@@ -8,11 +8,11 @@ import MessageView from "./MessageView";
 import Message from "./Message";
 // redux imports // 
 import { connect } from "react-redux";
-import { sendMessageRequest } from "../../redux/actions/messageActions";
-import { updateConversation } from "../../redux/actions/conversationActions";
-import { setGuestClient } from "../../redux/actions/clientActions";
+import { sendMessageRequest } from "./../../../redux/actions/messageActions";
+import { updateConversation } from "./../../../redux/actions/conversationActions";
+import { setGuestClient } from "./../../../redux/actions/clientActions";
 // socket io //
-import { socket } from "../../App";
+import { socket } from "./../../../App";
 
 const MessageForm = (props) => {
   const messageFormRef = useRef(null);

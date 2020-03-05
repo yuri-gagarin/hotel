@@ -24,10 +24,10 @@ import './App.css';
 // client route constants //
 import { adminRoutes, appRoutes } from "./routes/appRoutes";
 // additional components //
-import HomeComponent from "./components/HomeComponent";
+import HomeComponent from "./components/client_components/HomeComponent";
 import AdminComponent from './components/admin/AdminComponent';
 import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
-import RoomsIndexContainer from './components/rooms/RoomsIndexContainer';
+import RoomsIndexContainer from './components/client_components/rooms/RoomsIndexContainer';
 export const socket = io.connect("http://localhost:8080");
 
 

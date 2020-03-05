@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 // redux imports //
 import { connect } from "react-redux";
-import { sendContactFormData } from "./../../redux/actions/contactPostActions"; 
-import { setAppError } from "../../redux/actions/appGeneralActions";
+import { sendContactFormData } from "./../../../redux/actions/contactPostActions"; 
+import { setAppError } from "./../../../redux/actions/appGeneralActions";
 
 const ContactForm = (props) => {
   const { contactPostState, sendContactFormData, setAppError } = props;

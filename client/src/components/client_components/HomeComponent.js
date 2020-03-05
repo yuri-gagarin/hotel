@@ -9,17 +9,17 @@ import ContactForm from "./forms/ContactForm";
 import Footer from "./footer/Footer";
 import MessageFormContainer from "./messaging/MessageFormContainer";
 import BookingForm from "./forms/BookingForm";
-import SuccessComponent from "./display_components/SuccessComponent";
-import ErrorComponent from "./display_components/ErrorComponent";
+import SuccessComponent from "../display_components/SuccessComponent";
+import ErrorComponent from "../display_components/ErrorComponent";
 // redux imports //
 import { connect } from "react-redux";
-import { clearAppError, clearSuccessState } from "../redux/actions/appGeneralActions";
-import store from "../redux/store";
+import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
+import store from "../../redux/store";
 // react router //
 import { withRouter } from "react-router-dom";
 // additional imports //
 import ObjectID from "bson-objectid";
-import { setGuestClient } from "../redux/actions/clientActions";
+import { setGuestClient } from "../../redux/actions/clientActions";
 
 
 class HomeComponent extends React.Component {

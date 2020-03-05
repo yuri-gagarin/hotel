@@ -11,7 +11,7 @@ import {
 import NavbarComponent from "../navbar/NavbarComponent";
 // redux imports //
 import { connect } from "react-redux";
-import { fetchRooms } from "../../redux/actions/roomActions";
+import { fetchRooms } from "../../../redux/actions/roomActions";
 import Room from "./Room";
 
 const style = {

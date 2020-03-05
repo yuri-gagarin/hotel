@@ -1,28 +1,30 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-
+// react router imports //
+import { withRouter } from "react-router-dom";
 const style = {
   //border: "3px solid green",
 }
 const NavbarComponent = (props) => {
-  
+  const { history } = props;
   const [t, i18n] = useTranslation();
 
-  const goToBooking = (e) => {
-    let bookingForm = document.getElementById("booking");
-    let rect = bookingForm.getBoundingClientRect();
-    let offsetTop = window.pageYOffset;
-    let scrollAmount = rect.top - offsetTop;
-    window.scrollBy({
-      top: scrollAmount,
-      left: 0,
-      behavior: "smooth"
-    });
+  const goToHome = () => {
+    history.push("/");
+    console.log("clicked");
   };
-
-  const goToServices =(e) => {
+  // navbar handlers //
+  const goToBooking = () => {
+    let bookinView = document.getElementById("booking");
+    bookinView.scrollIntoView();
+  };
+  const goToServices = (e) => {
     let servicesView = document.getElementById("portfolio");
-    servicesView.scrollIntoView({ behavior: "smooth "});
+    servicesView.scrollIntoView();
+  };
+  const goToContactForm = (e) => {
+    let contactForm = document.getElementById("contact");
+    contactForm.scrollIntoView();
   };
 
   const changeLanguage = (e) => {
@@ -46,7 +48,13 @@ const NavbarComponent = (props) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark fixed-top" style={style} id="mainNav">
       <div className="container">
-        <a className="navbar-brand js-scroll-trigger" href="#page-top">{t("title")}</a>
+        <a 
+          className="navbar-brand js-scroll-trigger" 
+          onClick={goToHome}
+          style={{ cursor: "pointer" }}
+          >
+          {t("title")}
+        </a>
         <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i className="fas fa-bars"></i>
@@ -56,20 +64,20 @@ const NavbarComponent = (props) => {
           <i className="fas fa-bars"></i>
         </button>
         <div className="collapse navbar-collapse" id="navbarLanguage">
-          <ul className="navbar-nav mx-auto">
+          <ul className="navbar-nav mx-auto" style={{cursor: "pointer"}}>
             <li className="nav-item">
-              <a className="nav-link" onClick={changeLanguage} style={{cursor: "pointer"}}>UA</a>
+              <a className="nav-link" onClick={changeLanguage}>UA</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" onClick={changeLanguage} style={{cursor: "pointer"}}>EN</a>
+              <a className="nav-link" onClick={changeLanguage}>EN</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" onClick={changeLanguage} style={{cursor: "pointer"}}>RU</a>
+              <a className="nav-link" onClick={changeLanguage}>RU</a>
             </li>
           </ul>
         </div>
         <div className="collapse navbar-collapse" id="navbarResponsive">
-          <ul className="navbar-nav text-uppercase ml-auto">
+          <ul className="navbar-nav text-uppercase ml-auto" style={{cursor: "pointer"}}>
             <li className="nav-item">
               <a className="nav-link js-scroll-trigger" onClick={goToBooking}>{t("resTitle")}</a>
             </li>
@@ -80,7 +88,7 @@ const NavbarComponent = (props) => {
               <a className="nav-link js-scroll-trigger">{t("newsTitle")}</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger">{t("contactTitle")}</a>
+              <a className="nav-link js-scroll-trigger" onClick={goToContactForm}>{t("contactTitle")}</a>
             </li>
             <li className="nav-item">
               <a className="nav-link js-scroll-trigger">{t("aboutTitle")}</a>
@@ -92,4 +100,4 @@ const NavbarComponent = (props) => {
   );
 };
 
-export default NavbarComponent;
+export default withRouter(NavbarComponent);

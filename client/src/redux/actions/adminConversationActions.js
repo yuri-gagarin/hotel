@@ -1,5 +1,5 @@
 import axios from "axios";
-import store from '../../redux/store';
+import store from '../store';
 import { conversationConstants } from "../constants";
 const { 
   SET_ADMIN_CONVERSATIONS, ADMIN_CONVERSATIONS_ERROR, 

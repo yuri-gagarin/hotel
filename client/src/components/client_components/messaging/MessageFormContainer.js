@@ -5,7 +5,7 @@ import {
 } from "react-bootstrap";
 // redux imports //
 import { connect } from "react-redux";
-import { fetchClientConversation } from "../../redux/actions/conversationActions";
+import { fetchClientConversation } from "./../../../redux/actions/conversationActions";
 import MessageForm from "./MessageForm";
 import OpenMessageForm from "./OpenMessageForm";
 
