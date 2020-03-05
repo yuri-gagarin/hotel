@@ -7,7 +7,7 @@ import {
 // styles //
 import { roomStyle } from "./style/styles";
 // helper functions //
-import { setUploadedImgPath } from "./../helpers/displayHelpers";
+import { setUploadedImgPath } from "../../helpers/displayHelpers";
 // translations //
 import { useTranslation } from "react-i18next";
 

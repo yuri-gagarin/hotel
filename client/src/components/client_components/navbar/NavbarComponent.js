@@ -9,10 +9,6 @@ const NavbarComponent = (props) => {
   const { history } = props;
   const [t, i18n] = useTranslation();
 
-  const goToBooking = (e) => {
-    let bookingForm = document.getElementById("booking");
-    bookingForm.scrollIntoView();
-  };
   // navbar handlers //
   const goToBooking = () => {
     let bookinView = document.getElementById("booking");
@@ -26,6 +22,10 @@ const NavbarComponent = (props) => {
   const goToContactForm = (e) => {
    let contactForm = document.getElementById("contact");
    contactForm.scrollIntoView();
+  };
+
+  const goToHome = () => {
+    history.push("/");
   };
 
   const changeLanguage = (e) => {
