@@ -22,6 +22,7 @@ const initialState = {
   roomData: {},
   roomImages: [],
   createdRooms: [],
+  numberOfRooms: 0,
   error: null
 }
 
@@ -40,6 +41,7 @@ const roomReducer = (state = initialState, { type, payload }) => {
         loading: payload.loading,
         responseMsg: payload.responseMsg,
         createdRooms: [ ...payload.createdRooms ],
+        numberOfRooms: payload.createdRooms.length,
         error: payload.error
       };
     };

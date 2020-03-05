@@ -20,6 +20,13 @@ export const contactPhone = {
   marginBottom: "0.5em"
 };
 
+export const contactBody = {
+  border: "1px solid rgb(3, 152, 252)",
+  borderRadius: "5px",
+  padding: "0.5em",
+  marginBottom: "0.5em"
+};
+
 export const contactScreenStyle = {
   headerRow: {
     backgroundImage: "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)", 

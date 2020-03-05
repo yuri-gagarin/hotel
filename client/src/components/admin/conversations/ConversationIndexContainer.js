@@ -20,7 +20,7 @@ import { socket } from "../../../App";
 
 const MessagesSplashScreen = (props) => {
   return (
-    <Grid.Column width={10}>
+    <Grid.Column width={11}>
       <div className="messageArea">
         <div className="messageAreaTitle">
           <h1>Hotel Instant Messaging</h1>
@@ -84,7 +84,7 @@ const ConversationIndexCotainer = (props) => {
   return (
     <React.Fragment>
       <Grid.Row>
-        <Grid.Column width={14}>
+        <Grid.Column width={16}>
           <h5 style={{textAlign: "center"}}>Live Conversations</h5>
           {
             conversationOpen ? 
@@ -99,7 +99,7 @@ const ConversationIndexCotainer = (props) => {
         </Grid.Column>
       </Grid.Row>
       <Grid.Row style={{borderTop: "1px solid grey", borderBottom: "1px solid grey" }}>
-        <Grid.Column width={4} style={{ height: "100vh", paddingLeft: "0.5em", paddingRight: 0 }}>
+        <Grid.Column width={5} style={{ height: "100vh", paddingLeft: "0.5em", paddingRight: 0 }}>
           <ConversationComponent 
             adminConversationState={adminConversationState}
             openConversation={openConversation}

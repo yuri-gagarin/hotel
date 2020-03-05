@@ -60,7 +60,6 @@ const AdminDashComponent = (props) => {
   const goToMessenger = () => {
     history.push("/admin/messages");
   }
-
   return (
     <React.Fragment>
       <Grid.Row>
@@ -82,7 +81,7 @@ const AdminDashComponent = (props) => {
             <h4>Rooms</h4>
             <p>How many different types of rooms displayed to clients</p>
           </div>
-          <InformationHolder />
+          <InformationHolder number={roomState.numberOfRooms} />
           <Button basic color="green" style={infoButton} onClick={goToRooms}>Show Hotel Rooms</Button>
         </Grid.Column>
         <Grid.Column width={8}>

@@ -56,7 +56,7 @@ const MessagesView = (props) => {
   };
 
   return (
-    <Grid.Column width={10} style={{ height: "100vh", padding: 0 }}>
+    <Grid.Column width={11} style={{ height: "100vh", padding: 0 }}>
       <Comment.Group style={{overflowY: "scroll", height: "100%", maxWidth: "none" }}>
         <div style={conversationTitle}>ConversationWith: {setConversationTitle(messages, adminState)}</div>
       {

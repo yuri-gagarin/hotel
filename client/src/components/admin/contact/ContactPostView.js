@@ -9,9 +9,14 @@ import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 // style imports //
 import {
-  backgroundStyle, contactForm, contactEmail, contactPhone
+  backgroundStyle, contactForm, contactEmail, contactPhone, contactBody
 } from "./style/styles";
 
+const iconStyle = {
+  color: "rgb(3, 152, 252)",
+  fontSize: "1.5em",
+  marginRight: "0.5em"
+}
 const ContactPostView = (props) => {
   const { postOpen, post, handleClosePost } = props;
   const [data, setData] = useState("");
@@ -31,16 +36,22 @@ const ContactPostView = (props) => {
       <React.Fragment>
         <Container fluid>
           <div style={contactForm}>
-            <i className="fas fa-envelope-square"></i>
+            <i className="fas fa-sticky-note" style={iconStyle}></i>
             <span>  Message from: {post.name}</span>
           </div>
           <div style={contactEmail}>  
-            <i className="fas fa-reply-all"></i>            
-            <span>  Email: {post.email}</span>
+            <i className="fas fa-envelope-square"  style={iconStyle}></i>            
+            <span>Email: </span><a href="#" style={{color: "blue"}}>{post.email}</a>
           </div>
           <div style={contactPhone}>
-            <i className="fas fa-phone-square"></i>
+            <i className="fas fa-phone-square"  style={iconStyle}></i>
             <span>  Phone: {post.phoneNumber || "No phone number given"} </span>
+          </div>
+        </Container>
+        <Container>
+          <h4>Request from: {post.name}</h4>
+          <div style={contactBody}>
+            {post.content}
           </div>
         </Container>
         <Container fluid>

@@ -6,12 +6,36 @@ import { withRouter } from "react-router-dom";
 import { adminRoutes } from "../../../routes/appRoutes";
 
 const AdminNavMenu = (props) =>  {
-  const [active, setActiveItem] = useState({ activeItem: "home" })
+  const [active, setActiveItem] = useState("home");
   const { history, logoutUser } = props;
 
   useEffect(() => {
     history.push(adminRoutes.ADMIN_DASH);
   }, []);
+  useEffect(() => {
+    const pathName = history.location.pathname;
+    // set the navbar active item based on history //
+    switch (pathName) {
+      case adminRoutes.ADMIN_MESSAGES: {
+        setActiveItem("messages");
+        break;
+      };
+      case adminRoutes.ADMIN_ROOMS: {
+        setActiveItem("rooms");
+        break;
+      };
+      case adminRoutes.ADMIN_POSTS: {
+        setActiveItem("posts");
+      };
+      case adminRoutes.ADMIN_CONTACT_POSTS: {
+        setActiveItem("contactRequests");
+      };  
+      default: {
+        setActiveItem("home");
+      };
+    }
+    
+  }, [history.location]);
 
   const handleMenuClick = (e, { name }) => {
     //console.log(name);
@@ -44,9 +68,7 @@ const AdminNavMenu = (props) =>  {
         history.push(adminRoutes.ADMIN_DASH);
       }
     }
-    setActiveItem((state) => {
-      return { ...state, activeItem: name };
-    });
+    setActiveItem(name);
   };
   const _logoutUser = (e) => {
     // todo for logout functionality //
@@ -57,41 +79,42 @@ const AdminNavMenu = (props) =>  {
     <Menu pointing secondary>
       <Menu.Item
         name='home'
-        active={active.activeItem === "home"}
+        active={active === "home"}
         onClick={handleMenuClick}
       />
       <Menu.Item
         name='messages'
-        active={active.activeItem === 'messages'}
+        active={active === 'messages'}
         onClick={handleMenuClick}
       />
       <Menu.Item
         name='rooms'
-        active={active.activeItem === 'rooms'}
+        active={active === 'rooms'}
         onClick={handleMenuClick}
       />
       <Menu.Item
         name='posts'
-        active={active.activeItem === 'posts'}
+        active={active === 'posts'}
         onClick={handleMenuClick}
       />
       <Menu.Item 
         name='contactRequests'
-        active={active.activeItem === "contactRequests"}
+        active={active === "contactRequests"}
         onClick={handleMenuClick}
       />
       <Menu.Menu position='right'>
         <Menu.Item 
           name="regulate users"
-          active={active.activeItem === "regulate users"}
+          active={active === "regulate users"}
           onClick={handleMenuClick}
         />
         <Menu.Item
           name='logout'
-          active={active.activeItem === 'logout'}
+          active={active === 'logout'}
           onClick={_logoutUser}
         />
       </Menu.Menu>
+      
     </Menu>   
   );
 };
