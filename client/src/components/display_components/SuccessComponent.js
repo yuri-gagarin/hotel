@@ -17,7 +17,7 @@ const SuccessComponent = (props) => {
       <Card style={{ border: "1px solid rgb(66, 132, 245)"}}>
         <Card.Content textAlign="center">
           <Card.Description style={{fontWeight: "bold", color: "rgb(66, 132, 245)"}}>
-            {"all ok is fine"}
+            {responseMsg}
           </Card.Description>
         </Card.Content>
         <Card.Content extra textAlign="center">

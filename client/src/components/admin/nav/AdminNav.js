@@ -26,9 +26,11 @@ const AdminNavMenu = (props) =>  {
       };
       case adminRoutes.ADMIN_POSTS: {
         setActiveItem("posts");
+        break;
       };
       case adminRoutes.ADMIN_CONTACT_POSTS: {
         setActiveItem("contactRequests");
+        break;
       };  
       default: {
         setActiveItem("home");

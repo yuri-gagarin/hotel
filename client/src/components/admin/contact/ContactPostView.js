@@ -17,19 +17,27 @@ const iconStyle = {
   fontSize: "1.5em",
   marginRight: "0.5em"
 }
+const setInitialMessage = (post) => {
+  return (
+    `
+    <p>your response ... </p>
+    `
+  );
+}
 const ContactPostView = (props) => {
   const { postOpen, post, handleClosePost } = props;
-  const [data, setData] = useState("");
+  const [data, setData] = useState(setInitialMessage(post));
 
   const handleInit = (e, editor) => {
-
+   
   };
   const handleEditorChange = (e, editor) =>{
-    setData(editor.data());
+    console.log(editor.getData())
   };
   const handleSend = () => {
     console.log(data);
-  }
+  };
+
 
   if (postOpen) {
     return (
@@ -58,7 +66,7 @@ const ContactPostView = (props) => {
           <h4>Write your reply</h4>
           <CKEditor style={{height: "500px" }}
             editor={ ClassicEditor }
-            data="<p>Write your response here...</p>"
+            data={setInitialMessage(post)}
            
             onInit={handleInit}
             onChange={handleEditorChange}

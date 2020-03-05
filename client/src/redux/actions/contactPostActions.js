@@ -166,14 +166,16 @@ export const handleContactPostDelete = (dispatch, postId, createdPosts = []) => 
   return axios(requestOptions) 
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedPost } = data;
-      const updatedPosts = createdPosts.filter((createdPost) => createdPost._id != deletedPost._id );
+      const { responseMsg, deletedContactPost } = data;
+      const updatedPosts = createdPosts.filter((post) => post._id != deletedContactPost._id );
+
       const stateData = {
         status: status,
         responseMsg: responseMsg,
         createdPosts: updatedPosts,
       }
       dispatch(deleteContactPost(stateData));
+      dispatch(operationSuccessful(responseMsg));
     })
     .catch((error) => {
       dispatch(sendContactError(error));

@@ -34,6 +34,9 @@ const AdminComponent = (props) => {
   const {
     clearAppError, clearSuccessState, handleLogout, setAdmin
   } = props; 
+  // error and success states //
+  const [successTimeout, setSuccessTimeout] = useState(null);
+  const [errorTimeout, setErrorTimeout] = useState(null);
   // set the localStoreage state  so the app can reload //
   useEffect(() => {
     if (!localStorage.getItem("hotelAdminState")) {
@@ -44,6 +47,27 @@ const AdminComponent = (props) => {
       setAdmin(savedState);
     }
   }, []); 
+  // timeouts for the error and success components //
+  useEffect(() => {
+    if (error) {
+      setErrorTimeout(setTimeout(() => {
+        clearAppError();
+      }, 5000));
+    }
+    if (!error && errorTimeout) {
+      clearTimeout(errorTimeout);
+      setErrorTimeout(null);
+    }
+    if (succcessComponentOpen) {
+      setSuccessTimeout(setTimeout(() =>{
+        clearSuccessState();
+      }, 5000))
+    }
+    if (successComponentOpen && successTimeout) {
+      clearTimeout(successTimeout);
+      setSuccessTimeout(null);
+    }
+  }, [appGeneralState]);
   // logout user functionality //
   const logoutUser = (e) => {
     handleLogout(history);
