@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 // semantic ui imports //
 import {
@@ -20,7 +20,32 @@ const Room = (props) => {
   const { room = {}, images = [] } = props;
   const { options } = room;
   const [index, setIndex] = useState(0);
+  const [isVisible, setVisible] = useState(false)
   const [direction, setDirection] = useState(null);
+  // refs //
+  const roomTitleRef = useRef(null);
+  const roomPicturesRef = useRef(null);
+  const roomDescRef = useRef(null);
+  // 
+  useEffect(() => {
+    const animatedRows = document.querySelectorAll(".animatedRoomRow");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.intersectionRatio > 0) {
+          console.log("entered view");
+          entry.target.classList.add("isVisible");
+        }
+      });
+    });
+    animatedRows.forEach((row) => {
+      observer.observe(row);
+    });
+    return () => {
+      animatedRows.forEach((row) => {
+        observer.unobserve(row);
+      });
+    }
+  }, []);
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
     setDirection(e.direction);
@@ -28,12 +53,12 @@ const Room = (props) => {
   const roomImagePaths = room.images.map((image) => image.path);
   return (
     <React.Fragment>
-      <Row>
+      <Row ref={roomTitleRef} className="animatedRoomRow">
         <Col>
           <div style={roomTitle}>{room.roomType}</div>
         </Col>
       </Row>
-      <Row>
+      <Row ref={roomPicturesRef} className="animatedRoomRow">
         <Col xs="12" lg="6" style={{padding: 0}}>
           <Carousel activeIndex={index} direction={direction} onSelect={handleSelect} style={carouselStyle}>
             {
@@ -63,7 +88,7 @@ const Room = (props) => {
           </div>
         </Col>
       </Row>  
-      <Row style={{ marginTop: "10px" }}>
+      <Row style={{ marginTop: "10px" }} ref={roomDescRef} className="animatedRoomRow">`}>
         <Col xs="12" lg="6" style={{padding: 0}}>
           <div style={roomsDescription}>
             <p>{room.description}</p>
