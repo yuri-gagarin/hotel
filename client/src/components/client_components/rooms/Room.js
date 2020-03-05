@@ -25,7 +25,6 @@ const Room = (props) => {
   const [index, setIndex] = useState(0);
   const [isVisible, setVisible] = useState(false)
   const [direction, setDirection] = useState(null);
-<<<<<<< HEAD:client/src/components/client_components/rooms/Room.js
   // refs //
   const roomTitleRef = useRef(null);
   const roomPicturesRef = useRef(null);
@@ -50,11 +49,6 @@ const Room = (props) => {
       });
     }
   }, []);
-=======
-  const [t, i18n]= useTranslation();
-
-
->>>>>>> master:client/src/components/rooms/Room.js
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
     setDirection(e.direction);

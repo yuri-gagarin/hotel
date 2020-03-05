@@ -9,15 +9,9 @@ const NavbarComponent = (props) => {
   const { history } = props;
   const [t, i18n] = useTranslation();
 
-<<<<<<< HEAD:client/src/components/client_components/navbar/NavbarComponent.js
   const goToHome = () => {
     history.push("/");
     console.log("clicked");
-=======
-  const goToBooking = (e) => {
-    let bookingForm = document.getElementById("booking");
-    bookingForm.scrollIntoView();
->>>>>>> master:client/src/components/navbar/NavbarComponent.js
   };
   // navbar handlers //
   const goToBooking = () => {
@@ -28,16 +22,9 @@ const NavbarComponent = (props) => {
     let servicesView = document.getElementById("portfolio");
     servicesView.scrollIntoView();
   };
-<<<<<<< HEAD:client/src/components/client_components/navbar/NavbarComponent.js
   const goToContactForm = (e) => {
     let contactForm = document.getElementById("contact");
     contactForm.scrollIntoView();
-=======
-
-  const goToContactForm = (e) => {
-   let contactForm = document.getElementById("contact");
-   contactForm.scrollIntoView();
->>>>>>> master:client/src/components/navbar/NavbarComponent.js
   };
 
   const changeLanguage = (e) => {
@@ -90,11 +77,7 @@ const NavbarComponent = (props) => {
           </ul>
         </div>
         <div className="collapse navbar-collapse" id="navbarResponsive">
-<<<<<<< HEAD:client/src/components/client_components/navbar/NavbarComponent.js
           <ul className="navbar-nav text-uppercase ml-auto" style={{cursor: "pointer"}}>
-=======
-          <ul className="navbar-nav text-uppercase ml-auto" style={{ cursor: "pointer "}}>
->>>>>>> master:client/src/components/navbar/NavbarComponent.js
             <li className="nav-item">
               <a className="nav-link js-scroll-trigger" onClick={goToBooking}>{t("resTitle")}</a>
             </li>

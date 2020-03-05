@@ -1,13 +1,6 @@
 import React, { useState } from "react";
-<<<<<<< HEAD:client/src/components/client_components/services/ServicesComponent.js
 import roomDefault from "./../../../static_images/services_images/room_default.jpg";
 import restaurantDefault from "./../../../static_images/services_images/restaurant_default.jpg";
-=======
-import roomDefault from "../../static_images/services_images/room_default.jpg";
-import restaurantDefault from "../../static_images/services_images/restaurant_default.jpg";
-import { useTranslation } from "react-i18next";
-
->>>>>>> master:client/src/components/services/ServicesComponent.js
 
 const ServicesComponent = (props) => {
   const { history } = props;
