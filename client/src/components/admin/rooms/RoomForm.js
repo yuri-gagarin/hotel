@@ -64,7 +64,7 @@ const FileInput = (props) => {
 
 const RoomForm = (props) => {
   const { 
-    adminRoomState, 
+    roomState, 
     history,
     uploadRoomImage, 
     deleteRoomImage,
@@ -72,7 +72,7 @@ const RoomForm = (props) => {
     updateRoom, 
     setPreviewImages
   } = props;
-  const { roomData, roomImages } = adminRoomState;
+  const { roomData, roomImages } = roomState;
 
   const [roomDetails, setRoomDetails] = useState(roomData);
   const [roomOptions = {}, setRoomOptions] = useState(roomData.options);
@@ -211,10 +211,10 @@ const RoomForm = (props) => {
   };
   // END checkbox handler //
   const handleFormSubmit = () => {
-    const roomId = adminRoomState.roomData._id;
-    const createdRooms = adminRoomState.createdRooms;
+    const roomId = roomState.roomData._id;
+    const createdRooms = roomState.createdRooms;
 
-    const roomImages = adminRoomState.roomImages.map((img) => img._id );
+    const roomImages = roomState.roomImages.map((img) => img._id );
     const roomData = {
       ...roomDetails,
       options: {
@@ -227,13 +227,13 @@ const RoomForm = (props) => {
       handleNewRoom(roomData, history)
     } else {
       // existing room being edited with existing data //
-      const roomImages = { currentImages: adminRoomState.roomImages };
+      const roomImages = { currentImages: roomState.roomImages };
       updateRoom({ ...roomData, _id: roomId }, roomImages, createdRooms);
     }
   };  
 
   const handleImageDelete = (imageId) => {
-    const { roomImages } = adminRoomState;
+    const { roomImages } = roomState;
     const confirm = window.confirm("Are you Sure?");
     if (confirm) {
       deleteRoomImage(imageId, roomImages);
@@ -339,7 +339,7 @@ const RoomForm = (props) => {
 
 RoomForm.propTypes = {
   history: PropTypes.object.isRequired,
-  adminRoomState: PropTypes.object.isRequired,
+  roomState: PropTypes.object.isRequired,
   uploadRoomImage: PropTypes.func.isRequired,
   deleteRoomImage: PropTypes.func.isRequired,
   setPreviewImages: PropTypes.func.isRequired,
@@ -350,7 +350,7 @@ RoomForm.propTypes = {
 // redux functionality //
 const mapStateToProps = (state) => {
   return {
-    adminRoomState: state.adminRoomState
+    roomState: state.roomState
   };
 };
 const mapDispatchToProps = (dispatch) => {

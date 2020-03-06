@@ -28,6 +28,7 @@ import HomeComponent from "./components/client_components/HomeComponent";
 import AdminComponent from './components/admin/AdminComponent';
 import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
 import RoomsIndexContainer from './components/client_components/rooms/RoomsIndexContainer';
+import ServicesIndexComponent from "./components/client_components/services/ServicesIndexComponent";
 export const socket = io.connect("http://localhost:8080");
 
 
@@ -76,6 +77,7 @@ const AppRoutes = (props) => {
         <AuthorizedRoute path={"/admin/*"} loggedIn={true} component={AdminComponent} />
         <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />
         <Route path={"/rooms"} exact={true} component={RoomsIndexContainer} />
+        <Route path={"/services"} exact={true} component={ServicesIndexComponent} />
         <Route path={appRoutes.HOME_ROUTE} exact={true} component={HomeComponent} />
        </Switch>
     </Router>
