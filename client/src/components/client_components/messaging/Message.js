@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {
   Comment
 } from "semantic-ui-react";
-import { formatDate } from "../helpers/dateHelpers";
+import { formatDate } from "./../../helpers/dateHelpers";
 
 export const messageStyle = {
   borderRadius: "5px",
