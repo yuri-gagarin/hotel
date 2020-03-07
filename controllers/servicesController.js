@@ -1,6 +1,79 @@
 import ServiceImage from "./../models/ServiceImage";
+import HotelService from "../models/HotelService";
 
 export default {
+  getServices: (req, res) => {
+    return HotelService.find({})
+      .populate("images", ["_id", "path"])
+      .then((services) => {
+        return res.status(200).json({
+          responseMsg: "Success",
+          services: services
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          responseMsg: "An error occured",
+          error: error
+        });
+      });
+  },
+  createHotelService: (req, res) => {
+    const  { serviceData } = req.body;
+    return HotelService.create(serviceData)
+      .then((service) => {
+        return HotelService.populate(service, { path: "images", model: "ServiceImage"});
+      })
+      .then((newService) => {
+        return res.status(200).json({
+          responseMsg: "New Service created",
+          newService: newService
+        });
+      })
+      .catch((error) => {
+        console.error(error)
+        return res.status(500).json({
+          responseMsg: "It seems an error occured",
+          error: error
+        })
+      }); 
+      
+  },
+  updateService: (req, res) => {
+    let status, foundRoom;
+    const serviceId = req.params.serviceId;
+    const { serviceData, serviceImages } = req.body;
+    const updatedImages = serviceImages.currentImages.map((img) => `${img._id}` );
+    return HotelService.findOneAndUpdate(
+      { _id: serviceId },
+      {
+        $set: { 
+          serviceType: serviceData.serviceType,
+          hours: serviceData.hours,
+          price: serviceData.price,
+          description: serviceData.description,
+          images: [ ...updatedImages ]
+        },
+      },
+      { new: true }
+    ).then((updatedService) => {
+      return HotelService.populate(updatedService, { path: "images", model: "ServiceImage" });
+    })
+    .then((service) => {
+      console.log(room);
+      return res.status(200).json({
+        responseMsg: "Service Updated",
+        updatedService: service
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(status || 500).json({
+        responseMsg: "An error occured",
+        error: error
+      });
+    });
+  },
   uploadImage: (req, res) => {
     const imageUploadResult = req.locals.serviceImageUpload;
     if (imageUploadResult.success) {

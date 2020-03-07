@@ -20,6 +20,13 @@ const hotelServiceSchema = new Schema({
     type: String,
     required: true
   },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  editedAt: {
+    type: Date
+  }
 });
 
 export default mongoose.model("HotelService", hotelServiceSchema);
