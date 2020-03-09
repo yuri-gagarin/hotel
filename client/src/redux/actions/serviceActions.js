@@ -142,7 +142,7 @@ export const clearServiceData = () => {
 export const uploadServiceImage = (dispatch, file) => {
   const requestOptions = {
     method: "post",
-    url: "/api/uploadServiceImage",
+    url: "/api/services/uploadServiceImage",
     headers: {
       'content-type': 'multipart/form-data'
     },
@@ -173,7 +173,7 @@ export const uploadServiceImage = (dispatch, file) => {
 export const deleteServiceImage = (dispatch, imageId, oldImageState = []) => {
   const requestOptions = {
     method: "delete",
-    url: "/api/deleteServiceImage/" + imageId
+    url: "/api/services/deleteServiceImage/" + imageId
   };
   dispatch(serviceRequest());
   return axios(requestOptions)
@@ -199,7 +199,7 @@ export const deleteServiceImage = (dispatch, imageId, oldImageState = []) => {
 export const handleNewService= (dispatch, hotelServiceData, history) => {
   const requestOptions = {
     method: "post",
-    url: "/api/createRoom",
+    url: "/api/services/createHotelService",
     data: {
       hotelServiceData: hotelServiceData,
     }
@@ -219,7 +219,7 @@ export const handleNewService= (dispatch, hotelServiceData, history) => {
       };
       dispatch(serviceCreated(stateData));
       dispatch(addNewService(newService));
-      history.push("/admin/rooms");
+      history.push("/admin/services");
     })
     .catch((error) => {
       console.error(error);
@@ -230,9 +230,9 @@ export const handleNewService= (dispatch, hotelServiceData, history) => {
 export const fetchServices = (dispatch) => {
   const requestOptions = {
     method: "get",
-    url: "/api/hotelServices"
+    url: "/api/services"
   };
-  dispatch(roomRequest());
+  dispatch(serviceRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
@@ -248,6 +248,80 @@ export const fetchServices = (dispatch) => {
     })
     .catch((error) => {
       console.error(error);
+      dispatch(serviceError(error));
+    });
+};
+
+export const updateHotelService = (dispatch, serviceData, serviceImages = [], currentServices = []) => {
+  const serviceId = serviceData._id
+  const requestOptions = {
+    method: "patch",
+    url: "/api/services/" + serviceId,
+    data: {
+      serviceData: serviceData,
+      serviceImages: serviceImages
+    }
+  }
+  dispatch(serviceRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedService } = data;
+      const updatedServices = currentServices.map((service) => {
+        if (service._id == updatedService._id) {
+          return {
+            ...updatedService
+          };
+        } else {
+          return service;
+        }
+      })
+      const serviceStateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        serviceData: updatedService,
+        serviceImages: updatedService.images,
+        createdServices: updatedServices,
+        error: null
+      };
+      dispatch(serviceUpdated(serviceStateData));
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(serviceError(error));
+    })
+};
+
+export const deleteService = (dispatch, serviceId, currentServices = []) => {
+  const serviceImages = currentServices.filter((service) => serviceId == service._id)[0].images;
+  const requestOptions = {
+    method: "delete",
+    url: "/api/services/" + serviceId,
+    data: {
+      serviceImages: serviceImages
+    }
+  };
+  dispatch(serviceRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, deletedService } = data;
+      const updatedServices = currentServices.filter((service) => {
+        return deletedService._id != service._id;
+      });
+      const serviceStateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        serviceData: {},
+        serviceImages: [],
+        createdServices: updatedServices,
+        error: null
+      };
+      dispatch(serviceDeleted(serviceStateData));
+    })
+    .catch((error) => {
       dispatch(serviceError(error));
     });
 };
