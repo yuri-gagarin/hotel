@@ -275,7 +275,7 @@ export const updateHotelService = (dispatch, serviceData, serviceImages = [], cu
         } else {
           return service;
         }
-      })
+      });
       const serviceStateData = {
         status: status,
         loading: false,
@@ -290,7 +290,7 @@ export const updateHotelService = (dispatch, serviceData, serviceImages = [], cu
     .catch((error) => {
       console.error(error);
       dispatch(serviceError(error));
-    })
+    });
 };
 
 export const deleteService = (dispatch, serviceId, currentServices = []) => {
