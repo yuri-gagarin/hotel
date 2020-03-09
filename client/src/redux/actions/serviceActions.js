@@ -139,3 +139,115 @@ export const clearServiceData = () => {
   };
 };
 
+export const uploadServiceImage = (dispatch, file) => {
+  const requestOptions = {
+    method: "post",
+    url: "/api/uploadServiceImage",
+    headers: {
+      'content-type': 'multipart/form-data'
+    },
+    data: file
+  }
+  dispatch(uploadRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, newImage } = data;
+      const stateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        newImage: newImage,
+        error: null
+      };
+      dispatch(serviceImgUploadSucess(stateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(serviceImgUploadError(error));
+      return Promise.resolve(false);
+    });
+};
+
+export const deleteServiceImage = (dispatch, imageId, oldImageState = []) => {
+  const requestOptions = {
+    method: "delete",
+    url: "/api/deleteServiceImage/" + imageId
+  };
+  dispatch(serviceRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg } = data;
+      const newImageState = oldImageState.filter((image) => imageId != image._id)
+      const stateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        serviceImages: newImageState,
+        error: null
+      };
+      dispatch(serviceImgDeleteSuccess(stateData));
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(serviceImgUploadError(error));
+    });
+};
+
+export const handleNewService= (dispatch, hotelServiceData, history) => {
+  const requestOptions = {
+    method: "post",
+    url: "/api/createRoom",
+    data: {
+      hotelServiceData: hotelServiceData,
+    }
+  };
+  dispatch(serviceRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, newService } = data;
+      const stateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        serviceData: newService,
+        serviceImages: newService.images,
+        error: null
+      };
+      dispatch(serviceCreated(stateData));
+      dispatch(addNewService(newService));
+      history.push("/admin/rooms");
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(serviceError(error));
+    });
+};
+
+export const fetchServices = (dispatch) => {
+  const requestOptions = {
+    method: "get",
+    url: "/api/hotelServices"
+  };
+  dispatch(roomRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, services } = data;
+      const stateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        createdServices: services,
+        error: null
+      };
+      dispatch(setServices(stateData))
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(serviceError(error));
+    });
+};
