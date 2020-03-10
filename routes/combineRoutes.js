@@ -5,6 +5,7 @@ import messageRoutes from "./messageRoutes";
 import roomImageRoutes from "./roomImageRoutes";
 import roomRoutes from "./roomRoutes";
 import serviceImageRoutes from "./serviceImageRoutes";
+import serviceRoutes from "./serviceRoutes";
 import testRoutes from "./testRoutes";
 
 export default function (router) {
@@ -15,5 +16,6 @@ export default function (router) {
   roomImageRoutes(router);
   roomRoutes(router);
   serviceImageRoutes(router);
+  serviceRoutes(router);
   //testRoutes(router);
 };

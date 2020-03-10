@@ -8,7 +8,7 @@ export default function (router) {
   // @access PRIVATE //
   router  
     .route("/api/services")
-    .get(servicesController.getService);
+    .get(servicesController.getServices);
 
     
   // @route PATCH "/api/services/:serviceId" //
@@ -23,7 +23,7 @@ export default function (router) {
   // @access PRIVATE
   router
   .route("/api/services/createService")
-  .post(servicesController.createService);
+  .post(servicesController.createHotelService);
   
 
   // @route DELETE "/api/services/:roomId" //
@@ -31,5 +31,5 @@ export default function (router) {
   // @access PRIVATE //
   router  
     .route("/api/services/:serviceId")
-    .delete(servicesController.deleteService);
+    .delete(servicesController.deleteHotelService);
 };  

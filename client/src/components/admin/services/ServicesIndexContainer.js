@@ -10,17 +10,29 @@ import {
 import { connect } from "react-redux"; 
 // router imports //
 import { withRouter, Route } from "react-router-dom";
+import { 
+  clearServiceData, fetchServices,
+  handleNewService, updateHotelService, deleteService,
+} from "./../../../redux/actions/serviceActions";
 
 const ServicesIndexContainer = (props) => {
   const { 
-    history
+    history,
+    serviceState
   } = props;
-  const { createdServices } = servicesState;
+  const {
+    fetchServices, clearServiceData, handleNewService,
+    handleServiceUpdate, handleServiceDelete
+  } = props;
+
+  const { createdServices } = serviceState;
   const [servicInfoOpen, setServiceInfoOpen] = useState(false);
   const [newServiceFormOpen, setNewServiceFormOpen] = useState(false);
 
   useEffect(() => {
-   // services api call //
+    // services api call //
+    fetchServices();
+    console.log("loaded");
   }, []);
   const openNewServiceForm = () => {
     clearServiceData();
@@ -77,12 +89,11 @@ const ServicesIndexContainer = (props) => {
       <Route path={"/admin/services/new"}>
         <Grid.Row>
           <Grid.Column width={14}>
-            <Button onClick={goBackToRooms}>Back</Button>
+            <Button onClick={goBackToServices}>Back</Button>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={14}>
-            <RoomForm history={history} />
           </Grid.Column>
         </Grid.Row>
       </Route>
@@ -92,11 +103,11 @@ const ServicesIndexContainer = (props) => {
             <Button onClick={goBackToServices}>Back</Button>
           </Grid.Column>
         </Grid.Row>
-        <RoomDisplay room={servicesState.serviceData} history={history} />
       </Route>
     </React.Fragment>
   );
 };
+// PropTypes validation //
 
 const mapStateToProps = (state) => {
   return {
@@ -105,7 +116,17 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-   
+   clearServiceData: () => dispatch(clearServiceData()),
+   fetchServices: () => fetchServices(dispatch),
+   handleNewService: (serviceData, history) => {
+     return handleNewService(dispatch, serviceData, history);
+   },
+   handleServiceDelete: (serviceId, createdServices) => {
+     return deleteService(dispatch, serviceId, createdServices);
+   },
+   handleServiceUpdate: (serviceData, serviceImages, createdServices) => {
+     return updateHotelService(dispatch, serviceData, serviceImages, createdServices);
+   }
   };
 };
 

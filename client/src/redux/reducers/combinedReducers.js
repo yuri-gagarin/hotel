@@ -7,6 +7,7 @@ import clientReducer from "./clientReducer";
 import contactPostReducer from "./contactPostReducer";
 import conversationReducer from "./conversationReducer";
 import messageReducer from "./messageReducer";
+import serviceReducer from "./serviceReducer";
 
 const rootReducer = combineReducers({
   adminConvState: adminConversation, 
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   contactPostState: contactPostReducer,
   conversationState: conversationReducer,
   adminState: adminReducer,
-  messageState: messageReducer
+  messageState: messageReducer,
+  serviceState: serviceReducer
 });
 
 export default rootReducer;

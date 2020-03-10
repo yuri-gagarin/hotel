@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
 import ContactPostContainer from "./contact/ContactPostContainer";
+import ServicesIndexContainer from "./services/ServicesIndexContainer";
 
 
 
@@ -28,7 +29,7 @@ const AdminComponent = (props) => {
   const { 
     history, adminState, adminConvState,
     roomState, appGeneralState,
-    contactPostState
+    contactPostState, serviceState
   } = props;
   // redux action functions //
   const {
@@ -105,6 +106,9 @@ const AdminComponent = (props) => {
       <Route path="/admin/contactPosts">
         <ContactPostContainer contactPostState={contactPostState} />
       </Route>
+      <Route path="/admin/services">
+        <ServicesIndexContainer serviceState={serviceState} />
+      </Route>
     </Grid>
   )
 };
@@ -115,7 +119,8 @@ AdminComponent.propTypes = {
   adminState: PropTypes.object.isRequired,
   roomState: PropTypes.object.isRequired,
   appGeneralState: PropTypes.object.isRequired,
-  contactPostState: PropTypes.object.isRequired
+  contactPostState: PropTypes.object.isRequired,
+  serviceState: PropTypes.object.isRequired
 };
 // redux mapping functions //
 const mapStateToProps = (state) => {
@@ -124,7 +129,8 @@ const mapStateToProps = (state) => {
     roomState: state.roomState,
     adminState: state.adminState,
     appGeneralState: state.appGeneralState,
-    contactPostState: state.contactPostState
+    contactPostState: state.contactPostState,
+    serviceState: state.serviceState
   };
 };
 const mapDispatchToProps = (dispatch) => {

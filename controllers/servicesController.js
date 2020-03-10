@@ -1,11 +1,15 @@
 import ServiceImage from "./../models/ServiceImage";
 import HotelService from "../models/HotelService";
+// helpers //
+import { deleteFile } from "./helpers/apiHelpers"
 
 export default {
   getServices: (req, res) => {
     return HotelService.find({})
       .populate("images", ["_id", "path"])
       .then((services) => {
+        console.log("responded");
+        console.log(services);
         return res.status(200).json({
           responseMsg: "Success",
           services: services
@@ -40,7 +44,7 @@ export default {
       
   },
   updateService: (req, res) => {
-    let status, foundRoom;
+    let status;
     const serviceId = req.params.serviceId;
     const { serviceData, serviceImages } = req.body;
     const updatedImages = serviceImages.currentImages.map((img) => `${img._id}` );
@@ -73,6 +77,46 @@ export default {
         error: error
       });
     });
+  },
+  deleteHotelService: (req, res) => {
+    let status, deletedService, imagePathsToDelete, imageIdsToDelete;
+    const serviceId = req.params.serviceId;
+    const { serviceImages } = req.body;
+    if (serviceImages && Array.isArray(serviceImages) && serviceImages.length > 0) {
+      // do image cleanup first //
+      imagePathsToDelete = serviceImages.map((img) => `${img.path}`);
+      imageIdsToDelete = serviceImages.map((img) => `${img._id}`);
+    }
+    return HotelService.findOneAndDelete({ _id: serviceId })
+      .then((hotelService) => {
+        deletedService = hotelService;
+        if (imagePathsToDelete) {
+          const deletePromises = imagePathsToDelete.map((filePath) => deleteFile(filePath));
+          return Promise.all(deletePromises);
+        } else {
+          return Promise.resolve([{ success: true }]);
+        }
+      })
+      .then((deleteArray) => {
+        if (imageIdsToDelete) {
+          return ServiceImage.deleteMany({ _id: imageIdsToDelete});
+        } else {
+          return Promise.resolve({ "n": 0, "ok": 1, "deletedCount": 0 })
+        }
+      })
+      .then((result) => {
+        return res.status(200).json({
+          responseMsg: `Deleted 1 Item and ${result.deletedCount} related images`,
+          deletedService: deletedService
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        return res.status(status || 500).json({
+          responseMsg: "An error occured in your request",
+          error: error
+        });
+      });
   },
   uploadImage: (req, res) => {
     const imageUploadResult = req.locals.serviceImageUpload;

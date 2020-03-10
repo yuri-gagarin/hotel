@@ -32,6 +32,10 @@ const AdminNavMenu = (props) =>  {
         setActiveItem("contactRequests");
         break;
       };  
+      case "/admin/services": {
+        setActiveItem("services");
+        break;
+      }
       default: {
         setActiveItem("home");
       };
@@ -56,6 +60,10 @@ const AdminNavMenu = (props) =>  {
       }
       case "posts": {
         history.push(adminRoutes.ADMIN_POSTS);
+        break;
+      };
+      case "services": {
+        history.push("/admin/services");
         break;
       };
       case "contactRequests": {
@@ -102,6 +110,11 @@ const AdminNavMenu = (props) =>  {
       <Menu.Item 
         name='contactRequests'
         active={active === "contactRequests"}
+        onClick={handleMenuClick}
+      />
+      <Menu.Item
+        name="services"
+        active={active === "services"}
         onClick={handleMenuClick}
       />
       <Menu.Menu position='right'>

@@ -10,16 +10,6 @@ const {
   SET_SERVICES_IMAGES, CLEAR_SERVICES_DATA
 } = serviceConstants;
 
-export const serviceRequest = () => {
-  return {
-    type: SERVICE_REQUEST,
-    payload: {
-      loading: true,
-      error: null
-    }
-  };
-};
-
 export const serviceImgUploadSucess = (stateData) => {
   return {
     type: SERVICE_IMG_UPLOADED,
@@ -57,6 +47,7 @@ export const serviceRequest = () => {
 };
 
 export const serviceCreated = (stateData) => {
+  console.log(50)
   return {
     type: SERVICE_CREATED,
     payload: stateData
@@ -228,6 +219,7 @@ export const handleNewService= (dispatch, hotelServiceData, history) => {
 };
 
 export const fetchServices = (dispatch) => {
+  console.log("calling feth")
   const requestOptions = {
     method: "get",
     url: "/api/services"
@@ -241,7 +233,7 @@ export const fetchServices = (dispatch) => {
         status: status,
         loading: false,
         responseMsg: responseMsg,
-        createdServices: services,
+        createdServices: services || [],
         error: null
       };
       dispatch(setServices(stateData))
