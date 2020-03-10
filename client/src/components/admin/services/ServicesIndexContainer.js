@@ -6,6 +6,7 @@ import {
   Grid,
 } from "semantic-ui-react";
 // additional imports //
+import ServiceForm from "./ServiceForm";
 // redux imports //
 import { connect } from "react-redux"; 
 // router imports //
@@ -94,6 +95,7 @@ const ServicesIndexContainer = (props) => {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={14}>
+            <ServiceForm />
           </Grid.Column>
         </Grid.Row>
       </Route>
