@@ -23,8 +23,9 @@ export default {
       });
   },
   createHotelService: (req, res) => {
-    const  { serviceData } = req.body;
-    return HotelService.create(serviceData)
+    const  { hotelServiceData } = req.body;
+    console.log(req.body)
+    return HotelService.create(hotelServiceData)
       .then((service) => {
         return HotelService.populate(service, { path: "images", model: "ServiceImage"});
       })

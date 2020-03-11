@@ -7,10 +7,10 @@ const hotelServiceSchema = new Schema({
     required: true
   },
   hours: {
-    type: String,
+    type: String
   },
   price: {
-    type: Number
+    type: String
   },
   images: [{
     type: Schema.Types.ObjectId,

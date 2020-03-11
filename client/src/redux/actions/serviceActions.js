@@ -24,7 +24,7 @@ export const serviceImgDeleteSuccess = (stateData) => {
   };
 };
 
-export const serviceImgUploaddError = (error) => {
+export const serviceImgUploadError = (error) => {
   return {
     type: SERVICE_IMG_ERROR,
     payload: {
@@ -96,6 +96,8 @@ export const serviceError = (error) => {
 };
 
 export const openService = (services, serviceId) => {
+  console.log(services);
+  console.log(serviceId);
   const serviceData = services.filter((service) => service._id == serviceId)[0];
   return {
     type: OPEN_SERVICE,
@@ -139,7 +141,7 @@ export const uploadServiceImage = (dispatch, file) => {
     },
     data: file
   }
-  dispatch(uploadRequest());
+  dispatch(serviceRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;

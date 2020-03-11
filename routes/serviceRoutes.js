@@ -18,11 +18,11 @@ export default function (router) {
     .route("/api/services/:serviceId")
     .patch(servicesController.updateService);
   
-    // @route POST "/api/services/createService"
+    // @route POST "/api/services/createHotelService"
   // @description Creates a new Service to display
   // @access PRIVATE
   router
-  .route("/api/services/createService")
+  .route("/api/services/createHotelService")
   .post(servicesController.createHotelService);
   
 

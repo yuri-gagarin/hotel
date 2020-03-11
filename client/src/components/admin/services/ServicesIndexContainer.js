@@ -7,13 +7,14 @@ import {
 } from "semantic-ui-react";
 // additional imports //
 import ServiceForm from "./ServiceForm";
+import ServiceHolder from "./ServiceHolder";
 // redux imports //
 import { connect } from "react-redux"; 
 // router imports //
 import { withRouter, Route } from "react-router-dom";
 import { 
-  clearServiceData, fetchServices,
-  handleNewService, updateHotelService, deleteService,
+  clearServiceData, openService, fetchServices,
+  handleNewService, updateHotelService, deleteService, se
 } from "./../../../redux/actions/serviceActions";
 
 const ServicesIndexContainer = (props) => {
@@ -22,19 +23,19 @@ const ServicesIndexContainer = (props) => {
     serviceState
   } = props;
   const {
-    fetchServices, clearServiceData, handleNewService,
+    fetchServices, clearServiceData, handleOpenService, handleNewService,
     handleServiceUpdate, handleServiceDelete
   } = props;
 
-  const { createdServices } = serviceState;
+  const { createdServices, serviceData } = serviceState;
   const [servicInfoOpen, setServiceInfoOpen] = useState(false);
   const [newServiceFormOpen, setNewServiceFormOpen] = useState(false);
 
   useEffect(() => {
     // services api call //
     fetchServices();
-    console.log("loaded");
   }, []);
+  // form handlers //
   const openNewServiceForm = () => {
     clearServiceData();
     history.push("/admin/services/new");
@@ -47,6 +48,7 @@ const ServicesIndexContainer = (props) => {
     setNewServiceFormOpen(false);
   };
   const openService = (serviceId) => {
+    handleOpenService(createdServices, serviceId);
     history.push("/admin/services/edit");
     setServiceInfoOpen(true);
   };
@@ -54,11 +56,12 @@ const ServicesIndexContainer = (props) => {
     handleServiceDelete(serviceId, createdServices);
     setRoomInfoOpen(false);
   };
+  // END form handlers //
   return (
     <React.Fragment>
       <Grid.Row>
         <Grid.Column width={14}>
-          <h5>Current additional services displayed Hotel</h5>
+          <h5>Current additional services offered by Hotel</h5>
         </Grid.Column>
       </Grid.Row>
       <Route path={"/admin/services"} exact={true}>
@@ -73,7 +76,7 @@ const ServicesIndexContainer = (props) => {
             {
               createdServices.map((service) => {
                 return ( 
-                  <ServicesHolder
+                  <ServiceHolder
                     key={service._id} 
                     service={service}
                     openService={openService}
@@ -95,7 +98,7 @@ const ServicesIndexContainer = (props) => {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={14}>
-            <ServiceForm />
+            <ServiceForm history={history} />
           </Grid.Column>
         </Grid.Row>
       </Route>
@@ -103,6 +106,7 @@ const ServicesIndexContainer = (props) => {
         <Grid.Row>
           <Grid.Column width={14}>
             <Button onClick={goBackToServices}>Back</Button>
+            <ServiceForm />
           </Grid.Column>
         </Grid.Row>
       </Route>
@@ -119,6 +123,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
    clearServiceData: () => dispatch(clearServiceData()),
+   handleOpenService: (createdServices, serviceId) => {
+     return dispatch(openService(createdServices, serviceId));
+   },
    fetchServices: () => fetchServices(dispatch),
    handleNewService: (serviceData, history) => {
      return handleNewService(dispatch, serviceData, history);

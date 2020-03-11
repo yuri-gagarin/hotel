@@ -112,7 +112,7 @@ const serviceReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: payload.loading,
-        serviceData
+        serviceData: payload.serviceData
       };
     };
     case CLOSE_SERVICE: {

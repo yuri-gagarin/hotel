@@ -53,7 +53,6 @@ const AuthorizedRoute = ({ loggedIn, component, path }) => {
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
-  console.log("called");
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);

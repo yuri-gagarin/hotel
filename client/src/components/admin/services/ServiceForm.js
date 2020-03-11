@@ -18,6 +18,7 @@ import {
   updateHotelService, 
   setServicesImages
 } from "../../../redux/actions/serviceActions";
+// helpers //
 
 const FileInput = (props) => {
   const { uploadServiceImage } = props;
@@ -29,10 +30,11 @@ const FileInput = (props) => {
   }
   
   const uploadFile = () => {
+    console.log(file);
     if (!file) return;
     let data = new FormData();
     data.append("serviceImage", file);
-    return uploadRoomService(data)
+    return uploadServiceImage(data)
       .then((success) => {
         if (success) {
           // clear the input //
@@ -46,7 +48,7 @@ const FileInput = (props) => {
 
   return (
     <div>
-      <Button as="label" htmlFor="fileInput"
+      <Button as="label" htmlFor="serviceFormPicInput"
               icon="file" type="button">
       </Button>
       <input type="file" id="serviceFormPicInput" hidden onChange={onChange} />
@@ -72,6 +74,8 @@ const ServiceForm = (props) => {
     setServicesImages
   } = props;
   const { serviceData, serviceImages } = serviceState;
+  console.log(serviceData);
+
   // local form state //
   const [serviceDetails, setServiceDetails] = useState(serviceData);
 
@@ -96,7 +100,7 @@ const ServiceForm = (props) => {
     });
   };
   const handleServicePrice = (e, data) => {
-    serviceDetails({
+    setServiceDetails({
       ...serviceDetails,
       price: data.value
     });
@@ -195,7 +199,7 @@ const ServiceForm = (props) => {
   )
 };
 
-RoomForm.propTypes = {
+ServiceForm.propTypes = {
   history: PropTypes.object.isRequired,
   uploadServiceImage: PropTypes.func.isRequired,
   deleteServiceImage: PropTypes.func.isRequired,
