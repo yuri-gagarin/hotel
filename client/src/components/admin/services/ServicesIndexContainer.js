@@ -16,6 +16,7 @@ import {
   clearServiceData, openService, fetchServices,
   handleNewService, updateHotelService, deleteService, se
 } from "./../../../redux/actions/serviceActions";
+import ServiceDisplay from "./ServiceDisplay";
 
 const ServicesIndexContainer = (props) => {
   const { 
@@ -106,7 +107,7 @@ const ServicesIndexContainer = (props) => {
         <Grid.Row>
           <Grid.Column width={14}>
             <Button onClick={goBackToServices}>Back</Button>
-            <ServiceForm />
+            <ServiceDisplay  service={serviceData} history={history} />
           </Grid.Column>
         </Grid.Row>
       </Route>

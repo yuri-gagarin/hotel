@@ -71,7 +71,7 @@ const ServiceDisplay = (props) => {
       <div>
           <h4>Details</h4>
           <div>
-            <div style={metaStyle}>Type: {service.type}</div>
+            <div style={metaStyle}>Type: {service.serviceType}</div>
             <div style={metaStyle}>Hours: {service.hours}</div>
             <div style={metaStyle}>Price: {service.price}</div>
           </div>

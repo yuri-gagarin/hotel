@@ -22,7 +22,7 @@ const deleteIconStyle = {
 
 const ServiceImageThumb = (props) => {
   const { serviceImage, handleImageDelete } = props;
-
+  console.log(25)
   // 
   const normalizePath = (uploadPath) => {
     if (uploadPath) {

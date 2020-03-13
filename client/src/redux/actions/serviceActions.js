@@ -1,5 +1,6 @@
 import axios from "axios";
 import { serviceConstants } from "./../constants";
+import { operationSuccessful, setAppError } from "./appGeneralActions";
 
 const {
   SERVICE_REQUEST, SERVICE_CREATED, SERVICE_UPDATED,
@@ -96,11 +97,13 @@ export const serviceError = (error) => {
 
 export const openService = (services, serviceId) => {
   const serviceData = services.filter((service) => service._id == serviceId)[0];
+  console.log(serviceData);
   return {
     type: OPEN_SERVICE,
     payload: {
       loading: false,
       serviceData: serviceData,
+      serviceImages: serviceData.images,
       error: null
     }
   };
@@ -151,11 +154,17 @@ export const uploadServiceImage = (dispatch, file) => {
         error: null
       };
       dispatch(serviceImgUploadSucess(stateData));
+      dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
       return Promise.resolve(true);
     })
     .catch((error) => {
       console.error(error);
       dispatch(serviceImgUploadError(error));
+      dispatch(setAppError({ 
+        status: 500, 
+        responseMsg: responseMsg
+        } 
+      ))
       return Promise.resolve(false);
     });
 };
@@ -179,6 +188,7 @@ export const deleteServiceImage = (dispatch, imageId, oldImageState = []) => {
         error: null
       };
       dispatch(serviceImgDeleteSuccess(stateData));
+      dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
     })
     .catch((error) => {
       console.error(error);
@@ -277,10 +287,14 @@ export const updateHotelService = (dispatch, serviceData, serviceImages = [], cu
         error: null
       };
       dispatch(serviceUpdated(serviceStateData));
+      dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
+      return true;
     })
     .catch((error) => {
       console.error(error);
       dispatch(serviceError(error));
+      dispatch(setAppError({ status: 500, responseMsg: "An error occured" }));
+      return false;
     });
 };
 

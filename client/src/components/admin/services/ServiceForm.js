@@ -8,7 +8,7 @@ import {
   TextArea
 } from "semantic-ui-react";
 // additional component imports  //
-import ServiceImageThumb from "./ServiceImages";
+import ServiceImageThumb from "./ServiceImageThumb";
 // redux imports  //
 import { connect } from "react-redux";
 import { 
@@ -126,10 +126,24 @@ const ServiceForm = (props) => {
     if (!serviceId) {
       // new room being created //
       handleNewService(serviceData, history)
+        .then((success) => {
+          if (success) {
+            history.push("/admim/services");
+          } else {
+            return;
+          }
+        });
     } else {
       // existing room being edited with existing data //
       const serviceImages = { currentImages: serviceState.serviceImages };
-      updateHotelService({ ...serviceData, _id: serviceId }, serviceImages, createdServices);
+      updateHotelService({ ...serviceData, _id: serviceId }, serviceImages, createdServices)
+        .then((success) => {
+          if (success) {
+            history.push("/admin/services");
+          } else {
+            return;
+          }
+        });
     }
   };  
 

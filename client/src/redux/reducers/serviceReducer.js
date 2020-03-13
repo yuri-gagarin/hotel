@@ -114,7 +114,8 @@ const serviceReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: payload.loading,
-        serviceData: payload.serviceData
+        serviceData: payload.serviceData,
+        serviceImages: [ ...payload.serviceImages ]
       };
     };
     case CLOSE_SERVICE: {
