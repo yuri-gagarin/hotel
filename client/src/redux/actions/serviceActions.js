@@ -47,7 +47,6 @@ export const serviceRequest = () => {
 };
 
 export const serviceCreated = (stateData) => {
-  console.log(50)
   return {
     type: SERVICE_CREATED,
     payload: stateData
@@ -96,8 +95,6 @@ export const serviceError = (error) => {
 };
 
 export const openService = (services, serviceId) => {
-  console.log(services);
-  console.log(serviceId);
   const serviceData = services.filter((service) => service._id == serviceId)[0];
   return {
     type: OPEN_SERVICE,

@@ -45,9 +45,12 @@ export default {
       
   },
   updateService: (req, res) => {
+    console.log("updating");
     let status;
     const serviceId = req.params.serviceId;
     const { serviceData, serviceImages } = req.body;
+    console.log(52);
+    console.log(serviceImages);
     const updatedImages = serviceImages.currentImages.map((img) => `${img._id}` );
     return HotelService.findOneAndUpdate(
       { _id: serviceId },
@@ -65,7 +68,7 @@ export default {
       return HotelService.populate(updatedService, { path: "images", model: "ServiceImage" });
     })
     .then((service) => {
-      console.log(room);
+      console.log(service);
       return res.status(200).json({
         responseMsg: "Service Updated",
         updatedService: service

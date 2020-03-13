@@ -82,6 +82,7 @@ const ServiceForm = (props) => {
   useEffect(() => {
     if (serviceData && serviceData.images && Array.isArray(serviceData.images)) {
       // set the images array //
+      console.log("called set service images");
       setServicesImages(serviceData.images);
     }
   }, []);
@@ -181,7 +182,7 @@ const ServiceForm = (props) => {
         serviceImages.map((serviceImg) => {
           return (
             <ServiceImageThumb 
-              key={roomImage._id} 
+              key={serviceImg._id} 
               serviceImage={serviceImg} 
               handleImageDelete={handleImageDelete} 
             />

@@ -75,12 +75,14 @@ const serviceReducer = (state = initialState, { type, payload }) => {
       };
     };
     case SERVICE_IMG_UPLOADED: {
+      console.log("calling reduer");
+      console.log(payload.newImage);
       return {
         ...state,
         status: payload.status,
         loading: payload.loading,
         responseMsg: payload.responseMsg,
-        servicesImages: [ ...state.serviceImages, payload.newImage ],
+        serviceImages: [ ...state.serviceImages, payload.newImage ],
         error: payload.error
       };
     };

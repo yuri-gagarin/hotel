@@ -54,7 +54,7 @@ const ServicesIndexContainer = (props) => {
   };
   const deleteService = (serviceId) => {
     handleServiceDelete(serviceId, createdServices);
-    setRoomInfoOpen(false);
+    setServiceInfoOpen(false);
   };
   // END form handlers //
   return (
@@ -117,7 +117,7 @@ const ServicesIndexContainer = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-
+    
   };
 };
 const mapDispatchToProps = (dispatch) => {
