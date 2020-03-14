@@ -1,6 +1,8 @@
 import { validateUser } from "./helpers/validationHelpers";
 import User from "../models/User";
 import bcrypt from "bcrypt";
+// validators //
+import { validateLoginForm } from "./helpers/validationHelpers";
 const SALT_ROUNDS = 10;
 /**
  * Hashes a password with bcrypt.
@@ -80,8 +82,19 @@ export default {
       });
   },
   loginUser: (req, res) => {
+    console.log("valled")
     const user = req.user;
-    console.log(req.session);
+    const { errors, isValid } = validateLoginForm(req.body);
+    if (!isValid) {
+      return Promise.resolve()
+        .then(() => {
+          res.status(400).json({
+            responseMsg: "Login Error",
+            error: errors
+          });
+        });
+    }
+    console.log("valid");
     if (user) {
       return res.status(200).json({
         responseMsg: "Successful Login",

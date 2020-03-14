@@ -35,54 +35,101 @@ const loginPageStyle = {
 }
 const { titleRow, formRow } = loginPageStyle;
 
+
+
 const AdminLoginComponent = (props) => {
   const { history, appGeneralState, handleUserLogin, clearAppError } = props;
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [typing, setTyping] = useState(false);
+  const [formData, setFormData] = useState({ 
+    email: "", password: "", typingEmail: false, typingPass: false
+  });
+  const [sumbitDisabled, setSubmitDisabled] = useState(true);
+  const [emailInputError, setEmailInputError] = useState(false);
+  const [passInputError, setPassInputError] = useState(false);
+  const [errorTimeout, setErrorTimeout] = useState(null);
 
   useEffect(() => {
     // to automatically clear error and close error comopnent //
     const { error } = appGeneralState;
-    let errorTimeout;
     if (error) {
-      errorTimeout = setTimeout(() => {
+      console.log("setting")
+      setErrorTimeout(setTimeout(() => {
         clearAppError();
-      }, 5000);
+      }, 5000));
     }
     if (!error && errorTimeout) {
       clearTimeout(errorTimeout);
+      setErrorTimeout(null);
     }
     // clean up if unmounted //
-    return errorTimeout ? clearTimeout(error) : null;
+    return errorTimeout ? clearTimeout(errorTimeout) : undefined;
   }, [appGeneralState]);
 
-  const handleEmailInut = (e) => {
-    setEmail(e.target.value);
-    setTyping(true);
+  // error handlers - client side validation //
+  const handleEmailError = () => {
+    const { email, typingEmail } = formData;
+    if (typingEmail && (email.length === 0)) {
+      setEmailInputError({
+        content: "Email required",
+        pointing: "below"
+      });
+    } else {
+      setEmailInputError(false);
+    }
+  };
+  const handlePassError = () => {
+    const { password, typingPass } = formData;
+    if (typingPass && (password.length < 1)) {
+      setPassInputError({
+        content: "Password is required",
+        pointing: "below"
+      });
+    } else {
+      setPassInputError(false);
+    }
+  };
+  // end error handlers - client side validation //
+  // useEffect handlers for dynamic input validation //
+  useEffect(() => {
+    handleEmailError(formData);
+    handlePassError(formData);
+  }, [formData]);
+
+  useEffect(() => {
+    const { email, password } = formData;
+    if (!passInputError && !emailInputError && email && password) {
+      setSubmitDisabled(false);
+    }
+    else {
+      setSubmitDisabled(true);
+    }
+  },  [emailInputError, passInputError, formData]);
+  // end useEffect handlers for dynamic input validation //
+  // form input and submit handlers //
+  const handleEmailInput = (e) => {
+    setFormData({
+      ...formData,
+      email: e.target.value,
+      typingEmail: true
+    });
   };
   const handlePassInput = (e) => {
-    setPassword(e.target.value);
-    setTyping(true);
+    setFormData({
+      ...formData, 
+      password: e.target.value,
+      typingPass: true
+    });
   };
-  const handleEmailError = () => {
-    if (typing && (email.length === 0)) {
-      return { content: 'Please enter your email', pointing: 'below' };
-    }
-    else return false;
-  }
-  const handlePasswordError = () => {
-
-  }
   const _handleUserLogin = () => {
     // api call to log in an administrator //
+    const { email, password } = formData;
     const userData = {
       email: email,
       password: password
     };
     handleUserLogin(userData, history);
   };
+  // end form input and sublit handlers //
   return (
     <Grid style={loginPageStyle.container}>
       <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
@@ -99,21 +146,21 @@ const AdminLoginComponent = (props) => {
         <Grid.Column width={6}>
         <Form>
           <Form.Input
-            error={false}
-            onChange={handleEmailInut}
+            error={emailInputError}
+            onChange={handleEmailInput}
             fluid
             label='Email'
             placeholder='...email'
           />
           <Form.Input
-            error={false}
+            error={passInputError}
             onChange={handlePassInput}
             type={"password"}
             fluid
             label='Password'
             placeholder='...password'
           />
-          <Button onClick={_handleUserLogin}>
+          <Button onClick={_handleUserLogin} disabled={sumbitDisabled}>
             Login
           </Button>
         </Form>

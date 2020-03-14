@@ -13,7 +13,6 @@ const ErrorComponent = (props) => {
   const handleClose = () => {
     clearAppError();
   };
-
   return ( 
     error ?
     <div ref={componentRef} id="errorComponent" >

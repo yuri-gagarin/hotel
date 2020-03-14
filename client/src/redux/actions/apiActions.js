@@ -109,11 +109,12 @@ export const loginUser = (dispatch, userCredentials, history) => {
       dispatch(setAdmin(adminData));
       // set admin data in local storage //
       localStorage.setItem("hotelAdminState", JSON.stringify(adminData));
-      history.push("/admin/dashboard");
+      return true
     })
     .catch((error) => {
       dispatch(loginError(error));
       dispatch(setAppError({ status: 500, responseMsg: "Please check email or password", error: error }));
+      return false;
     });
 };
 

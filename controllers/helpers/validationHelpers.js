@@ -136,3 +136,17 @@ export const validateHotelService = (data) => {
     isValid: isEmpty(errors)
   };
 };
+
+export const validateLoginForm = (data) => {
+  const errors = {};
+  if (!data.email) {
+    errors.email = "Please put in your email";
+  }
+  if (!data.password) {
+    errors.password = "Please put in your password";
+  }
+  return {
+    errors: errors,
+    isValid: isEmpty(errors)
+  }
+};
