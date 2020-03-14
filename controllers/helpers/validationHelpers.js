@@ -103,3 +103,36 @@ export const validateContactPost = (postData) => {
     isValid: isEmpty(errors)
   };
 };
+
+const validateHotelService = (data) => {
+  const errors = {};
+  // service type validation //
+  if (data.serviceType) {
+    if (data.serviceType.length < 2) {
+      errors.type = "Type must be more than two characters";
+    }
+  } else {
+    errors.type = "Please fill out type field";
+  }
+  // service hours validation //
+  if (data.hours) {
+    if (data.hours.length < 1) {
+      errors.hours = "Should be at least one character";
+    }
+  } else {
+    errors.hours = "Please fill out the hours field";
+  }
+  // service description validation //
+  if (data.description) {
+    if (data.description.length < 10) {
+      errors.description = "Description should be more than 10 characters";
+    }
+  } else {
+    errors.type = "Please fill out the description field";
+  }
+
+  return {
+    errors: errors,
+    isValid: isEmpty(errors)
+  };
+};

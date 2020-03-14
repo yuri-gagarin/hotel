@@ -1,6 +1,8 @@
 import axios from "axios";
 import { serviceConstants } from "./../constants";
 import { operationSuccessful, setAppError } from "./appGeneralActions";
+// helpers //
+import { normalizeErrorMessages, setAxiosError } from "./helpers/errorHelpers";
 
 const {
   SERVICE_REQUEST, SERVICE_CREATED, SERVICE_UPDATED,
@@ -84,12 +86,13 @@ export const serviceDeleted = (stateData) => {
   };
 };
 
-export const serviceError = (error) => {
+export const serviceError = ({ status, responseMsg, error }) => {
   console.error(error);
   return {
     type: SERVICE_ERROR,
     payload: {
-      status: 500,
+      status: status,
+      responseMsg: responseMsg,
       error: error
     }
   };
@@ -97,7 +100,6 @@ export const serviceError = (error) => {
 
 export const openService = (services, serviceId) => {
   const serviceData = services.filter((service) => service._id == serviceId)[0];
-  console.log(serviceData);
   return {
     type: OPEN_SERVICE,
     payload: {
@@ -155,17 +157,13 @@ export const uploadServiceImage = (dispatch, file) => {
       };
       dispatch(serviceImgUploadSucess(stateData));
       dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
-      return Promise.resolve(true);
+      return true;
     })
-    .catch((error) => {
-      console.error(error);
-      dispatch(serviceImgUploadError(error));
-      dispatch(setAppError({ 
-        status: 500, 
-        responseMsg: responseMsg
-        } 
-      ))
-      return Promise.resolve(false);
+    .catch((err) => {
+      const { status, responseMsg, error } = setAxiosError(err);
+      dispatch(serviceImgUploadError({ status, responseMsg, error }));
+      dispatch(setAppError({ status, responseMsg, error }));
+      return false;
     });
 };
 
@@ -189,10 +187,13 @@ export const deleteServiceImage = (dispatch, imageId, oldImageState = []) => {
       };
       dispatch(serviceImgDeleteSuccess(stateData));
       dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
+      return true;
     })
-    .catch((error) => {
-      console.error(error);
-      dispatch(serviceImgUploadError(error));
+    .catch((err) => {
+      const { status, responseMsg, error } = setAxiosError(err);
+      dispatch(setAppError({ status, responseMsg, error }));
+      dispatch(serviceImgUploadError({ status, responseMsg, error }));
+      return false;
     });
 };
 
@@ -219,11 +220,22 @@ export const handleNewService= (dispatch, hotelServiceData, history) => {
       };
       dispatch(serviceCreated(stateData));
       dispatch(addNewService(newService));
-      history.push("/admin/services");
+      dispatch(operationSuccessful({ status, responseMsg }));
+      return true;
     })
-    .catch((error) => {
-      console.error(error);
-      dispatch(serviceError(error));
+    .catch((err) => {
+      const { status, responseMsg, errorMessages, error } = setAxiosError(err);
+      // check for validation messages errors //
+      if (errorMessages.length > 0) {
+        dispatch(setAppError({ status, responseMsg, error, errorMessages }));
+        dispatch(serviceError({ status, responseMsg, error }));
+        return false;
+      } else {
+        console.log(236)
+        dispatch(serviceError({ status, responseMsg, error }));
+        dispatch(setAppError({ status, responseMsg, error }));
+        return false;
+      }
     });
 };
 
@@ -293,7 +305,7 @@ export const updateHotelService = (dispatch, serviceData, serviceImages = [], cu
     .catch((error) => {
       console.error(error);
       dispatch(serviceError(error));
-      dispatch(setAppError({ status: 500, responseMsg: "An error occured" }));
+      dispatch(setAppError({ status: 500, responseMsg: "An error occured", error: error }));
       return false;
     });
 };
@@ -325,8 +337,12 @@ export const deleteService = (dispatch, serviceId, currentServices = []) => {
         error: null
       };
       dispatch(serviceDeleted(serviceStateData));
+      dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
+      return true;
     })
     .catch((error) => {
       dispatch(serviceError(error));
+      dispatch(setAppError(({ status: 500, responseMsg: error.message, error: error })));
+      return false;
     });
 };

@@ -24,7 +24,17 @@ export default {
   },
   createHotelService: (req, res) => {
     const  { hotelServiceData } = req.body;
-    console.log(req.body)
+    const { errors, isValid } = validateHotelService(hotelServiceData);
+    if (!isValid) { 
+      return Promise.reject()
+        .then(() => {
+          return res.status(400).json({
+            responseMsg: "Valiation error",
+            error: errors
+          });
+        });
+    };
+    
     return HotelService.create(hotelServiceData)
       .then((service) => {
         return HotelService.populate(service, { path: "images", model: "ServiceImage"});
