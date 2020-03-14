@@ -73,11 +73,17 @@ const ServiceForm = (props) => {
     updateHotelService, 
     setServicesImages
   } = props;
-  const { serviceData, serviceImages } = serviceState;
-  console.log(serviceData);
+  const { serviceData = {}, serviceImages } = serviceState;
+
+  const initialFormState = {
+    serviceType: serviceData.serviceType || "",
+    hours: serviceData.hours || "",
+    price: serviceData.price || "",
+    description: serviceData.description || ""
+  };
 
   // local form state //
-  const [serviceDetails, setServiceDetails] = useState(serviceData);
+  const [serviceDetails, setServiceDetails] = useState(initialFormState);
 
   useEffect(() => {
     if (serviceData && serviceData.images && Array.isArray(serviceData.images)) {
@@ -128,7 +134,7 @@ const ServiceForm = (props) => {
       handleNewService(serviceData, history)
         .then((success) => {
           if (success) {
-            history.push("/admim/services");
+            history.push("/admin/services");
           } else {
             return;
           }

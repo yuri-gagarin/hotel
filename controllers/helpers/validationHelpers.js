@@ -104,7 +104,7 @@ export const validateContactPost = (postData) => {
   };
 };
 
-const validateHotelService = (data) => {
+export const validateHotelService = (data) => {
   const errors = {};
   // service type validation //
   if (data.serviceType) {

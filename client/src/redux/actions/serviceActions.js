@@ -56,11 +56,12 @@ export const serviceCreated = (stateData) => {
   };
 };
 
-export const addNewService = (serviceState) => {
+export const addNewService = (newService) => {
+  console.log(newService);
   return {
     type: ADD_SERVICE_TO_STATE,
     payload: {
-      newService: serviceState
+      newService: newService
     }
   };
 };   
@@ -160,9 +161,9 @@ export const uploadServiceImage = (dispatch, file) => {
       return true;
     })
     .catch((err) => {
-      const { status, responseMsg, error } = setAxiosError(err);
+      const { status, responseMsg, error, errorMessages } = setAxiosError(err);
       dispatch(serviceImgUploadError({ status, responseMsg, error }));
-      dispatch(setAppError({ status, responseMsg, error }));
+      dispatch(setAppError({ status, responseMsg, errorMessages, error }));
       return false;
     });
 };
@@ -186,7 +187,7 @@ export const deleteServiceImage = (dispatch, imageId, oldImageState = []) => {
         error: null
       };
       dispatch(serviceImgDeleteSuccess(stateData));
-      dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
+      dispatch(operationSuccessful({ status, responseMsg }));
       return true;
     })
     .catch((err) => {
@@ -225,18 +226,11 @@ export const handleNewService= (dispatch, hotelServiceData, history) => {
     })
     .catch((err) => {
       const { status, responseMsg, errorMessages, error } = setAxiosError(err);
-      // check for validation messages errors //
-      if (errorMessages.length > 0) {
-        dispatch(setAppError({ status, responseMsg, error, errorMessages }));
-        dispatch(serviceError({ status, responseMsg, error }));
-        return false;
-      } else {
-        console.log(236)
-        dispatch(serviceError({ status, responseMsg, error }));
-        dispatch(setAppError({ status, responseMsg, error }));
-        return false;
-      }
-    });
+      dispatch(setAppError({ status, responseMsg, error, errorMessages }));
+      dispatch(serviceError({ status, responseMsg, error }));
+      return false;
+  });
+   
 };
 
 export const fetchServices = (dispatch) => {

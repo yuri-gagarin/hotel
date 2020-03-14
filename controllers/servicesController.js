@@ -2,14 +2,14 @@ import ServiceImage from "./../models/ServiceImage";
 import HotelService from "../models/HotelService";
 // helpers //
 import { deleteFile } from "./helpers/apiHelpers"
+// validators //
+import { validateHotelService } from "./helpers/validationHelpers";
 
 export default {
   getServices: (req, res) => {
     return HotelService.find({})
       .populate("images", ["_id", "path"])
       .then((services) => {
-        console.log("responded");
-        console.log(services);
         return res.status(200).json({
           responseMsg: "Success",
           services: services
@@ -26,15 +26,15 @@ export default {
     const  { hotelServiceData } = req.body;
     const { errors, isValid } = validateHotelService(hotelServiceData);
     if (!isValid) { 
-      return Promise.reject()
+      return Promise.resolve()
         .then(() => {
           return res.status(400).json({
-            responseMsg: "Valiation error",
+            responseMsg: "Validation error",
             error: errors
           });
         });
     };
-    
+
     return HotelService.create(hotelServiceData)
       .then((service) => {
         return HotelService.populate(service, { path: "images", model: "ServiceImage"});

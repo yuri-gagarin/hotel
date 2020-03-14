@@ -35,7 +35,6 @@ const serviceReducer = (state = initialState, { type, payload }) => {
         status: payload.status,
         loading: payload.loading,
         responseMsg: payload.responseMsg,
-        createdServices: [ ...payload.createdServices ],
         error: payload.error
       };
     };
@@ -75,8 +74,6 @@ const serviceReducer = (state = initialState, { type, payload }) => {
       };
     };
     case SERVICE_IMG_UPLOADED: {
-      console.log("calling reduer");
-      console.log(payload.newImage);
       return {
         ...state,
         status: payload.status,
@@ -136,7 +133,7 @@ const serviceReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: payload.loading,
-        servicesImages: [ ...payload.servicesImages ],
+        serviceImages: [ ...payload.serviceImages ],
         error: payload.error
       };
     };
@@ -145,6 +142,7 @@ const serviceReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: payload.loading,
         serviceData: { ...payload.serviceData },
+        serviceImages: [ ...payload.serviceImages ],
         error: payload.error
       };
     };

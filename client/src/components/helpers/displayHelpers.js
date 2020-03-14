@@ -16,3 +16,7 @@ export const simplifyPath = (path) => {
   }
 };
 
+export const matchNestedRoute = (path) => {
+  
+}
+
