@@ -36,7 +36,10 @@ export const infoButton = {
 };
 
 export const infoColumn = {
-  //borderTop: "1px solid grey", 
+  border: "0.75px solid rgb(135, 181, 250)",
+  borderRadius: "5px",
+  margin: "2.5px",
+  width: "48%",
   //borderBottom: "1px solid grey", 
   padding: "0.5em", 
   textAlign: "center" 

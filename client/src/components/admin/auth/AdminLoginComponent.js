@@ -52,7 +52,6 @@ const AdminLoginComponent = (props) => {
     // to automatically clear error and close error comopnent //
     const { error } = appGeneralState;
     if (error) {
-      console.log("setting")
       setErrorTimeout(setTimeout(() => {
         clearAppError();
       }, 5000));
@@ -140,10 +139,10 @@ const AdminLoginComponent = (props) => {
         </Grid.Column>
       </Grid.Row>
       <Grid.Row style={formRow}>
-        <Grid.Column width={5}>
+        <Grid.Column computer={5} mobile={1}>
 
         </Grid.Column>
-        <Grid.Column width={6}>
+        <Grid.Column computer={6} mobile={14} paddding={0}>
         <Form>
           <Form.Input
             error={emailInputError}
@@ -165,7 +164,7 @@ const AdminLoginComponent = (props) => {
           </Button>
         </Form>
         </Grid.Column>
-        <Grid.Column width={5}>
+        <Grid.Column computer={5} mobile={1}>
 
         </Grid.Column>
       </Grid.Row>

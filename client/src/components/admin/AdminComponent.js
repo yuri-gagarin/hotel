@@ -92,6 +92,7 @@ const AdminComponent = (props) => {
           roomState={roomState}
           appGeneralState={appGeneralState}
           contactPostState={contactPostState}
+          serviceState={serviceState}
         />
       </Route>
       <Route path="/admin/messages">
