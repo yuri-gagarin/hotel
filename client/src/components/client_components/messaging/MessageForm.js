@@ -36,10 +36,8 @@ const MessageForm = (props) => {
                           message: newMessage, adminSocketId: null });
     });
     if (localStorage.getItem("conversationId")) {
-      console.log("we have messages!");
-      console.log(localStorage.getItem("clientId"));
-      console.log(localStorage.getItem("conversationId"));
     }
+    console.log(window.matchMedia("man-width: 250px").matches);
   }, []);
 
   const toggleMessageForm = (e) => {
@@ -74,7 +72,7 @@ const MessageForm = (props) => {
   };
 
   return (
-    <div style={messageForm.formContainer} ref={messageFormRef}>
+    <div className="clientMessageFormContainer" ref={messageFormRef}>
       <div style={messageForm.closeMessageForm} onClick={toggleMessageForm}>
         <span>X</span>
       </div>

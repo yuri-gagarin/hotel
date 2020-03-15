@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 // react router imports //
 import { withRouter } from "react-router-dom";
+
 const style = {
   //border: "3px solid green",
 }
@@ -48,7 +49,7 @@ const NavbarComponent = (props) => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark fixed-top" style={style} id="mainNav">
-      <div className="container" style={{ margin: 0 }}>
+      <div className="container">
         <a 
           className="navbar-brand js-scroll-trigger" 
           onClick={goToHome}
@@ -56,10 +57,15 @@ const NavbarComponent = (props) => {
           >
           {t("title")}
         </a>
+        <button className="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarLanguage" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Language
+          <i className="fas fa-bars"></i>
+        </button>
         <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i className="fas fa-bars"></i>
         </button>
+       
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav text-uppercase ml-auto" style={{ cursor: "pointer "}}>
             <li className="nav-item">
@@ -79,20 +85,23 @@ const NavbarComponent = (props) => {
             </li>
           </ul>
         </div>
-        <button className="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarLanguage" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Language
-          <i className="fas fa-bars"></i>
-        </button>
+       
         <div className="collapse navbar-collapse" id="navbarLanguage">
           <ul className="navbar-nav mx-auto" style={{cursor: "pointer"}}>
             <li className="nav-item">
-              <a className="nav-link" onClick={changeLanguage}>UA</a>
+              <a className="nav-link" onClick={changeLanguage}>UA
+                <img src="/assets/images/flags/ua_flag.svg" style={{ height: "25px", width: "25px" }}></img>
+              </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" onClick={changeLanguage}>EN</a>
+              <a className="nav-link" onClick={changeLanguage}>EN
+                <img src="/assets/images/flags/uk_flag.svg" style={{ height: "25px", width: "25px" }}></img>
+              </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" onClick={changeLanguage}>RU</a>
+              <a className="nav-link" onClick={changeLanguage}>RU
+                <img src="/assets/images/flags/ru_flag.svg" style={{ height: "25px", width: "25px" }}></img>
+              </a>
             </li>
           </ul>
         </div>

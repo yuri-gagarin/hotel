@@ -27,7 +27,7 @@ const  MainHeaderComponent = (props) => {
       <div className="container">
         <div className="intro-text">
           <div className="intro-lead-in" style={headerStyle}>{t("title")}</div>
-          <div className="intro-heading text-uppercase" style={titleStyle}>{t("welcome")}</div>
+          <div className="intro-heading text-uppercase">{t("welcome")}</div>
           <div className="muted" style={cityStyle}>
               <h2 style={{ fontFamily: "Pacifico" }}>{t("city")}</h2>
             </div>

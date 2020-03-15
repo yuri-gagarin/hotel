@@ -142,3 +142,13 @@
 	font-size: 52px;
 	font-weight: 700;
 }
+
+@media (max-width: 800px) {
+	.booking-cta {
+		width: 100%;
+		text-align: center;
+	}
+	.booking-cta > h1 {
+		font-size: 1.75em;
+	}
+}

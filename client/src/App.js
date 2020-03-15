@@ -18,6 +18,7 @@ import "./assets/theme/vendor/fontawesome-free/css/all.css";
 import "./assets/css/convoSplashScreen.css";
 import "./assets/css/successComponent.css";
 import "./assets/css/componentFadeIns.css";
+import "./assets/css/clientMessageForm.css";
 import "./assets/theme/agency.css";
 import "./assets/theme/booking_style.css";
 import './App.css';
