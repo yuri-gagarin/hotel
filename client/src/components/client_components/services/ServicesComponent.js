@@ -20,15 +20,15 @@ const ServicesComponent = (props) => {
   };
   return (
     <section className="bg-light page-section" id="portfolio">
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-12 text-center">
+      <div className="container fluid" style={{border: "2px solid red"}}>
+        <div className="row" >
+          <div className="col-lg-12 col-xs-12 text-center">
             <h2 className="section-heading text-uppercase">{t("servicesTitle")}</h2>
             <h3 className="section-subheading text-muted">{t("servicesDesc")}</h3>
           </div>
         </div>
         <div className="row">
-          <div className="col-md-4 col-sm-6 portfolio-item">
+          <div className="col-md-4 col-sm-12 portfolio-item">
             <a className="portfolio-link" data-toggle="modal" href="#portfolioModal1" onClick={handleRoomsClick}> 
               <div className="portfolio-hover">
                 <div className="portfolio-hover-content">

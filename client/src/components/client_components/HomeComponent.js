@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import $ from "jquery";
+import { Container } from "react-bootstrap";
 // component imports //
 import NavbarComponent from "./navbar/NavbarComponent";
 import MainHeaderComponent from "./main_header/MainHeaderComponent";
@@ -94,7 +95,7 @@ class HomeComponent extends React.Component {
   render () {
     const { history, appGeneralState, clearAppError, clearSuccessState } = this.props;
     return (
-      <React.Fragment>
+      <div style={{ border: "5px solid red", width: "100vw", height: "auto"}}>
         <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={clearSuccessState} />
         <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
         <NavbarComponent />
@@ -104,7 +105,7 @@ class HomeComponent extends React.Component {
         <ContactForm />
         <MessageFormContainer />
         <Footer />
-      </React.Fragment>
+      </div>
     );
   }
 };

@@ -102,7 +102,7 @@ const ConversationIndexCotainer = (props) => {
         </Grid.Column>
       </Grid.Row>
       <Grid.Row style={{borderTop: "1px solid grey", borderBottom: "1px solid grey" }}>
-        <Grid.Column width={5} style={{ height: "100vh", paddingLeft: "0.5em", paddingRight: 0 }}>
+        <Grid.Column width={5} style={{ height: "90vh", paddingLeft: "0.5em", paddingRight: 0 }}>
           <ConversationComponent 
             adminConversationState={adminConversationState}
             openConversation={openConversation}

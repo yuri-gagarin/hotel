@@ -48,7 +48,7 @@ const NavbarComponent = (props) => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark fixed-top" style={style} id="mainNav">
-      <div className="container">
+      <div className="container" style={{ margin: 0 }}>
         <a 
           className="navbar-brand js-scroll-trigger" 
           onClick={goToHome}
@@ -60,23 +60,6 @@ const NavbarComponent = (props) => {
           Menu
           <i className="fas fa-bars"></i>
         </button>
-        <button className="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarLanguage" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Language
-          <i className="fas fa-bars"></i>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarLanguage">
-          <ul className="navbar-nav mx-auto" style={{cursor: "pointer"}}>
-            <li className="nav-item">
-              <a className="nav-link" onClick={changeLanguage}>UA</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" onClick={changeLanguage}>EN</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" onClick={changeLanguage}>RU</a>
-            </li>
-          </ul>
-        </div>
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav text-uppercase ml-auto" style={{ cursor: "pointer "}}>
             <li className="nav-item">
@@ -93,6 +76,23 @@ const NavbarComponent = (props) => {
             </li>
             <li className="nav-item">
               <a className="nav-link js-scroll-trigger">{t("aboutTitle")}</a>
+            </li>
+          </ul>
+        </div>
+        <button className="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarLanguage" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Language
+          <i className="fas fa-bars"></i>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarLanguage">
+          <ul className="navbar-nav mx-auto" style={{cursor: "pointer"}}>
+            <li className="nav-item">
+              <a className="nav-link" onClick={changeLanguage}>UA</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" onClick={changeLanguage}>EN</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" onClick={changeLanguage}>RU</a>
             </li>
           </ul>
         </div>

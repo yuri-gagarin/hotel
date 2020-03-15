@@ -40,3 +40,13 @@
 .ck-editor .ck-editor__main .ck-content {
   min-height: 400px;
 }
+
+div.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+div.row {
+  margin-right: 0px;
+  margin-left: 0px
+}

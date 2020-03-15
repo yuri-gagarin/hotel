@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import {
   Comment,
@@ -20,20 +20,28 @@ const MessagesView = (props) => {
   } = props;
   const [message, setMessage] = useState("");
   const [messageSounds, setMessageSounds] = useState({});
-
+  // set the sound effects for send, receive instant message //
   useEffect(() => { 
+    // load sounds upon component load //
+    const messageInput = document.getElementById("messageInput");
     setMessageSounds({
       ...messageSounds,
       sendMessageSound: new Audio("/assets/media/sounds/sentMsg.mp3"),
       receiveMessageSound: new Audio("/assets/media/sounds/receiveMsg.mp3")
     });
+    messageInput.scrollIntoView();
+   
     return function cleanup () { 
       setMessageSounds({});
     };
   }, [])
-
+  // 
   useEffect(() => {
-  }, [messageSounds])
+    const messagesView = document.getElementById("messagesView");
+    const messageInput = document.getElementById("messageInput");
+    messageInput.scrollIntoView();
+    messagesView.scrollTo(0, messagesView.scrollHeight);
+  }, [messages]);
 
   const setConversationTitle = (messages, adminState) => {
     let conversationTitle;
@@ -49,15 +57,21 @@ const MessagesView = (props) => {
     setMessage(e.target.value);
   };
   const handleSendMessage = (e) => {
-    // first get the user informatin //
+    // first get the user information //
+    console.log("calling")
     const messageData = {
       user: adminState,
       messageData: message,
       conversationId: conversationState.conversationId,
       clientSocketId: conversationState.clientSocketId
     };
-    sendMessageRequest(messageData);
     e.target.value = "";
+    sendMessageRequest(messageData)
+      .then((success) => {
+        if (success && messageSounds.sendMessageSound) {
+          messageSounds.sendMessageSound.play();
+        }
+      });
   };
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -68,35 +82,40 @@ const MessagesView = (props) => {
         conversationId: conversationState.conversationId,
         clientSocketId: conversationState.clientSocketId
       };
-      sendMessageRequest(messageData);
       e.target.value = "";
+      sendMessageRequest(messageData)
+        .then((success) => {
+          if (success && messageSounds.sendMessageSound) {
+            messageSounds.sendMessageSound.play();
+          }
+        });
     };
   };
 
   return (
-    <Grid.Column width={11} style={{ height: "100vh", padding: 0 }}>
-      <Segment style={{ overflowY: "scroll", height: "100%", }}>
+    <Grid.Column width={11} style={{ height: "90vh", padding: 0 }}>
+      <Segment style={{ overflowY: "scroll", height: "100%", paddingBottom: "60px", position: "relative" }} id="messagesView">
         <Comment.Group style={{ maxWidth: "none" }}>
           <div style={conversationTitle}>ConversationWith: {setConversationTitle(messages, adminState)}</div>
-        {
-          messages.map((message) => {
-            return <Message key={message._id} message={message} adminState={adminState} />
-          })
-        }
-        <Input 
-          action={{
-            icon: "send",
-            content: "Send",
-            onClick: handleSendMessage
-          }}
-          onChange={handleInputChange}
-          placeholder='message...' 
-          style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
-          onKeyPress={handleKeyPress}
-          />
+          {
+            messages.map((message) => {
+              return <Message key={message._id} message={message} adminState={adminState} />
+            })
+          }
         </Comment.Group>
-
       </Segment>
+      <Input 
+        id="messageInput"
+        action={{
+          icon: "send",
+          content: "Send",
+          onClick: handleSendMessage
+        }}
+        onChange={handleInputChange}
+        placeholder='message...' 
+        style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
+        onKeyPress={handleKeyPress}
+        />
     </Grid.Column>
   )
 };
