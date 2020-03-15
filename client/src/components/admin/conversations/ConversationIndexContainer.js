@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {
   Button,
   Grid, 
+  Segment
 } from "semantic-ui-react";
 // styles imports //
 import { closeConvoButton } from "./styles/style";
@@ -48,14 +49,17 @@ const ConversationIndexCotainer = (props) => {
   const [conversationOpen, setConversationOpen] = useState(false);
 
   const { 
-    sendMessageRequest,
-    fetchAllConversations,
-    fetchConversation,
-    handleDeleteConversation,
-    newClientMessage,
     adminState,
     adminConversationState,
     conversationState
+  } = props;
+
+  const {
+    sendMessageRequest,
+    fetchConversation,
+    fetchAllConversations,
+    handleDeleteConversation,
+    newClientMessage
   } = props;
 
   useEffect(() => {
@@ -63,9 +67,8 @@ const ConversationIndexCotainer = (props) => {
         const { conversationId, clientSocket, newMessage } = data;
         newClientMessage({ conversationId: conversationId, clientSocketId: clientSocket, newMessage: newMessage });
         //scrollToRef(bottomMessageRef);
-    })
+    });
     fetchAllConversations();
-
   }, []);
 
   const openConversation = (conversationId) => {
@@ -105,13 +108,14 @@ const ConversationIndexCotainer = (props) => {
             openConversation={openConversation}
             fetchAllConversations={fetchAllConversations}
             deleteConversation={deleteConversation}
-           />
+          />          
         </Grid.Column>
         {
           conversationOpen ? 
             <MessagesView 
               adminState={adminState}
               messages={conversationState.messages}
+              conversationState={conversationState}
               sendMessageRequest={sendMessageRequest}
             /> :
             <MessagesSplashScreen />

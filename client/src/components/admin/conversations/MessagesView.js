@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Comment,
   Grid,
-  Input
+  Input,
+  Segment
 } from "semantic-ui-react";
 // additional component imports //
 import Message from "./Message";
@@ -13,9 +14,26 @@ import { conversationTitle } from "./styles/style";
 const MessagesView = (props) => {
   const { 
     adminState, 
+    conversationState,
     messages, 
+    sendMessageRequest
   } = props;
   const [message, setMessage] = useState("");
+  const [messageSounds, setMessageSounds] = useState({});
+
+  useEffect(() => { 
+    setMessageSounds({
+      ...messageSounds,
+      sendMessageSound: new Audio("/assets/media/sounds/sentMsg.mp3"),
+      receiveMessageSound: new Audio("/assets/media/sounds/receiveMsg.mp3")
+    });
+    return function cleanup () { 
+      setMessageSounds({});
+    };
+  }, [])
+
+  useEffect(() => {
+  }, [messageSounds])
 
   const setConversationTitle = (messages, adminState) => {
     let conversationTitle;
@@ -57,32 +75,37 @@ const MessagesView = (props) => {
 
   return (
     <Grid.Column width={11} style={{ height: "100vh", padding: 0 }}>
-      <Comment.Group style={{overflowY: "scroll", height: "100%", maxWidth: "none" }}>
-        <div style={conversationTitle}>ConversationWith: {setConversationTitle(messages, adminState)}</div>
-      {
-        messages.map((message) => {
-          return <Message key={message._id} message={message} adminState={adminState} />
-        })
-      }
-      <Input 
-        action={{
-          icon: "send",
-          content: "Send",
-          onClick: handleSendMessage
-        }}
-        onChange={handleInputChange}
-        placeholder='message...' 
-        style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
-        onKeyPress={handleKeyPress}
-        />
-      </Comment.Group>
+      <Segment style={{ overflowY: "scroll", height: "100%", }}>
+        <Comment.Group style={{ maxWidth: "none" }}>
+          <div style={conversationTitle}>ConversationWith: {setConversationTitle(messages, adminState)}</div>
+        {
+          messages.map((message) => {
+            return <Message key={message._id} message={message} adminState={adminState} />
+          })
+        }
+        <Input 
+          action={{
+            icon: "send",
+            content: "Send",
+            onClick: handleSendMessage
+          }}
+          onChange={handleInputChange}
+          placeholder='message...' 
+          style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
+          onKeyPress={handleKeyPress}
+          />
+        </Comment.Group>
+
+      </Segment>
     </Grid.Column>
   )
 };
 
 // PropTypes validation //
-MessagesView.PropTypes = {
-  messages: PropTypes.object.isRequired
+MessagesView.propTypes = {
+  messages: PropTypes.array.isRequired,
+  conversationState: PropTypes.object.isRequired,
+  sendMessageRequest: PropTypes.func.isRequired
 };
 
 export default MessagesView;

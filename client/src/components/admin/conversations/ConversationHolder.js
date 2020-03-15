@@ -10,15 +10,17 @@ import { formatDate } from "../../helpers/dateHelpers";
 const style = {
   convoContainerStyle: {
     cursor: "pointer", 
-    border: "1px solid grey", 
-    padding: "1em"
+    border: "1px solid rgb(50, 113, 230)", 
+    borderRadius: "5px",
+    padding: "1.5em",
+    WebkitBoxShadow: "0px 0px 7px -2px rgba(158,142,54,1)",
+    MozBoxShadow: "0px 0px 7px -2px rgba(158,142,54,1)",
+    BoxShadow: "0px 0px 7px -2px rgba(158,142,54,1)"
   },
   convoDeleteBtn: { 
     position: "absolute",
-    right: 0,
-    top: 0,
-    padding: "0.5em",
-    marginTop: "0.25em",
+    right: "1%",
+    top: "5%",
     color: "white"
   }
 };
@@ -50,11 +52,11 @@ const ConversationHolder = (props) => {
   
   return (
     <Comment onClick={() => openConversation(conversationId)} style={style.convoContainerStyle}>
-      <Comment.Content style={{paddingTop: "0.5em"}}>
+      <Comment.Content style={{paddingTop: "0.75em"}}>
         <DeleteConvoBtn deleteConversation={deleteConversation} conversationId={conversationId} />
-        <Comment.Author as='a'>{lastMessage.sender}</Comment.Author>
+        <Comment.Author><span>From: </span>{lastMessage.sender}</Comment.Author>
         <Comment.Content>{lastMessage.content}</Comment.Content>
-        <Comment.Metadata>
+        <Comment.Metadata style={{ marginLeft: 0 }}>
           <div>Sent at: {formatDate(lastMessage.sentAt, { military: true })}</div>
         </Comment.Metadata>
       </Comment.Content>

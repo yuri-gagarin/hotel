@@ -1,8 +1,9 @@
 //import {} from "React";
 export const messageStyle = {
-  borderRadius: "5px",
+  borderRadius: "15px",
   color: "white",
-  backgroundColor: "rgb(3, 161, 252)",
+  background: "linear-gradient(to bottom, #00D0EA 0%, #0085D1 100%)",
+  backgroundAttachment: "fixed",
   margin: "0.5em",
   maxWidth: "75%",
   float: "right",
@@ -12,11 +13,9 @@ export const messageStyle = {
 }
 
 export const responseStyle = {
-  borderRadius: "5px",
-  color: "white",
-  backgroundColor: "rgb(25, 140, 52)",
-  margin: "0.5em",
-  maxWidth: "75%",
+  borderRadius: "15px",
+  color: "black",
+  backgroundColor: "#eee",
   float: "left",
   padding: "1em",
   width: "auto",
