@@ -1,25 +1,35 @@
 .clientMessageFormContainer {
   border: 4px solid red;
+  border-radius: 25px;
   background-color: white;
-  border-radius: 5px;
   width: 33%;
   position: fixed;
   bottom: 1%;
-  right: 1em;
+  right: -100%;
   padding: 1em;
   z-index: 999;
+  transition: right 0.25s linear;
 }
+
+.clientMessageFormContainer.transitionedForm {
+  right: 1%;
+} 
 
 @media (max-width: 425px) {
   .clientMessageFormContainer {
     width: 100%;
-    right: 0;
+    height: 50%;
+    right: -100%;
     bottom: 0;
+  }
+  .clientMessageFormContainer.transitionedForm {
+    right: 0%;
   }
 }
 
 @media (min-width: 426px) and (max-width: 768px) {
   .clientMessageFormContainer {
-    width: 50%;
+    width: 75%;
+    right: -100%;
   }
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import ReactDom from "react-dom";
 import PropTypes from "prop-types";
 // styles  and images //
 import { messageForm} from "./style/styles";
@@ -43,7 +44,8 @@ const MessageForm = (props) => {
   const toggleMessageForm = (e) => {
     handleFormOpen();
     // maybe animate later //
-    messageFormRef.current.style.display = "none";
+    const node = ReactDom.findDOMNode(messageFormRef.current);
+    console.log(node.classList.toggle("transitionedForm"));
   };
 
   const handleInitialMessage = (messageData) => {
@@ -72,7 +74,7 @@ const MessageForm = (props) => {
   };
 
   return (
-    <div className="clientMessageFormContainer" ref={messageFormRef}>
+    <div className="clientMessageFormContainer" ref={messageFormRef} id="clientMessageForm">
       <div style={messageForm.closeMessageForm} onClick={toggleMessageForm}>
         <span>X</span>
       </div>

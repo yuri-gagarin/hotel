@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 // style imports //
 import { openMessageForm } from "./style/styles";
 
 const OpenMessageForm = (props) => {
   const {handleFormOpen} = props;
+  useEffect(() => {
+    console.log(document.getElementById("clientMessageForm"));
+  })
   return (
     <div style={openMessageForm.formContainer}> 
       <div style={openMessageForm.adminOnlineIndicator}>

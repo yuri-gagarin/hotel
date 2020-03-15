@@ -23,22 +23,17 @@ const MessageFormContainer = (props) => {
   }, []);
   const handleFormOpen = (e) => {
     // toggles between messaging form and back //
-    setFormOpen((state) => {
-      return {open: !state.open};
-    });
+    const messageForm = document.getElementById("clientMessageForm");
+    messageForm.classList.add("transitionedForm");
   }
   // render conditionally //
-  if (!formOpen.open) {
-    return (
+  return (
+    <React.Fragment>
       <OpenMessageForm handleFormOpen={handleFormOpen} />
-    );
-  } else {
-    return (
       <MessageForm handleFormOpen={handleFormOpen}/>
-    );
-  }
-};
-
+    </React.Fragment>
+  );
+}
 const mapStateToProps = (state) => {
   return {
     conversationState: state.conversationState
