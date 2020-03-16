@@ -12,7 +12,6 @@ const  AdminFooterMenu = (props) => {
   return (
     
     <Menu style={{ width: "100%" }}>
-      { console.log(activeItem)}
       <Menu.Item
         name='editorials'
         active={activeItem === 'editorials'}

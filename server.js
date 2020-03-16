@@ -1,7 +1,9 @@
 import express from "express";
+import http from "http";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import socketIo from 'socket.io';
+import redis from "redis";
 import path from "path";
 import passport from "passport";
 import session from "express-session";
@@ -61,18 +63,23 @@ combineRoutes(router);
 app.use(router);
 
 //app.use()
-//let socket;
+// app config //
+const redisClient = redis.createClient();
 app.on("dbReady", () => {
-  const server = app.listen(PORT, () => {
-    console.log(`Listening at PORT: ${PORT}`);
+  const server = http.createServer(app);
+  server.listen(PORT, () => {
+    console.info(`App listening at Port: ${PORT}`);
   });
   global.io = socketIo.listen(server);
+  io.attach(redisClient);
   // IO functionality //
   io.sockets.on("connection", (socket) => {
-    //console.log("connected");
+    console.log("connected");
+    io.to(`${socket.id}`).emit("askForCredentials");
     socket.on("sendClientCredentials", (user) => {
       //console.log(socket.id);
-      clientsMap[user._id] = socket.id;
+      console.log(socket.id);
+      console.log(user);
     });
     // client is messaging //
     socket.on("clientMessageSent", (data) => {

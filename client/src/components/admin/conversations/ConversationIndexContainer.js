@@ -17,7 +17,7 @@ import { handleNewClientMessage } from "../../../redux/actions/adminConversation
 import ConversationComponent from "./ConversationComponent";
 import MessagesView from "./MessagesView";
 // socket import //
-import { socket } from "../../../App";
+import { socket } from "./../../../App";
 
 const MessagesSplashScreen = (props) => {
   return (

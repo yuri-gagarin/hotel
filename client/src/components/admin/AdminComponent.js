@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Grid } from "semantic-ui-react";
 import { withRouter, Route } from "react-router-dom"; 
+// sockek io //
+import io from "socket.io-client";
 import AdminNavComponent from "./nav/AdminNav";
 
 import ConversationIndexContainer from "./conversations/ConversationIndexContainer";
@@ -16,8 +18,7 @@ import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
 import ContactPostContainer from "./contact/ContactPostContainer";
 import ServicesIndexContainer from "./services/ServicesIndexContainer";
-
-
+// 
 
 const setUserCredentials = (userData) => {
   const adminState = JSON.stringify(userData);

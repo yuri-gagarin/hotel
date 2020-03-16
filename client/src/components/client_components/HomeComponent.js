@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import $ from "jquery";
-import { Container } from "react-bootstrap";
 // component imports //
 import NavbarComponent from "./navbar/NavbarComponent";
 import MainHeaderComponent from "./main_header/MainHeaderComponent";
@@ -15,63 +14,51 @@ import ErrorComponent from "../display_components/ErrorComponent";
 // redux imports //
 import { connect } from "react-redux";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
-import store from "../../redux/store";
 // react router //
 import { withRouter } from "react-router-dom";
 // additional imports //
 import ObjectID from "bson-objectid";
 import { setGuestClient } from "../../redux/actions/clientActions";
+// 
+import { socket } from "./../../App";
 
+const handleNewClient = () => {
 
-class HomeComponent extends React.Component {
-  //const [client, setClient] = useState(setUser(handleClient));
-  constructor (props) {
-    super(props);
-    this.state = {
-      errorTimeout: null,
-      successTimeout: null
-    };
-    this.props.handleClient({
-      userId: ObjectID.generate(Date.now),
-      firstName: "Guest",
-      email: null
-    });
-  }
+}
+const HomeComponent = (props) => {
+  const { 
+    history, appGeneralState, 
+    clearAppError, clearSuccessState 
+  } = props;
+  const [client, setClient] = useState({});
+  const [successTimeout, setSuccessTimeout] = useState(null);
+  const [errorTimeout, setErrorTimeout] = useState(null);
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { appGeneralState } = nextProps;
-    const { error, successComponentOpen } = appGeneralState
-    const { errorTimeout, successTimeout } = prevState;
-   
+  useEffect(() => {
+    const { error, successComponentOpen } = appGeneralState;
     if (error) {
-      return {
-        errorTimeout: setTimeout(() => {
-          store.dispatch(clearAppError());
-        }, 5000)
-      };
+      setErrorTimeout(() => {
+        clearAppError();
+      }, 5000);
     }
     if (!error && errorTimeout) {
-      return {
-        errorTimeout: clearTimeout(prevState.errorTimeout)
-      };
+      clearTimeout(errorTimeout);
+      setErrorTimeout(null);
     }
     if (successComponentOpen) {
-      return {
-        successTimeout: setTimeout(() => {
-          store.dispatch(clearSuccessState());
-        }, 5000)
-      };
+      setSuccessTimeout(() => {
+        clearSuccessState();
+      }, 5000);
     }
     if (!successComponentOpen && successTimeout) {
-      console.log("clearing success timeout")
-      return {
-        successTimeout: clearTimeout(prevState.successTimeout)
-      };
+      clearTimeout(successTimeout);
+      setSuccessTimeout(null);
     }
-    return prevState;
-  }
-  
-  componentDidMount() {
+
+  }, [appGeneralState]);
+   
+      
+  useEffect(() => {
     // automatic form clear for error //
     (function() {
       // Collapse Navbar
@@ -87,27 +74,29 @@ class HomeComponent extends React.Component {
       // Collapse the navbar when page is scrolled
       $(window).scroll(navbarCollapse);
     })();
-  }
-  componentWillUnmount() {
-    localStorage.removeItem("clientId");
-    localStorage.removeItem("conversationId");
-  }
-  render () {
-    const { history, appGeneralState, clearAppError, clearSuccessState } = this.props;
-    return (
-      <div style={{ border: "5px solid red", width: "100vw", height: "auto"}}>
-        <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={clearSuccessState} />
-        <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
-        <NavbarComponent />
-        <MainHeaderComponent />
-        <BookingForm />
-        <ServicesComponent history={history} />
-        <ContactForm />
-        <MessageFormContainer />
-        <Footer />
-      </div>
-    );
-  }
+    // inform server of new client //
+    socket.on("askForCredentials", () => {
+      socket.emit("sendClientCredentials", { user: "user" });
+    });
+    return function () {
+      localStorage.removeItem("clientId");
+      localStorage.removeItem("conversationId");
+    }
+  }, []);
+  
+  return (
+    <div style={{ border: "5px solid red", width: "100vw", height: "auto"}}>
+      <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={clearSuccessState} />
+      <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
+      <NavbarComponent />
+      <MainHeaderComponent />
+      <BookingForm />
+      <ServicesComponent history={history} />
+      <ContactForm />
+      <MessageFormContainer />
+      <Footer />
+    </div>
+  );
 };
 // PropTypes validation //
 HomeComponent.propTypes = {
