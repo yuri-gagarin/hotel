@@ -79,7 +79,7 @@ app.on("dbReady", () => {
   // IO functionality //
   io.sockets.on("connection", (socket) => {
     socket.on("sendClientCredentials", (user) => {
-      // set client id with socket id in memory to prevent multiple connections //
+      // set client id with socket id in redis to prevent multiple connections //
       redisClient.hmset(user._id, user._id, socket.id, (error, reply) => {
         if (error) {
           console.error(error);
@@ -91,13 +91,20 @@ app.on("dbReady", () => {
     });
     socket.on("clientLeaving",  (user) => {
       // remove client information from redis //
-      console.log("client leaving")
-      console.log(user);
+      if (user._id)
+      redisClient.del(user._id, (error, reply) => {
+        if (error) {
+          console.error(error);
+          socket.emit("socketConnectionError");
+          return;
+        }
+      });
+      
     });
     // keeping connection alive //
     socket.on("keepConnectionAlive", () => {
-      console.log("pings");
     });
+    //
 
     // client is messaging //
     socket.on("clientMessageSent", (data) => {

@@ -33,7 +33,7 @@ const handleNewClient = () => {
 const HomeComponent = (props) => {
   const { 
     history, appGeneralState, clientState,
-    clearAppError, clearSuccessState,
+    _clearAppError, _clearSuccessState,
     _setGuestClient
   } = props;
   const [successTimeout, setSuccessTimeout] = useState(null);
@@ -41,9 +41,8 @@ const HomeComponent = (props) => {
 
   const unloadWindowHandler = () => {
     socket.emit("clientLeaving", clientState);
-  }
-  
-
+  };
+  // set default client info on initial load //
   useEffect(() => {
     // automatic form clear for error //
     (function() {
@@ -60,32 +59,7 @@ const HomeComponent = (props) => {
       // Collapse the navbar when page is scrolled
       $(window).scroll(navbarCollapse);
     })();
-  }, []);
-
-  useEffect(() => {
-    const { error, successComponentOpen } = appGeneralState;
-    if (error) {
-      setErrorTimeout(() => {
-        clearAppError();
-      }, 5000);
-    }
-    if (!error && errorTimeout) {
-      clearTimeout(errorTimeout);
-      setErrorTimeout(null);
-    }
-    if (successComponentOpen) {
-      setSuccessTimeout(() => {
-        clearSuccessState();
-      }, 5000);
-    }
-    if (!successComponentOpen && successTimeout) {
-      clearTimeout(successTimeout);
-      setSuccessTimeout(null);
-    }
-
-  }, [appGeneralState]);
-
-  useEffect(() => {
+    // check for saved user data in localStorage //
     const clientId = localStorage.getItem("hotelGuestClientId");
     const firstName = localStorage.getItem("hotelGuestClientName");
     if (clientId && firstName) {
@@ -94,31 +68,63 @@ const HomeComponent = (props) => {
       _setGuestClient(handleNewClient());
     }
   }, []);
+  // error and success component triggers //
+  useEffect(() => {
+    const { error, successComponentOpen } = appGeneralState;
+    if (error) {
+      setErrorTimeout(
+        setTimeout(() => {
+          _clearAppError();
+        }, 5000)
+      );
+    }
+    if (!error && errorTimeout) {
+      clearTimeout(errorTimeout);
+     // setErrorTimeout(null);
+    }
+    if (successComponentOpen) {
+      setSuccessTimeout(
+        setTimeout(() => {
+          _clearSuccessState();
+        }, 5000)
+      );
+    }
+    if (!successComponentOpen && successTimeout) {
+      clearTimeout(successTimeout);
+      //setSuccessTimeout(null);
+    }
+    return function () {
+      if (successTimeout) {
+        clearTimeout(successTimeout);
 
+      }
+      if (errorTimeout) {
+        clearTimeout(errorTimeout);
+      }
+    }
+  }, [ appGeneralState ]);
+  // set localStorage items if they do not exist //
+  // listener for closed window or navigation away //
   useEffect(() => {
     const storedId = localStorage.getItem("hotelGuestClientId");
     const storedName = localStorage.getItem("hotelGuestClientName");
     const { _id, firstName } = clientState;
 
     if ( _id && firstName ) {
-      if (!storedId && !storedName) {
+      if (!storedId || !storedName) {
         localStorage.setItem("hotelGuestClientId", _id);
         localStorage.setItem("hotelGuestClientName", firstName);
       }
-      console.log("should set event")
       window.addEventListener("beforeunload", unloadWindowHandler);
       // emit client information to the server //
       socket.emit("sendClientCredentials",  clientState);
     }
   }, [clientState])
    
-      
-  
-  
   return (
     <div style={{ border: "5px solid red", width: "100vw", height: "auto"}}>
-      <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={clearSuccessState} />
-      <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
+      <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={_clearSuccessState} />
+      <ErrorComponent appGeneralState={appGeneralState} clearAppError={_clearAppError} />
       <NavbarComponent />
       <MainHeaderComponent />
       <BookingForm />
@@ -132,8 +138,11 @@ const HomeComponent = (props) => {
 // PropTypes validation //
 HomeComponent.propTypes = {
   //socket: PropTypes.object.isRequired
+  appGeneralState: PropTypes.object.isRequired,
   clientState: PropTypes.object.isRequired,
-  _setGuestClient: PropTypes.func.isRequired
+  _setGuestClient: PropTypes.func.isRequired,
+  _clearAppError: PropTypes.func.isRequired,
+  _clearSuccessState: PropTypes.func.isRequired
 };
 
 // redux mapping functions //
@@ -146,8 +155,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     _setGuestClient: (userData) => dispatch(setGuestClient(userData)),
-    clearAppError: () => dispatch(clearAppError()),
-    clearSuccessState: () => dispatch(clearSuccessState())
+    _clearAppError: () => dispatch(clearAppError()),
+    _clearSuccessState: () => dispatch(clearSuccessState())
   };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeComponent));

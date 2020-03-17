@@ -123,11 +123,19 @@ const App = (props) => {
           socket.emit("keepConnectionAlive");
         }, 5000)
       );
-    })
+    });
+    // keep admin connected if admin is logged in on their sice //
+    socket.on("adminConnected", () => {
+      setSocketConnectionInterval(
+        setInterval(() => {
+          socket.emit("keepConnectionAlive");
+        }, 5000)
+      );
+    });
     return () => {
       clearInterval(socketConnectionInterval);
     }
-  }, [socketConnectionInterval]);
+  }, []);
 
   return (
     <AppRoutes loggedIn={loggedIn} />

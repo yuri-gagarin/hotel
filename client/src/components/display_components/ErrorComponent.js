@@ -9,7 +9,6 @@ const ErrorComponent = (props) => {
   const { appGeneralState, clearAppError } = props;
   const { status, responseMsg, error, errorMessages } = appGeneralState;
   const componentRef = useRef(null);
-
   const handleClose = () => {
     clearAppError();
   };

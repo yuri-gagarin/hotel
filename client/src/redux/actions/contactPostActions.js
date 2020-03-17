@@ -64,7 +64,6 @@ export const setContactPosts = ({ status, responseMsg, contactPosts = [] }) => {
 
 export const openContactPost = (postId, contactPosts = []) => {
   const contactPost = contactPosts.filter((contactPost) => contactPost._id == postId)[0];
-  console.log(postId);
   return {
     type: OPEN_CONTACT_POST,
     payload: {
