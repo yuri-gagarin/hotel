@@ -5,9 +5,7 @@ import { openMessageForm } from "./style/styles";
 
 const OpenMessageForm = (props) => {
   const {handleFormOpen} = props;
-  useEffect(() => {
-    console.log(document.getElementById("clientMessageForm"));
-  })
+ 
   return (
     <div style={openMessageForm.formContainer}> 
       <div style={openMessageForm.adminOnlineIndicator}>

@@ -23,16 +23,44 @@ import { setGuestClient } from "../../redux/actions/clientActions";
 import { socket } from "./../../App";
 
 const handleNewClient = () => {
+  return {
+    _id: ObjectID.generate(Date.now()),
+    firstName: "guest",
+    email: null
+  };
+};
 
-}
 const HomeComponent = (props) => {
   const { 
-    history, appGeneralState, 
-    clearAppError, clearSuccessState 
+    history, appGeneralState, clientState,
+    clearAppError, clearSuccessState,
+    _setGuestClient
   } = props;
-  const [client, setClient] = useState({});
   const [successTimeout, setSuccessTimeout] = useState(null);
   const [errorTimeout, setErrorTimeout] = useState(null);
+
+  const unloadWindowHandler = () => {
+    socket.emit("clientLeaving", clientState);
+  }
+  
+
+  useEffect(() => {
+    // automatic form clear for error //
+    (function() {
+      // Collapse Navbar
+      var navbarCollapse = function() {
+        if ($("#mainNav").offset().top > 100) {
+          $("#mainNav").addClass("navbar-shrink");
+        } else {
+          $("#mainNav").removeClass("navbar-shrink");
+        }
+      };
+      // Collapse now if page is not at top
+      navbarCollapse();
+      // Collapse the navbar when page is scrolled
+      $(window).scroll(navbarCollapse);
+    })();
+  }, []);
 
   useEffect(() => {
     const { error, successComponentOpen } = appGeneralState;
@@ -56,33 +84,36 @@ const HomeComponent = (props) => {
     }
 
   }, [appGeneralState]);
-   
-      
+
   useEffect(() => {
-    // automatic form clear for error //
-    (function() {
-      // Collapse Navbar
-      var navbarCollapse = function() {
-        if ($("#mainNav").offset().top > 100) {
-          $("#mainNav").addClass("navbar-shrink");
-        } else {
-          $("#mainNav").removeClass("navbar-shrink");
-        }
-      };
-      // Collapse now if page is not at top
-      navbarCollapse();
-      // Collapse the navbar when page is scrolled
-      $(window).scroll(navbarCollapse);
-    })();
-    // inform server of new client //
-    socket.on("askForCredentials", () => {
-      socket.emit("sendClientCredentials", { user: "user" });
-    });
-    return function () {
-      localStorage.removeItem("clientId");
-      localStorage.removeItem("conversationId");
+    const clientId = localStorage.getItem("hotelGuestClientId");
+    const firstName = localStorage.getItem("hotelGuestClientName");
+    if (clientId && firstName) {
+      _setGuestClient({ _id: clientId, firstName: firstName });
+    } else {
+      _setGuestClient(handleNewClient());
     }
   }, []);
+
+  useEffect(() => {
+    const storedId = localStorage.getItem("hotelGuestClientId");
+    const storedName = localStorage.getItem("hotelGuestClientName");
+    const { _id, firstName } = clientState;
+
+    if ( _id && firstName ) {
+      if (!storedId && !storedName) {
+        localStorage.setItem("hotelGuestClientId", _id);
+        localStorage.setItem("hotelGuestClientName", firstName);
+      }
+      console.log("should set event")
+      window.addEventListener("beforeunload", unloadWindowHandler);
+      // emit client information to the server //
+      socket.emit("sendClientCredentials",  clientState);
+    }
+  }, [clientState])
+   
+      
+  
   
   return (
     <div style={{ border: "5px solid red", width: "100vw", height: "auto"}}>
@@ -101,6 +132,8 @@ const HomeComponent = (props) => {
 // PropTypes validation //
 HomeComponent.propTypes = {
   //socket: PropTypes.object.isRequired
+  clientState: PropTypes.object.isRequired,
+  _setGuestClient: PropTypes.func.isRequired
 };
 
 // redux mapping functions //
@@ -112,7 +145,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClient: (userData) => dispatch(setGuestClient(userData)),
+    _setGuestClient: (userData) => dispatch(setGuestClient(userData)),
     clearAppError: () => dispatch(clearAppError()),
     clearSuccessState: () => dispatch(clearSuccessState())
   };

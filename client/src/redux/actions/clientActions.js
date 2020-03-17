@@ -4,11 +4,11 @@ const {
   SET_ADMIN
 } = clientConstants;
 
-export const setGuestClient = ({ userId, firstName, email }) => {
+export const setGuestClient = ({ _id, firstName, email }) => {
   return {
     type: SET_GUEST_USER,
     payload: {
-      _id: userId,
+      _id: _id,
       firstName: firstName,
       email: email
     }

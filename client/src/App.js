@@ -1,5 +1,6 @@
 /* global jQuery, define */
 import React, { useEffect, useState }from 'react';
+import PropTypes from "prop-types";
 import {
   BrowserRouter as Router,
   Switch, Route, useLocation
@@ -84,11 +85,13 @@ const AppRoutes = (props) => {
   );
 }
 
-class App extends React.Component {
-  constructor (props) {
-    super(props);
-  }
-  checkLogin = () => {
+const App = (props) => {
+  const { adminState, _setAdmin } = props;
+  const { loggedIn } = adminState;
+  
+  const [socketConnectionInterval, setSocketConnectionInterval] = useState(null);
+
+  const checkLogin = () => {
     // checks for user login //
     const requestParams = {
       method: "get",
@@ -100,26 +103,40 @@ class App extends React.Component {
         if (status === 200) {
           // user is logged in still //
           const savedState = JSON.parse(localStorage.getItem("hotelAdminState"));
-          this.props.setAdmin({ ...savedState, loggedIn: true })
+          _setAdmin({ ...savedState, loggedIn: true })
         } else {
           // not a status code 200 //
-          this.props.setAdmin({ ...savedState, loggedIn: false })
+          _setAdmin({ ...savedState, loggedIn: false })
         }
       })
       .catch((error) => {
         const savedState = JSON.parse(localStorage.getItem("hotelAdminState"));
-        this.props.setAdmin({ ...savedState, loggedIn: false })
+        _setAdmin({ ...savedState, loggedIn: false })
       });
   }
-  componentDidMount() {
-    this.checkLogin()
-  }
-  render() {
-    const { loggedIn } = store.getState().adminState;
-    return (
-      <AppRoutes loggedIn={loggedIn} />
-    );
-  }
+  useEffect(() => {
+    // keep client connected to the same socket if idle //
+    socket.on("clientCredentialsReceived", () => {
+      // set an interval to keep connection alive while idle //
+      setSocketConnectionInterval(
+        setInterval(() => {
+          socket.emit("keepConnectionAlive");
+        }, 5000)
+      );
+    })
+    return () => {
+      clearInterval(socketConnectionInterval);
+    }
+  }, [socketConnectionInterval]);
+
+  return (
+    <AppRoutes loggedIn={loggedIn} />
+  );
+};
+// PropTypes validation //
+App.propTypes = {
+  adminState: PropTypes.object.isRequired,
+  _setAdmin: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
@@ -129,7 +146,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    setAdmin: (adminData) => dispatch(setAdmin(adminData))
+    _setAdmin: (adminData) => dispatch(setAdmin(adminData))
   };
 };
 

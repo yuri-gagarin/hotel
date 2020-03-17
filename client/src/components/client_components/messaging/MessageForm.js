@@ -38,14 +38,13 @@ const MessageForm = (props) => {
     });
     if (localStorage.getItem("conversationId")) {
     }
-    console.log(window.matchMedia("man-width: 250px").matches);
   }, []);
 
   const toggleMessageForm = (e) => {
     handleFormOpen();
     // maybe animate later //
     const node = ReactDom.findDOMNode(messageFormRef.current);
-    console.log(node.classList.toggle("transitionedForm"));
+    node.classList.toggle("transitionedForm");
   };
 
   const handleInitialMessage = (messageData) => {

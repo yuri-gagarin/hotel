@@ -64,7 +64,11 @@ app.use(router);
 
 //app.use()
 // app config //
-const redisClient = redis.createClient();
+const redisClient = redis.createClient({
+  host: process.env.REDIS_HOST || 'localhost',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASS || 'password',
+});
 app.on("dbReady", () => {
   const server = http.createServer(app);
   server.listen(PORT, () => {
@@ -74,13 +78,27 @@ app.on("dbReady", () => {
   io.attach(redisClient);
   // IO functionality //
   io.sockets.on("connection", (socket) => {
-    console.log("connected");
-    io.to(`${socket.id}`).emit("askForCredentials");
     socket.on("sendClientCredentials", (user) => {
-      //console.log(socket.id);
-      console.log(socket.id);
+      // set client id with socket id in memory to prevent multiple connections //
+      redisClient.hmset(user._id, user._id, socket.id, (error, reply) => {
+        if (error) {
+          console.error(error);
+          socket.emit("socketConnectionError");
+          return;
+        }
+        socket.emit("clientCredentialsReceived");
+      });
+    });
+    socket.on("clientLeaving",  (user) => {
+      // remove client information from redis //
+      console.log("client leaving")
       console.log(user);
     });
+    // keeping connection alive //
+    socket.on("keepConnectionAlive", () => {
+      console.log("pings");
+    });
+
     // client is messaging //
     socket.on("clientMessageSent", (data) => {
       const { conversationId, newMessage } = data;
