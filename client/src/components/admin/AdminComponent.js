@@ -18,8 +18,11 @@ import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
 import ContactPostContainer from "./contact/ContactPostContainer";
 import ServicesIndexContainer from "./services/ServicesIndexContainer";
-// 
-
+// helper functions //
+import checkLogin from "./../helpers/checkLogin";
+const saveAdminState = (state) => {
+  console.log("should fire");
+}
 const setUserCredentials = (userData) => {
   const adminState = JSON.stringify(userData);
   localStorage.setItem("hotelAdminState", adminState);
@@ -41,14 +44,25 @@ const AdminComponent = (props) => {
   const [errorTimeout, setErrorTimeout] = useState(null);
   // set the localStoreage state  so the app can reload //
   useEffect(() => {
-    if (!localStorage.getItem("hotelAdminState")) {
-      setUserCredentials(adminState);
-    } else {
-      const savedState = JSON.parse(localStorage.getItem("hotelAdminState"));
-      // set admin state on refresh //
-      setAdmin(savedState);
+    const { loggedIn, firstName } = adminState;
+    if (!loggedIn && !firstName) {
+      checkLogin().then((success) => {
+        if (success) {
+          // get saved admin state information //
+          const adminState = JSON.stringify(localStorage.getItem("hotelAdminState"));
+          _setAdminState(adminState);
+        } else {
+          console.log("not logged in");
+          _setAdminState({});
+        }
+      });
     }
-  }, []); 
+    // event listener for closed window //
+    window.addEventListener("beforeunload", saveAdminState)
+    return function () {
+      window.removeEventListener("beforeunload");
+    }
+  }, []);
   // timeouts for the error and success components //
   useEffect(() => {
     const { error, successComponentOpen } = appGeneralState;
