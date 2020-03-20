@@ -125,7 +125,7 @@ const App = (props) => {
       );
     });
     // keep admin connected if admin is logged in on their sice //
-    socket.on("adminConnected", () => {
+    socket.on("adminCredentialsReceived", () => {
       setSocketConnectionInterval(
         setInterval(() => {
           socket.emit("keepConnectionAlive");

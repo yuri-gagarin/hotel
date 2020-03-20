@@ -17,9 +17,7 @@ const MessageInitView = (props) => {
   const [message, setMessage] = useState("");
   // redux state //
   const { sendInitialMessage, clientState } = props;
-  useEffect(() => {
-    localStorage.setItem("clientId", clientState._id);
-  }, []);
+
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -39,12 +37,12 @@ const MessageInitView = (props) => {
     e.stopPropagation();
     setValidated(true);
 
-    const clientId = localStorage.getItem("clientId");
+    const { _id, firstName } = clientState;
     const messageData = {
       user: {
-        _id: clientId,
-        firstName: name,
-        email: email
+        _id: _id,
+        firstName: name || firstName,
+        email: email || ""
       },
       content: message
     };

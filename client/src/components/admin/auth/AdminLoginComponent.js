@@ -126,7 +126,12 @@ const AdminLoginComponent = (props) => {
       email: email,
       password: password
     };
-    handleUserLogin(userData, history);
+    return handleUserLogin(userData)
+      .then((success) => {
+        if (success) {
+          history.push("/admin/dash");
+        }
+      })
   };
   // end form input and sublit handlers //
   return (

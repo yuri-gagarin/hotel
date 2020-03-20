@@ -2,9 +2,124 @@ import mongoose, { Mongoose } from "mongoose";
 import Conversation from "../models/Conversation";
 import Message from "../models/Message";
 import io from "../server";
-
+// instant messaging between client and admin //
+// maybe later we can implement these in redis rather than Mongo if needed //
 export default {
-  sendMessage: (req, res) => {
+  sendClientMessage: (req, res) => {
+    const { user } = req.body;
+    let { conversationId } = req.body;
+    let newMessage;
+    if (!user) {
+      return Promise.resolve().then(() => {
+        res.status(400).json({
+          responseMsg: "Couldn't set user"
+        });
+      });
+    }
+    if (!messageData) {
+      return Promise.resolve().then(() => {
+        res.status(400).json({
+          responseMsg: "Couldn't resolve message data"
+        });
+      });
+    }
+    // look for a conversation if conversationId exists //
+    if (conversationId) {
+      return Conversation.findById(conversationId)
+        .then((conversation) => {
+          if (conversation) {
+            return Promise.resolve(conversation);
+          } else {
+            return Promise.reject(new Error ("Can't find a conversation"));
+          }
+        })
+        .then((conversation) => {
+          return Message.create({
+            conversationId: conversationId,
+            sender: user.firstName,
+            content: messageData
+          });
+        })
+        .then((createdMessage) => {
+          newMessage = createdMessage;
+          return Conversation.updateOne(
+            { 
+              _id: conversationId 
+            },
+            { 
+              "$push": { "unreadMessages": createdMessage._id },
+              "$addToSet": { "participants": userId },
+              "$set": { "lastMessage": { 
+                _id: createdMessage._id,
+                sender: createdMessage.sender,
+                content: createdMessage.content,
+                sentAt: createdMessage.sentAt
+              } }
+            }
+          );
+        })
+        .then((updatedConversation) => {
+          return res.status(200).json({
+            responseMsg: "Your message was sent",
+            conversationId: conversationId,
+            newMessage: newMessage,
+            user: user
+          });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            responseMsg: "Ooops we seem to have a server error",
+            error: error
+          })
+        })
+    } else {
+      return Conversation.create({
+        participants: [
+          user._id
+        ]
+      })
+      .then((conversation) => {
+        return Message.create({
+          conversationId: conversation._id,
+          sender: user.firstName,
+          content: messageData
+        });
+      })
+      .then((createdMessage) => {
+        newMessage = createdMessage;
+        return Conversation.updateOne(
+          { 
+            _id: conversationId 
+          },
+          { 
+            "$push": { "unreadMessages": createdMessage._id },
+            "$addToSet": { "participants": userId },
+            "$set": { "lastMessage": { 
+              _id: createdMessage._id,
+              sender: createdMessage.sender,
+              content: createdMessage.content,
+              sentAt: createdMessage.sentAt
+            } }
+          }
+        );
+      })
+      .then((response) => {
+        return res.status(200).json({
+          responseMsg: "Your message was sent",
+          conversationId: conversationId,
+          newMessage: newMessage,
+          user: user
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          responseMsg: "Ooops we seem to have a server error",
+          error: error
+        });
+      });
+    }
+  },
+  sendAdminMessage: (req, res) => {
     //console.log(global.io);
     const user = req.user || req.body.user || {};
     const userId = user._id || mongoose.Types.ObjectId();

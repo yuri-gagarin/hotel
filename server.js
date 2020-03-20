@@ -101,6 +101,18 @@ app.on("dbReady", () => {
       });
       
     });
+    // listen for an administrator to connect //
+    socket.on("adminConnected", (admin) => {
+      console.log(admin);
+      redisClient.hmset(admin._id, admin._id, socket.id, (error, reply) => {
+        if (error) {
+          console.error(error);
+          socket.emit("socketConnectionError");
+          return;
+        }
+        socket.emit("adminCredentialsReceived");
+      })
+    })
     // keeping connection alive //
     socket.on("keepConnectionAlive", () => {
     });

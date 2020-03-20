@@ -10,6 +10,7 @@ const initialState = {
   loggedIn: false,
   loading: false,
   admin: false,
+  _id: null,
   email: "",
   firstName: "",
   lastName: "",
@@ -21,10 +22,10 @@ const adminReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case LOGIN_REQUEST: {
       return {
-        ...state,
         loggedIn: payload.loggedIn,
         loading: payload.loading,
         admin: payload.admin,
+        _id: payload._id,
         email: payload.email,
         firstName: payload.firstName,
         lastName: payload.lastName,
@@ -34,38 +35,41 @@ const adminReducer = (state = initialState, { type, payload }) => {
     };
     case SET_ADMIN: {
       return {
-        ...state,
         loggedIn: payload.loggedIn,
         loading: payload.loading,
         admin: payload.admin,
+        _id: payload._id,
         email: payload.email,
         firstName: payload.firstName,
         lastName: payload.lastName,
-        phoneNumber: payload.phoneNumber
+        phoneNumber: payload.phoneNumber,
+        error: payload.error
       };
     };
     case LOG_OUT_ADMIN: {
       return {
-        ...state,
         loggedIn: payload.loggedIn,
         loading: payload.loading,
         admin: payload.admin,
+        _id: payload._id,
         email: payload.email,
         firstName: payload.firstName,
         lastName: payload.lastName,
-        phoneNumber: payload.phoneNumber
+        phoneNumber: payload.phoneNumber,
+        error: payload.error
       };
     };
     case LOGIN_ERROR: {
       return {
-        ...state,
         loggedIn: payload.loggedIn,
         loading: payload.loading,
+        _id: payload._id,
         admin: payload.admin,
         email: payload.email,
         firstName: payload.firstName,
         lastName: payload.lastName,
-        phoneNumber: payload.phoneNumber
+        phoneNumber: payload.phoneNumber,
+        error: payload.error
       };
     };
     default: {

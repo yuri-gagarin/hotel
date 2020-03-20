@@ -36,8 +36,6 @@ const MessageForm = (props) => {
       updateConversation({clientSocketId: clientSocketId, conversationId: newMessage.conversationId,
                           message: newMessage, adminSocketId: null });
     });
-    if (localStorage.getItem("conversationId")) {
-    }
   }, []);
 
   const toggleMessageForm = (e) => {
@@ -49,17 +47,16 @@ const MessageForm = (props) => {
 
   const handleInitialMessage = (messageData) => {
     const { user, content } = messageData;
-    socket.emit("sendClientCredentials", user);
+    const { _id, firstName, email } = user;
     handleMessageRequest(user, null, content);
-    if (!clientState.userId) {
-      setClientState({userId: user._id, firstName: user.firstName, email: user.email });
-    }
+    // update client state with name of user //
+    setClientState({ _id: _id, firstName: firstName, email: email });
   };
 
   const sendMessage = (content) => {
     const user = clientState;
+    console.log(user);
     handleMessageRequest(user, conversationId, content);
-    localStorage.setItem("conversationId", conversationId);
   };
 
   const renderMessages = (messages) => {

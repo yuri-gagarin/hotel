@@ -5,6 +5,13 @@ export default function (router) {
   // @desc Sends a message, creating a new Message and Conversation model (if necessary) //
   // @access PUBLIC //
   router
-    .route("/api/sendMessage")
-    .post(messagesController.sendMessage);
+    .route("/api/sendClientMessage")
+    .post(messagesController.sendClientMessage);
+  
+  // @route /api/sendAdminMessage //
+  // @desc Sends an admin response message, creating a new Message and Conversation model (if necessary) //
+  // @access Private //
+  router
+    .route("/api/sendAdminMessage")
+    .post(messagesController.sendAdminMessage);
 };

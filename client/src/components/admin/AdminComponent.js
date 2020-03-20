@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Grid } from "semantic-ui-react";
 import { withRouter, Route } from "react-router-dom"; 
-// sockek io //
-import io from "socket.io-client";
+// additional components //
 import AdminNavComponent from "./nav/AdminNav";
-
 import ConversationIndexContainer from "./conversations/ConversationIndexContainer";
 import AdminDashComponent from "./dash/AdminDashComponent";
 import PostsIndexContainer from "./posts/PostsIndexContainer";
@@ -18,15 +16,11 @@ import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
 import ContactPostContainer from "./contact/ContactPostContainer";
 import ServicesIndexContainer from "./services/ServicesIndexContainer";
+// socket io client //
+import { socket } from "./../../App";
 // helper functions //
 import checkLogin from "./../helpers/checkLogin";
-const saveAdminState = (state) => {
-  console.log("should fire");
-}
-const setUserCredentials = (userData) => {
-  const adminState = JSON.stringify(userData);
-  localStorage.setItem("hotelAdminState", adminState);
-};
+
 
 const AdminComponent = (props) => {
   // redux state objects //
@@ -37,57 +31,81 @@ const AdminComponent = (props) => {
   } = props;
   // redux action functions //
   const {
-    clearAppError, clearSuccessState, handleLogout, setAdmin
+    _clearAppError, _clearSuccessState, _logoutUser, _setAdmin
   } = props; 
   // error and success states //
   const [successTimeout, setSuccessTimeout] = useState(null);
   const [errorTimeout, setErrorTimeout] = useState(null);
+
+  const saveAdminState = () => {
+    const { loggedIn } = adminState;
+    if (loggedIn) {
+      const adminStateString = JSON.stringify(adminState);
+      localStorage.setItem("hotelAdminState", adminStateString);
+    } else {
+      return;
+    }
+  };
   // set the localStoreage state  so the app can reload //
   useEffect(() => {
-    const { loggedIn, firstName } = adminState;
-    if (!loggedIn && !firstName) {
+    const { loggedIn } = adminState;
+    if (!loggedIn) {
       checkLogin().then((success) => {
         if (success) {
           // get saved admin state information //
-          const adminState = JSON.stringify(localStorage.getItem("hotelAdminState"));
-          _setAdminState(adminState);
+          const adminState = JSON.parse(localStorage.getItem("hotelAdminState"));
+          if (adminState) {
+            _setAdmin(adminState);
+          }
         } else {
-          console.log("not logged in");
-          _setAdminState({});
+          history.push("/login/admin");
         }
       });
     }
     // event listener for closed window //
-    window.addEventListener("beforeunload", saveAdminState)
+    window.addEventListener("beforeunload", saveAdminState);
     return function () {
-      window.removeEventListener("beforeunload");
+      window.removeEventListener("beforeunload", saveAdminState);
     }
   }, []);
+  // save admin state to localStorage //
+  useEffect(() => {
+    const { loggedIn, firstName, lastName } = adminState;
+    if (!localStorage.getItem("hotelAdminState")) {
+      if (loggedIn && firstName && lastName) {
+        const adminStateString = JSON.stringify(adminState);
+        localStorage.setItem("hotelAdminState", adminStateString);
+      }
+    }
+    if (loggedIn) {
+       socket.emit("adminConnected", adminState);
+    }
+  }, [adminState]);
   // timeouts for the error and success components //
   useEffect(() => {
     const { error, successComponentOpen } = appGeneralState;
     if (error) {
       setErrorTimeout(setTimeout(() => {
-        clearAppError();
+        _clearAppError();
       }, 5000));
     }
     if (!error && errorTimeout) {
-      clearTimeout(errorTimeout);
+      _clearTimeout(errorTimeout);
       setErrorTimeout(null);
     }
     if (successComponentOpen) {
       setSuccessTimeout(setTimeout(() =>{
-        clearSuccessState();
+        _clearSuccessState();
       }, 5000))
     }
     if (!successComponentOpen && successTimeout) {
-      clearTimeout(successTimeout);
+      _clearTimeout(successTimeout);
       setSuccessTimeout(null);
     }
   }, [appGeneralState]);
   // logout user functionality //
   const logoutUser = (e) => {
-    handleLogout(history);
+    _logoutUser(history);
   };
 
   return (
@@ -151,10 +169,10 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    setAdmin: (adminData) => dispatch(setAdmin(adminData)),
-    handleLogout: (history) => logOutUser(dispatch, history),
-    clearAppError: () => dispatch(clearAppError()),
-    clearSuccessState: () => dispatch(clearSuccessState())
+    _setAdmin: (adminData) => dispatch(setAdmin(adminData)),
+    _logoutUser: (history) => logOutUser(dispatch, history),
+    _clearAppError: () => dispatch(clearAppError()),
+    _clearSuccessState: () => dispatch(clearSuccessState())
   };
 };
 // export default component with dependencies //

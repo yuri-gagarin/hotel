@@ -15,6 +15,7 @@ const loginRequest = () => {
       loggedIn: false,
       loading: true,
       admin: false,
+      _id: null,
       email: "",
       firstName: "",
       lastName: "",
@@ -31,6 +32,7 @@ const loginError = (error) => {
       loggedIn: false,
       loading: false,
       admin: false,
+      _id: null,
       email: "",
       firstName: "",
       lastName: "",
@@ -47,6 +49,7 @@ const logOutAdmin = () => {
       loggedIn: false,
       loading: false,
       admin: false,
+      _id: null,
       email: "",
       firstName: "",
       lastName: "",
@@ -61,6 +64,7 @@ export const setAdmin = (adminData) => {
     loggedIn,
     loading,
     admin,
+    _id,
     email,
     firstName,
     lastName,
@@ -73,6 +77,7 @@ export const setAdmin = (adminData) => {
       loggedIn: loggedIn,
       loading: loading,
       admin: admin,
+      _id: _id,
       email: email,
       firstName: firstName,
       lastName: lastName,
@@ -82,7 +87,7 @@ export const setAdmin = (adminData) => {
   }
 }
 
-export const loginUser = (dispatch, userCredentials, history) => {
+export const loginUser = (dispatch, userCredentials) => {
   const { email, password } = userCredentials;
   const requestOptions = {
     method: "post",
@@ -101,6 +106,7 @@ export const loginUser = (dispatch, userCredentials, history) => {
         loggedIn: true,
         loading: false,
         admin: admin,
+        _id: user._id,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
