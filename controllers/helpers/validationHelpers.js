@@ -150,3 +150,16 @@ export const validateLoginForm = (data) => {
     isValid: isEmpty(errors)
   }
 };
+
+// instant message validation //
+export const validateMessage = (data) => {
+  const errors = {};
+  if (!data.content) {
+    errors.message = "Message can't be blank"
+  }
+  return {
+    errors: errors,
+    isValid: isEmpty(errors)
+  }
+};
+
