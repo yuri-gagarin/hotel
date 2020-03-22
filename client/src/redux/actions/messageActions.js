@@ -61,11 +61,37 @@ export const reveiveMessage = (socketId, messageData) => {
   };
 };
 
-export const sendMessageRequest = (dispatch, { user,  conversationId, clientSocketId,  messageData }) => {
-  console.log(user);
+export const sendClientMessage = (dispatch, { user, conversationId, clientSocketId, messageData }) => {
   const requestOptions = {
     method: "post",
-    url: "/api/sendMessage",
+    url: "/api/sendClientMessage",
+    data: {
+      user: user,
+      conversationId: conversationId,
+      messageData: messageData
+    }
+  };
+  dispatch(messageRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, conversationId, newMessage } = data;
+
+      socket.emit("clientMessageSent", { conversationId: conversationId, newMessage: newMessage });
+      dispatch(conversationSuccess(conversationId, [newMessage]));
+      dispatch(messageSuccess({ status, responseMsg, newMessage }));
+      return true;
+    })
+    .catch((error) => {
+      dispatch(messageError(error));
+      return false;
+    })
+}
+
+export const sendMessageRequest = (dispatch, { user,  conversationId, clientSocketId,  messageData }) => {
+  const requestOptions = {
+    method: "post",
+    url: "/api/sendAdminMessage",
     data: {
       user: user,
       messageData: messageData,
@@ -77,14 +103,11 @@ export const sendMessageRequest = (dispatch, { user,  conversationId, clientSock
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversationId, newMessage } = data;
-      if (clientSocketId) {
-        const messageData = {
-          clientSocketId: clientSocketId,
-          newMessage: newMessage
-        };
-        socket.emit("adminResponseSent",  messageData);
-      }
-      socket.emit("clientMessageSent", { conversationId: conversationId, newMessage: newMessage });
+      const messageData = {
+        clientSocketId: clientSocketId,
+        newMessage: newMessage
+      };
+      socket.emit("adminResponseSent",  messageData);
       dispatch(conversationSuccess(conversationId, [newMessage]));
       dispatch(messageSuccess({ status, responseMsg, newMessage}));
       return true;

@@ -1,7 +1,7 @@
 import messagesController from "../controllers/messagesController";
 
 export default function (router) {
-  // @route /api/sendMessage //
+  // @route /api/sendClientMessage //
   // @desc Sends a message, creating a new Message and Conversation model (if necessary) //
   // @access PUBLIC //
   router

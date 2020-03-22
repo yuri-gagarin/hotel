@@ -64,7 +64,7 @@ app.use(router);
 
 //app.use()
 // app config //
-const redisClient = redis.createClient({
+export const redisClient = redis.createClient({
   host: process.env.REDIS_HOST || 'localhost',
   port: process.env.REDIS_PORT || 6379,
   password: process.env.REDIS_PASS || 'password',
@@ -120,9 +120,8 @@ app.on("dbReady", () => {
 
     // client is messaging //
     socket.on("clientMessageSent", (data) => {
-      const { conversationId, newMessage } = data;
-      const clientSocket = socket.id;
-      socket.broadcast.emit("newClientMessage", { conversationId: conversationId, clientSocket: clientSocket, newMessage: newMessage });
+      // emits a an event to notify admin of a new message //
+      socket.broadcast.emit("newClientMessage", { ...data, socketId: socket.id });
     });
     // end client messaging //
     // admin response messaging //

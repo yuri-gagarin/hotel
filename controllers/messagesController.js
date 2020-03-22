@@ -1,7 +1,8 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose, { Mongoose, isValidObjectId } from "mongoose";
 import Conversation from "../models/Conversation";
 import Message from "../models/Message";
 import io from "../server";
+import { validateMessage } from "./helpers/validationHelpers";
 // instant messaging between client and admin //
 // maybe later we can implement these in redis rather than Mongo if needed //
 export default {
@@ -119,21 +120,36 @@ export default {
       });
     }
   },
+
+  // separate controller action for admin message // 
+  // admin will be able to send pictures, invoices etc //
   sendAdminMessage: (req, res) => {
-    //console.log(global.io);
-    const user = req.user || req.body.user || {};
-    const userId = user._id || mongoose.Types.ObjectId();
+    const user = req.user;
     const { messageData } = req.body;
     let conversationId = req.body.conversationId;
     let newMessage;
     // validate message later //
-    if (!messageData) {
-      return res.status(400).json({
-        message: "Message cannot be blank"
+    const { errors, isValid } = validateMessage(messageData);
+    
+    if (user) {
+      return Promise.resolve().then(() => {
+        return res.status(400).json({
+          responseMsg: "Can't resolve user",
+          error: new Error("Cant resolve user")
+        });
+      });
+    }
+    if (!isValid) {
+      return Promise.resolve().then(() => {
+        return res.status(400).json({
+          responseMsg: "An error occured",
+          error: errors
+        });
       });
     }
     // check for existing conversation create one if necessary //
-    return Conversation.findOne({ _id: conversationId })
+    if (conversationId)  {
+      return Conversation.findById({ _id: conversationId })
       .then((conversation) => {
         if (conversation) {
           // converstion exists, append //
@@ -191,6 +207,10 @@ export default {
           error: error
         });
       });
+    } else {
+
+    }
+   
   },
   markMessageRead: (req, res) => {
     const conversationId = req.body.conversationId;
