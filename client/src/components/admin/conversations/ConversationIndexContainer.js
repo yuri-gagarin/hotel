@@ -10,9 +10,9 @@ import { closeConvoButton } from "./styles/style";
 import { withRouter } from "react-router-dom";
 // redux imports  //
 import { connect } from "react-redux";
-import { sendMessageRequest } from "../../../redux/actions/messageActions";
+import { sendAdminMessage } from "../../../redux/actions/messageActions";
 import { fetchAllConversations, fetchConversation, deleteConversation } from "../../../redux/actions/conversationActions";
-import { handleNewClientMessage } from "../../../redux/actions/adminConversationActions"; 
+import { newClientMessage } from "../../../redux/actions/adminConversationActions"; 
 // additional components //
 import ConversationComponent from "./ConversationComponent";
 import MessagesView from "./MessagesView";
@@ -44,44 +44,40 @@ const MessagesSplashScreen = (props) => {
   )
 };
 
-const ConversationIndexCotainer = (props) => {
+const ConversationIndexContainer = (props) => {
   
   const [conversationOpen, setConversationOpen] = useState(false);
-
+  // redux state props //
   const { 
     adminState,
     adminConversationState,
     conversationState
   } = props;
-
+  // redux action functions //
   const {
-    sendMessageRequest,
-    fetchConversation,
-    fetchAllConversations,
-    handleDeleteConversation,
-    newClientMessage
+    _sendAdminMessage,
+    _fetchAllConversations,
+    _fetchConversation,
+    _deleteConversation,
+    _newClientMessage
   } = props;
 
   useEffect(() => {
     socket.on("newClientMessage", (data) => {
         const { conversationId, clientSocket, newMessage } = data;
-        newClientMessage({ conversationId: conversationId, clientSocketId: clientSocket, newMessage: newMessage });
+        _newClientMessage({ conversationId: conversationId, clientSocketId: clientSocket, newMessage: newMessage });
         //scrollToRef(bottomMessageRef);
     });
-    fetchAllConversations();
+    _fetchAllConversations();
   }, []);
 
   const openConversation = (conversationId) => {
-    fetchConversation(conversationId);
+    _fetchConversation(conversationId);
     setConversationOpen(true);
   };
 
   const closeConversation = () => {
     setConversationOpen(false);
-  }
-
-  const deleteConversation = (conversationId) => {
-    handleDeleteConversation(conversationId);
   };
 
   return (
@@ -106,8 +102,8 @@ const ConversationIndexCotainer = (props) => {
           <ConversationComponent 
             adminConversationState={adminConversationState}
             openConversation={openConversation}
-            fetchAllConversations={fetchAllConversations}
-            deleteConversation={deleteConversation}
+            fetchAllConversations={_fetchAllConversations}
+            deleteConversation={_deleteConversation}
           />          
         </Grid.Column>
         {
@@ -116,7 +112,7 @@ const ConversationIndexCotainer = (props) => {
               adminState={adminState}
               messages={conversationState.messages}
               conversationState={conversationState}
-              sendMessageRequest={sendMessageRequest}
+              sendAdminMessage={_sendAdminMessage}
             /> :
             <MessagesSplashScreen />
         }
@@ -129,12 +125,15 @@ const ConversationIndexCotainer = (props) => {
   );
 };
 // PropTypes validation //
-ConversationIndexCotainer.propTypes = {
-  fetchAllConversations: PropTypes.func.isRequired,
-  fetchConversation: PropTypes.func.isRequired,
+ConversationIndexContainer.propTypes = {
+  _sendAdminMessage: PropTypes.func.isRequired,
+  _fetchAllConversations: PropTypes.func.isRequired,
+  _fetchConversation: PropTypes.func.isRequired,
+  _deleteConversation: PropTypes.func.isRequired,
+  _newClientMessage: PropTypes.func.isRequired,
+  adminState: PropTypes.object.isRequired,
   adminConversationState: PropTypes.object.isRequired,
-  conversationState: PropTypes.object.isRequired,
-  adminState: PropTypes.object.isRequired
+  conversationState: PropTypes.object.isRequired
 };
 // connect functions //
 const mapStateToProps = (state) => {
@@ -146,12 +145,12 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    sendMessageRequest: (messageData) => sendMessageRequest(dispatch, messageData),
-    fetchAllConversations: () => fetchAllConversations(dispatch),
-    fetchConversation: (conversationId) => fetchConversation(dispatch, { conversationId }),
-    handleDeleteConversation: (conversationId) => deleteConversation(dispatch, conversationId),
-    newClientMessage: (messageData, currentConversations) => handleNewClientMessage(dispatch, messageData, currentConversations)
+    _sendAdminMessage: (messageData) => sendAdminMessage(dispatch, messageData),
+    _fetchAllConversations: () => fetchAllConversations(dispatch),
+    _fetchConversation: (conversationId) => fetchConversation(dispatch, { conversationId }),
+    _deleteConversation: (conversationId) => deleteConversation(dispatch, conversationId),
+    _newClientMessage: (messageData, currentConversations) => newClientMessage(dispatch, messageData, currentConversations)
   };
 };  
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ConversationIndexCotainer));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ConversationIndexContainer));

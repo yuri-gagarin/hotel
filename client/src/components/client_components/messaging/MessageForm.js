@@ -9,7 +9,7 @@ import MessageView from "./MessageView";
 import Message from "./Message";
 // redux imports // 
 import { connect } from "react-redux";
-import { sendMessageRequest } from "./../../../redux/actions/messageActions";
+import { sendClientMessage } from "./../../../redux/actions/messageActions";
 import { updateConversation } from "./../../../redux/actions/conversationActions";
 import { setGuestClient } from "./../../../redux/actions/clientActions";
 // socket io //
@@ -17,23 +17,25 @@ import { socket } from "./../../../App";
 
 const MessageForm = (props) => {
   const messageFormRef = useRef(null);
-  const formOpen = useState(false);
+  // redux state objects //
   const { 
-    handleFormOpen,
-    handleMessageRequest, 
     clientState,
     conversationState,
     messageState,
-    updateConversation,
-    setClientState
   } = props;
+  // redux action dispatch functions //
+  const {
+    _sendClientMessage, _setGuestClient, _updateConversation
+  } = props;
+  // additional functions //
+  const { handleFormOpen } = props;
   const { messages, userMessaging, conversationId } = conversationState;
 
   useEffect(() => {
     socket.on("newAdminMessage", (data) => {
       // listen for new incoming messages from admin //
       const { clientSocketId, newMessage } = data;
-      updateConversation({clientSocketId: clientSocketId, conversationId: newMessage.conversationId,
+      _updateConversation({clientSocketId: clientSocketId, conversationId: newMessage.conversationId,
                           message: newMessage, adminSocketId: null });
     });
   }, []);
@@ -48,15 +50,13 @@ const MessageForm = (props) => {
   const handleInitialMessage = (messageData) => {
     const { user, content } = messageData;
     const { _id, firstName, email } = user;
-    handleMessageRequest(user, null, content);
+    _sendClientMessage(user, null, content);
     // update client state with name of user //
-    setClientState({ _id: _id, firstName: firstName, email: email });
+    _setGuestClient({ _id: _id, firstName: firstName, email: email });
   };
 
   const sendMessage = (content) => {
-    const user = clientState;
-    console.log(user);
-    handleMessageRequest(user, conversationId, content);
+    _sendClientMessage(user, conversationId, content);
   };
 
   const renderMessages = (messages) => {
@@ -100,8 +100,8 @@ MessageForm.propTypes = {
   conversationState: PropTypes.object.isRequired,
   messageState: PropTypes.object.isRequired,
   handleFormOpen: PropTypes.func.isRequired,
-  handleMessageRequest: PropTypes.func.isRequired,
-  setClientState: PropTypes.func.isRequired
+  _sendClientMessage: PropTypes.func.isRequired,
+  _setGuestClient: PropTypes.func.isRequired
 };
 
 // redux connect //
@@ -114,11 +114,11 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleMessageRequest: (user, conversationId, messageData) => {
-      return sendMessageRequest(dispatch, { user, conversationId, messageData });
+    _sendClientMessage: (user, conversationId, messageData) => {
+      return sendClientMessage(dispatch, { user, conversationId, messageData });
     },
-    setClientState: (userData) => dispatch(setGuestClient(userData)),
-    updateConversation: (conversationData) => dispatch(updateConversation(conversationData))
+    _setGuestClient: (userData) => dispatch(setGuestClient(userData)),
+    _updateConversation: (conversationData) => dispatch(updateConversation(conversationData))
   }
 };
 

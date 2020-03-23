@@ -50,7 +50,7 @@ export const removeAdminConversation = (conversationId, responseMsg) => {
 };
 
 
-export const handleNewClientMessage = (dispatch, data) => {
+export const newClientMessage = (dispatch, data) => {
   const { conversationId, clientSocketId, newMessage } = data;
   // do an api call for an update conversation ? //
   const adminConversationState = store.getState().adminConvState;

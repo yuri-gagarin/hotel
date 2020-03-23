@@ -61,7 +61,7 @@ export const reveiveMessage = (socketId, messageData) => {
   };
 };
 
-export const sendClientMessage = (dispatch, { user, conversationId, clientSocketId, messageData }) => {
+export const sendClientMessage = (dispatch, { user, conversationId, messageData }) => {
   const requestOptions = {
     method: "post",
     url: "/api/sendClientMessage",
@@ -88,7 +88,7 @@ export const sendClientMessage = (dispatch, { user, conversationId, clientSocket
     })
 }
 
-export const sendMessageRequest = (dispatch, { user,  conversationId, clientSocketId,  messageData }) => {
+export const sendAdminMessage = (dispatch, { user, conversationId, clientSocketId,  messageData }) => {
   const requestOptions = {
     method: "post",
     url: "/api/sendAdminMessage",
