@@ -12,9 +12,14 @@ import { sendMessage } from "./helpers/messageHelpers";
 
 const MessageInitView = (props) => {
   const [validated, setValidated] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [messageData, setMessageData] = useState({
+    name: "",
+    typingName: false,
+    content: "",
+    typingContent: false
+  });
+  const [nameInputError, setNameInputError] = useState(false);
+  const [contentInputError, setContentInputError] = useState(false);
   // redux state //
   const { sendInitialMessage, clientState } = props;
 
@@ -26,6 +31,29 @@ const MessageInitView = (props) => {
   };
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
+  };
+
+  const handleNameError = () => {
+    const { name, typingName } = messageData;
+    if (typingName && (name.length === 0)) {
+      setNameInputError({
+        content: "Name required",
+        pointing: "below"
+      })
+    } else {
+      setNameInputError(false);
+    }
+  };
+  const handleContentError = () => {
+    const { content, typingContent } = messageData;
+    if (typingContent && (content.length === 0)) {
+      setContentInputError({
+        content: "Type something here",
+        pointing: "below"
+      })
+    } else {
+      setNameInputError(false);
+    }
   };
   const handleInitSubmit = (e) => {
     if (e.currentTarget.checkValidity() === false) {

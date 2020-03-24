@@ -2,6 +2,8 @@ import axios from "axios";
 import { conversationSuccess } from "./conversationActions";
 import { messageConstants } from "../constants";
 import { socket } from "../../App";
+import { setAppError } from "./appGeneralActions";
+import { setAxiosError } from "./helpers/errorHelpers";
 // action constants //
 const {
   SEND_MESSAGE,
@@ -83,7 +85,9 @@ export const sendClientMessage = (dispatch, { user, conversationId, messageData 
       return true;
     })
     .catch((error) => {
+      console.error(error);
       dispatch(messageError(error));
+      dispatch(setAppError(setAxiosError(error)));
       return false;
     })
 }
