@@ -29,7 +29,7 @@ const MessageInitView = (props) => {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
-  const handleMessageChange = (e) => {
+  const handleContentChange = (e) => {
     setMessage(e.target.value);
   };
 
@@ -80,30 +80,27 @@ const MessageInitView = (props) => {
   return (
     <Form noValidate validated={validated} onSubmit={handleInitSubmit}>
       <Form.Group controlId="formName">
-        <Form.Control 
-          required
-          type="input" 
-          placeholder="your name ..." 
+        <Form.Input
+          error={handleNameError}
           onChange={handleNameChange}
+          fluid
+          placeholder='your name please...'
         />
       </Form.Group>
       <Form.Group controlId="formEmail">
-        <Form.Control 
-          type="input" 
-          placeholder="email ... optional" 
+        <Form.Input
           onChange={handleEmailChange}
-          />
-      </Form.Group>
-      <Form.Group controlId="formMessageInput">
-        <Form.Control 
-          required
-          type="input" 
-          placeholder="message ..." 
-          onChange={handleMessageChange}
+          fluid
+          placeholder="email (optional)..."
         />
       </Form.Group>
-      <Form.Group controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
+      <Form.Group controlId="formMessageInput">
+        <Form.Input
+          error={handleContentError}
+          onChange={handleContentChange}
+          fluid
+          placeholder='message content...'
+        />
       </Form.Group>
       <Button variant="primary" type="submit">
         Send
