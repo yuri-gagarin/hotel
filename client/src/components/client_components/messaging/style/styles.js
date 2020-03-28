@@ -31,7 +31,7 @@ export const messageForm = {
     borderRadius: "5px",
     marginTop: "1em",
     marginBottom: "1em",
-    overflow: "scroll"
+    overflowY: "scroll"
   },
   messagesViewContainer: {
     //flex: 1,

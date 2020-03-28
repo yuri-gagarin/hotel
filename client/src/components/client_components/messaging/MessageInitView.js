@@ -3,15 +3,10 @@ import PropTypes from "prop-types";
 import {
   Button,
   Form
-} from "react-bootstrap";
-
-// styles and images //
-import { messageForm } from "./style/styles";
-// additional dependencies //
-import { sendMessage } from "./helpers/messageHelpers";
+} from "semantic-ui-react";
 
 const MessageInitView = (props) => {
-  const [validated, setValidated] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [messageData, setMessageData] = useState({
     name: "",
     typingName: false,
@@ -20,17 +15,22 @@ const MessageInitView = (props) => {
   });
   const [nameInputError, setNameInputError] = useState(false);
   const [contentInputError, setContentInputError] = useState(false);
-  // redux state //
+  // redux state and actions //
   const { sendInitialMessage, clientState } = props;
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    setMessageData({
+      ...messageData,
+      name: e.target.value,
+      typingName: true
+    });
   };
   const handleContentChange = (e) => {
-    setMessage(e.target.value);
+    setMessageData({
+      ...messageData,
+      content: e.target.value,
+      typingContent: true
+    });
   };
 
   const handleNameError = () => {
@@ -39,7 +39,7 @@ const MessageInitView = (props) => {
       setNameInputError({
         content: "Name required",
         pointing: "below"
-      })
+      });
     } else {
       setNameInputError(false);
     }
@@ -52,18 +52,11 @@ const MessageInitView = (props) => {
         pointing: "below"
       })
     } else {
-      setNameInputError(false);
+      setContentInputError(false);
     }
   };
+
   const handleInitSubmit = (e) => {
-    if (e.currentTarget.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-    e.preventDefault();
-    e.stopPropagation();
-    setValidated(true);
 
     const { _id, firstName } = clientState;
     const messageData = {
@@ -75,34 +68,36 @@ const MessageInitView = (props) => {
       content: message
     };
     sendInitialMessage(messageData)
-  }
-  
+  };
+
+  useEffect(() => {
+    handleNameError();
+    handleContentError();
+  },  [messageData]);
+
+  useEffect(() => {
+    if (nameInputError || contentInputError || !messageData.name || !messageData.content) {
+      setButtonDisabled(true);
+    } else {
+      setButtonDisabled(false);
+    }
+  }, [nameInputError, contentInputError, messageData]);
+
   return (
-    <Form noValidate validated={validated} onSubmit={handleInitSubmit}>
-      <Form.Group controlId="formName">
+    <Form onSubmit={handleInitSubmit}>
         <Form.Input
-          error={handleNameError}
+          error={nameInputError}
           onChange={handleNameChange}
           fluid
           placeholder='your name please...'
         />
-      </Form.Group>
-      <Form.Group controlId="formEmail">
         <Form.Input
-          onChange={handleEmailChange}
-          fluid
-          placeholder="email (optional)..."
-        />
-      </Form.Group>
-      <Form.Group controlId="formMessageInput">
-        <Form.Input
-          error={handleContentError}
+          error={contentInputError}
           onChange={handleContentChange}
           fluid
           placeholder='message content...'
         />
-      </Form.Group>
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" disabled={buttonDisabled}>
         Send
       </Button>
     </Form>
@@ -110,7 +105,8 @@ const MessageInitView = (props) => {
 };
 // PropTypes validation //
 MessageInitView.propTypes = {
-  //handleFormHide: PropTypes.func.isRequired
+  clientState: PropTypes.object.isRequired,
+  sendInitialMessage: PropTypes.func.isRequired
 
 };
 
