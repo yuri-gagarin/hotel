@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Button,
-  Form,
-  InputGroup
-} from "react-bootstrap";
+  Input
+} from "semantic-ui-react";
 
 import { messageForm } from "./style/styles";
 
@@ -13,6 +12,11 @@ const MessageView = (props) => {
   const [ message, setMessage ] = useState("");
 
   const handleInputChange = (e) => {
+    if (e.charCode === 13) {
+      sendMessage(message);
+      e.target.value = "";
+      setMessage("");
+    }
     setMessage(e.target.value);
   };
   const handleMessageSend = (e) => {
@@ -20,30 +24,12 @@ const MessageView = (props) => {
     e.target.value = "";
     setMessage("");
   };
-  const handleKeyPress = (e) => {
-    if (e.charCode === 13) {
-      sendMessage(message);
-      e.target.value = "";
-      setMessage("");
-    }
-  };
+  
   return (
-    <InputGroup>
-      <Form.Control
-        placeholder="message..."
-        aria-label="Recipient's username"
-        onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
-      />
-      <InputGroup.Append>
-        <Button 
-          variant="outline-secondary"
-          onClick={handleMessageSend}
-        >
-          Send
-        </Button>
-      </InputGroup.Append>
-    </InputGroup>
+    <Input type="text" placeholder="message..." action onChange={handleInputChange} style={{ border: "2px solid red", width: "100%"}}>
+      <input />
+      <Button onClick={handleMessageSend}>Send</Button>
+    </Input>
   );
 };
 // PropTypes validation //

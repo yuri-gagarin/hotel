@@ -12,7 +12,7 @@ const initialState = {
   loading: false,
   user: {},
   messageContent: "",
-  messageError: null
+  error: null
 };
 
 const messageReducer = (state = initialState, { type = "", payload = {} }) => {
@@ -21,7 +21,7 @@ const messageReducer = (state = initialState, { type = "", payload = {} }) => {
     responseMsg,
     loading,
     messageContent,
-    messageError
+    error
   } = payload;
   switch (type) {
     case MESSAGE_REQUEST: {
@@ -31,7 +31,7 @@ const messageReducer = (state = initialState, { type = "", payload = {} }) => {
         responseMsg: responseMsg,
         loading: loading,
         messageContent: messageContent,
-        messageError: messageError
+        error: error
       };
     };
     case MESSAGE_SUCCESS: {
@@ -41,7 +41,7 @@ const messageReducer = (state = initialState, { type = "", payload = {} }) => {
         responseMsg: responseMsg,
         loading: loading,
         messageContent: messageContent,
-        messageError: messageError
+        error: error
       };
     };
     case MESSAGE_ERROR: {
@@ -51,7 +51,7 @@ const messageReducer = (state = initialState, { type = "", payload = {} }) => {
         responseMsg: responseMsg,
         loading: loading,
         messageContent: messageContent,
-        messageError: messageError
+        error: error
       };
     };
     default: {

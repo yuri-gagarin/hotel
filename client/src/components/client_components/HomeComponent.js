@@ -24,7 +24,7 @@ import { socket } from "./../../App";
 
 const handleNewClient = () => {
   return {
-    _id: ObjectID.generate(Date.now()),
+    _id: ObjectID.generate(Date.now()).toString(),
     firstName: "guest",
     email: null
   };
@@ -45,9 +45,9 @@ const HomeComponent = (props) => {
   // set default client info on initial load //
   useEffect(() => {
     // automatic form clear for error //
-    (function() {
+    (function () {
       // Collapse Navbar
-      var navbarCollapse = function() {
+      var navbarCollapse = function () {
         if ($("#mainNav").offset().top > 100) {
           $("#mainNav").addClass("navbar-shrink");
         } else {
@@ -67,7 +67,7 @@ const HomeComponent = (props) => {
     } else {
       _setGuestClient(handleNewClient());
     }
-  }, []);
+  }, []); 
   // error and success component triggers //
   useEffect(() => {
     const { error, successComponentOpen } = appGeneralState;
@@ -109,7 +109,6 @@ const HomeComponent = (props) => {
     const storedId = localStorage.getItem("hotelGuestClientId");
     const storedName = localStorage.getItem("hotelGuestClientName");
     const { _id, firstName } = clientState;
-
     if ( _id && firstName ) {
       if (!storedId || !storedName) {
         localStorage.setItem("hotelGuestClientId", _id);

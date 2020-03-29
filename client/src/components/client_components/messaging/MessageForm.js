@@ -16,6 +16,7 @@ import { setGuestClient } from "./../../../redux/actions/clientActions";
 import { socket } from "./../../../App";
 
 const MessageForm = (props) => {
+  const [messageSounds, setMessageSounds] = useState({}); 
   const messageFormRef = useRef(null);
   // redux state objects //
   const { 
@@ -30,6 +31,7 @@ const MessageForm = (props) => {
   // additional functions //
   const { handleFormOpen } = props;
   const { messages, userMessaging, conversationId } = conversationState;
+  const user = { ...clientState };
 
   useEffect(() => {
     socket.on("newAdminMessage", (data) => {
@@ -49,15 +51,39 @@ const MessageForm = (props) => {
 
   const handleInitialMessage = (messageData) => {
     const { user, content } = messageData;
-    const { _id, firstName, email } = user;
-    _sendClientMessage(user, null, content);
+    _sendClientMessage(null, content, user)
+      .then((success) => {
+        if (success) {
+          _setGuestClient(user);
+          messageSounds.sendMessageSound.play();
+        }
+      });
     // update client state with name of user //
-    _setGuestClient({ _id: _id, firstName: firstName, email: email });
+    //_setGuestClient({ _id: _id, firstName: firstName, email: email });
   };
 
   const sendMessage = (content) => {
-    _sendClientMessage(user, conversationId, content);
+    _sendClientMessage(conversationId, content, user)
+      .then((success) => {
+        if (success) {
+          messageSounds.sendMessageSound.play();
+        }
+      });
   };
+
+  useEffect(() => {
+    const messageInput = document.getElementById("lastMessageSpacer");
+    // cache the message sounds //
+    setMessageSounds({
+      ...messageSounds,
+      sendMessageSound: new Audio("/assets/media/sounds/sentMsg.mp3"),
+      receiveMessageSound: new Audio("/assets/media/sounds/receiveMsg.mp3")
+    });
+
+    return () => {
+      setMessageSounds({});
+    };
+  }, []);
 
   const renderMessages = (messages) => {
     return messages.map((message) => {
@@ -80,13 +106,14 @@ const MessageForm = (props) => {
           }
       </div>
       {
-        userMessaging ? 
+        userMessaging ?
         <MessageView 
           sendMessage={sendMessage}
           clientState={clientState}
-        /> : 
+        />
+        :
         <MessagesInitView 
-          sendInitialMessage={handleInitialMessage}
+          handleInitialMessage={handleInitialMessage}
           clientState={clientState}
         />
       }
@@ -114,8 +141,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    _sendClientMessage: (user, conversationId, messageData) => {
-      return sendClientMessage(dispatch, { user, conversationId, messageData });
+    _sendClientMessage: (conversationId, messageContent, user) => {
+      return sendClientMessage(dispatch, conversationId, messageContent, user);
     },
     _setGuestClient: (userData) => dispatch(setGuestClient(userData)),
     _updateConversation: (conversationData) => dispatch(updateConversation(conversationData))

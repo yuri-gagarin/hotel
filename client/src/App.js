@@ -62,12 +62,11 @@ export const ScrollToTop = () => {
 };
 
 const AppRoutes = (props) => {
-  const cleanUpState = () => {
-    // some cleanup here //
-    localStorage.removeItem("conversationId");
-  }
+
   useEffect(() => {
-    return cleanUpState();
+    return function () {
+      localStorage.removeItem("conversationId");
+    }
   }, []);
   
 
@@ -91,29 +90,6 @@ const App = (props) => {
   
   const [socketConnectionInterval, setSocketConnectionInterval] = useState(null);
 
-  const checkLogin = () => {
-    // checks for user login //
-    const requestParams = {
-      method: "get",
-      url: "/api/logged_in"
-    }
-    return axios(requestParams)
-      .then((response) => {
-        const { status } = response;
-        if (status === 200) {
-          // user is logged in still //
-          const savedState = JSON.parse(localStorage.getItem("hotelAdminState"));
-          _setAdmin({ ...savedState, loggedIn: true })
-        } else {
-          // not a status code 200 //
-          _setAdmin({ ...savedState, loggedIn: false })
-        }
-      })
-      .catch((error) => {
-        const savedState = JSON.parse(localStorage.getItem("hotelAdminState"));
-        _setAdmin({ ...savedState, loggedIn: false })
-      });
-  }
   useEffect(() => {
     // keep client connected to the same socket if idle //
     socket.on("clientCredentialsReceived", () => {

@@ -21,7 +21,7 @@ export const messageRequest = () => {
       responseMsg: null,
       loading: true,
       messageContent: "",
-      messageError: null
+      error: null
     }
   };
 };
@@ -34,20 +34,20 @@ export const messageSuccess = ({ status, responseMsg, newMessage }) => {
       responseMsg: responseMsg,
       loading: false,
       messageContent: newMessage,
-      messageError: null
+      error: null
     }
   };
 };
 
-export const messageError = ({ status, responseMsg, messageContent }) => {
+export const messageError = ({ status, responseMsg, errorMessages, error }) => {
   return {
     type: MESSAGE_ERROR,
     payload: {
       status: status,
       responseMsg: responseMsg,
       loading: false,
-      messageContent: messageContent,
-      messageError: null
+      messageContent: null,
+      error: error
     }
   };
 };
@@ -62,15 +62,22 @@ export const reveiveMessage = (socketId, messageData) => {
     }
   };
 };
-
-export const sendClientMessage = (dispatch, { user, conversationId, messageData }) => {
+/**
+ * Sends a message from the client 
+ * @param {function} dispatch - Redux  dispatch function
+ * @param {string} conversationId - Optional ObjectId of an existing conversation\
+ * @param {string} messageContent - New message content
+ * @param {Object} user - A user object
+ * @returns {Promise<boolean>} - A Promise which resolve to true or false
+ */
+export const sendClientMessage = (dispatch, conversationId, messageContent, user) => {
   const requestOptions = {
     method: "post",
     url: "/api/sendClientMessage",
     data: {
-      user: user,
-      conversationId: conversationId,
-      messageData: messageData
+      conversationId: conversationId || "",
+      messageContent: messageContent,
+      user: user
     }
   };
   dispatch(messageRequest());
@@ -78,16 +85,15 @@ export const sendClientMessage = (dispatch, { user, conversationId, messageData 
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversationId, newMessage } = data;
-
-      socket.emit("clientMessageSent", { conversationId: conversationId, newMessage: newMessage });
+      //socket.emit("clientMessageSent", { conversationId: conversationId, newMessage: newMessage });
       dispatch(conversationSuccess(conversationId, [newMessage]));
       dispatch(messageSuccess({ status, responseMsg, newMessage }));
       return true;
     })
     .catch((error) => {
-      console.error(error);
-      dispatch(messageError(error));
-      dispatch(setAppError(setAxiosError(error)));
+      const errorInfo = setAxiosError(error)
+      dispatch(messageError(errorInfo));
+      //dispatch(setAppError(errorInfo));
       return false;
     })
 }

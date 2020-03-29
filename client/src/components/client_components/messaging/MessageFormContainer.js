@@ -42,7 +42,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleOldConversation: (conversationId) => fetchClientConversation(dispatch, conversationId)
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessageFormContainer);

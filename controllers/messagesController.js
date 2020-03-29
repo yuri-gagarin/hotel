@@ -7,9 +7,11 @@ import { validateMessage } from "./helpers/validationHelpers";
 // maybe later we can implement these in redis rather than Mongo if needed //
 export default {
   sendClientMessage: (req, res) => {
-    const { user } = req.body;
+    const { messageContent, user } = req.body;
+    const userId = user._id;
     let { conversationId } = req.body;
     let newMessage;
+    console.log(req.body);
     if (!user) {
       return Promise.resolve().then(() => {
         res.status(400).json({
@@ -17,7 +19,7 @@ export default {
         });
       });
     }
-    if (!messageData) {
+    if (!messageContent) {
       return Promise.resolve().then(() => {
         res.status(400).json({
           responseMsg: "Couldn't resolve message data"
@@ -26,6 +28,8 @@ export default {
     }
     // look for a conversation if conversationId exists //
     if (conversationId) {
+      console.log(31)
+      console.log(conversationId)
       return Conversation.findById(conversationId)
         .then((conversation) => {
           if (conversation) {
@@ -35,14 +39,17 @@ export default {
           }
         })
         .then((conversation) => {
+          console.log(41);
+          console.log(conversation)
           return Message.create({
             conversationId: conversationId,
             sender: user.firstName,
-            content: messageData
+            content: messageContent
           });
         })
         .then((createdMessage) => {
           newMessage = createdMessage;
+          console.log(46)
           return Conversation.updateOne(
             { 
               _id: conversationId 
@@ -74,20 +81,25 @@ export default {
           })
         })
     } else {
+      console.log(79)
       return Conversation.create({
         participants: [
           user._id
         ]
       })
       .then((conversation) => {
+        console.log(86)
+        console.log(conversation)
+        conversationId = conversation._id;
         return Message.create({
-          conversationId: conversation._id,
+          conversationId: conversationId,
           sender: user.firstName,
-          content: messageData
+          content: messageContent
         });
       })
       .then((createdMessage) => {
         newMessage = createdMessage;
+        console.log(91)
         return Conversation.updateOne(
           { 
             _id: conversationId 
@@ -105,6 +117,7 @@ export default {
         );
       })
       .then((response) => {
+        console.log(110)
         return res.status(200).json({
           responseMsg: "Your message was sent",
           conversationId: conversationId,
@@ -113,6 +126,7 @@ export default {
         });
       })
       .catch((error) => {
+        console.error(error)
         return res.status(500).json({
           responseMsg: "Ooops we seem to have a server error",
           error: error

@@ -16,8 +16,7 @@ const MessageInitView = (props) => {
   const [nameInputError, setNameInputError] = useState(false);
   const [contentInputError, setContentInputError] = useState(false);
   // redux state and actions //
-  const { sendInitialMessage, clientState } = props;
-
+  const { handleInitialMessage, clientState } = props;
   const handleNameChange = (e) => {
     setMessageData({
       ...messageData,
@@ -57,19 +56,18 @@ const MessageInitView = (props) => {
   };
 
   const handleInitSubmit = (e) => {
-
+    e.preventDefault();
     const { _id, firstName } = clientState;
-    const messageData = {
+    const data = {
       user: {
         _id: _id,
-        firstName: name || firstName,
-        email: email || ""
+        firstName: messageData.name || firstName
       },
-      content: message
+      content: messageData.content
     };
-    sendInitialMessage(messageData)
+    handleInitialMessage(data)
   };
-
+  
   useEffect(() => {
     handleNameError();
     handleContentError();
@@ -82,22 +80,20 @@ const MessageInitView = (props) => {
       setButtonDisabled(false);
     }
   }, [nameInputError, contentInputError, messageData]);
-
+  
   return (
-    <Form onSubmit={handleInitSubmit}>
+    <Form>
         <Form.Input
           error={nameInputError}
           onChange={handleNameChange}
-          fluid
           placeholder='your name please...'
         />
         <Form.Input
           error={contentInputError}
           onChange={handleContentChange}
-          fluid
           placeholder='message content...'
         />
-      <Button variant="primary" type="submit" disabled={buttonDisabled}>
+      <Button variant="primary" type="submit" disabled={buttonDisabled} onClick={handleInitSubmit}>
         Send
       </Button>
     </Form>
@@ -106,7 +102,7 @@ const MessageInitView = (props) => {
 // PropTypes validation //
 MessageInitView.propTypes = {
   clientState: PropTypes.object.isRequired,
-  sendInitialMessage: PropTypes.func.isRequired
+  handleInitialMessage: PropTypes.func.isRequired
 
 };
 
