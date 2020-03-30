@@ -121,14 +121,21 @@ app.on("dbReady", () => {
     // client is messaging //
     socket.on("clientMessageSent", (data) => {
       // emits a an event to notify admin of a new message //
-      socket.broadcast.emit("newClientMessage", { ...data, socketId: socket.id });
+      const { conversationId, userId, newMessage } = data;
+      const socketId = socket.id;
+      redisClient.hmset(userId, userId, socketId, (error, reply) => {
+        if (error) {
+          console.error(error);
+          return;
+        }
+        socket.broadcast.emit("newClientMessage", { conversationId: conversationId, newMessage: newMessage, socketId: socketId });
+      });
     });
     // end client messaging //
     // admin response messaging //
     socket.on("adminResponseSent", (data) => {
       const { clientSocketId, newMessage } = data;
-      console.log(data);
-      socket.broadcast.to(clientSocketId).emit("newAdminMessage", data);
+      socket.broadcast.to(clientSocketId).emit("newAdminMessage", newMessage);
     });
     // end admin response 
     socket.once("disconnect", () => {

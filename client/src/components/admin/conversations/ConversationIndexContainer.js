@@ -64,8 +64,8 @@ const ConversationIndexContainer = (props) => {
 
   useEffect(() => {
     socket.on("newClientMessage", (data) => {
-        const { conversationId, clientSocket, newMessage } = data;
-        _newClientMessage({ conversationId: conversationId, clientSocketId: clientSocket, newMessage: newMessage });
+        const { conversationId, socketId, newMessage } = data;
+        _newClientMessage({ conversationId: conversationId, clientSocketId: socketId, newMessage: newMessage });
         //scrollToRef(bottomMessageRef);
     });
     _fetchAllConversations();

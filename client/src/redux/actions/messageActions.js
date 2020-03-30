@@ -68,7 +68,7 @@ export const reveiveMessage = (socketId, messageData) => {
  * @param {string} conversationId - Optional ObjectId of an existing conversation\
  * @param {string} messageContent - New message content
  * @param {Object} user - A user object
- * @returns {Promise<boolean>} - A Promise which resolve to true or false
+ * @returns {Promise<boolean>} - A Promise which resolves to true or false
  */
 export const sendClientMessage = (dispatch, conversationId, messageContent, user) => {
   const requestOptions = {
@@ -85,27 +85,36 @@ export const sendClientMessage = (dispatch, conversationId, messageContent, user
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversationId, newMessage } = data;
-      //socket.emit("clientMessageSent", { conversationId: conversationId, newMessage: newMessage });
+      socket.emit("clientMessageSent", { conversationId: conversationId, userId: user._id, newMessage: newMessage });
       dispatch(conversationSuccess(conversationId, [newMessage]));
       dispatch(messageSuccess({ status, responseMsg, newMessage }));
       return true;
     })
     .catch((error) => {
-      const errorInfo = setAxiosError(error)
+      const errorInfo = setAxio3sError(error)
       dispatch(messageError(errorInfo));
       //dispatch(setAppError(errorInfo));
       return false;
     })
 }
-
-export const sendAdminMessage = (dispatch, { user, conversationId, clientSocketId,  messageData }) => {
+/**
+ * Sends a reply to the user
+ * @param {function} dispatch - Redux dispatch function
+ * @param {string} clientSocketId - SocketIO socket id for client
+ * @param {string} conversationId - ObjectId of a conversation
+ * @param {string} messageContent - New message content
+ * @param {Object} user - A user object
+ * @returns {Promise<boolean>} A Promise which resolves to true or false
+ */
+export const sendAdminMessage = (dispatch, clientSocketId, conversationId,  messageContent, user) => {
   const requestOptions = {
     method: "post",
     url: "/api/sendAdminMessage",
     data: {
-      user: user,
-      messageData: messageData,
-      conversationId: conversationId
+      clientSocketId: clientSocketId,
+      conversationId: conversationId,
+      messageContent: messageContent,
+      user: user
     }
   };
   dispatch(messageRequest());
@@ -117,7 +126,7 @@ export const sendAdminMessage = (dispatch, { user, conversationId, clientSocketI
         clientSocketId: clientSocketId,
         newMessage: newMessage
       };
-      socket.emit("adminResponseSent",  messageData);
+      socket.emit("adminMessageSent",  messageData);
       dispatch(conversationSuccess(conversationId, [newMessage]));
       dispatch(messageSuccess({ status, responseMsg, newMessage}));
       return true;
