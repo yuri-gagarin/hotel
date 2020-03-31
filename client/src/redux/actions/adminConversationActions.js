@@ -35,13 +35,14 @@ export const adminConversationsError = (error) => {
 };
 
 export const updateAdminConversations = (updatedConversations = []) => {
+  console.log("called update conversations")
   return {
     type: UPDATE_ADMIN_CONVERSATIONS,
     payload: {
       status: "ok",
       responseMsg: "ok",
       loading: false,
-      conversations: [...updatedConversations],
+      conversations: updatedConversations,
       error: null
     }
   };
@@ -132,6 +133,7 @@ export const newClientMessage = (dispatch, data, adminConvState = {}) => {
     return Promise.resolve(true);
   } else {
     // fetch a new conversation and set it //
+    console.log("should call")
     const requestOptions = {
       method: "get",
       url: "/api/conversations/" + conversationId,
@@ -141,6 +143,7 @@ export const newClientMessage = (dispatch, data, adminConvState = {}) => {
         const { status, data } = response;
         const { responseMsg, conversation } = data;
         updatedConversations = [ ...conversations,  { ...conversation, clientSocketId: clientSocketId, lastMessage: newMessage }];
+        console.log(updatedConversations);
         dispatch(updateAdminConversations(updatedConversations));
         return true;
       })
@@ -153,7 +156,11 @@ export const newClientMessage = (dispatch, data, adminConvState = {}) => {
   }
   
 };
-
+/**
+ * Fetches all saved conversations in the database 
+ * @param {function} dispatch - Redux dispatch function
+ * @returns {Promise<Boolean>} A Promise which resolves to true or false
+ */
 export const fetchAllConversations = (dispatch) => {
   let status, data;
   dispatch(conversationRequest());
@@ -165,12 +172,14 @@ export const fetchAllConversations = (dispatch) => {
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, conversations } = data;
-      dispatch(conversationSuccess(null, []))
+      dispatch(conversationSuccess(null, []));
       dispatch(setAdminConversations({ status, responseMsg }, conversations));
+      return true;
     })
     .catch((error) => {
       console.error(error);
       dispatch(conversationError(error));
+      return false;
     });
 };
 

@@ -11,7 +11,10 @@ import { withRouter } from "react-router-dom";
 // redux imports  //
 import { connect } from "react-redux";
 import { sendAdminMessage } from "../../../redux/actions/messageActions";
-import { fetchAllConversations, fetchConversation, deleteConversation } from "../../../redux/actions/conversationActions";
+import { 
+  fetchAllConversations, fetchConversation, 
+  deleteConversation, clearConversationState 
+} from "../../../redux/actions/conversationActions";
 import { newClientMessage } from "../../../redux/actions/adminConversationActions"; 
 // additional components //
 import ConversationComponent from "./ConversationComponent";
@@ -58,6 +61,7 @@ const ConversationIndexContainer = (props) => {
     _sendAdminMessage,
     _fetchAllConversations,
     _fetchConversation,
+    _clearConversationState,
     _deleteConversation,
     _newClientMessage
   } = props;
@@ -78,6 +82,7 @@ const ConversationIndexContainer = (props) => {
 
   const closeConversation = () => {
     setConversationOpen(false);
+    _clearConversationState();
   };
 
   return (
@@ -131,6 +136,7 @@ ConversationIndexContainer.propTypes = {
   _sendAdminMessage: PropTypes.func.isRequired,
   _fetchAllConversations: PropTypes.func.isRequired,
   _fetchConversation: PropTypes.func.isRequired,
+  _clearConversationState: PropTypes.func.isRequired,
   _deleteConversation: PropTypes.func.isRequired,
   _newClientMessage: PropTypes.func.isRequired,
   adminState: PropTypes.object.isRequired,
@@ -150,6 +156,7 @@ const mapDispatchToProps = (dispatch) => {
     _sendAdminMessage: (messageData) => sendAdminMessage(dispatch, messageData),
     _fetchAllConversations: () => fetchAllConversations(dispatch),
     _fetchConversation: (conversationId) => fetchConversation(dispatch, { conversationId }),
+    _clearConversationState: () => dispatch(clearConversationState()),
     _deleteConversation: (conversationId, curentConversationId) => {
       return deleteConversation(dispatch, conversationId, curentConversationId);
     },

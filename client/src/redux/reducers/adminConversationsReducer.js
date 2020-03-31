@@ -1,6 +1,6 @@
 import { conversationConstants } from "../constants";
 const {
-  SET_ADMIN_CONVERSATIONS, HANDLE_NEW_MESSAGE,
+  SET_ADMIN_CONVERSATIONS, HANDLE_NEW_MESSAGE, UPDATE_ADMIN_CONVERSATIONS,
   REMOVE_ADMIN_CONVERSATION, ADMIN_CONVERSATIONS_ERROR
 } = conversationConstants
 
@@ -27,6 +27,13 @@ const adminConverstionsReducer = (state = initialState, { type, payload = {} }) 
         error: payload.error
       };
     }; 
+    case UPDATE_ADMIN_CONVERSATIONS: {
+      return {
+        ...state,
+        conversations: [ ...payload.conversations ],
+        error: payload.error
+      }
+    }
     case HANDLE_NEW_MESSAGE: {
       return {
         ...state,
@@ -41,7 +48,6 @@ const adminConverstionsReducer = (state = initialState, { type, payload = {} }) 
       return {
         status: payload.status,
         responseMsg: payload.responseMsg,
-        currentConversationId: payload.conversations,
         loading: payload.loading,
         conversations: [...payload.conversations],
         numberOfConversations: payload.conversations.length,

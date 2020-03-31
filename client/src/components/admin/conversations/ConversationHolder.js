@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Button,
@@ -11,6 +11,18 @@ const style = {
   convoContainerStyle: {
     cursor: "pointer", 
     border: "1px solid rgb(50, 113, 230)", 
+    borderRadius: "5px",
+    padding: "1.5em",
+    WebkitBoxShadow: "0px 0px 7px -2px rgba(158,142,54,1)",
+    MozBoxShadow: "0px 0px 7px -2px rgba(158,142,54,1)",
+    BoxShadow: "0px 0px 7px -2px rgba(158,142,54,1)"
+  },
+  activeConvoContainerStyle: {
+    cursor: "pointer", 
+    border: "1px solid rgb(50, 113, 230)", 
+    background: "#00B4DB",  /* fallback for old browsers */
+    background: "-webkit-linear-gradient(to right, #0083B0, #00B4DB)",  /* Chrome 10-25, Safari 5.1-6 */
+    background: "linear-gradient(to right, #0083B0, #00B4DB)",
     borderRadius: "5px",
     padding: "1.5em",
     WebkitBoxShadow: "0px 0px 7px -2px rgba(158,142,54,1)",
@@ -43,6 +55,7 @@ const DeleteConvoBtn = (props) => {
         }
       });
   };
+
   return (
     <Button 
       icon 
@@ -57,12 +70,28 @@ const DeleteConvoBtn = (props) => {
 };
 
 const ConversationHolder = (props) => {
+  const [ convoSelected, setConvoSelected ] = useState(false);
+
   const { conversationState, conversation, openConversation, closeConversation, deleteConversation } = props;
   const conversationId = conversation._id;
+  const currentOpenConversationId = conversationState.conversationId;
   const lastMessage = conversation.lastMessage;
   
+  useEffect(() => {
+    console.log(conversationId);
+    console.log(currentOpenConversationId);
+    if (conversationId === currentOpenConversationId) {
+      setConvoSelected(true);
+    } else {
+      setConvoSelected(false);
+    }
+  }, [conversationState]);
+
   return (
-    <Comment onClick={() => openConversation(conversationId)} style={style.convoContainerStyle}>
+    <Comment 
+      onClick={() => openConversation(conversationId)} 
+      style={ convoSelected ? style.activeConvoContainerStyle : style.convoContainerStyle }
+    >
       <Comment.Content style={{paddingTop: "0.75em"}}>
         <DeleteConvoBtn 
           conversationState={conversationState}
