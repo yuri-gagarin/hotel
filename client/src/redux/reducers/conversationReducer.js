@@ -2,6 +2,7 @@ import { conversationConstants } from "../constants";
 const {
   OPEN_CONVERASTION,
   CLOSE_CONVERSATION,
+  CLEAR_CONVERSATION_STATE,
   DELETE_CONVERSATION,
   UPDATE_CONVERSATION,
   CONVERSATION_SUCCESS
@@ -29,7 +30,7 @@ const conversationReducer = (state = initialState, { type, payload = {} }) => {
     adminSocketId,
     conversationId,
     messages = [],
-    conversationError
+    error
   } = payload;
 
   switch (type) {
@@ -42,7 +43,7 @@ const conversationReducer = (state = initialState, { type, payload = {} }) => {
         conversationId: conversationId,
         clientSocketId: clientSocketId,
         messages: [...messages],
-        conversationError: conversationError
+        error: error
       };
     };
     case  CLOSE_CONVERSATION: {
@@ -62,7 +63,7 @@ const conversationReducer = (state = initialState, { type, payload = {} }) => {
         clientSocketId: clientSocketId || state.clientSocketId,
         adminSocketId: adminSocketId || state.adminSocketId,
         messages: [...state.messages, ...messages],
-        conversationError: conversationError
+        error: error
       };
     };
     case CONVERSATION_SUCCESS: {
@@ -75,15 +76,28 @@ const conversationReducer = (state = initialState, { type, payload = {} }) => {
         messages: [...state.messages, ...messages]
       };
     };
+    case CLEAR_CONVERSATION_STATE: {
+      return {
+        status: status,
+        responseMsg: responseMsg,
+        loading: false,
+        userMessaging: userMessaging,
+        clientSocketId: clientSocketId,
+        adminSocketId: adminSocketId,
+        conversationId: conversationId,
+        messages: [...messages],
+        error: error
+      }
+    }
     case DELETE_CONVERSATION: {
       return {
         ...state,
         loading: loading,
-        conversationId: onversationId,
+        conversationId: conversationId,
       };
     };
     default: {
-      return { ...state };
+      return state;
     }
   }
 };

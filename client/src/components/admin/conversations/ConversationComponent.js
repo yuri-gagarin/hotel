@@ -9,24 +9,10 @@ import { withRouter } from "react-router-dom";
 // addiotinal component imports //
 import ConversationHolder from "./ConversationHolder";
 
-const renderConversations = (conversations, openConversation, deleteConversation) => {
-
-  return conversations.map((conversation) => {
-    return (
-      <ConversationHolder 
-        key={conversation._id}
-        conversation={conversation}
-        openConversation={openConversation}
-        deleteConversation={deleteConversation}
-      />
-    );
-  });
-};
 
 const ConversationComponent = (props) => {
-  const { adminConversationState, openConversation, deleteConversation } = props;
-  const { conversations } =  adminConversationState;
-  
+  const { adminConversationState, conversationState, openConversation, closeConversation, deleteConversation } = props;
+  const { conversations } = adminConversationState;
   return (
     <Segment style={{ overflowY: "scroll", height: "100%", marginRight: "3%" }}>
        <Comment.Group style={{ paddingRight: "0.5em" }}>
@@ -34,7 +20,18 @@ const ConversationComponent = (props) => {
           Active Conversations
         </Header>
         {
-          [...renderConversations(conversations, openConversation, deleteConversation)]
+          conversations.map((conversation) => {
+            return (
+              <ConversationHolder 
+                key={conversation._id}
+                conversationState={conversationState}
+                conversation={conversation}
+                openConversation={openConversation}
+                closeConversation={closeConversation}
+                deleteConversation={deleteConversation}
+              />
+            );
+          })
         } 
       </Comment.Group>
     </Segment>
@@ -42,8 +39,10 @@ const ConversationComponent = (props) => {
 };
 // PropTypes validation //
 ConversationComponent.propTypes = {
-  openConversation: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  adminConversationState: PropTypes.object.isRequired,
+  conversationState: PropTypes.object.isRequired,
+  openConversation: PropTypes.func.isRequired
 };
 
 export default withRouter(ConversationComponent);

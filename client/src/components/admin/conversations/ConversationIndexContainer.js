@@ -65,8 +65,7 @@ const ConversationIndexContainer = (props) => {
   useEffect(() => {
     socket.on("newClientMessage", (data) => {
         const { conversationId, socketId, newMessage } = data;
-        const { messages } = conversationState;
-        _newClientMessage({ conversationId: conversationId, clientSocketId: socketId, newMessage: newMessage }, messages);
+        _newClientMessage({ conversationId: conversationId, clientSocketId: socketId, newMessage: newMessage }, adminConversationState);
         //scrollToRef(bottomMessageRef);
     });
     _fetchAllConversations();
@@ -102,7 +101,9 @@ const ConversationIndexContainer = (props) => {
         <Grid.Column width={5} style={{ height: "90vh", paddingLeft: "0.5em", paddingRight: 0 }}>
           <ConversationComponent 
             adminConversationState={adminConversationState}
+            conversationState={conversationState}
             openConversation={openConversation}
+            closeConversation={closeConversation}
             fetchAllConversations={_fetchAllConversations}
             deleteConversation={_deleteConversation}
           />          
@@ -149,7 +150,9 @@ const mapDispatchToProps = (dispatch) => {
     _sendAdminMessage: (messageData) => sendAdminMessage(dispatch, messageData),
     _fetchAllConversations: () => fetchAllConversations(dispatch),
     _fetchConversation: (conversationId) => fetchConversation(dispatch, { conversationId }),
-    _deleteConversation: (conversationId) => deleteConversation(dispatch, conversationId),
+    _deleteConversation: (conversationId, curentConversationId) => {
+      return deleteConversation(dispatch, conversationId, curentConversationId);
+    },
     _newClientMessage: (messageData, currentConversations) => newClientMessage(dispatch, messageData, currentConversations)
   };
 };  

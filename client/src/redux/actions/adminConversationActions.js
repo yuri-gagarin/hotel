@@ -1,7 +1,6 @@
 import axios from "axios";
 import store from '../store';
 import { conversationConstants } from "../constants";
-import e from "express";
 import { updateConversation } from "./conversationActions";
 import { setAxiosError } from "./helpers/errorHelpers";
 const { 
@@ -82,13 +81,14 @@ export const adminConversationError = ({ status, responseMsg, errorMessages, err
  * Handles a new client message in admin screen and updates conversations
  * @param {function} dispatch - Redux dispatch function
  * @param {Object} data - A message data object 
- * @param {Object[]} oldConversations - Old conversations
+ * @param {Object} adminConvState - Admin conversation state
  * @returns {Promise<Boolean>} A promise which resolves to true if successful
  */
 export const newClientMessage = (dispatch, data, adminConvState = {}) => {
   const { conversationId, clientSocketId, newMessage } = data;
   const { currentConversationId, conversations } = adminConvState;
   let updatedConversations;
+  console.log(91)
 
   // check if new message coming in is current active conversation //
   if (currentConversationId == conversationId) {
@@ -110,10 +110,10 @@ export const newClientMessage = (dispatch, data, adminConvState = {}) => {
     return Promise.resolve(true);
   }
   // first check if conversation already exists //
-  const conversation = oldConversations.filter((conv) => conv._id == conversationId);
+  const conversation = conversations.filter((conv) => conv._id == conversationId);
   if (conversation && conversation.length === 1) {
     // conversation already exists update with a new message //
-    updatedConversations = oldConversations.map((conversation) => {
+    updatedConversations = conversations.map((conversation) => {
       if (conversation._id == conversationId) {
         return {
           ...conversation,
@@ -126,6 +126,8 @@ export const newClientMessage = (dispatch, data, adminConvState = {}) => {
         return conversation;
       }
     });
+    console.log(129)
+    console.log(updatedConversations);
     dispatch(updateAdminConversations(updatedConversations));
     return Promise.resolve(true);
   } else {
@@ -139,11 +141,12 @@ export const newClientMessage = (dispatch, data, adminConvState = {}) => {
         const { status, data } = response;
         const { responseMsg, conversation } = data;
         updatedConversations = [ ...conversations,  { ...conversation, clientSocketId: clientSocketId, lastMessage: newMessage }];
-        dispatch(updateAdminConversations(updateAdminConversations));
+        dispatch(updateAdminConversations(updatedConversations));
         return true;
       })
       .catch((err) => {
         const error = setAxiosError(err);
+        console.error(err);
         dispatch(adminConversationError(error));
         return false;
       });

@@ -26,13 +26,24 @@ const style = {
 };
 
 const DeleteConvoBtn = (props) => {
-  const { deleteConversation, conversationId } = props;
+  const { conversationId, conversationState, deleteConversation, closeConversation } = props;
+  const currentOpenConvId = conversationState.conversationId;
+
   const confirmDeleteConversation = (e) => {
     e.stopPropagation();
     alert("Are You Sure?");
-    deleteConversation(conversationId);
+    deleteConversation(conversationId, currentOpenConvId)
+      .then((success) => {
+        if (success) {
+          // handle view close here //
+          console.log(conversationState)
+          if (conversationId == currentOpenConvId) {
+            closeConversation();
+          }
+        }
+      });
   };
-  return(
+  return (
     <Button 
       icon 
       style={style.convoDeleteBtn} 
@@ -42,18 +53,23 @@ const DeleteConvoBtn = (props) => {
       <Icon name="trash"></Icon>
       <span>Delete</span>
     </Button>
-  )
+  );
 };
 
 const ConversationHolder = (props) => {
-  const { conversation, openConversation, deleteConversation } = props;
+  const { conversationState, conversation, openConversation, closeConversation, deleteConversation } = props;
   const conversationId = conversation._id;
   const lastMessage = conversation.lastMessage;
   
   return (
     <Comment onClick={() => openConversation(conversationId)} style={style.convoContainerStyle}>
       <Comment.Content style={{paddingTop: "0.75em"}}>
-        <DeleteConvoBtn deleteConversation={deleteConversation} conversationId={conversationId} />
+        <DeleteConvoBtn 
+          conversationState={conversationState}
+          deleteConversation={deleteConversation} 
+          closeConversation={closeConversation}
+          conversationId={conversationId} 
+        />
         <Comment.Author><span>From: </span>{lastMessage.sender}</Comment.Author>
         <Comment.Content>{lastMessage.content}</Comment.Content>
         <Comment.Metadata style={{ marginLeft: 0 }}>
@@ -65,7 +81,18 @@ const ConversationHolder = (props) => {
 };  
 
 ConversationHolder.propTypes = {
+  conversationState: PropTypes.object.isRequired,
+  conversation: PropTypes.object.isRequired,
+  openConversation: PropTypes.func.isRequired,
+  closeConversation: PropTypes.func.isRequired,
+  deleteConversation: PropTypes.func.isRequired
+};
 
+DeleteConvoBtn.propTypes = {
+  conversationState: PropTypes.object.isRequired,
+  conversationId: PropTypes.string.isRequired,
+  closeConversation: PropTypes.func.isRequired,
+  deleteConversation: PropTypes.func.isRequired
 };
 
 export default ConversationHolder;

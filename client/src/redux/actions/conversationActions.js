@@ -7,9 +7,11 @@ const {
   CONVERSATION_SUCCESS,
   OPEN_CONVERASTION,
   CLOSE_CONVERSATION,
+  CLEAR_CONVERSATION_STATE,
   UPDATE_CONVERSATION
 } = conversationConstants;
 import { setAdminConversations, removeAdminConversation } from "./adminConversationActions";
+
 export const conversationRequest = () => {
   return {
     type: CONVERSATION_REQUEST,
@@ -55,7 +57,8 @@ export const conversationSuccess = (conversationId, messages) => {
       loading: false,
       userMessaging: true,
       conversationId: conversationId,
-      messages: messages
+      messages: messages,
+      error: null
     }
   };
 };
@@ -69,10 +72,28 @@ export const updateConversation = ({ conversationId, clientSocketId, adminSocket
       conversationId: conversationId,
       clientSocketId: clientSocketId,
       adminSocketId: adminSocketId,
-      messages: [message]
+      messages: [message],
+      error: null
+    }
+  };
+};
+
+
+export const clearConversationState = () => {
+  return {
+    type: CLEAR_CONVERSATION_STATE,
+    payload: {
+      responseMsg: "",
+      loading: false,
+      userMessaging: false,
+      conversationId: null,
+      clientSocketId: null,
+      adminSocketId: null,
+      messages: [],
+      error: null
     }
   }
-}
+};
 
 /**
  * 
@@ -172,11 +193,14 @@ export const fetchAllConversations = (dispatch) => {
     });
 };
 
-export const closeConversation = ({ conversationId }) => {
-
-};
-
-export const deleteConversation = (dispatch, conversationId) => {
+/**
+ * Deletes a conversation, clears conversation state if applicable
+ * @param {function} dispatch - Redux dispatch function
+ * @param {string} conversationId - ObjectId of a Conversation to delete
+ * @param {string} [currentConversationId] - ObjectId of a Conversation to clear (if open and set)
+ * @returns {Promise<Boolean>} A Promise resolving to true or false
+ */
+export const deleteConversation = (dispatch, conversationId, currentConversationId) => {
   let status, data;
   dispatch(conversationRequest());
   const requestOptions = {
@@ -189,9 +213,15 @@ export const deleteConversation = (dispatch, conversationId) => {
       const { responseMsg, conversationId } = response.data;
       // remove active conversation from the admin dash //
       dispatch(removeAdminConversation(conversationId, responseMsg));
+      if (currentConversationId && (currentConversationId == conversationId)) {
+        console.log(217)
+        dispatch(clearConversationState());
+      }
+      return true;
     })
     .catch((error) => {
       console.log(152)
       dispatch(conversationError(error));
+      return false;
     });
-}
+};
