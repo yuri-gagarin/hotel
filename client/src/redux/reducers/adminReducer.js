@@ -7,7 +7,7 @@ const {
 } = clientConstants;
 
 const initialState = {
-  loggedIn: false,
+  loggedIn: true,
   loading: false,
   admin: false,
   _id: null,

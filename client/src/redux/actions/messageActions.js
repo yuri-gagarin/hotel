@@ -104,7 +104,7 @@ export const sendClientMessage = (dispatch, conversationId, messageContent, user
  * @param {string} conversationId - ObjectId of a conversation
  * @param {string} messageContent - New message content
  * @param {Object} user - A user object
- * @returns {Promise<boolean>} A Promise which resolves to true or false
+ * @returns {Promise<Boolean>} A Promise which resolves to true or false
  */
 export const sendAdminMessage = (dispatch, clientSocketId, conversationId,  messageContent, user) => {
   const requestOptions = {

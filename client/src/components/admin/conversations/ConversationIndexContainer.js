@@ -48,9 +48,7 @@ const MessagesSplashScreen = (props) => {
 };
 
 const ConversationIndexContainer = (props) => {
-  
-  const [conversationOpen, setConversationOpen] = useState(false);
-  // redux state props //
+    // redux state props //
   const { 
     adminState,
     adminConversationState,
@@ -77,11 +75,9 @@ const ConversationIndexContainer = (props) => {
 
   const openConversation = (conversationId) => {
     _fetchConversation(conversationId);
-    setConversationOpen(true);
   };
 
   const closeConversation = () => {
-    setConversationOpen(false);
     _clearConversationState();
   };
 
@@ -89,17 +85,7 @@ const ConversationIndexContainer = (props) => {
     <React.Fragment>
       <Grid.Row>
         <Grid.Column width={16}>
-          <h5 style={{textAlign: "center"}}>Live Conversations</h5>
-          {
-            conversationOpen ? 
-              <Button 
-                style={closeConvoButton} 
-                onClick={closeConversation}
-              >
-                Close Conversation
-              </Button>
-              : null
-          }
+          <h5 style={{textAlign: "center"}}>Active Conversations</h5>
         </Grid.Column>
       </Grid.Row>
       <Grid.Row style={{borderTop: "1px solid grey", borderBottom: "1px solid grey" }}>
@@ -114,7 +100,7 @@ const ConversationIndexContainer = (props) => {
           />          
         </Grid.Column>
         {
-          conversationOpen ? 
+          conversationState.conversationId ? 
             <MessagesView 
               adminState={adminState}
               messages={conversationState.messages}

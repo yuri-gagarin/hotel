@@ -16,7 +16,7 @@ const MessagesView = (props) => {
     adminState, 
     conversationState,
     messages, 
-    sendMessageRequest
+    sendAdminMessage
   } = props;
   const [message, setMessage] = useState("");
   const [messageSounds, setMessageSounds] = useState({});
@@ -96,7 +96,15 @@ const MessagesView = (props) => {
     <Grid.Column width={11} style={{ height: "90vh", padding: 0 }}>
       <Segment style={{ overflowY: "scroll", height: "100%", paddingBottom: "60px", position: "relative" }} id="messagesView">
         <Comment.Group style={{ maxWidth: "none" }}>
-          <div style={conversationTitle}>ConversationWith: {setConversationTitle(messages, adminState)}</div>
+          <div className="adminConvHeader">
+            <div className="adminConvTitle">
+              <p>ConversationWith: {setConversationTitle(messages, adminState)}</p>
+            </div>
+            <div className="adminCloseConvButton" onClick={closeConversation}>
+              <p>Close Conversation</p>
+            </div>
+          </div>
+         
           {
             messages.map((message) => {
               return <Message key={message._id} message={message} adminState={adminState} />
@@ -124,7 +132,8 @@ const MessagesView = (props) => {
 MessagesView.propTypes = {
   messages: PropTypes.array.isRequired,
   conversationState: PropTypes.object.isRequired,
-  sendMessageRequest: PropTypes.func.isRequired
+  sendMessageRequest: PropTypes.func.isRequired,
+  closeConversation: PropTypes.func.isRequired
 };
 
 export default MessagesView;

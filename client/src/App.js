@@ -12,7 +12,6 @@ import store from "./redux/store";
 // socketio //
 import io from "socket.io-client";
 // axios //
-import axios from "axios";
 import "./assets/theme/vendor/jquery/jquery";
 import "./assets/theme/vendor/bootstrap/css/bootstrap.min.css";
 import "./assets/theme/vendor/fontawesome-free/css/all.css";
@@ -20,6 +19,7 @@ import "./assets/css/convoSplashScreen.css";
 import "./assets/css/successComponent.css";
 import "./assets/css/componentFadeIns.css";
 import "./assets/css/clientMessageForm.css";
+import "./assets/css/adminMessagesView.css";
 import "./assets/theme/agency.css";
 import "./assets/theme/booking_style.css";
 import './App.css';
@@ -74,7 +74,7 @@ const AppRoutes = (props) => {
     <Router>
       <ScrollToTop />
       <Switch>
-        <AuthorizedRoute path={"/admin/*"} loggedIn={true} component={AdminComponent} />
+        <Route path={"/admin/*"} loggedIn={true} component={AdminComponent} />
         <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />
         <Route path={"/rooms"} exact={true} component={RoomsIndexContainer} />
         <Route path={"/services"} exact={true} component={ServicesIndexComponent} />
