@@ -80,6 +80,7 @@ export const updateConversation = ({ conversationId, clientSocketId, adminSocket
 
 
 export const clearConversationState = () => {
+  console.log("called clear conversation state")
   return {
     type: CLEAR_CONVERSATION_STATE,
     payload: {

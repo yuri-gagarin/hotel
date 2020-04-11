@@ -78,8 +78,6 @@ const ConversationHolder = (props) => {
   const lastMessage = conversation.lastMessage;
   
   useEffect(() => {
-    console.log(conversationId);
-    console.log(currentOpenConversationId);
     if (conversationId === currentOpenConversationId) {
       setConvoSelected(true);
     } else {

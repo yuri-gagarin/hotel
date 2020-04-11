@@ -106,6 +106,7 @@ const ConversationIndexContainer = (props) => {
               messages={conversationState.messages}
               conversationState={conversationState}
               sendAdminMessage={_sendAdminMessage}
+              closeConversation={closeConversation}
             /> :
             <MessagesSplashScreen />
         }

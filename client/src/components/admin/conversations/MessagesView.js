@@ -16,10 +16,12 @@ const MessagesView = (props) => {
     adminState, 
     conversationState,
     messages, 
-    sendAdminMessage
+    sendAdminMessage,
+    closeConversation
   } = props;
   const [message, setMessage] = useState("");
   const [messageSounds, setMessageSounds] = useState({});
+  const [sendBtnDisabled, setSendButtondDisabled] = useState(true);
   // set the sound effects for send, receive instant message //
   useEffect(() => { 
     // load sounds upon component load //
@@ -51,7 +53,7 @@ const MessagesView = (props) => {
         break;
       }
     }
-    return conversationTitle
+    return conversationTitle ;
   };
   const handleInputChange = (e) => {
     setMessage(e.target.value);
@@ -66,7 +68,7 @@ const MessagesView = (props) => {
       clientSocketId: conversationState.clientSocketId
     };
     e.target.value = "";
-    sendMessageRequest(messageData)
+    sendAdminMessage(messageData)
       .then((success) => {
         if (success && messageSounds.sendMessageSound) {
           messageSounds.sendMessageSound.play();
@@ -117,7 +119,8 @@ const MessagesView = (props) => {
         action={{
           icon: "send",
           content: "Send",
-          onClick: handleSendMessage
+          onClick: sendAdminMessage,
+          disabled: sendBtnDisabled
         }}
         onChange={handleInputChange}
         placeholder='message...' 
@@ -132,7 +135,7 @@ const MessagesView = (props) => {
 MessagesView.propTypes = {
   messages: PropTypes.array.isRequired,
   conversationState: PropTypes.object.isRequired,
-  sendMessageRequest: PropTypes.func.isRequired,
+  sendAdminMessage: PropTypes.func.isRequired,
   closeConversation: PropTypes.func.isRequired
 };
 
