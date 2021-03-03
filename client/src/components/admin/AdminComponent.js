@@ -68,16 +68,32 @@ const AdminComponent = (props) => {
       window.removeEventListener("beforeunload", saveAdminState);
     }
   }, []);
+  /* for development remove later */
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      _setAdmin({
+        loggedIn: true,
+        loading: false,
+        admin: "admin",
+        _id: "arandomid",
+        email: "email@admin.com",
+        firstName: "first",
+        lastName: "last",
+        phoneNumber: "phoneNumber",
+        error: null
+      })
+    } 
+  }, [ process.env.NODE_ENV ])
   // save admin state to localStorage //
   useEffect(() => {
-    const { loggedIn, firstName, lastName } = adminState;
+    const { loggedIn, firstName, lastName, _id } = adminState;
     if (!localStorage.getItem("hotelAdminState")) {
       if (loggedIn && firstName && lastName) {
         const adminStateString = JSON.stringify(adminState);
         localStorage.setItem("hotelAdminState", adminStateString);
       }
     }
-    if (loggedIn) {
+    if (loggedIn && firstName && lastName && _id) {
        socket.emit("adminConnected", adminState);
     }
   }, [adminState]);
@@ -90,7 +106,7 @@ const AdminComponent = (props) => {
       }, 5000));
     }
     if (!error && errorTimeout) {
-      _clearTimeout(errorTimeout);
+      clearTimeout(errorTimeout);
       setErrorTimeout(null);
     }
     if (successComponentOpen) {
@@ -99,7 +115,7 @@ const AdminComponent = (props) => {
       }, 5000))
     }
     if (!successComponentOpen && successTimeout) {
-      _clearTimeout(successTimeout);
+      clearTimeout(successTimeout);
       setSuccessTimeout(null);
     }
   }, [appGeneralState]);
@@ -110,8 +126,8 @@ const AdminComponent = (props) => {
 
   return (
     <Grid stackable padded divided centered style={{paddingLeft: "1em", paddingRight: "1em"}}>
-      <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={clearSuccessState} />
-      <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
+      <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={_clearSuccessState} />
+      <ErrorComponent appGeneralState={appGeneralState} clearAppError={_clearAppError} />
       <Grid.Row>
         <Grid.Column width={16}>
           <AdminNavComponent logoutUser={logoutUser} />

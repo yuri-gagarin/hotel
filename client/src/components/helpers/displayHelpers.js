@@ -20,3 +20,9 @@ export const matchNestedRoute = (path) => {
   
 }
 
+
+export const isEmpty = (obj) => {
+  console.log(Object.keys(obj))
+  return obj && Object.keys(obj).length === 0;
+};
+

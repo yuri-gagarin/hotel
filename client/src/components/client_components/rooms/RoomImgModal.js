@@ -16,7 +16,7 @@ const pictureModal = {
 
 const RoomImgModal = (props) => {
   const { show, closePictureModal, paths, imageIndex } = props;
-  const [index, setIndex] = useState(imageIndex)
+  const [index, setIndex] = useState(imageIndex);
   const [direction, setDirection] = useState(null);
   
   // set the initial image to one clicked on //
@@ -26,7 +26,7 @@ const RoomImgModal = (props) => {
   }, [show]);
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
-    setDirection(e.direction);
+    // setDirection(e.direction);
   };
 
 

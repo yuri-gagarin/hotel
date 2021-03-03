@@ -47,13 +47,13 @@ app.use(passport.session());
 // app.use(express.static(path.join(__dirname, "client/build")));
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.resolve(__dirname, "client/build")));
-  app.get("/", () => {
+  app.get("/", (_req, res) => {
     res.sendFile(path.resolve(__dirname, "client/dist/index.html"));
   });
 }
 else {
   app.use(express.static(path.resolve(__dirname, "client/src")));
-  app.get("/", () => {
+  app.get("/", (_req, res) => {
     res.sendFile(path.resolve(__dirname, "client/public/index.html"));
   });
 }
@@ -103,6 +103,7 @@ app.on("dbReady", () => {
     });
     // listen for an administrator to connect //
     socket.on("adminConnected", (admin) => {
+      console.log(106)
       console.log(admin);
       redisClient.hmset(admin._id, admin._id, socket.id, (error, reply) => {
         if (error) {

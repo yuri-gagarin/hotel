@@ -53,8 +53,8 @@ const Room = (props) => {
 
 
   const handleSelect = (selectedIndex, e) => {
-    setIndex(selectedIndex);
-    setDirection(e.direction);
+   // setIndex(selectedIndex);
+   // setDirection(e.direction);
   };
   const roomImagePaths = room.images.map((image) => image.path);
 

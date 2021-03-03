@@ -9,6 +9,7 @@ import {
 } from "semantic-ui-react";
 // additional component imports  //
 import RoomImageThumb from "./RoomImages";
+import ImgUploadControls from "../shared/ImgUploadControls";
 // redux imports  //
 import { connect } from "react-redux";
 import { 
@@ -18,10 +19,20 @@ import {
   updateRoom, 
   setPreviewImages 
 } from "../../../redux/actions/roomActions";
+// css 
+import styles from "./css/fileInput.module.css";
+// helpers //
+import { isEmpty } from "../../helpers/displayHelpers";
 
 const FileInput = (props) => {
   const { uploadRoomImage } = props;
   const [ file, setFile ] = useState({});
+
+  useEffect(() => {
+    console.log(32);
+    console.log(file);
+    console.log(isEmpty(file))
+  }, [ file ])
   const onChange = (e) => {
     console.log(e.target);
     setFile(() => {
@@ -46,20 +57,26 @@ const FileInput = (props) => {
   };
 
   return (
-    <div>
-      <Button as="label" htmlFor="fileInput"
-              icon="file" type="button">
-      </Button>
-      <input type="file" id="fileInput" hidden onChange={onChange} />
-      <Button
-        primary
-        content="Upload File"
-        onClick={uploadFile} 
-      />
-      <span style={{marginLeft: "1em"}}>{file.name ? file.name : "No file"}</span>
+    <div className={ styles.fileInputContainer }>
+      {
+        isEmpty(file) 
+        ?
+        <div>
+          <Button 
+            as="label" 
+            htmlFor="fileInput"
+            icon="file" 
+            type="button">
+          </Button>
+          <input type="file" id="fileInput" hidden onChange={onChange} />   
+          <span style={{marginLeft: "1em"}}>{file.name ? file.name : "No file"}</span>
+        </div>
+        :
+        <ImgUploadControls />
+      }
+        
     </div>
-   
-  )
+  );
 };
 
 const RoomForm = (props) => {
