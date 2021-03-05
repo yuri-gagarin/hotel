@@ -6,6 +6,7 @@ import {
 } from "react-bootstrap"
 // styles //
 import { roomStyle } from "./style/styles";
+import styles from "./style/room.module.css";
 // helper functions //
 import { setUploadedImgPath } from "../../helpers/displayHelpers";
 // translations //
@@ -74,7 +75,7 @@ const Room = (props) => {
           </div>
         </Col>
       </Row>
-      <Row ref={roomPicturesRef} className="animatedRoomRow">
+      <Row ref={roomPicturesRef} className={ `animatedRoomRow ${styles.carouselRow}`}>
         <Col xs="12" lg="6" style={{padding: 0}}>
           <Carousel activeIndex={index} direction={direction} onSelect={handleSelect} style={carouselStyle}>
             {
@@ -121,68 +122,88 @@ const Room = (props) => {
           </div>
         </Col>
       </Row>  
-      <Row style={descriptionHolder} ref={roomDescRef} className="animatedRoomRow">
+      <Row ref={roomDescRef} className={`animatedRoomRow ${styles.descriptionContainerRow}`}>
         <Col xs="12" lg="6" style={{padding: 0}}>
           <div style={roomsDescription}>
             <p>{room.description}</p>
           </div>
         </Col>
         <Col xs="12" lg="6" style={{padding: 0}}>
-          <div>
-            <span style={roomDetails}><i className="fas fa-store-alt"></i> {t("rooms.area")}: {room.area} m<sup>2</sup></span>
-            <span style={roomDetails}><i className="fas fa-users"></i> {t("rooms.sleeps")}: {room.sleeps}</span>
-            <span style={roomDetails}><i className="fas fa-bed"></i> {t("rooms.beds")}: {room.beds}</span>
-            <span style={roomDetails}><i className="fas fa-couch"></i> {t("rooms.couches")}: {room.couches}</span>
+          <div className={ styles.roomDetailsContainer }>
+            <span className={ styles.roomDetails }><i className="fas fa-store-alt"></i> {t("rooms.area")}: {room.area}</span>
+            <span className={ styles.roomDetails }><i className="fas fa-users"></i> {t("rooms.sleeps")}: {room.sleeps}</span>
+            <span className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: {room.beds}</span>
+            <span className={ styles.roomDetails }><i className="fas fa-couch"></i> {t("rooms.couches")}: {room.couches}</span>
           </div>
-          <div style={roomOptionsHolder}>
+          <div className={ styles.roomOptionsContainer }>
             { 
               options.privateBathroom 
-              ? <span style={roomOptions}><i className="fas fa-toilet"></i> {t("rooms.bathRoom")}</span> 
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-toilet`}></i> {t("rooms.bathRoom")}
+                </div> 
               : null
             }
             {
               options.suiteBathroom 
-              ? <span style={roomOptions}><i className="fas fa-bath"></i> {t("rooms.shower")}</span>
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-bath`}></i> {t("rooms.shower")}
+                </div>
               : null
             }
             { 
               options.wifi
-              ? <span style={roomOptions}><i className="fas fa-wifi"></i> {t("rooms.wifi")}</span> 
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-wifi`}></i> {t("rooms.wifi")}
+                </div> 
               : null
             }
             {
               options.balcony 
-              ? <span style={roomOptions}><i className="fas fa-warehouse"></i> {t("rooms.balcony")}</span>
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-warehouse`}></i> {t("rooms.balcony")}
+                </div>
               : null
             }
             { 
               options.terrace
-              ? <span style={roomOptions}><i className="fas fa-campground"></i> {t("rooms.terrace")}</span>
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-campground`}></i> {t("rooms.terrace")}
+                </div>
               : null
             }
             { 
               options.mountainView
-              ? <span style={roomOptions}><i className="fas fa-mountain"></i> {t("rooms.mtnView")}</span>
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-mountain`}></i> {t("rooms.mtnView")}
+                </div>
               : null
             }
             { 
               options.streetView
-              ? <span style={roomOptions}><i className="fas fa-road"></i> {t("rooms.streetView")}</span>
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-road`}></i> {t("rooms.streetView")}
+                </div>
               : null
             } 
             { 
               options.riverView
-              ? <span style={roomOptions}><i className="fas fa-water"></i> {t("rooms.riverView")}</span>
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-water`}></i> {t("rooms.riverView")}
+                </div>
               : null
             } 
             { 
               options.tv
-              ? <span style={roomOptions}><i className="fas fa-tv"></i> {t("rooms.tv")}</span>
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-tv`}></i> {t("rooms.tv")}
+                </div>
               : null
             }
             {
               options.airConditioning
-              ? <span style={roomOptions}><i className="fas fa-wind"></i> {t("rooms.ac")}</span>
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-wind`}></i> {t("rooms.ac")}
+                </div>
               : null
             }
            

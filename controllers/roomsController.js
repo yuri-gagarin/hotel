@@ -23,6 +23,7 @@ export default {
   },
   createRoom: (req, res) => {
     const  { roomData } = req.body;
+    ///   channel managert data //
     return Room.create(roomData)
       .then((room) => {
         return Room.populate(room, { path: "images", model: "RoomImage"});

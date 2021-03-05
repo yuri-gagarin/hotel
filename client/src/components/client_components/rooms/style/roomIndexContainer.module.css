@@ -1,0 +1,31 @@
+.parallax {
+  height: 500px;
+  /* Create the parallax scrolling effect */
+  background-image: url("/assets/images/backgrounds/bg_nature_mist.jpeg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.roomsIndexHeaderRow {
+  background-color: rgb(44, 53, 49);
+  margin-bottom: 0.5em;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3.5em;
+  font-family: "Pacifico";
+  font-weight: "bold";
+  color: rgb(214, 199, 14);
+}
+.headerFixed {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 50px;
+  height: 100px;
+  z-index: 999;
+  transition: height 1s linear;
+}

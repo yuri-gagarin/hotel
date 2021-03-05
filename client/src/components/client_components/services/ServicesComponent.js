@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import roomDefault from "./../../../static_images/services_images/room_default.jpg";
 import restaurantDefault from "./../../../static_images/services_images/restaurant_default.jpg";
 import { useTranslation } from "react-i18next";
 
 const ServicesComponent = (props) => {
   const { history } = props;
-  const [t, i18n] = useTranslation();
+  const [t] = useTranslation();
 
   const handleRoomsClick = (e) => {
     // console.log(e);
@@ -14,9 +14,11 @@ const ServicesComponent = (props) => {
   };
   const handleRestaurantClick = (e) => {
     console.log(e);
+    history.push("/restaurant");
   };
   const handleExtrasClick = (e) => {
     console.log(e);
+    history.push("/extras");
   };
   return (
     <section className="bg-light page-section" id="portfolio">

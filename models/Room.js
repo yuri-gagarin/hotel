@@ -7,20 +7,20 @@ const roomSchema = new Schema({
     required: true
   },
   area: {
-    type: Number,
+    type: String,
     required: true
   },
   sleeps: {
-    type: Number
+    type: String
   },
   price: {
-    type: Number
+    type: String
   },
   beds: {
-    type: Number
+    type: String
   },
   couches: {
-    type: Number
+    type: String
   },
   images: [{
     type: Schema.Types.ObjectId,

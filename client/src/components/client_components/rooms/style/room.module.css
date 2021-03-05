@@ -1,0 +1,40 @@
+.carouselRow {
+  height: 400px;
+  overflow: hidden;
+}
+
+.descriptionContainerRow {
+  margin-top: 1em;
+  border-bottom: 4px solid rgb(252, 219, 3) !important;
+  border-right: 4px solid rgb(252, 219, 3);
+}
+/* room details */
+.roomDetailsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.roomDetails {
+  border-left: 0.5px solid grey;
+  border-right: 0.5px solid grey;
+  padding: 0 1em;
+}
+
+/* room options */
+.roomOptionsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin-top: 1em;
+}
+.roomOption {
+  display: flex;
+  align-items: center;
+  color: rgb(38, 42, 51);
+  padding: 0.5em 0;
+  margin-right: 0.5em;
+}
+.roomOption > i {
+  margin-right: 0.5em;
+  color: rgb(42, 142, 189);
+}

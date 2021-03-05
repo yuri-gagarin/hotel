@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 // semantic ui components //
 import {
@@ -16,8 +16,11 @@ import RoomImgModal from "./RoomImgModal";
 import { connect } from "react-redux";
 import { fetchRooms } from "../../../redux/actions/roomActions";
 import Room from "./Room";
+// images //
+//
 // styles //
 import { roomStyle as style } from "./style/styles";
+import styles from "./style/roomIndexContainer.module.css";
 
 const {
   background, carouselStyle,
@@ -34,6 +37,31 @@ const RoomsIndexContainer = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [clickedImg, setClickedImg] = useState("");
   const [imagePaths, setImagePaths] = useState([]);
+  const [ headerFixed, setHeaderFixed ] = useState(false);
+
+  const indexRowRef = useRef();
+
+  useEffect(() => {
+    if (indexRowRef.current) {
+      const mainNav = document.getElementById("mainNav");
+      if (mainNav) {
+        const navHeight = mainNav.getBoundingClientRect().height;
+        window.onscroll = () => {
+          const indexRowRefY = indexRowRef.current.getBoundingClientRect().y;
+          if (indexRowRefY <= navHeight) {
+            if (!headerFixed) {
+              setHeaderFixed(true);
+            }
+          }
+  
+        }
+      }
+     
+    }
+    return () => {
+      window.onscroll = null;
+    }
+  }, [ indexRowRef.current, headerFixed ]);
 
   useEffect(() => {
     // Navbar collapse implementation // 
@@ -71,21 +99,26 @@ const RoomsIndexContainer = (props) => {
   const bookButton = () => {
 
   };
+
+  const indexRowScroll = () =>{
+    console.log("scroll detected")
+  }
  
   return (
-    <div style={background}>
+    <div style={background} onScroll={ indexRowScroll }>
       <NavbarComponent/>
+      <div className={ styles.parallax }></div>
+      <Row className={ `${styles.roomsIndexHeaderRow} ${ headerFixed ? styles.headerFixed : ""}`} ref={ indexRowRef } >
+        <div>Our Rooms</div>
+      </Row>
       <RoomImgModal 
         show={showModal} 
         closePictureModal={closePictureModal}
         paths={imagePaths} 
         imageIndex={imageIndex}
       />
-      <Container style={containerStyle}>
-        <Row>
-          <Col style={headerStyle}>Our Rooms</Col>
-        </Row>
-        <hr />
+      <Container className={ styles.roomsIndexContainer }>
+       
         {
           createdRooms.map((room) => {
             return (

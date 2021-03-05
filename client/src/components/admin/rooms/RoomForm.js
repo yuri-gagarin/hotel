@@ -9,7 +9,7 @@ import {
 } from "semantic-ui-react";
 // additional component imports  //
 import RoomImageThumb from "./RoomImages";
-import ImgUploadControls from "../shared/ImgUploadControls";
+import FileInput from "./FileInput";
 // redux imports  //
 import { connect } from "react-redux";
 import { 
@@ -22,62 +22,7 @@ import {
 // css 
 import styles from "./css/fileInput.module.css";
 // helpers //
-import { isEmpty } from "../../helpers/displayHelpers";
 
-const FileInput = (props) => {
-  const { uploadRoomImage } = props;
-  const [ file, setFile ] = useState({});
-
-  useEffect(() => {
-    console.log(32);
-    console.log(file);
-    console.log(isEmpty(file))
-  }, [ file ])
-  const onChange = (e) => {
-    console.log(e.target);
-    setFile(() => {
-      return e.target.files[0];
-    });
-  }
-  
-  const uploadFile = () => {
-    if (!file) return;
-    let data = new FormData();
-    data.append("roomImage", file);
-    return uploadRoomImage(data)
-      .then((success) => {
-        if (success) {
-          // clear the input //
-          document.getElementById("fileInput").value = "";
-          setFile(() => {
-            return {};
-          })
-        }
-      });
-  };
-
-  return (
-    <div className={ styles.fileInputContainer }>
-      {
-        isEmpty(file) 
-        ?
-        <div>
-          <Button 
-            as="label" 
-            htmlFor="fileInput"
-            icon="file" 
-            type="button">
-          </Button>
-          <input type="file" id="fileInput" hidden onChange={onChange} />   
-          <span style={{marginLeft: "1em"}}>{file.name ? file.name : "No file"}</span>
-        </div>
-        :
-        <ImgUploadControls />
-      }
-        
-    </div>
-  );
-};
 
 const RoomForm = (props) => {
   const { 
@@ -267,21 +212,21 @@ const RoomForm = (props) => {
           label='Room Type'
           placeholder='...type of room'
           onChange={handleRoomType}
-          value={roomDetails.roomType}
+          value={roomDetails.roomType || ""}
         />
         <Form.Field
           control={Input}
           label='Area'
           placeholder='...only numbers please'
           onChange={handleRoomArea}
-          value={roomDetails.area}
+          value={roomDetails.area || ""}
         />
         <Form.Field
           control={Input}
           label="Sleeps"
           placeholder='...how many people it sleeps'
           onChange={handleSleeps}
-          value={roomDetails.sleeps}
+          value={roomDetails.sleeps || ""}
         />
       </Form.Group>
       <Form.Group widths='equal'>
@@ -290,7 +235,7 @@ const RoomForm = (props) => {
           label='Price from'
           placeholder='...price from (optional)'
           onChange={handlePrice}
-          value={roomDetails.price}
+          value={roomDetails.price || ""}
 
         />
         <Form.Field
@@ -298,7 +243,7 @@ const RoomForm = (props) => {
           label='Beds'
           placeholder='...number of beds'
           onChange={handleBeds}
-          value={roomDetails.beds}
+          value={roomDetails.beds || ""}
 
         />
         <Form.Field
@@ -306,7 +251,7 @@ const RoomForm = (props) => {
           label="Couches"
           placeholder='...number of couches'
           onChange={handleCouches}
-          value={roomDetails.couches}
+          value={roomDetails.couches || ""}
         />
       </Form.Group>
       <Form.Field
@@ -315,7 +260,7 @@ const RoomForm = (props) => {
         label='Description of the Room'
         placeholder='...description of the room here'
         onChange={handleDescriptionChange}
-        value={roomDetails.description}
+        value={roomDetails.description || ""}
 
       />
        <Form.Field>

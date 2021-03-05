@@ -48,10 +48,15 @@ const HomeComponent = (props) => {
     (function () {
       // Collapse Navbar
       var navbarCollapse = function () {
-        if ($("#mainNav").offset().top > 100) {
-          $("#mainNav").addClass("navbar-shrink");
+        const nav = $("#mainNav");
+        if (nav && nav.offset()) {
+          if (nav.offset().top > 100) {
+            nav.addClass("navbar-shrink");
+          } else {
+            nav.removeClass("navbar-shrink");
+          }
         } else {
-          $("#mainNav").removeClass("navbar-shrink");
+          return;
         }
       };
       // Collapse now if page is not at top

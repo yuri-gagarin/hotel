@@ -4,19 +4,19 @@ import { useTranslation } from "react-i18next";
 const headerStyle = {
   fontFamily: "Lobster",
   fontSize: "3em",
-  color: "rgb(252, 250, 237)"
+  color: "black"
 }
 const titleStyle = {
   fontFamily: "PT Serif",
   fontSize: "7em",
   fontWeight: "bold",
-  color: "rgb(252, 219, 3)"
+  color: "black"
 }
 const cityStyle = {
   fontFamily: "Pacifico cursive",
   marginTop: "-2%",
   marginBottom: "5%",
-  color: "rgb(252, 250, 237)"
+  color: "black"
 }
 const  MainHeaderComponent = (props) => {
   const [t, i18n] = useTranslation();
