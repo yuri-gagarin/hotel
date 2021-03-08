@@ -15,30 +15,23 @@ const AdminNavMenu = (props) =>  {
   useEffect(() => {
     const pathName = history.location.pathname;
     // set the navbar active item based on history //
-    switch (pathName) {
-      case adminRoutes.ADMIN_MESSAGES: {
-        setActiveItem("messages");
-        break;
-      };
-      case adminRoutes.ADMIN_ROOMS: {
-        setActiveItem("rooms");
-        break;
-      };
-      case adminRoutes.ADMIN_POSTS: {
-        setActiveItem("posts");
-        break;
-      };
-      case adminRoutes.ADMIN_CONTACT_POSTS: {
-        setActiveItem("contactRequests");
-        break;
-      };  
-      case "/admin/services": {
-        setActiveItem("services");
-        break;
-      }
-      default: {
-        setActiveItem("home");
-      };
+    if(pathName.includes("messages")) {
+      setActiveItem("messages");
+    } 
+    else if (pathName.includes("rooms")) {
+      setActiveItem("rooms");
+    }
+    else if (pathName.includes("posts")) {
+      setActiveItem("posts");
+    }
+    else if (pathName.includes("contact_requests")) {
+      setActiveItem("contactRequests");
+    }
+    else if(pathName.includes("services")) {
+      setActiveItem("services");
+    }
+    else {
+      setActiveItem("home");
     }
     
   }, [history.location]);

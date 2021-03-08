@@ -68,8 +68,8 @@ const Room = (props) => {
   return (
     <React.Fragment>
       <Row ref={roomTitleRef} className="animatedRoomRow">
-        <Col textAlign="center">
-          <div style={{ position: "relative", width: "100%", height: "50px", marginBottom: "1em" }}>
+        <Col style={{padding: 0}}>
+          <div style={{ position: "relative", width: "100%", height: "50px", marginBottom: "1em" }} className={ styles.titleRow }>
             <div style={roomTitle}>{room.roomType}</div>
             <div style={strikeThrough}></div>
           </div>

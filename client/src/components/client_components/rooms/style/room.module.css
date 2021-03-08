@@ -1,3 +1,7 @@
+.titleRow {
+  color:rgb(38, 42, 51);
+}
+
 .carouselRow {
   height: 400px;
   overflow: hidden;

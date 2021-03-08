@@ -6,7 +6,7 @@ import ImgUploadControls from "../shared/ImgUploadControls";
 import styles from "./css/fileInput.module.css";
 
 const FileInput = (props) => {
-  const { uploadRoomImage } = props;
+  const { uploadImage, dataName } = props;
   const [ file, setFile ] = useState(null);
   const [ objectURL, setObjectURL] = useState(null);
 
@@ -21,8 +21,8 @@ const FileInput = (props) => {
   const uploadFile = () => {
     if (!file) return;
     let data = new FormData();
-    data.append("roomImage", file);
-    return uploadRoomImage(data)
+    data.append(dataName, file);
+    return uploadImage(data)
       .then((success) => {
         if (success) {
           // clear the input //

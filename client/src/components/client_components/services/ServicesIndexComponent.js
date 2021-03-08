@@ -1,10 +1,16 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import Gallery from "react-photo-gallery";
+// additonal components //
+import NavbarComponent from "../navbar/NavbarComponent";
+import Carousel, { Modal, ModalGateway } from "react-images";
+import ClipText from "../../admin/shared/ClipText";
 // react bootstrap component imports //
 import {
-  Container, Col, Image, Row
+  Container, Row, Col
 } from "react-bootstrap";
-import Gallery from "react-photo-gallery";
-import Carousel, { Modal, ModalGateway } from "react-images";
+import styles from "./css/servicesIndexContainer.module.css";
+// helpers //
+import { navbarCollapseListener } from "../../helpers/componentHelpers";
 
 const imgOverlay = {
   position: "absolute",
@@ -70,6 +76,10 @@ const ServicesIndexComponent = (props) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
 
+  useEffect(() => {
+    navbarCollapseListener();
+  }, []);
+
   const openLightbox = useCallback((event, { photo, index }) => {
     setCurrentImage(index);
     setViewerIsOpen(true);
@@ -81,34 +91,39 @@ const ServicesIndexComponent = (props) => {
   };
  
   return (
-    <Container>
+    <div className={ styles.mainContainer }>
+      <NavbarComponent />
       <Row>
-        <Col xs={12} md={12} lg={12} style={{ textAlign: "center" }}>
-          <h3>Services</h3>
-        </Col>
+        <div className={ styles.servicesHeader }>
+          <div className={ styles.headerText}>
+            <ClipText text={"Services"} />
+          </div>
+        </div>
       </Row>
-        <Gallery photos={photos} onClick={openLightbox} />
-        <ModalGateway>
-          {viewerIsOpen ? (
-            <Modal onClose={closeLightbox}>
-              <Carousel
-                currentIndex={currentImage}
-                views={photos.map(x => ({
-                  ...x,
-                  srcset: x.srcSet,
-                  caption: x.title
-                }))}
-              />
-            </Modal>
-          ) : null}
-        </ModalGateway>
-
-      <Row>
+      <Row className={ styles.serviceRow }>
+        <Container className={ `${styles.serviceContainer} ${styles.draw}` }>
+          <Gallery photos={photos.slice(0, 6)} onClick={openLightbox} />
+          <ModalGateway>
+            {viewerIsOpen ? (
+              <Modal onClose={closeLightbox}>
+                <Carousel
+                  currentIndex={currentImage}
+                  views={photos.map(x => ({
+                    ...x,
+                    srcset: x.srcSet,
+                    caption: x.title
+                  }))}
+                />
+              </Modal>
+            ) : null}
+          </ModalGateway>
+          
+        </Container>
         
       </Row>
-      <Row>
-      </Row>
-    </Container>
+      <div className={ styles.servicesBreakpoint }>
+      </div>
+    </div>
   )
 };  
 

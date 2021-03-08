@@ -9,6 +9,7 @@ import {
 } from "semantic-ui-react";
 // additional component imports  //
 import ServiceImageThumb from "./ServiceImageThumb";
+import FileInput from "../rooms/FileInput";
 // redux imports  //
 import { connect } from "react-redux";
 import { 
@@ -19,49 +20,6 @@ import {
   setServicesImages
 } from "../../../redux/actions/serviceActions";
 // helpers //
-
-const FileInput = (props) => {
-  const { uploadServiceImage } = props;
-  const [ file, setFile ] = useState({});
-  const onChange = (e) => {
-    setFile(() => {
-      return e.target.files[0];
-    });
-  }
-  
-  const uploadFile = () => {
-    console.log(file);
-    if (!file) return;
-    let data = new FormData();
-    data.append("serviceImage", file);
-    return uploadServiceImage(data)
-      .then((success) => {
-        if (success) {
-          // clear the input //
-          document.getElementById("serviceFormPicInput").value = "";
-          setFile(() => {
-            return {};
-          })
-        }
-      });
-  };
-
-  return (
-    <div>
-      <Button as="label" htmlFor="serviceFormPicInput"
-              icon="file" type="button">
-      </Button>
-      <input type="file" id="serviceFormPicInput" hidden onChange={onChange} />
-      <Button
-        primary
-        content="Upload File"
-        onClick={uploadFile} 
-      />
-      <span style={{marginLeft: "1em"}}>{file.name ? file.name : "No file"}</span>
-    </div>
-   
-  )
-};
 
 const ServiceForm = (props) => {
   const { 
@@ -197,7 +155,7 @@ const ServiceForm = (props) => {
         value={serviceDetails.description}
 
       />
-      <FileInput uploadServiceImage={uploadServiceImage} />
+      <FileInput uploadImage={uploadServiceImage} dataName={"serviceImage"} />
       { 
         serviceImages.map((serviceImg) => {
           return (

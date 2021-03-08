@@ -100,12 +100,9 @@ const RoomsIndexContainer = (props) => {
 
   };
 
-  const indexRowScroll = () =>{
-    console.log("scroll detected")
-  }
  
   return (
-    <div style={background} onScroll={ indexRowScroll }>
+    <div style={background}>
       <NavbarComponent/>
       <div className={ styles.parallax }></div>
       <Row className={ `${styles.roomsIndexHeaderRow} ${ headerFixed ? styles.headerFixed : ""}`} ref={ indexRowRef } >

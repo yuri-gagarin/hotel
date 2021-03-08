@@ -276,7 +276,7 @@ const RoomForm = (props) => {
         <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.wifi}/>
 
       </Form.Field>
-      <FileInput uploadRoomImage={uploadRoomImage} />
+      <FileInput uploadImage={uploadRoomImage} dataName={"roomImage"} />
       { 
         roomImages.map((roomImage) => {
           return (

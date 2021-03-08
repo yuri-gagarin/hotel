@@ -17,7 +17,11 @@ const NavbarComponent = (props) => {
   };
   const goToServices = (e) => {
     let servicesView = document.getElementById("portfolio");
-    servicesView.scrollIntoView();
+    if (servicesView) {
+      servicesView.scrollIntoView();
+    } else {
+      history.push("/services");
+    }
   };
 
   const goToContactForm = (e) => {
