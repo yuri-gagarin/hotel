@@ -15,14 +15,9 @@
   flex-grow: 1;
 }
 
-.serviceRow {
-  background-color: wheat;
-  display: flex;
-  flex-direction: column;
-}
 .servicesHeader {
   /* Set a specific height */
-  min-height: 300px;
+  min-height: 400px;
   display: flex;
   flex-grow: 1;
   justify-content: center;
@@ -34,33 +29,35 @@
   font-family: "Lobster";
   width: 100%;
 }
-.headerText > svg {
+.svgElem {
+  width: 100%;
   opacity: 0.75;
-  border: 4px solid green;
-  fill: black;
+  fill: rgb(44, 53, 49);
+  background-color: rgb(44, 53, 49);
 }
-
+.animateSVGElem {
+  opacity: 1;
+  transition: opacity 0.5s ease-in;
+  color: red;
+}
+.fixed {
+  position: fixed;;
+  left: 0;
+  top: 50px;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.5s ease-in;
+  z-index: 100;
+}
 /* */
 
 .servicesBreakpoint {
   height: 100px;
   display: flex;
   flex-grow: 1;
-  border: 3px solid red;
 }
 
 
-.serviceContainer {
-  background: none;
-  border: 0;
-  box-sizing: border-box;
-  /* box-shadow: inset 0 0 0 2px red; */
-  /* color: red; */
-  font-size: inherit;
-  position: relative;
-  padding: 0 !important;
-  z-index: 1;
-}
 .serviceContainer::before {
   box-sizing: inherit;
   content: '';
@@ -78,6 +75,7 @@
   z-index: -1;
 }
 /* draw border */
+/*
 .draw {
   transition: color 0.25s;
 }
@@ -87,24 +85,28 @@
   width: 0;
   height: 0;
 }
-
+*/
 /* This covers the top & right borders (expands right, then down) */
+/*
 .draw::before {
   top: 0;
   left: 0;
 }
-
+*/
 /*  And this the bottom & left borders (expands left, then up) */
+/*
 .draw::after {
   bottom: 0;
   right: 0;
 }
-
+*/
+/*
 .draw:hover {
   color: yellow;
 }
-
+*/
 /* Hover styles */
+/*
 .draw:hover::before,
 .draw:hover::after {
   width: 100%;
@@ -125,4 +127,5 @@
     width 0.25s ease-out 0.5s,
     height 0.25s ease-out 0.75s; 
 }
+*/
 

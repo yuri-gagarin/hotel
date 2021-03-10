@@ -20,6 +20,11 @@ export const matchNestedRoute = (path) => {
   
 }
 
+export const setImagePath = (path) => {
+  const imagePathArr = path.split("/");
+  return "/" + imagePathArr.slice(1).join("/")
+}
+
 
 export const isEmpty = (obj) => {
   console.log(Object.keys(obj))

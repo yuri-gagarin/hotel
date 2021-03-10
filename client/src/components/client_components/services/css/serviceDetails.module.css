@@ -1,0 +1,63 @@
+.serviceDetailsContainer {
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+  flex-wrap: wrap;
+  flex-direction: column;
+  background-color: rgb(44, 53, 49);
+}
+
+.iconDiv {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.serviceHours {
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2em;
+  margin-left: 10px;
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+}
+.serviceHours > span {
+  margin-left: 5px;
+}
+
+.servicePrice {
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.5em;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.servicePrice > i {
+  font-size: 2em;
+}
+.servicePrice > span {
+  margin-left: 5px;
+}
+
+.serviceDescription {
+  color: white;
+  font-size: 1.25em;
+  margin-left: 10px;
+  margin-left: 20px;
+}
+.serviceDescription > p {
+  font-style: italic;
+  margin-top: 10px;
+}
+
+.serviceDetailsDivider {
+  height: 4px;
+  width: 95%;
+  margin-left: 10px;
+  background-color: wheat;
+}

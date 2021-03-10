@@ -6,16 +6,23 @@ import styles from "./css/clipText.module.css";
 const ClipText = ({ text, className }) => {
 
   return (
-    <svg width="100%" className={ className }>
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" xmlSpace="preserve" className={ className }>
       <defs>
-        <mask id="myMask" x="0" y="0" width="100%" height="100%">
-          <rect fill="white" x="0" y="0" width="100%" height="100%" />
-
-          <text fill="#999" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="2em" fill="#999" stroke="red" strokeWidth="4px">{ text }</text>  
+        <pattern id="pattern" width="1" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect x="0" y="0" width="1" height=".8" fill="#ffffff"/>
+        </pattern>
+          
+        <text id="text" y="50%" x="50%" fontFamily="'Oswald', sans-serif" fontSize="64" letterSpacing="15px" textAnchor="middle" dominantBaseline="middle">{ text }</text>
+        
+        <mask id="mask">
+          <rect x="0" y="0" width="100%" height="100%" fill="#fff" />
+          <use x="-6" y="-6" stroke="#000" strokeWidth="5" xlinkHref="#text" opacity="1" fill="#000"/>
         </mask>
       </defs>
-
-      <rect id="baseMask" mask="url(#myMask)" x="0" y="0" width="100%" height="100%" />
+    
+      <use x="6" y="6" xlinkHref="#text" opacity="1" fill="url(#pattern)" mask="url(#mask)"/>
+        
+      <use x="0" y="0" xlinkHref="#text" fill="#fff"/>
     </svg>
   );
 };

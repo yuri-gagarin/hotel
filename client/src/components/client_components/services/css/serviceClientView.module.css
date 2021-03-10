@@ -1,0 +1,64 @@
+.serviceRow {
+  background-color: rgb(44, 53, 49);
+  height: 300px;
+  border-top: 4px solid yellow;
+  position: relative;
+  display: flex;
+}
+
+.serviceTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  position: absolute;
+  background-color: rgb(211, 211, 26);
+  left: 50%;
+  top: -45px;
+  transform: translateX(-50%);
+  padding: 1em;
+  font-size: 3em;
+  font-family: "Lobster", sans-serif;
+  font-weight: 500;
+  color:  rgb(44, 53, 49);
+  z-index: 10;
+}
+
+.serviceContainer {
+  background: none;
+  border: 0;
+  box-sizing: border-box;
+  /* box-shadow: inset 0 0 0 2px red; */
+  /* color: red; */
+  font-size: inherit;
+  position: relative;
+  padding: 0 !important;
+  z-index: 1;
+  background-color: rgb(44, 53, 49);
+}
+
+.serviceImgGallery {
+  width: 100%;
+  border-left: 4px solid yellow;
+}
+.galleryImage {
+  height: 400px;
+}
+.thumbnailImage {
+  overflow: hidden;
+}
+
+.serviceDetailsBtnDiv {
+  display: flex;
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  z-index: 2;
+}
+
+.serviceDetailsBtnDiv > button {
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: rgb(182, 182, 28);
+}
+
