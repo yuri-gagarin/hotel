@@ -1,22 +1,56 @@
 .diningIndexContainer {
-  border: 4px solid blue;
-  height: 100vh;
-  width: 100vw;
   background-color: rgb(44, 53, 49);
 }
-.parallaxBackground {
-  height: 100%;
+.parallaxContainer {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
   /* Create the parallax scrolling effect */
-  background-image: url("/assets/images/backgrounds/bg_nature_mist.jpeg");
+  background-image: url("/assets/images/layered_backgrounds/dining/restaurant_stock1.png");
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  transform-style: preserve-3d;
 }
 
 .headerRow {
   height: 300px;
-  width: 100%;
-  background-color: rgb(44, 53, 49);
-  margin-top: 200px;
+  position: absolute;
+  top: 300px;
+  left: 0px;
+  right: 0px;
+  border: 4px solid red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.firstSvg {
+  width: 400px;
+  height: 100px;
+  fill:rgb(44, 53, 49);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color:  rgb(44, 53, 49);
+  z-index: 2;
+}
+.secondSvg {
+  width: 150px;
+  height: 75px;
+  position: absolute;
+  background-color: rgb(194, 194, 25);
+  left: 40%;
+  top: 60%;
+  z-index: 4;
+}
+.thirdSvg {
+  width: 350px;
+  height: 75px;
+  position: absolute;
+  left: 50%;
+  top: 65%;
+  background-color:  rgb(44, 53, 49);
+  z-index: 2;
 }

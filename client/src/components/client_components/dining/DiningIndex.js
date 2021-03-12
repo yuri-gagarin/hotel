@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Row, Col } from "react-bootstrap";
 // additional components //
 import NavbarComponent from "../navbar/NavbarComponent";
+import ClipText from "../../admin/shared/ClipText";
 // redux //
 import { connect } from "react-redux";
 // styles and css //
@@ -14,9 +15,15 @@ const DiningIndexContainer = (props) => {
   return (
     <div className={ styles.diningIndexContainer }>
       <NavbarComponent />
-      <div className={ styles.parallaxBackground }>
-
+      <div className={ `${styles.parallaxGroup} ${styles.parallaxContainer}` }>
+        <div className={ styles.headerRow }>
+          <ClipText className={ styles.firstSvg } text="Dining" textId="dining" fontSize={"3em"} />
+          <ClipText className={ styles.secondSvg } text="and" textId="and" fontSize={"4em"}/>
+          <ClipText className={ styles.thirdSvg } text="Entertainment" textId="entainmnt" fontSize={"2em"} letterSpacing={"5px"} />
+        </div>
       </div>
+     
+
       <Row>
         <div className={ styles.headerRow }>
 

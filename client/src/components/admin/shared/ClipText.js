@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // styles and css //
 import styles from "./css/clipText.module.css";
 
-const ClipText = ({ text, className }) => {
+const ClipText = ({ text, className, textId, fontSize, letterSpacing }) => {
 
   return (
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" xmlSpace="preserve" className={ className }>
@@ -12,7 +12,7 @@ const ClipText = ({ text, className }) => {
           <rect x="0" y="0" width="1" height=".8" fill="#ffffff"/>
         </pattern>
           
-        <text id="text" y="50%" x="50%" fontFamily="'Oswald', sans-serif" fontSize="64" letterSpacing="15px" textAnchor="middle" dominantBaseline="middle">{ text }</text>
+        <text id={textId} y="50%" x="50%" fontFamily="'Oswald', sans-serif" fontSize={ fontSize ? fontSize : "3em"} letterSpacing={ letterSpacing ? letterSpacing : "15px"} textAnchor="middle" dominantBaseline="middle">{ text }</text>
         
         <mask id="mask">
           <rect x="0" y="0" width="100%" height="100%" fill="#fff" />
@@ -20,16 +20,19 @@ const ClipText = ({ text, className }) => {
         </mask>
       </defs>
     
-      <use x="6" y="6" xlinkHref="#text" opacity="1" fill="url(#pattern)" mask="url(#mask)"/>
+      <use x="6" y="6" xlinkHref={`#${textId}`} opacity="1" fill="url(#pattern)" mask="url(#mask)"/>
         
-      <use x="0" y="0" xlinkHref="#text" fill="#fff"/>
+      <use x="0" y="0" xlinkHref={`#${textId}`} fill="#fff"/>
     </svg>
   );
 };
 
 ClipText.propTypes = {
   text: PropTypes.string.isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  textId: PropTypes.string.isRequired,
+  fontSize: PropTypes.string,
+  letterSpacing: PropTypes.string
 };
 
 export default ClipText;
