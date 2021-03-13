@@ -16,13 +16,14 @@ import { navbarCollapseListener } from "../../helpers/componentHelpers";
 const DiningIndexContainer = (props) => {
   const headerRowRef = useRef(null);
   const [ headerRowState, setHeaderRowState ] = useState({ headerFixed: false, top: "" });
-  
+
   useEffect(() => {
     navbarCollapseListener();
   }, []);
 
   useEffect(() => {
     if (headerRowRef.current) {
+      /*
       const mainNav = document.getElementById("mainNav");
       if (mainNav) {
         window.onscroll = () => {
@@ -37,7 +38,15 @@ const DiningIndexContainer = (props) => {
           }
         }
       }
-     
+      */
+      window.onscroll = () => {
+        const headerRowRefY = headerRowRef.current.getBoundingClientRect().y;
+        if (headerRowRefY <= 50) {
+          if (!headerRowState.headerFixed) {
+            setHeaderRowState({ headerFixed: true, top: 50 });
+          }
+        }
+      }
     }
     return () => {
       window.onscroll = null;
@@ -56,7 +65,10 @@ const DiningIndexContainer = (props) => {
           </div>
           
         </div>
+        
       </div>
+      <DiningComponent />
+      <div className={ styles.parallaxSpacer }></div>
       <DiningComponent />
     </div>
   );
