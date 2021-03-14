@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import adminReducer from "../reducers/adminReducer";
 import adminConversation from "./adminConversationsReducer";
+import diningModelReducer from "./diningReducer";
 import roomReducer from "./roomReducer";
 import appGeneralReducer from "./appGeneralReducer";
 import clientReducer from "./clientReducer";
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   conversationState: conversationReducer,
   adminState: adminReducer,
   messageState: messageReducer,
-  serviceState: serviceReducer
+  serviceState: serviceReducer,
+  diningState: diningModelReducer
 });
 
 export default rootReducer;
