@@ -8,6 +8,7 @@ import ConversationIndexContainer from "./conversations/ConversationIndexContain
 import AdminDashComponent from "./dash/AdminDashComponent";
 import PostsIndexContainer from "./posts/PostsIndexContainer";
 import RoomsIndexContainer from "./rooms/RoomsIndexContainer";
+import DiningEntertainmentIndexContainer from "./dining_entertainment/DiningEntertainmentIndexContainer";
 import SuccessComponent from "./../display_components/SuccessComponent";
 import ErrorComponent from "./../display_components/ErrorComponent";
 // redux imports //
@@ -27,7 +28,7 @@ const AdminComponent = (props) => {
   const { 
     history, adminState, adminConvState,
     roomState, appGeneralState,
-    contactPostState, serviceState
+    contactPostState, serviceState, diningState
   } = props;
   // redux action functions //
   const {
@@ -150,6 +151,9 @@ const AdminComponent = (props) => {
       <Route path="/admin/rooms">
         <RoomsIndexContainer adminState={adminState} roomState={roomState} />
       </Route>
+      <Route path="/admin/dining_entertainment">
+        <DiningEntertainmentIndexContainer adminState={adminState} diningState={diningState} />
+      </Route>
       <Route path="/admin/posts">
         <PostsIndexContainer />
       </Route>
@@ -177,6 +181,7 @@ const mapStateToProps = (state) => {
   return {
     adminConvState: state.adminConvState,
     roomState: state.roomState,
+    diningState: state.diningState,
     adminState: state.adminState,
     appGeneralState: state.appGeneralState,
     contactPostState: state.contactPostState,

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Menu, Segment } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 import { withRouter } from "react-router-dom";
 
 import { adminRoutes } from "../../../routes/appRoutes";
 
 const AdminNavMenu = (props) =>  {
-  const [active, setActiveItem] = useState("home");
+  const [ active, setActiveItem ] = useState("home");
   const { history, logoutUser } = props;
 
   useEffect(() => {
@@ -20,6 +20,9 @@ const AdminNavMenu = (props) =>  {
     } 
     else if (pathName.includes("rooms")) {
       setActiveItem("rooms");
+    }
+    else if (pathName.includes("dining_entertainment")) {
+      setActiveItem("dining_entertainment");
     }
     else if (pathName.includes("posts")) {
       setActiveItem("posts");
@@ -37,7 +40,7 @@ const AdminNavMenu = (props) =>  {
   }, [history.location]);
 
   const handleMenuClick = (e, { name }) => {
-    //console.log(name);
+    console.log(name);
     switch (name) {
       case "home": {
         history.push(adminRoutes.ADMIN_DASH);
@@ -49,6 +52,10 @@ const AdminNavMenu = (props) =>  {
       };
       case "rooms": {
         history.push("/admin/rooms");
+        break;
+      }
+      case "dining_entertainment": {
+        history.push("/admin/dining_entertainment");
         break;
       }
       case "posts": {
@@ -93,6 +100,11 @@ const AdminNavMenu = (props) =>  {
       <Menu.Item
         name='rooms'
         active={active === 'rooms'}
+        onClick={handleMenuClick}
+      />
+      <Menu.Item
+        name="dining_entertainment"
+        active={active === "dining_entertainment"}
         onClick={handleMenuClick}
       />
       <Menu.Item

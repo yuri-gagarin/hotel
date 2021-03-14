@@ -1,4 +1,4 @@
-import { diningConstants } from "../constants";
+import { diningModelConstants } from "../constants";
 const {
   DINING_MODEL_REQUEST,
   DINING_MODEL_CREATED,
@@ -14,7 +14,7 @@ const {
   CLEAR_DINING_MODEL_DATA,
   ADD_DINING_MODEL_TO_STATE,
   OPEN_DINING_MODEL
-} = diningConstants;
+} = diningModelConstants;
 
 const initialState = {
   status: status,
@@ -33,7 +33,7 @@ const diningModelReducer = (state = initialState, { type, payload }) => {
     case ADD_DINING_MODEL_TO_STATE: {
       return {
         ...state,
-        createdDiningModels: [ ...state.createdDiningModelss, payload.newDiningModel ]
+        createdDiningModels: [ ...state.createdDiningModels, payload.newDiningModel ]
       };
     };
     case SET_DINING_MODELS: {

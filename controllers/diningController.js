@@ -1,4 +1,4 @@
-import DiningModel from "../models/Room";
+import DiningModel from "../models/DiningModel";
 import DiningModelImage from "../models/DiningImage";
 import MenuImage from "../models/MenuImage";
 // helpers //
@@ -24,13 +24,13 @@ export default {
   },
   createDiningModel: (req, res) => {
     const  { diningModelData } = req.body;
-    const populateQuery = [
-      { path:'images', model: "DiningModelImage" }, 
-      { path: "menuImages" , model: "DiningModelMenuImage" }
-    ];
+    
     return DiningModel.create({ ...diningModelData, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()) })
       .then((createdModel) => {
-        return DiningModel.populate(createdModel, populateQuery).execPopulate();
+        return createdModel
+          .populate({ path:'images', model: "DiningModelImage" })
+          .populate({ path: "menuImages" , model: "MenuImage" })
+          .execPopulate()
       })
       .then((newDiningModel) => {
         return res.status(200).json({
@@ -56,7 +56,7 @@ export default {
     // 
     const populateQuery = [
       { path:'images', model: "DiningModelImage" }, 
-      { path: "menuImages" , model: "DiningModelMenuImage" }
+      { path: "menuImages" , model: "MenuImage" }
     ];
 
     const updatedDiningModelImages = diningModelImages.currentImages.map((img) => `${img._id}` );

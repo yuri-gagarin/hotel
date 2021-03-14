@@ -20,7 +20,7 @@ const diningModelSchema = new Schema({
   }],
   menuImages: [{
     type: Schema.Types.ObjectId,
-    ref: "DiningModelMenuImage"
+    ref: "MenuImage"
   }],
   createdAt: {
     type: Date,
@@ -34,4 +34,4 @@ const diningModelSchema = new Schema({
   }
 });
 
-export default mongoose.model("DiningModel",  contactPostSchema);
+export default mongoose.model("DiningModel",  diningModelSchema);

@@ -59,7 +59,7 @@ export const roomConstants = {
   CLEAR_ROOM_DATA: "CLEAR_ROOM_DATA"
 };
 
-export const diningConstants = {
+export const diningModelConstants = {
   DINING_MODEL_REQUEST: "DINING_MODEL_REQUEST",
   DINING_MODEL_CREATED: "DINING_MODEL_CREATED",
   DINING_MODEL_UPDATED: "DINING_MODEL_UPDATED",

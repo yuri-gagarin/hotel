@@ -1,5 +1,5 @@
 import axios from "axios";
-import { diningConstants } from "../constants";
+import { diningModelConstants } from "../constants";
 const {
   UPDATE_STATE,
   CLEAR_DINING_MODEL_DATA,
