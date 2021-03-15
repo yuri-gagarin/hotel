@@ -10,7 +10,7 @@ const {
   ROOM_IMG_DELETED,
   ROOM_IMG_ERROR,
   SET_ROOMS,
-  SET_PREVIEW_IMAGES,
+  SET_ROOM_PREVIEW_IMAGES,
   CLEAR_ROOM_DATA,
   ADD_ROOM_TO_STATE,
   OPEN_ROOM
@@ -54,7 +54,7 @@ const roomReducer = (state = initialState, { type, payload }) => {
         error: payload.error
       };
     };
-    case SET_PREVIEW_IMAGES: {
+    case SET_ROOM_PREVIEW_IMAGES: {
       return {
         ...state,
         loading: payload.loading,

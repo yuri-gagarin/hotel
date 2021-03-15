@@ -1,5 +1,9 @@
-import React from 'react'
-import { Button, Card, Image } from 'semantic-ui-react'
+import React from 'react';
+import { Button, Card, Image } from 'semantic-ui-react';
+// styles and css //
+import styles from "./css/roomHolder.module.css";
+// helpers //
+import { trimStringToSpecificLength } from "../../helpers/displayHelpers";
 
 const RoomHolder = (props) => {
   const { room, openRoom, deleteRoom } = props;
@@ -15,14 +19,19 @@ const RoomHolder = (props) => {
  
   return (
     <Card >
-      <Card.Content>
-        <Card.Header>{room.roomType}</Card.Header>
+      <Card.Content textAlign={"center"}>
+        <Card.Header style={{ marginBottom: "0.5em" }}>
+          <div className={ styles.headerTitle }>Room Type:</div>
+          <div className={ styles.headerRoomType }>{room.roomType}</div>
+        </Card.Header>
         <Image
           size='small'
+          rounded
           src={imgPath}
         />
         <Card.Description>
-          {room.description}
+          <p>Room Description:</p>
+          {trimStringToSpecificLength(room.description)}
         </Card.Description>
       </Card.Content>
       <Card.Content extra>

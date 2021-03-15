@@ -22,16 +22,27 @@ export default {
       });
   },
   createRoom: (req, res) => {
-    const  { roomData } = req.body;
+    const { roomData } = req.body;
+    let createdRoom;
     ///   channel managert data //
     return Room.create(roomData)
       .then((room) => {
+        createdRoom = room;
         return Room.populate(room, { path: "images", model: "RoomImage"});
       })
-      .then((newRoom) => {
+      .then((populatedRoom) => {
+        if (populatedRoom.populated("images")) {
+          // update image models //
+          const imageIdsToUpdate = populatedRoom.images.map((roomImg) => roomImg._id);
+          return RoomImage.updateMany({ _id: imageIdsToUpdate, }, { room: populatedRoom._id });
+        } else {
+          return Promise.resolve({ nModified: 0 });
+        }
+      })
+      .then((_) => {
         return res.status(200).json({
           responseMsg: "Room created",
-          newRoom: newRoom
+          newRoom: createdRoom
         });
       })
       .catch((error) => {
@@ -44,10 +55,11 @@ export default {
       
   },
   updateRoom: (req, res) => {
-    let status, foundRoom;
+    let status, editedRoom;
     const roomId = req.params.roomId;
     const { roomData, roomImages } = req.body;
     const updatedImages = roomImages.currentImages.map((img) => `${img._id}` );
+
     return Room.findOneAndUpdate(
       { _id: roomId },
       {
@@ -65,13 +77,20 @@ export default {
       },
       { new: true }
     ).then((updatedRoom) => {
+      editedRoom = updatedRoom;
       return Room.populate(updatedRoom, { path: "images", model: "RoomImage" });
     })
-    .then((room) => {
-      console.log(room);
+    .then((populatedRoom) => {
+      if (populatedRoom.populated("images")) {
+        return RoomImage.updateMany({ _id: updatedImages },  { room: populatedRoom._id }).exec();
+      } else {
+        return Promise.resolve({ nModified: 0 });
+      }
+    })
+    .then((_) => {
       return res.status(200).json({
         responseMsg: "Room Updated",
-        updatedRoom: room
+        updatedRoom: editedRoom
       });
     })
     .catch((error) => {

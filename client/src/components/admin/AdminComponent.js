@@ -157,7 +157,7 @@ const AdminComponent = (props) => {
       <Route path="/admin/posts">
         <PostsIndexContainer />
       </Route>
-      <Route path="/admin/contactPosts">
+      <Route path="/admin/contact_requests">
         <ContactPostContainer contactPostState={contactPostState} />
       </Route>
       <Route path="/admin/services">

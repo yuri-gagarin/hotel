@@ -17,11 +17,11 @@ const DiningEntertainmentContainer = (props) => {
  
   return (
     <Card >
-      <Card.Content>
+      <Card.Content textAlign="center">
         <Card.Header>{diningModel.title}</Card.Header>
         <Image
-          fluid
-          size='small'
+          rounded
+          size="big"
           src={imgPath}
         />
         <Card.Description>

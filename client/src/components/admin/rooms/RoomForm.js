@@ -288,12 +288,16 @@ const RoomForm = (props) => {
           );
         })
       }
-      <Form.Field style={{marginTop: "0.5em"}}
-        id='form-button-control-public'
-        control={Button}
-        content='Save All'
-        onClick={handleFormSubmit}
-      />
+      <Form.Field>
+        <Button 
+          inverted
+          color="blue"
+          style={{marginTop: "0.5em"}}
+          content='Save All'
+          onClick={handleFormSubmit}
+        />
+      </Form.Field>
+     
      
     </Form>
   )

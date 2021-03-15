@@ -16,19 +16,19 @@ const AdminNavMenu = (props) =>  {
     const pathName = history.location.pathname;
     // set the navbar active item based on history //
     if(pathName.includes("messages")) {
-      setActiveItem("messages");
+      setActiveItem("messenger");
     } 
     else if (pathName.includes("rooms")) {
       setActiveItem("rooms");
     }
     else if (pathName.includes("dining_entertainment")) {
-      setActiveItem("dining_entertainment");
+      setActiveItem("dining_and_entertainment");
     }
     else if (pathName.includes("posts")) {
       setActiveItem("posts");
     }
     else if (pathName.includes("contact_requests")) {
-      setActiveItem("contactRequests");
+      setActiveItem("contact_requests");
     }
     else if(pathName.includes("services")) {
       setActiveItem("services");
@@ -40,13 +40,12 @@ const AdminNavMenu = (props) =>  {
   }, [history.location]);
 
   const handleMenuClick = (e, { name }) => {
-    console.log(name);
     switch (name) {
       case "home": {
         history.push(adminRoutes.ADMIN_DASH);
         break;
       };
-      case "messages": {
+      case "messenger": {
         history.push(adminRoutes.ADMIN_MESSAGES);
         break;
       };
@@ -54,7 +53,7 @@ const AdminNavMenu = (props) =>  {
         history.push("/admin/rooms");
         break;
       }
-      case "dining_entertainment": {
+      case "dining_and_entertainment": {
         history.push("/admin/dining_entertainment");
         break;
       }
@@ -66,8 +65,8 @@ const AdminNavMenu = (props) =>  {
         history.push("/admin/services");
         break;
       };
-      case "contactRequests": {
-        history.push("/admin/contactPosts");
+      case "contact_requests": {
+        history.push("/admin/contact_requests");
         break;
       }
       case "regulate users": {
@@ -93,8 +92,8 @@ const AdminNavMenu = (props) =>  {
         onClick={handleMenuClick}
       />
       <Menu.Item
-        name='messages'
-        active={active === 'messages'}
+        name='messenger'
+        active={active === 'messenger'}
         onClick={handleMenuClick}
       />
       <Menu.Item
@@ -102,9 +101,14 @@ const AdminNavMenu = (props) =>  {
         active={active === 'rooms'}
         onClick={handleMenuClick}
       />
+       <Menu.Item
+        name="services"
+        active={active === "services"}
+        onClick={handleMenuClick}
+      />
       <Menu.Item
-        name="dining_entertainment"
-        active={active === "dining_entertainment"}
+        name="dining_and_entertainment"
+        active={active === "dining_and_entertainment"}
         onClick={handleMenuClick}
       />
       <Menu.Item
@@ -113,19 +117,14 @@ const AdminNavMenu = (props) =>  {
         onClick={handleMenuClick}
       />
       <Menu.Item 
-        name='contactRequests'
-        active={active === "contactRequests"}
-        onClick={handleMenuClick}
-      />
-      <Menu.Item
-        name="services"
-        active={active === "services"}
+        name='contact_requests'
+        active={active === "contact_requests"}
         onClick={handleMenuClick}
       />
       <Menu.Menu position='right'>
         <Menu.Item 
-          name="regulate users"
-          active={active === "regulate users"}
+          name="regulate_users"
+          active={active === "regulate_users"}
           onClick={handleMenuClick}
         />
         <Menu.Item

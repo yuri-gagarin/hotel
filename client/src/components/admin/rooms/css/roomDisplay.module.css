@@ -1,0 +1,66 @@
+/* room details styles */
+.roomDetailsDiv {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 1em;
+}
+.roomDetail {
+  display: flex;
+  padding: 0.5em 1em;
+  border: 1px solid green;
+  border-radius: 2px;
+  margin-right: 0.5em;
+}
+/* room description styles */
+.roomDescriptionDiv {
+  border: 1px solid grey;
+  border-radius: 2px; 
+  padding: 0.5em 1em;
+  margin-top: 1em;
+}
+
+/* room options style */
+.roomOptionDiv {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 1em;
+}
+.roomOption {
+  display: flex;
+  flex-direction: row;
+  margin-top: 0.5em;
+  margin-right: 0.5em;
+  padding: .5em 1em;
+  border-radius: 2px;
+}
+.roomOption > i {
+  font-size: 1.5em;
+}
+.roomOption > span {
+  color: black;
+  margin-left: 0.5em;
+}
+.roomOptionAvailable {
+  border: 1px solid green;
+  color: green;
+}
+.roomOptionNotAvailable {
+  border: 1px solid red;
+  color: red;
+}
+/* */
+
+/* room images styles */
+.roomImagesDiv {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.roomImage {
+  border: 4px solid rgb(103, 103, 207);
+  border-radius: 5px;
+  margin-right: 0.5em;
+  cursor: pointer;
+}

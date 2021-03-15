@@ -4,43 +4,11 @@ import {
   Button, Grid, Image, Item, Segment, Container
 } from "semantic-ui-react";
 // additional component imports //
-import RoomForm from "./RoomForm";
 import EditRoomDisplay from "./EditRoomDisplay";
-
-const style = {
-  metaStyle: {
-    border: "2px solid grey",
-    padding: "0.5em",
-    marginRight: "0.5em",
-    marginBottom: "0.5em",
-    display: "inline-block"
-  },
-  roomDescription: {
-    border: "2px solid grey",
-    padding: "0.5em",
-    marginTop: "0.5em",
-    marginBottom: "1em",
-    fontSize: "18px",
-  },
-  roomImage: {
-    border: "1px solid grey",
-    marginRight: "0.5em",
-    marginBottom: "1em",
-    display: "inline-block"
-  },
-  formButton: {
-    marginTop: "1em",
-    marginBottom: "1em"
-  }
-};
-const {
-  metaStyle, roomDescription, roomImage, formButton
-} = style;
-
-const normalizePath = (uploadPath) => {
-  const imgSourcePath = uploadPath.split("/");
-  return  "/" + imgSourcePath[1] + "/" + imgSourcePath[2] + "/" + imgSourcePath[3];
-};
+// styles and css //
+import styles from "./css/roomDisplay.module.css";
+// helpers //
+import { setImagePath } from "../../helpers/displayHelpers";
 
 const RoomDisplay = (props) => {
   const { room, history } = props;
@@ -66,42 +34,89 @@ const RoomDisplay = (props) => {
   };
 
   return (
-    <Grid.Column width={14}>
+    <Grid.Column width={15}>
       <div>
+          <h5>Room Type:</h5>
           <h1>{room.roomType}</h1>
-          <h4>Room Details</h4>
-          <div>
-            <div style={metaStyle}>Area: {room.area}</div>
-            <div style={metaStyle}>Sleeps: {room.sleeps}</div>
-            <div style={metaStyle}>Price: {room.price}</div>
-            <div style={metaStyle}>Beds: {room.beds}</div>
-            <div style={metaStyle}>Couches: {room.couches}</div>
-
+          <h5>Room Details:</h5>
+          <div className={ styles.roomDetailsDiv }>
+            <div className={ styles.roomDetail }>
+              Area: {room.area}
+            </div>
+            <div className={ styles.roomDetail }>
+              Sleeps: {room.sleeps}
+            </div>
+            <div className={ styles.roomDetail }>
+              Price: {room.price}
+            </div>
+            <div className={ styles.roomDetail }>
+              Beds: {room.beds}
+            </div>
+            <div className={ styles.roomDetail }>
+              Couches: {room.couches}
+            </div>
           </div>
-          <h4>Description</h4>
-          <div style={roomDescription}>{room.description}</div>
-          <h4>Room Options</h4>
-          <div>
-            <div style={metaStyle}>Private Bathroom: {options.privateBathroom ? "Yes" : "No"}</div>
-            <div style={metaStyle}>Suite Bathroom: {options.suiteBathroom ? "Yes" : "No"}</div>
-            <div style={metaStyle}>Balcony: {options.balcony ? "Yes" : "No"}</div>
-            <div style={metaStyle}>Terrace: {options.terrace ? "Yes" : "No"}</div>
-            <div style={metaStyle}>Street View: {options.streetView ? "Yes" : "No"}</div>
-            <div style={metaStyle}>Mountain View: {options.mountainView ? "Yes" : "No"}</div>
-            <div style={metaStyle}>River View: {options.riverView ? "Yes" : "No"}</div>
-            <div style={metaStyle}>TV: {options.tv ? "Yes" : "No"}</div>
-            <div style={metaStyle}>WiFi: {options.wifi ? "Yes" : "No"}</div>
-            <div style={metaStyle}>Air Conditioning: {options.airConditioning ? "Yes" : "No"}</div>
+          <h5>Description:</h5>
+          <div className={ styles.roomDescriptionDiv }>
+            <p>{room.description}</p>
+          </div>
+          <h5>Room Options:</h5>
+          <div className={ styles.roomOptionDiv }>
+            <div className={`${styles.roomOption} ${options.privateBathroom ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-toilet"></i>
+              <span>Private Bathroom: {options.privateBathroom ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.suiteBathroom ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-bath"></i>
+              <span>Bathtub: {options.suiteBathroom ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.jacuzzi ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-hot-tub"></i>
+              <span>Jacuzzi: {options.jacuzzi ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.balcony ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-warehouse"></i>
+              <span>Balcony: {options.balcony ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.terrace ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-store"></i>
+              <span>Terrace: {options.terrace ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.streetView ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-road"></i>
+              <span>Street View: {options.streetView ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.mountainView ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-mountain"></i>
+              <span>Mountain View: {options.mountainView ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.riverView ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-water"></i>
+              <span>River View: {options.riverView ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.tv ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-tv"></i>
+              <span>TV: {options.tv ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.wifi ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-wifi"></i>
+              <span>WiFi: {options.wifi ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.airConditioning ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-snowflake"></i>
+              <span>Air Conditioning: {options.airConditioning ? "Yes" : "No"}</span>
+            </div>
           </div>
           <hr />
-            <div>Room Images</div>
-          <hr />
-          {
-            images.map((img) => <Image key={img._id} style={roomImage} size='medium' src={normalizePath(img.path)} />)
-          }
+            <h4>Uploaded Room Images:</h4>
+            <div className={ styles.roomImagesDiv }>
+              {
+                images.map((img) => <Image className={ styles.roomImage } key={img._id} size='medium' src={setImagePath(img.path)} />)
+              }
+            </div>
       </div>
       {
-        formOpen ? <Button style={formButton} onClick={openForm}>Close</Button> : <Button style={formButton} onClick={openForm}>Edit Room</Button>
+        formOpen ? <Button inverted color="green" style={formButton} onClick={openForm}>Close</Button> : <Button inverted color="green" onClick={openForm}>Edit Room</Button>
       }
       { formOpen ? <EditRoomDisplay history={history} room={room} /> : null }
     </Grid.Column>

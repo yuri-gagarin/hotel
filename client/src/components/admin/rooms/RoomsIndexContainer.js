@@ -15,6 +15,8 @@ import { connect } from "react-redux";
 import { fetchRooms, openRoom, deleteRoom, clearRoomData } from "../../../redux/actions/roomActions";
 // router imports //
 import { withRouter, Route } from "react-router-dom";
+// styles and css //
+import styles from "./css/roomIndexCont.module.css";
 
 const RoomsIndexContainer = (props) => {
   const { 
@@ -55,18 +57,22 @@ const RoomsIndexContainer = (props) => {
   return (
     <React.Fragment>
       <Grid.Row>
-        <Grid.Column width={14}>
+        <Grid.Column width={15} className={ styles.headerCol }>
           <h5>Current Rooms in Hotel</h5>
         </Grid.Column>
       </Grid.Row>
       <Route path={"/admin/rooms"} exact={true}>
         <Grid.Row>
-          <Grid.Column width={14}>
-            <Button onClick={openNewRoomForm}>Add New Room</Button>
+          <Grid.Column width={15} className={ styles.buttonsCol }>
+            <Button color="green" onClick={openNewRoomForm}>Add New Room</Button>
+            <Button.Group>
+              <Button color="blue">Take all Rooms online</Button>
+              <Button color="orange">Take all Rooms offline</Button>
+            </Button.Group>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={14}>
+          <Grid.Column width={15} className={ styles.contentCol }>
             <Card.Group>
             {
               createdRooms.map((room) => {
@@ -87,20 +93,24 @@ const RoomsIndexContainer = (props) => {
       </Route>
       <Route path={"/admin/rooms/new"}>
         <Grid.Row>
-          <Grid.Column width={14}>
+          <Grid.Column width={15}>
             <Button onClick={goBackToRooms}>Back</Button>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={14}>
+          <Grid.Column width={15}>
             <RoomForm history={history} />
           </Grid.Column>
         </Grid.Row>
       </Route>
       <Route path={"/admin/rooms/edit"}>
         <Grid.Row>
-          <Grid.Column width={14}>
-            <Button onClick={goBackToRooms}>Back</Button>
+          <Grid.Column width={15} className={ styles.editColButtons }>
+            <Button inverted color="green" onClick={goBackToRooms}>Back</Button>
+            <Button.Group>
+              <Button color="blue">Take Online</Button>
+              <Button color="orange">Take Offline</Button>
+            </Button.Group>
           </Grid.Column>
         </Grid.Row>
         <RoomDisplay room={roomState.roomData} history={history} />

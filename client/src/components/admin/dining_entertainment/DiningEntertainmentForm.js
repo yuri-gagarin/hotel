@@ -8,6 +8,7 @@ import {
 } from "semantic-ui-react";
 // additional component imports  //
 import DiningEntertainmentImageThumb from "./DiningEntertainmentImgThumb";
+import DiningEntertainmentTypeDropdown from "./form_components/DiningEntertainmentTypeDropdown";
 import FileInput from "../rooms/FileInput";
 // redux imports  //
 import { connect } from "react-redux";
@@ -66,6 +67,13 @@ const DiningEntertainmentForm = (props) => {
       ...diningModelDetails,
       description: data.value
     });
+  };
+  // select handlers //
+  const handleSelect = (_e, data) => {
+    console.log(data.value);
+  };
+  const handleClear = (_e, data) => {
+    console.log(data);
   };
   
   const handleFormSubmit = () => {
@@ -130,6 +138,10 @@ const DiningEntertainmentForm = (props) => {
           value={diningModelDetails.hours}
         />
       </Form.Group>
+      <DiningEntertainmentTypeDropdown 
+        handleSelect={ handleSelect }
+        handleClear={ handleClear }
+      />
       <Form.Field
         id='form-textarea-control-opinion'
         control={TextArea}

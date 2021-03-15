@@ -1,0 +1,23 @@
+.headerCol {
+  border: 1px solid grey;
+  border-radius: 3px;
+  padding: 1em;
+}
+
+.buttonsCol {
+  border: 1px solid grey;
+  border-radius: 3px;
+  padding: 1em;
+}
+
+.contentCol {
+  border: 1px solid grey;
+  border-radius: 3px;
+  padding: 1em;
+}
+
+.editColButtons {
+  border: 1px solid grey;
+  border-radius: 3px;
+  padding: 1em;
+}
