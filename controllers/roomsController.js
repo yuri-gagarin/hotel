@@ -25,7 +25,7 @@ export default {
     const { roomData } = req.body;
     let createdRoom;
     ///   channel managert data //
-    return Room.create(roomData)
+    return Room.create({ ...roomData, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()), live: false })
       .then((room) => {
         createdRoom = room;
         return Room.populate(room, { path: "images", model: "RoomImage"});
@@ -57,49 +57,73 @@ export default {
   updateRoom: (req, res) => {
     let status, editedRoom;
     const roomId = req.params.roomId;
-    const { roomData, roomImages } = req.body;
-    const updatedImages = roomImages.currentImages.map((img) => `${img._id}` );
+    const { roomData = {}, roomImages = {}, changeOnlineStatus } = req.body;
+    const updatedImages = roomImages.currentImages ? roomImages.currentImages.map((img) => `${img._id}` ) : [];
 
-    return Room.findOneAndUpdate(
-      { _id: roomId },
-      {
-        $set: { 
-          roomType: roomData.roomType,
-          area: roomData.area,
-          sleeps: roomData.sleeps,
-          price: roomData.price,
-          beds: roomData.beds,
-          couches: roomData.couches,
-          description: roomData.description,
-          images: [ ...updatedImages ],
-          options: { ...roomData.options }
+    if (changeOnlineStatus) {
+      const { status } = changeOnlineStatus;
+      return Room.findOneAndUpdate(
+        { _id: roomId },
+        { $set: { live: status } },
+        { new: true }
+      )
+      .populate("images").exec()
+      .then((updatedRoom) => {
+        return res.status(200).json({
+          responseMsg: `Current room is now: ${updatedRoom.live ? "Live" : "Not Live"}`,
+          updatedRoom: updatedRoom
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          responseMsg: "An error occured",
+          error: error
+        });
+      });
+    }
+    else {
+      return Room.findOneAndUpdate(
+        { _id: roomId },
+        {
+          $set: { 
+            roomType: roomData.roomType,
+            area: roomData.area,
+            sleeps: roomData.sleeps,
+            price: roomData.price,
+            beds: roomData.beds,
+            couches: roomData.couches,
+            description: roomData.description,
+            images: [ ...updatedImages ],
+            options: { ...roomData.options },
+            editedAt: new Date(Date.now())
+          },
         },
-      },
-      { new: true }
-    ).then((updatedRoom) => {
-      editedRoom = updatedRoom;
-      return Room.populate(updatedRoom, { path: "images", model: "RoomImage" });
-    })
-    .then((populatedRoom) => {
-      if (populatedRoom.populated("images")) {
-        return RoomImage.updateMany({ _id: updatedImages },  { room: populatedRoom._id }).exec();
-      } else {
-        return Promise.resolve({ nModified: 0 });
-      }
-    })
-    .then((_) => {
-      return res.status(200).json({
-        responseMsg: "Room Updated",
-        updatedRoom: editedRoom
+        { new: true }
+      ).then((updatedRoom) => {
+        editedRoom = updatedRoom;
+        return Room.populate(updatedRoom, { path: "images", model: "RoomImage" });
+      })
+      .then((populatedRoom) => {
+        if (populatedRoom.populated("images")) {
+          return RoomImage.updateMany({ _id: updatedImages },  { room: populatedRoom._id }).exec();
+        } else {
+          return Promise.resolve({ nModified: 0 });
+        }
+      })
+      .then((_) => {
+        return res.status(200).json({
+          responseMsg: "Room Updated",
+          updatedRoom: editedRoom
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        return res.status(status || 500).json({
+          responseMsg: "An error occured",
+          error: error
+        });
       });
-    })
-    .catch((error) => {
-      console.error(error);
-      return res.status(status || 500).json({
-        responseMsg: "An error occured",
-        error: error
-      });
-    });
+    }
   },
   deleteRoom: (req, res) => {
     const roomId = req.params.roomId;

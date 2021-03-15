@@ -14,10 +14,19 @@
   border: 1px solid grey;
   border-radius: 3px;
   padding: 1em;
+  height: 100%;
 }
 
 .editColButtons {
   border: 1px solid grey;
   border-radius: 3px;
   padding: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.roomOnlineLabel > i {
+  margin: 0 auto !important;
 }

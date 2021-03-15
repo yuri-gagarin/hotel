@@ -5,6 +5,9 @@
   flex-wrap: wrap;
   margin-top: 1em;
 }
+.roomDetailsHeader {
+  width: 100%;
+}
 .roomDetail {
   display: flex;
   padding: 0.5em 1em;
@@ -26,6 +29,9 @@
   flex-direction: row;
   flex-wrap: wrap;
   margin-top: 1em;
+}
+.roomOptionHeader {
+  width: 100%;
 }
 .roomOption {
   display: flex;
@@ -63,4 +69,10 @@
   border-radius: 5px;
   margin-right: 0.5em;
   cursor: pointer;
+}
+
+/* buttons div */
+.buttonsDiv {
+  display: flex;
+  margin-top: 1em;
 }

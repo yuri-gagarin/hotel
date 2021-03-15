@@ -83,11 +83,6 @@ const ConversationIndexContainer = (props) => {
 
   return (
     <React.Fragment>
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <h5 style={{textAlign: "center"}}>Active Conversations</h5>
-        </Grid.Column>
-      </Grid.Row>
       <Grid.Row style={{borderTop: "1px solid grey", borderBottom: "1px solid grey" }}>
         <Grid.Column width={5} style={{ height: "90vh", paddingLeft: "0.5em", paddingRight: 0 }}>
           <ConversationComponent 

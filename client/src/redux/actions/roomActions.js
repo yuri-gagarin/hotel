@@ -8,6 +8,7 @@ const {
   ROOM_UPDATED,
   ROOM_DELETED,
   ROOM_ERROR,
+  CHANGE_ROOM_ONLINE_STATUS,
   ROOM_IMG_REQUEST,
   ROOM_IMG_UPLOADED,
   ROOM_IMG_DELETED,
@@ -66,6 +67,13 @@ export const roomRequest = () => {
   };
 };
 
+export const changeRoomOnlineStatus = (stateData) => {
+  return {
+    type: CHANGE_ROOM_ONLINE_STATUS,
+    payload: stateData
+  };
+};
+
 export const roomCreated = (stateData) => {
   return {
     type: ROOM_CREATED,
@@ -103,15 +111,32 @@ export const roomDeleted = (stateData) => {
   };
 };
 
-export const roomError = (error) => {
-  console.error(error);
-  return {
-    type: ROOM_ERROR,
-    payload: {
-      status: 500,
-      error: error
-    }
-  };
+export const roomError = (axiosError) => {
+  // remove and set into own function later //
+  console.log(axiosError)
+  const errResponse = axiosError.response;
+  if (errResponse) {
+    const { data, status } = errResponse;
+    const { responseMsg, error } = data;
+    return {
+      type: ROOM_ERROR,
+      payload: {
+        responseMsg: responseMsg,
+        status: status,
+        error: error ? error : axiosError
+      }
+    };
+  } else {
+    return {
+      type: ROOM_ERROR,
+      payload: {
+        responseMsg: "An error occured",
+        status: status,
+        error: axiosError
+      }
+    };
+  }
+  
 };
 
 export const openRoom = (rooms, roomId) => {
@@ -301,6 +326,51 @@ export const updateRoom = (dispatch, roomData, roomImages = {}, currentRooms = [
       console.error(error);
       dispatch(roomError(error));
     })
+};
+
+export const onlineRoomStatusAPIRequest = (dispatch, roomData, currentRooms=[]) => {
+  console.log("fired change online status")
+  const { _id: roomId, live } = roomData;
+  const requestOptions = {
+    method: "patch",
+    url: "/api/rooms/" + roomId,
+    data: {
+      changeOnlineStatus: { status: !live },
+    }
+  };
+
+  dispatch(roomRequest());
+
+  return axios.request(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedRoom } = data;
+      console.log(data);
+
+      const updatedRooms = currentRooms.map((room) => {
+        if (room._id == updatedRoom._id) {
+          return {
+            ...updatedRoom
+          };
+        } else {
+          return room;
+        }
+      });
+      const roomStateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        roomData: updatedRoom,
+        roomImages: updatedRoom.images,
+        createdRooms: updatedRooms,
+        error: null
+      };
+      dispatch(changeRoomOnlineStatus(roomStateData));
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(roomError(error));
+    });
 };
 
 export const deleteRoom = (dispatch, roomId, currentRooms = []) => {

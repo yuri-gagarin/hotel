@@ -126,7 +126,7 @@ const AdminComponent = (props) => {
   };
 
   return (
-    <Grid stackable padded divided centered style={{paddingLeft: "1em", paddingRight: "1em"}}>
+    <Grid stackable padded divided centered style={{ paddingLeft: "1em", paddingRight: "1em", height: "100%" }}>
       <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={_clearSuccessState} />
       <ErrorComponent appGeneralState={appGeneralState} clearAppError={_clearAppError} />
       <Grid.Row>

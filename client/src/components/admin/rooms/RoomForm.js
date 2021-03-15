@@ -20,7 +20,6 @@ import {
   setPreviewImages 
 } from "../../../redux/actions/roomActions";
 // css 
-import styles from "./css/fileInput.module.css";
 // helpers //
 
 
@@ -121,6 +120,12 @@ const RoomForm = (props) => {
         });
         break;
       } 
+      case "Jacuzzi": {
+        setRoomOptions((state) => {
+          return checked ? { ...state, jacuzzi: true } : { ...state, jacuzzi: false };
+        });
+        break;
+      } 
       case "Balcony": {
         setRoomOptions((state) => {
           return checked ? { ...state, balcony: true } : { ...state, balcony: false };
@@ -157,15 +162,33 @@ const RoomForm = (props) => {
         })
         break;
       }
+      case "WiFi": {
+        setRoomOptions((state) => {
+          return checked ? { ...state, wifi: true } : { ...state, wifi: false };
+        })
+        break;
+      }
+      case "Phone": {
+        setRoomOptions((state) => {
+          return checked ? { ...state, phone: true } : { ...state, phone: false };
+        })
+        break;
+      }
       case "Air Conditioning": {
         setRoomOptions((state) => {
           return checked ? { ...state, airConditioning: true } : { ...state, airConditioning: false };
         })
         break;
       }
-      case "WiFi": {
+      case "Refrigerator": {
         setRoomOptions((state) => {
-          return checked ? { ...state, wifi: true } : { ...state, wifi: false };
+          return checked ? { ...state, refrigerator: true } : { ...state, refrigerator: false };
+        })
+        break;
+      }
+      case "Coffee Maker": {
+        setRoomOptions((state) => {
+          return checked ? { ...state, coffeeMaker: true } : { ...state, coffeeMaker: false };
         })
         break;
       }
@@ -264,16 +287,21 @@ const RoomForm = (props) => {
 
       />
        <Form.Field>
-        <Checkbox label='Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.privateBathroom}/>
+        <Checkbox label='Private Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.privateBathroom}/>
         <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.suiteBathroom} />
+        <Checkbox label='Jacuzzi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.jacuzzi} />
         <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.balcony} />
         <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.terrace} />
         <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.mountainView}/>
         <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.streetView}/>
         <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.riverView}/>
         <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.tv}/>
-        <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.airConditioning}/>
         <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.wifi}/>
+        <Checkbox label='Phone' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.phone}/>
+        <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.airConditioning}/>
+        <Checkbox label='Refrigerator' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.refrigerator}/>
+        <Checkbox label='Coffee Maker' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.cofeeMaker}/>
+
 
       </Form.Field>
       <FileInput uploadImage={uploadRoomImage} dataName={"roomImage"} />

@@ -1,0 +1,4 @@
+.defaultDisplay {
+  display: flex;
+  flex-direction: column;
+}

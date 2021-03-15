@@ -5,6 +5,7 @@ const {
   ROOM_UPDATED,
   ROOM_DELETED,
   ROOM_ERROR,
+  CHANGE_ROOM_ONLINE_STATUS,
   ROOM_IMG_REQUEST,
   ROOM_IMG_UPLOADED,
   ROOM_IMG_DELETED,
@@ -65,7 +66,6 @@ const roomReducer = (state = initialState, { type, payload }) => {
     case OPEN_ROOM: {
       return {
         ...state,
-        loading: payload.loading,
         roomData: { ...payload.roomData },
         error: payload.error
       };
@@ -76,6 +76,12 @@ const roomReducer = (state = initialState, { type, payload }) => {
         status: payload.status,
         loading: payload.loading,
         error: payload.error
+      };
+    };
+    case CHANGE_ROOM_ONLINE_STATUS: {
+      return {
+        ...state,
+        ...payload
       };
     };
     case ROOM_CREATED: {
@@ -118,6 +124,7 @@ const roomReducer = (state = initialState, { type, payload }) => {
         ...state,
         status: payload.status,
         loading: payload.loading,
+        responseMsg: payload.responseMsg,
         error: payload.error
       }
     }

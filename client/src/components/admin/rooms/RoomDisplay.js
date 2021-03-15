@@ -38,8 +38,8 @@ const RoomDisplay = (props) => {
       <div>
           <h5>Room Type:</h5>
           <h1>{room.roomType}</h1>
-          <h5>Room Details:</h5>
           <div className={ styles.roomDetailsDiv }>
+            <h5 className={ styles.roomDetailsHeader }>Room Details:</h5>
             <div className={ styles.roomDetail }>
               Area: {room.area}
             </div>
@@ -56,12 +56,12 @@ const RoomDisplay = (props) => {
               Couches: {room.couches}
             </div>
           </div>
-          <h5>Description:</h5>
           <div className={ styles.roomDescriptionDiv }>
+            <h5>Description:</h5>
             <p>{room.description}</p>
           </div>
-          <h5>Room Options:</h5>
           <div className={ styles.roomOptionDiv }>
+            <h5 className={ styles.roomOptionHeader }>Room Options:</h5>
             <div className={`${styles.roomOption} ${options.privateBathroom ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
               <i className="fas fa-toilet"></i>
               <span>Private Bathroom: {options.privateBathroom ? "Yes" : "No"}</span>
@@ -102,9 +102,21 @@ const RoomDisplay = (props) => {
               <i className="fas fa-wifi"></i>
               <span>WiFi: {options.wifi ? "Yes" : "No"}</span>
             </div>
+            <div className={`${styles.roomOption} ${options.phone ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-phone-volume"></i>
+              <span>Phone: {options.phone ? "Yes" : "No"}</span>
+            </div>
             <div className={`${styles.roomOption} ${options.airConditioning ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
-              <i className="fas fa-snowflake"></i>
+              <i className="fas fa-wind"></i>
               <span>Air Conditioning: {options.airConditioning ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.refrigerator ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-snowflake"></i>
+              <span>Refrigerator: {options.refrigerator ? "Yes" : "No"}</span>
+            </div>
+            <div className={`${styles.roomOption} ${options.coffeeMaker ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+              <i className="fas fa-coffee"></i>
+              <span>Coffee Maker: {options.coffeeMaker ? "Yes" : "No"}</span>
             </div>
           </div>
           <hr />
@@ -115,9 +127,12 @@ const RoomDisplay = (props) => {
               }
             </div>
       </div>
+      <div className={ styles.buttonsDiv }>
       {
-        formOpen ? <Button inverted color="green" style={formButton} onClick={openForm}>Close</Button> : <Button inverted color="green" onClick={openForm}>Edit Room</Button>
+        formOpen ? <Button inverted color="green" onClick={openForm}>Close</Button> : <Button inverted color="green" onClick={openForm}>Edit Room</Button>
       }
+      </div>
+     
       { formOpen ? <EditRoomDisplay history={history} room={room} /> : null }
     </Grid.Column>
   );
