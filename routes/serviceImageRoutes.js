@@ -6,7 +6,7 @@ export default function (router) {
   // @desc Uploads a ServiceImage //
   // @access PRIVATE //
   router
-    .route("/api/services/uploadServiceImage")
+    .route("/api/services/uploadServiceImage/:serviceId?")
     .post([serviceImageUploader], servicesController.uploadImage);
 
   // @route DELETE "/api/services/deleteServiceImage/:imageId" //

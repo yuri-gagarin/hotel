@@ -27,10 +27,10 @@ export default {
     ///   channel managert data //
     return Room.create({ ...roomData, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()), live: false })
       .then((room) => {
-        createdRoom = room;
         return Room.populate(room, { path: "images", model: "RoomImage"});
       })
       .then((populatedRoom) => {
+        createdRoom = populatedRoom;
         if (populatedRoom.populated("images")) {
           // update image models //
           const imageIdsToUpdate = populatedRoom.images.map((roomImg) => roomImg._id);
@@ -236,8 +236,6 @@ export default {
       })
       .then((room) => {
         updatedRoom = room;
-        console.log(deletedImage)
-        console.log(updatedRoom)
         return res.status(200).json({
           responseMsg: "Deleted the image",
           deletedImage: deletedImage,

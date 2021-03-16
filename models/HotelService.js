@@ -26,7 +26,8 @@ const hotelServiceSchema = new Schema({
     default: new Date(Date.now())
   },
   editedAt: {
-    type: Date
+    type: Date,
+    default: new Date(Date.now())
   }
 });
 

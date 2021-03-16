@@ -24,6 +24,7 @@ export default {
   },
   createHotelService: (req, res) => {
     const  { hotelServiceData } = req.body;
+    let createdService;
     const { errors, isValid } = validateHotelService(hotelServiceData);
     if (!isValid) { 
       return Promise.resolve()
@@ -35,14 +36,24 @@ export default {
         });
     };
 
-    return HotelService.create(hotelServiceData)
+    return HotelService.create({ ...hotelServiceData, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()), live: false })
       .then((service) => {
-        return HotelService.populate(service, { path: "images", model: "ServiceImage"});
+        return HotelService.populate(service, { path: "images", model: "ServiceImage" });
       })
-      .then((newService) => {
+      .then((populatedNewService) => {
+        createdService = populatedNewService;
+        if (populatedNewService.populated("images")) {
+          // update corresponding image models //
+          const imageIdsToUpdate = populatedNewService.images.map((image) => image._id);
+          return ServiceImage.updateMany({ _id: imageIdsToUpdate }, { hotelService: createdService._id });
+        } else {
+          return Promise.resolve({ nModified: 0 });
+        }
+      })
+      .then((_) => {
         return res.status(200).json({
           responseMsg: "New Service created",
-          newService: newService
+          newService: createdService
         });
       })
       .catch((error) => {
@@ -55,13 +66,29 @@ export default {
       
   },
   updateService: (req, res) => {
-    console.log("updating");
-    let status;
-    const serviceId = req.params.serviceId;
-    const { serviceData, serviceImages } = req.body;
-    console.log(52);
-    console.log(serviceImages);
+    let status, editedService;
+    const { serviceId } = req.params;
+    const { serviceData = {}, serviceImages = {}, changeOnlineStatus } = req.body;
     const updatedImages = serviceImages.currentImages.map((img) => `${img._id}` );
+
+    if (changeOnlineStatus) {
+      const { status = false } = changeOnlineStatus;
+      return HotelService.findOneAndUpdate(
+        { _id: serviceId },
+        { $set: { live: status, editedAt: new Date(Date.now()) } },
+        { new: true }
+      )
+      .populate("images").exec()
+      .then((editedHService) => {
+        editedService = editedHService;
+        const onlineStatus = editedService.live ? "ONLINE" : "OFFLINE";
+        return res.status(200).json({
+          responseMsg: `Current service online status is now: ${onlineStatus}`,
+          updatedService: editedService
+        });
+      });
+    };
+
     return HotelService.findOneAndUpdate(
       { _id: serviceId },
       {
@@ -70,18 +97,18 @@ export default {
           hours: serviceData.hours,
           price: serviceData.price,
           description: serviceData.description,
-          images: [ ...updatedImages ]
+          images: [ ...updatedImages ],
+          editedAt: new Date(Date.now())
         },
       },
       { new: true }
-    ).then((updatedService) => {
-      return HotelService.populate(updatedService, { path: "images", model: "ServiceImage" });
-    })
-    .then((service) => {
-      console.log(service);
+    )
+    .populate("images").exec()
+    .then((populatedService) => {
+      editedService = populatedService;
       return res.status(200).json({
         responseMsg: "Service Updated",
-        updatedService: service
+        updatedService: editedService
       });
     })
     .catch((error) => {
@@ -92,6 +119,7 @@ export default {
       });
     });
   },
+
   deleteHotelService: (req, res) => {
     let status, deletedService, imagePathsToDelete, imageIdsToDelete;
     const serviceId = req.params.serviceId;
@@ -132,24 +160,58 @@ export default {
         });
       });
   },
+
   uploadImage: (req, res) => {
     const imageUploadResult = req.locals.serviceImageUpload;
-    if (imageUploadResult.success) {
-      return ServiceImage.create({
-        path: imageUploadResult.imagePath
-      })
-      .then((serviceImage) => {
-        return res.status(200).json({
-          responseMsg: "Uploaded an image",
-          newImage: serviceImage
+    const { imagePath, success } = imageUploadResult;
+    const { serviceId } = req.params;
+    let uploadedImage, updatedService;
+
+    if (success) {
+      if (serviceId) {
+        // request is on an existing service //
+        return (
+          ServiceImage.create({ path: imagePath, hotelService: serviceId, createdAt: new Date(Date.now()) })
+        )
+        .then((createdImage) => {
+          uploadedImage = createdImage;
+          return (
+            HotelService 
+              .findOneAndUpdate({ _id: serviceId }, { $push: { images: createdImage._id } }, { new: true })
+              .populate("images").exec()
+          );
+        })
+        .then((populatedService) => {
+          updatedService = populatedService;
+          return res.status(200).json({
+            responseMsg: "Uploaded a Service image",
+            newImage: uploadedImage,
+            updatedService: updatedService
+          });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            responseMsg: "An error occured",
+            error: error
+          })
+        })
+      } else {
+        return ServiceImage.create({
+          path: imagePath, createdAt: new Date(Date.now())
+        })
+        .then((serviceImage) => {
+          return res.status(200).json({
+            responseMsg: "Uploaded an image",
+            newImage: serviceImage
+          });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            responseMsg: "A database error occured",
+            error: error
+          });
         });
-      })
-      .catch((error) => {
-        return res.status(500).json({
-          responseMsg: "A database error occured",
-          error: error
-        });
-      });
+      }
     } else {
       return res.status(500).json({
         responseMsg: "Upload not successful"
@@ -159,18 +221,32 @@ export default {
 
   deleteImage: (req, res) => {
     const { imageId } = req.params;
+    let deletedImage, updatedService;
+
     return ServiceImage.findOneAndDelete({ _id: imageId })
       .then((deletedImg) => {
         if (deletedImg) {
+          deletedImage = deletedImg;
           // remove from the files //
           return deleteFile(deletedImg.path);
         } else {
           return Promise.reject(new Error("No Image was found"));
         }
       })
-      .then((response) => {
+      .then((_) => {
+        const { _id : imageId, hotelService : serviceId } = deletedImage;
+        return (
+          HotelService
+            .findOneAndUpdate({ _id: serviceId }, { $pull: { images: imageId }, $set: { editedAt: new Date(Date.now()) } }, { new: true })
+            .populate("images").exec()
+        );
+      })
+      .then((populatedService) => {
+        updatedService = populatedService;
         return res.status(200).json({
-          responseMsg: "Deleted the image"
+          responseMsg: "Deleted the image",
+          deletedImage: deletedImage,
+          updatedService: updatedService
         });
       })
       .catch((error) => {
@@ -181,4 +257,4 @@ export default {
         });
       });
   }
-}
+};
