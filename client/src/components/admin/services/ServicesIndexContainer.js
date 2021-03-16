@@ -4,12 +4,14 @@ import {
   Button,
   Card,
   Grid,
+  Popup
 } from "semantic-ui-react";
 // additional imports //
 import ServiceForm from "./ServiceForm";
 import ServiceHolder from "./ServiceHolder";
 import ServiceDisplay from "./ServiceDisplay";
 import OnlinePopupControls from "../shared/OnlinePopupControls";
+import EditViewControls from "../shared/EditViewControls";
 // redux imports //
 import { connect } from "react-redux"; 
 // router imports //
@@ -37,15 +39,29 @@ const ServicesIndexContainer = (props) => {
 
   useEffect(() => {
     // services api call //
-    fetchServices();
+    let mounted = true;
+    if (mounted) {
+      fetchServices();
+    }
+    return () => mounted = false;
   }, []);
+  useEffect(() => {
+    console.log(48);
+    console.log(serviceData);
+  }, [ serviceData ]);
   // online/live online - offline api calls //
   const takeAllServicesOnline = () => {
 
   };
   const takeAllServicesOffline = () => {
     
-  }
+  };
+  const takeServiceOnline = () => {
+
+  };
+  const takeServiceOffline = () => {
+
+  };
   // form handlers //
   const openNewServiceForm = () => {
     clearServiceData();
@@ -109,12 +125,17 @@ const ServicesIndexContainer = (props) => {
       </Route>
       <Route path={"/admin/services/new"}>
         <Grid.Row>
-          <Grid.Column width={15} >
-            <Button onClick={goBackToServices}>Back</Button>
+          <Grid.Column width={15} className={ styles.indexViewControlsDiv } >
+            <Popup 
+              content="Content will NOT be saved"
+              trigger= {
+                <Button color="orange" onClick={goBackToServices}>Back</Button>
+              }
+            />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={15}>
+          <Grid.Column width={15} className={ styles.serviceFormColumn }>
             <ServiceForm history={history} />
           </Grid.Column>
         </Grid.Row>
@@ -122,7 +143,10 @@ const ServicesIndexContainer = (props) => {
       <Route path={"/admin/services/edit"}>
         <Grid.Row>
           <Grid.Column width={15}>
-            <Button onClick={goBackToServices}>Back</Button>
+            <div className={ styles.indexViewControlsDiv }>
+              <EditViewControls handleBack={ goBackToServices } modelType="service" model={ serviceData } takeOnline={ takeServiceOnline } takeOffline={ takeServiceOffline } />
+
+            </div>
             <ServiceDisplay  service={serviceData} history={history} />
           </Grid.Column>
         </Grid.Row>

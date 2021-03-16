@@ -1,5 +1,7 @@
 import React from 'react'
 import { Button, Card, Image } from 'semantic-ui-react'
+// css //
+import styles from "./css/serviceHolder.module.css";
 
 const ServiceHolder = (props) => {
   const { service, openService, deleteService } = props;
@@ -14,14 +16,15 @@ const ServiceHolder = (props) => {
   }
  
   return (
-    <Card >
-      <Card.Content>
+    <Card>
+      <Card.Content textAlign="center">
         <Card.Header>{service.serviceType}</Card.Header>
         <Image
-          size='small'
+          rounded
+          size="large"
           src={imgPath}
         />
-        <Card.Description>
+        <Card.Description textAlign="center">
           {service.description}
         </Card.Description>
       </Card.Content>
