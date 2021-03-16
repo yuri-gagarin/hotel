@@ -1,0 +1,59 @@
+.serviceDisplayCol {
+  border: 1px solid rgb(104, 159, 230);
+  padding: 1em;
+  border-radius: 2px;
+  margin-bottom: 1em;
+}
+/* service details divs and info */
+.serviceDetailsDiv {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 1em;
+}
+.serviceDetailsDiv > h4 {
+  width: 100%;
+}
+.serviceDetail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(104, 159, 230);
+  border-radius: 2px;
+  padding: 0.5em 1em;
+  margin-right: 0.5em;
+}
+
+/* service description divs and data */
+.serviceDescriptionDiv {
+  display: flex;
+  flex-direction: column;
+  
+}
+.serviceDescriptionDiv > p {
+  border: 1px solid rgb(104, 159, 230);
+  border-radius: 2px;
+  padding: 0.5em 1em;
+}
+
+/* service images divs and data */
+.serviceImagesDiv {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.serviceImagesDiv > h3 {
+  width: 100%;
+}
+.serviceImage {
+  border: 5px solid  rgb(104, 159, 230);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* buttons */
+.editServiceFormToggleDiv {
+  border: 1px solid rgb(104, 159, 230);
+  border-radius: 2px;
+  padding: 0.5em 1em;
+}

@@ -65,6 +65,7 @@ const AdminComponent = (props) => {
     }
     // event listener for closed window //
     window.addEventListener("beforeunload", saveAdminState);
+    history.push("/admin/services");
     return function () {
       window.removeEventListener("beforeunload", saveAdminState);
     }
@@ -134,6 +135,9 @@ const AdminComponent = (props) => {
           <AdminNavComponent logoutUser={logoutUser} />
         </Grid.Column>
       </Grid.Row>
+      <Route path="/admin/services">
+        <ServicesIndexContainer serviceState={serviceState} />
+      </Route>
       <Route path="/admin/dashboard">
         <AdminDashComponent 
           history={history}
@@ -160,9 +164,7 @@ const AdminComponent = (props) => {
       <Route path="/admin/contact_requests">
         <ContactPostContainer contactPostState={contactPostState} />
       </Route>
-      <Route path="/admin/services">
-        <ServicesIndexContainer serviceState={serviceState} />
-      </Route>
+     
     </Grid>
   )
 };

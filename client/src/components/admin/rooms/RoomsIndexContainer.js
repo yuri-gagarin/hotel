@@ -37,7 +37,11 @@ const RoomsIndexContainer = (props) => {
   const [ newRoomFormOpen, setNewRoomFormOpen ] = useState(false);
 
   useEffect(() => {
-   fetchRooms();
+    let mounted = true;
+    if (mounted) {
+      fetchRooms();
+    }
+    return () => mounted = false;
   }, []);
   
   const openNewRoomForm = () => {

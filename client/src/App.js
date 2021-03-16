@@ -76,7 +76,7 @@ const AppRoutes = (props) => {
     <Router>
       <ScrollToTop />
       <Switch>
-        <Route path={"/admin/*"} loggedIn={true} component={AdminComponent} />
+        <Route path={"/admin"} loggedIn={true} component={AdminComponent} />
         <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />
         <Route path={"/rooms"} exact={true} component={RoomsIndexContainer} />
         <Route path={"/services"} exact={true} component={ServicesIndexComponent} />

@@ -44,6 +44,17 @@ export const trimStringToSpecificLength = (string, length) => {
     return "Argument must be a string...";
   }
 };
+/**
+ * Capitalizes the string
+ * @param {string} string String to capitalize
+ */
+export const capitalizeString = (string) => {
+  if (string && typeof string === "string") {
+    return string.slice(0, 1).toUpperCase() + string.slice(1);
+  } else {
+    throw new Error("Invalid argument, expected a string");
+  }
+};
 
 
 export const isEmpty = (obj) => {

@@ -1,45 +1,26 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+// semantic ui react //
 import {
-  Button, Grid, Image, Item, Segment, Container
+  Button, Icon, Image, Segment, Popup
 } from "semantic-ui-react";
 // additional component imports //
 import EditServiceDisplay from "./EditServiceDisplay";
+// styles //
+import styles from "./css/serviceDisplay.module.css";
+// helpers //
+import { setImagePath } from "../../helpers/displayHelpers";
 
-const style = {
-  metaStyle: {
-    border: "2px solid grey",
-    padding: "0.5em",
-    marginRight: "0.5em",
-    marginBottom: "0.5em",
-    display: "inline-block"
-  },
-  serviceDescription: {
-    border: "2px solid grey",
-    padding: "0.5em",
-    marginTop: "0.5em",
-    marginBottom: "1em",
-    fontSize: "18px",
-  },
-  serviceImage: {
-    border: "1px solid grey",
-    marginRight: "0.5em",
-    marginBottom: "1em",
-    display: "inline-block"
-  },
-  formButton: {
-    marginTop: "1em",
-    marginBottom: "1em"
-  }
-};
-const {
-  metaStyle, serviceDescription, serviceImage, formButton
-} = style;
-
-const normalizePath = (uploadPath) => {
-  const imgSourcePath = uploadPath.split("/");
-  return  "/" + imgSourcePath[1] + "/" + imgSourcePath[2] + "/" + imgSourcePath[3];
-};
+const PopupWithButton = ({ contentString, buttonContent, buttonOnClick, color }) => {
+  return (
+    <Popup 
+      content={ contentString }
+      trigger={
+        <Button content={ buttonContent } onClick={ buttonOnClick } color={ color ? color : "grey" }/>
+      }
+    />
+  )
+}
 
 const ServiceDisplay = (props) => {
   const { service, history } = props;
@@ -62,33 +43,54 @@ const ServiceDisplay = (props) => {
     }
   }, [formOpen]);
 
-  const openForm = () => {
+  const toggleForm = () => {
     setFormOpen(!formOpen);
   };
 
   return (
-    <Grid.Column width={14}>
-      <div>
+    <React.Fragment>
+      <div className={ styles.serviceDisplayCol }>
+        <div className={ styles.serviceDetailsDiv }>
           <h4>Details</h4>
-          <div>
-            <div style={metaStyle}>Type: {service.serviceType}</div>
-            <div style={metaStyle}>Hours: {service.hours}</div>
-            <div style={metaStyle}>Price: {service.price}</div>
-          </div>
+          <div className={ styles.serviceDetail }>Type: {service.serviceType}</div>
+          <div className={ styles.serviceDetail }>Hours: {service.hours}</div>
+          <div className={ styles.serviceDetail }>Price: {service.price}</div>
+        </div>
+        <div className={ styles.serviceDescriptionDiv }>
           <h4>Description</h4>
-          <div style={serviceDescription}>{service.description}</div>
-          <hr />
-            <div>Uploaded Images</div>
-          <hr />
+          <p>{service.description}</p>
+        </div>
+        <hr />
+        <div className={ styles.serviceImagesDiv}>
+          <h3>Uploaded Images</h3>
           {
-            images.map((img) => <Image key={img._id} style={serviceImage} size='medium' src={normalizePath(img.path)} />)
+            images.length > 0 
+            ? 
+              images.map((img) => <Image key={img._id} className={ styles.serviceImage } size='medium' src={ setImagePath(img.path) } />)
+            : 
+              <Segment placeholder>
+                <Header icon>
+                  <Icon name="image outline" />
+                  No images are uploded for this service
+                </Header>
+                
+              </Segment>
           }
+        </div>
       </div>
+      <div className={ styles.editServiceFormToggleDiv }>
       {
-        formOpen ? <Button style={formButton} onClick={openForm}>Close</Button> : <Button style={formButton} onClick={openForm}>Edit Service</Button>
+        formOpen 
+        ? 
+          <PopupWithButton contentString="Changes will not be saved" buttonContent="Close" buttonOnClick={ toggleForm } color="orange" />
+        : 
+          <PopupWithButton contentString="Edit current Service" buttonContent="Edit" buttonOnClick={ toggleForm } color="green" />
       }
-      { formOpen ? <EditServiceDisplay history={history} service={service} /> : null }
-    </Grid.Column>
+      </div>
+      { 
+        formOpen ? <EditServiceDisplay history={history} service={service} /> : null 
+      }
+    </React.Fragment>
   );
 };
 // PropTypes validations //

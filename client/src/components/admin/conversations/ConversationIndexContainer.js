@@ -65,12 +65,16 @@ const ConversationIndexContainer = (props) => {
   } = props;
 
   useEffect(() => {
-    socket.on("newClientMessage", (data) => {
+    let mounted = true;
+    if (mounted) {
+      socket.on("newClientMessage", (data) => {
         const { conversationId, socketId, newMessage } = data;
         _newClientMessage({ conversationId: conversationId, clientSocketId: socketId, newMessage: newMessage }, adminConversationState);
         //scrollToRef(bottomMessageRef);
     });
     _fetchAllConversations();
+    }
+    return () => mounted = false;
   }, []);
 
   const openConversation = (conversationId) => {
