@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const roomImageSchema = new Schema({
   room: {
     type: Schema.Types.ObjectId,
-    ref: "room"
+    ref: "Room"
   },
   path: {
     type: String,
@@ -12,7 +12,7 @@ const roomImageSchema = new Schema({
   },
   uploadedAt: {
     type: Date,
-    default: Date.now
+    default: new Date(Date.now())
   }
 });
 

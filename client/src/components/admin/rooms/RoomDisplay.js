@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import {
   Button, Grid, Image, Item, Segment, Container
@@ -14,11 +14,20 @@ const RoomDisplay = (props) => {
   const { room, history } = props;
   const [formOpen, setFormOpen] = useState(false);
   const { options, images } = room;
+  
+  const roomRef = useRef(room);
 
   useEffect(() => {
     // close the room form on state change //
+    console.log(room)
     setFormOpen(false);
   }, [room]);
+
+  useEffect(() => {
+    if (room !== roomRef.current) {
+      setFormOpen(true);
+    }
+  }, [ room, roomRef.current]);
 
   useEffect(() => {
     // will scroll down the document when edit room form is open //
@@ -29,6 +38,13 @@ const RoomDisplay = (props) => {
     }
   }, [formOpen]);
 
+  /*
+  useEffect(() => {
+    if (prevImages.length !== images.length) {
+      setFormOpen(true);
+    }
+  }, [ imagesRef.current, images ]);
+  */
   const openForm = () => {
     setFormOpen(!formOpen);
   };
@@ -123,13 +139,15 @@ const RoomDisplay = (props) => {
             <h4>Uploaded Room Images:</h4>
             <div className={ styles.roomImagesDiv }>
               {
-                images.map((img) => <Image className={ styles.roomImage } key={img._id} size='medium' src={setImagePath(img.path)} />)
+                images 
+                ? images.map((img) => <Image className={ styles.roomImage } key={img._id} src={setImagePath(img.path)} />)
+                : null
               }
             </div>
       </div>
       <div className={ styles.buttonsDiv }>
       {
-        formOpen ? <Button inverted color="green" onClick={openForm}>Close</Button> : <Button inverted color="green" onClick={openForm}>Edit Room</Button>
+        formOpen ? <Button inverted color="green" onClick={openForm}>Close Edit Form</Button> : <Button inverted color="green" onClick={openForm}>Edit Room</Button>
       }
       </div>
      

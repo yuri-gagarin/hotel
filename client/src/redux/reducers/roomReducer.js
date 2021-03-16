@@ -138,21 +138,13 @@ const roomReducer = (state = initialState, { type, payload }) => {
     case ROOM_IMG_UPLOADED: {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        roomImages: [ ...state.roomImages, payload.newImage ],
-        error: payload.error
+        ...payload
       };
     };  
     case ROOM_IMG_DELETED: {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        roomImages: [ ...payload.roomImages ],
-        error: payload.error
+        ...payload
       };
     };
     case ROOM_IMG_ERROR: {

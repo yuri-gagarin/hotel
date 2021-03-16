@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { Button } from "semantic-ui-react";
 //
 import ImgUploadControls from "../shared/ImgUploadControls";
@@ -6,7 +7,7 @@ import ImgUploadControls from "../shared/ImgUploadControls";
 import styles from "./css/fileInput.module.css";
 
 const FileInput = (props) => {
-  const { uploadImage, dataName } = props;
+  const { uploadImage, dataName, state } = props;
   const [ file, setFile ] = useState(null);
   const [ objectURL, setObjectURL] = useState(null);
 
@@ -22,13 +23,20 @@ const FileInput = (props) => {
     if (!file) return;
     let data = new FormData();
     data.append(dataName, file);
-    return uploadImage(data)
+    return uploadImage(data, state)
       .then((success) => {
         if (success) {
           // clear the input //
-          document.getElementById("fileInput").value = "";
-          setFile(null);
-          setObjectURL(null);
+          const input = document.getElementById("fileInput");
+          if (input) {
+            input.value = "";
+            setFile(null);
+            setObjectURL(null);
+          } else {
+            setFile(null);
+            setObjectURL(null);
+          }
+          
         }
       });
   };

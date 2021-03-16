@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // semantic ui react //
 import {
-  Button, Icon, Image, Segment, Popup
+  Button, Header, Icon, Image, Segment, Popup
 } from "semantic-ui-react";
 // additional component imports //
 import EditServiceDisplay from "./EditServiceDisplay";
@@ -52,9 +52,9 @@ const ServiceDisplay = (props) => {
       <div className={ styles.serviceDisplayCol }>
         <div className={ styles.serviceDetailsDiv }>
           <h4>Details</h4>
-          <div className={ styles.serviceDetail }>Type: {service.serviceType}</div>
-          <div className={ styles.serviceDetail }>Hours: {service.hours}</div>
-          <div className={ styles.serviceDetail }>Price: {service.price}</div>
+          <div className={ styles.serviceDetail }><small>Type:</small><strong>{service.serviceType}</strong></div>
+          <div className={ styles.serviceDetail }><small>Hours:</small><strong>{service.hours}</strong></div>
+          <div className={ styles.serviceDetail }><small>Price:</small><strong>{service.price}</strong></div>
         </div>
         <div className={ styles.serviceDescriptionDiv }>
           <h4>Description</h4>
@@ -62,13 +62,13 @@ const ServiceDisplay = (props) => {
         </div>
         <hr />
         <div className={ styles.serviceImagesDiv}>
-          <h3>Uploaded Images</h3>
+          <h4>Uploaded Service Images</h4>
           {
             images.length > 0 
             ? 
               images.map((img) => <Image key={img._id} className={ styles.serviceImage } size='medium' src={ setImagePath(img.path) } />)
             : 
-              <Segment placeholder>
+              <Segment placeholder className={ styles.defaultNoImagesSegment }>
                 <Header icon>
                   <Icon name="image outline" />
                   No images are uploded for this service

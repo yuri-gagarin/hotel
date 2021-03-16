@@ -23,6 +23,13 @@
   padding: 0.5em 1em;
   margin-right: 0.5em;
 }
+.serviceDetail > small {
+  color: black;
+}
+.serviceDetail > strong {
+  margin-left: 0.5em;
+  color: green;
+}
 
 /* service description divs and data */
 .serviceDescriptionDiv {
@@ -49,6 +56,9 @@
   border: 5px solid  rgb(104, 159, 230);
   border-radius: 5px;
   cursor: pointer;
+}
+.defaultNoImagesSegment {
+  width: 100%;
 }
 
 /* buttons */

@@ -174,29 +174,66 @@ export const clearRoomData = () => {
   };
 };
 
-export const uploadRoomImage = (dispatch, file) => {
+/**
+ * 
+ * @param {function} dispatch redux dispatch function
+ * @param {File} file form file of image 
+ * @param {object} roomsState State of the Rooms
+ */
+export const uploadRoomImage = (dispatch, file, roomsState) => {
+  const { roomData, roomImages, createdRooms } = roomsState;
+  const { _id: roomId } = roomData ? roomData : "";
+  
   const requestOptions = {
     method: "post",
-    url: "/api/uploadRoomImage",
+    url: "/api/uploadRoomImage/" + (roomId ? roomId : ""),
     headers: {
       'content-type': 'multipart/form-data'
     },
     data: file
   }
+
   dispatch(uploadRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newImage } = data;
-      const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        newImage: newImage,
-        error: null
-      };
-      dispatch(roomImgUploadSucess(stateData));
-      return Promise.resolve(true);
+      const { responseMsg, newImage, updatedRoom } = data;
+
+      if (updatedRoom) {
+        // request is done on existing room //
+        const updatedRooms = createdRooms.map((room) => {
+          if (room._id === updatedRoom._id) {
+            return {
+              ...updatedRoom,
+              images: [ ...updatedRoom.images ]
+            }
+          } else {
+            return room;
+          }
+        });
+        const stateData = {
+          status: status,
+          loading: false,
+          responseMsg: responseMsg,
+          roomImages: [ ...roomImages, newImage ],
+          roomData: { ...updatedRoom, images: [ ...updatedRoom.images ]},
+          createdRooms: updatedRooms,
+          error: null
+        };
+        dispatch(roomImgUploadSucess(stateData));
+        return Promise.resolve(true);
+      } else {
+        const stateData = {
+          status: status,
+          loading: false,
+          responseMsg: responseMsg,
+          roomImages: [ ...roomImages, newImage ],
+          roomData: {},
+          error: null
+        };
+        dispatch(roomImgUploadSucess(stateData));
+        return Promise.resolve(true);
+      }
     })
     .catch((error) => {
       console.error(error);
@@ -204,8 +241,14 @@ export const uploadRoomImage = (dispatch, file) => {
       return Promise.resolve(false);
     });
 };
-
-export const deleteRoomImage = (dispatch, imageId, oldImageState = []) => {
+/**
+ * 
+ * @param {function} dispatch redux dispatch function
+ * @param {string} imageId Room model ObjectId
+ * @param {object} roomsState current room model state
+ */
+export const deleteRoomImage = (dispatch, imageId, roomsState) => {
+  const { roomData, roomImages, createdRooms } = roomsState;
   const requestOptions = {
     method: "delete",
     url: "/api/deleteRoomImage/" + imageId
@@ -214,16 +257,40 @@ export const deleteRoomImage = (dispatch, imageId, oldImageState = []) => {
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg } = data;
-      const newImageState = oldImageState.filter((image) => imageId != image._id)
-      const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        roomImages: newImageState,
-        error: null
-      };
-      dispatch(roomImgDeleteSuccess(stateData));
+      const { responseMsg, deletedImage, updatedRoom } = data;
+      const newImageState = roomImages.filter((image) => deletedImage._id !== image._id);
+
+      if (updatedRoom) {
+        const updatedRooms = createdRooms.map((room) => {
+          if (room._id === updatedRoom._id) {
+            return { ...updatedRoom };
+          } else {
+            return room;
+          }
+        });
+        const stateData = {
+          status: status,
+          loading: false,
+          responseMsg: responseMsg,
+          roomImages: newImageState,
+          roomData: updatedRoom,
+          createdRooms: updatedRooms,
+          error: null
+        };
+        dispatch(roomImgDeleteSuccess(stateData));
+        return Promise.resolve(true);
+      } else {
+        const stateData = {
+          status: status,
+          loading: false,
+          responseMsg: responseMsg,
+          roomImages: newImageState,
+          roomData: {},
+          error: null
+        };
+        dispatch(roomImgDeleteSuccess(stateData));
+        return Promise.resolve(true);
+      }
     })
     .catch((error) => {
       console.error(error);

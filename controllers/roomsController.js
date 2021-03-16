@@ -162,22 +162,51 @@ export default {
   },
   uploadImage: (req, res) => {
     const imageUploadResult = req.locals.roomImageUpload;
+    const { roomId } = req.params;
+    let uploadedImage, updatedRoom;
     if (imageUploadResult.success) {
-      return RoomImage.create({
-        path: imageUploadResult.imagePath
-      })
-      .then((roomImage) => {
-        return res.status(200).json({
-          responseMsg: "Uploaded an image",
-          newImage: roomImage
-        });
-      })
-      .catch((error) => {
-        return res.status(500).json({
-          responseMsg: "A database error occured",
-          error: error
-        });
-      });
+      if (roomId) {
+        // request is on an existing room //
+        return RoomImage.create({ path: imageUploadResult.imagePath, room: roomId, createdAt: new Date(Date.now()) })
+          .then((createdImage) => {
+            uploadedImage = createdImage;
+            return (
+              Room.findOneAndUpdate({ _id: roomId }, { $push: { images: createdImage._id } }, { new: true })
+                .populate("images").exec()
+            );
+          })
+          .then((room) => {
+            updatedRoom = room
+            return res.status(200).json({
+              responseMsg: "Uploaded an image",
+              newImage: uploadedImage,
+              updatedRoom: updatedRoom
+            });
+          })
+          .catch((error) => {
+            return res.status(500).json({
+              responseMsg: "A database error occured",
+              error: error
+            });
+          });
+      } else {
+        // reqeust is on a new room, not created yet //
+        return RoomImage.create({ path: imageUploadResult.imagePath, createdAt: new Date(Date.now()) })
+          .then((createdImage) => {
+            return res.status(200).json({
+              responseMsg: "Uploaded an image",
+              newImage: createdImage,
+              updatedRoom: null
+            });
+          })
+          .catch((error) => {
+            console.error(error)
+            return res.status(500).json({
+              responseMsg: "A database error occured",
+              error: error
+            });
+          })
+      }
     } else {
       return res.status(500).json({
         responseMsg: "Upload not successful"
@@ -186,18 +215,33 @@ export default {
   },
   deleteImage: (req, res) => {
     const { imageId } = req.params;
+    let deletedImage, updatedRoom;
+
     return RoomImage.findOneAndDelete({ _id: imageId })
       .then((deletedImg) => {
         if (deletedImg) {
+          deletedImage = deletedImg;
           // remove from the files //
           return deleteFile(deletedImg.path);
         } else {
           return Promise.reject(new Error("No Image was found"));
         }
       })
-      .then((response) => {
+      .then(() => {
+        return (
+          Room
+            .findOneAndUpdate({ _id: deletedImage.room },  { $pull: { images: deletedImage._id } }, { new: true })
+            .populate("images").exec()
+          )
+      })
+      .then((room) => {
+        updatedRoom = room;
+        console.log(deletedImage)
+        console.log(updatedRoom)
         return res.status(200).json({
-          responseMsg: "Deleted the image"
+          responseMsg: "Deleted the image",
+          deletedImage: deletedImage,
+          updatedRoom: updatedRoom
         });
       })
       .catch((error) => {

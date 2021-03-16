@@ -218,10 +218,9 @@ const RoomForm = (props) => {
   };  
 
   const handleImageDelete = (imageId) => {
-    const { roomImages } = roomState;
     const confirm = window.confirm("Are you Sure?");
     if (confirm) {
-      deleteRoomImage(imageId, roomImages);
+      deleteRoomImage(imageId, roomState);
     } else {
       return;
     }
@@ -304,7 +303,7 @@ const RoomForm = (props) => {
 
 
       </Form.Field>
-      <FileInput uploadImage={uploadRoomImage} dataName={"roomImage"} />
+      <FileInput uploadImage={uploadRoomImage} dataName={"roomImage"} state={ roomState } />
       { 
         roomImages.map((roomImage) => {
           return (
@@ -349,13 +348,13 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    uploadRoomImage: (imageData) => uploadRoomImage(dispatch, imageData),
+    uploadRoomImage: (imageData, roomState) => uploadRoomImage(dispatch, imageData, roomState),
     setPreviewImages: (previewImages) => dispatch(setPreviewImages(previewImages)),
     handleNewRoom: (roomData, history) => handleNewRoom(dispatch, roomData, history),
     updateRoom: (roomData, roomImages, currentRooms) => {
       return updateRoom(dispatch, roomData, roomImages, currentRooms);
     },
-    deleteRoomImage: (imageId, oldImageState) => deleteRoomImage(dispatch, imageId, oldImageState)
+    deleteRoomImage: (imageId, roomState) => deleteRoomImage(dispatch, imageId, roomState)
   };
 };
 

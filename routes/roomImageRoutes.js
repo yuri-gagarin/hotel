@@ -4,7 +4,7 @@ import roomsController from "../controllers/roomsController";
 export default function (router) {
   // //
   router
-    .route("/api/uploadRoomImage")
+    .route("/api/uploadRoomImage/:roomId?")
     .post([roomImageUploader], roomsController.uploadImage);
 
   // @route DELETE "/api/deleteRoomImage/:imageId" //
