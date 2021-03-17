@@ -1,4 +1,5 @@
-import { serviceConstants } from "./../constants";
+// @flow 
+import { serviceConstants } from "../../constants";
 const {
   SERVICE_REQUEST, SERVICE_CREATED, SERVICE_UPDATED,
   SERVICE_DELETED, SERVICE_ERROR, SERVICE_IMG_REQUEST,
@@ -7,19 +8,28 @@ const {
   OPEN_SERVICE, CLOSE_SERVICE, SET_SERVICES,
   SET_SERVICES_IMAGES, CLEAR_SERVICES_DATA
 } = serviceConstants;
+import type { ServiceState, ServiceAction } from "./flowTypes";
 
-const initialState = {
-  status: status,
+const initialState: ServiceState = { 
+  status: 200,
   loading: false,
   responseMsg: "",
-  serviceData: {},
+  serviceData: {
+    _id: "",
+    serviceType: "",
+    hours: "",
+    price: "",
+    images: [],
+    createdAt: "",
+    editedAt: ""
+  },
   serviceImages: [],
-  createdServices: [],
-  numberOfServices: 0,
   error: null
 };
 
-const serviceReducer = (state = initialState, { type, payload }) => {
+
+const serviceReducer = (state: ServiceState = initialState, action: ServiceAction): ServiceState => {
+  const { type, payload } = action;
   switch (type) {
     case SERVICE_REQUEST: {
       return {
@@ -73,7 +83,7 @@ const serviceReducer = (state = initialState, { type, payload }) => {
         error: payload.error
       };
     };
-    case SERVICE_IMG_UPLOADED: {
+    case "S": {
       return {
         ...state,
         status: payload.status,
@@ -150,6 +160,7 @@ const serviceReducer = (state = initialState, { type, payload }) => {
       return state;
     };
   };
+
 };
 
 export default serviceReducer;
