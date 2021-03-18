@@ -19,141 +19,130 @@ const initialState: ServiceState = {
     serviceType: "",
     hours: "",
     price: "",
+    description: "",
     images: [],
     createdAt: "",
     editedAt: ""
   },
   serviceImages: [],
+  createdServices: [],
+  numberOfServices: 0,
   error: null
 };
 
 
 const serviceReducer = (state: ServiceState = initialState, action: ServiceAction): ServiceState => {
-  const { type, payload } = action;
-  switch (type) {
-    case SERVICE_REQUEST: {
+  switch (action.type) {
+    case "ServiceAPIRequest": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        error: payload.error
+        loading: action.payload.loading,
+        status: action.payload.status,
+        error: action.payload.error
       };
     };
-    case SERVICE_CREATED: {
+    case "ServiceCreated": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        serviceData: action.payload.newServiceData,
+        serviceImages: [ ...action.payload.newServiceData.images ],
+        createdServices: [ ...state.createdServices, action.payload.newServiceData ],
+        numberOfServices: state.createdServices.length + 1,
+        error: null
       };
     };
-    case SERVICE_UPDATED: {
+    case "ServiceUpdated": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        createdServices: [ ...payload.createdServices ],
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        serviceData: action.payload.serviceData,
+        serviceImages: [ ...action.payload.serviceData.images ],
+        createdServices: action.payload.createdServices,
+        error: null
       };
     };
-    case SERVICE_DELETED: {
+    case "ServiceDeleted": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        createdServices: [ ...payload.createdServices ],
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        serviceData: action.payload.serviceData,
+        createdServices: action.payload.createdServices,
+        numberOfServices: action.payload.numberOfServices,
+        error: null
       };
     };
-    case SERVICE_ERROR: {
+    case "ServiceImgUplSuccess": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        serviceData: action.payload.updatedService,
+        serviceImages: action.payload.serviceImages,
+        createdServices: action.payload.createdServices,
+        error: null
       };
     };
-    case SERVICE_IMG_REQUEST: {
+    case "ServiceImgDelSuccess": {
       return {
         ...state,
-        loading: payload.loading,
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        serviceData: action.payload.updatedService,
+        serviceImages: action.payload.serviceImages,
+        createdServices: action.payload.createdServices,
+        error: null
       };
     };
-    case "S": {
+    case "OpenService": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        serviceImages: [ ...state.serviceImages, payload.newImage ],
-        error: payload.error
+        serviceData: action.payload.serviceData,
+        serviceImages: action.payload.serviceImages,
+        error: null
       };
     };
-    case SERVICE_IMG_DELETED: {
+    case "ClearServiceData": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        serviceImages: [ ...payload.serviceImages ],
-        error: payload.error
+        serviceData: action.payload.serviceData,
+        serviceImages: action.payload.serviceImages,
+        error: null
       };
     };
-    case SERVICE_IMG_ERROR: {
+    case "SetServices": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        createdServices: action.payload.createdServices,
+        numberOfServices: action.payload.numberOfServices,
+        error: null
       };
     };
-    case ADD_SERVICE_TO_STATE: {
+    case "SetServiceImages": {
       return {
         ...state,
-        createdServices: [ ...state.createdServices, payload.newService ]
+        serviceImages: action.payload.serviceImages,
+        error: null
       };
     };
-    case OPEN_SERVICE: {
+    case "ServiceError": {
       return {
         ...state,
-        loading: payload.loading,
-        serviceData: payload.serviceData,
-        serviceImages: [ ...payload.serviceImages ]
-      };
-    };
-    case CLOSE_SERVICE: {
-      return state;
-    };
-    case SET_SERVICES: {
-      return {
-        ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        createdServices: [ ...payload.createdServices ],
-        numberOfServices: payload.createdServices.length,
-        error: payload.error
-      };
-    };
-    case SET_SERVICES_IMAGES: {
-      return {
-        ...state,
-        loading: payload.loading,
-        serviceImages: [ ...payload.serviceImages ],
-        error: payload.error
-      };
-    };
-    case CLEAR_SERVICES_DATA: {
-      return {
-        ...state,
-        loading: payload.loading,
-        serviceData: { ...payload.serviceData },
-        serviceImages: [ ...payload.serviceImages ],
-        error: payload.error
+        status: action.payload.status,
+        responseMsg: action.payload.responseMsg,
+        loading: false,
+        error: action.payload.error
       };
     };
     default: {

@@ -1,8 +1,18 @@
 // @flow 
+// expected data from client //
+export type ClientServiceFormData = {
+  _id?: string,
+  serviceType: string,
+  hours: string,
+  price: string,
+  createdAt?: string,
+  editedAt?: string
+}
+// expected data from server //
 export type ServiceImgData = {
   _id: string,
   path: string,
-  hotelService: string,
+  hotelService?: string,
   createdAt: string,
 };
 export type ServiceData = {
@@ -29,7 +39,7 @@ export type ServiceState = {
 // service action types //
 export type ServiceAPIRequest = {
   +type: "ServiceAPIRequest",
-  +payload: {
+  payload: {
     status: number,
     loading: boolean,
     error: null
@@ -37,13 +47,17 @@ export type ServiceAPIRequest = {
 };
 export type SetServices = {
   +type: "SetServices",
-  +payload: {
-    createdServices: Array<ServiceData>
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    createdServices: Array<ServiceData>,
+    numberOfServices: number
   }
 }
 export type ServiceError = {
   +type: "ServiceError",
-  +payload: {
+  payload: {
     status: number,
     responseMsg: string,
     error: any
@@ -51,17 +65,16 @@ export type ServiceError = {
 };
 export type ServiceCreated = {
   +type: "ServiceCreated",
-  +payload: {
+  payload: {
     status: number,
     loading: boolean,
     responseMsg: string,
-    loading: boolean,
-    serviceData: ServiceData
+    newServiceData: ServiceData
   }
 };
 export type ServiceUpdated = {
   +type: "ServiceUpdated",
-  +payload: {
+  payload: {
     status: number,
     loading: boolean,
     responseMsg: string,
@@ -71,28 +84,29 @@ export type ServiceUpdated = {
 }
 export type ServiceDeleted = {
   +type: "ServiceDeleted",
-  +payload: {
+  payload: {
     status: number,
     loading: boolean,
     responseMsg: string,
-    serviceData: ServiceData | null,
-    createdServices: Array<ServiceData>
+    serviceData: ServiceData,
+    createdServices: Array<ServiceData>,
+    numberOfServices: number
   }
 };
 export type ServiceImgUplSuccess = {
   +type: "ServiceImgUplSuccess",
-  +payload: {
+  payload: {
     status: number,
     loading: boolean,
     responseMsg: string,
     serviceImages: Array<ServiceImgData>,
-    updatedService: ServiceData | null,
-    createdServices: ServiceData[] | null
+    updatedService: ServiceData,
+    createdServices: Array<ServiceData>
   }
 };
 export type ServiceImgDelSuccess = {
   +type: "ServiceImgDelSuccess",
-  +payload: {
+  payload: {
     status: number,
     loading: boolean,
     responseMsg: string,
@@ -104,21 +118,21 @@ export type ServiceImgDelSuccess = {
 
 export type OpenService = {
   +type: "OpenService",
-  +payload: {
+  payload: {
     serviceData: ServiceData,
     serviceImages: Array<ServiceImgData>
   }
 };
 export type ClearServiceData = {
   +type: "ClearServiceData",
-  +payload: {
+  payload: {
     serviceImages: Array<ServiceImgData>,
     serviceData: ServiceData,
   }
 };
 export type SetServiceImages = {
   +type: "SetServiceImages",
-  +payload: {
+  payload: {
     serviceImages: Array<ServiceImgData>
   }
 };

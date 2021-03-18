@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from "react";
+// @flow
+import * as React from "react";
 import PropTypes from "prop-types";
-import { 
-  Button,
-  Card,
-  Grid,
-  Popup
-} from "semantic-ui-react";
+import { Button, Card, Grid, Popup } from "semantic-ui-react";
 // additional imports //
 import ServiceForm from "./ServiceForm";
 import ServiceHolder from "./ServiceHolder";
@@ -16,36 +12,53 @@ import EditViewControls from "../shared/EditViewControls";
 import { connect } from "react-redux"; 
 // router imports //
 import { withRouter, Route } from "react-router-dom";
+import type { RouterHistory } from "react-router-dom";
 import { 
   clearServiceData, openService, fetchServices,
   handleNewService, updateHotelService, deleteService
 } from "./../../../redux/actions/serviceActions";
+import type { ServiceState, ServiceData, ServiceImgData, ClientServiceFormData } from "../../../redux/reducers/service/flowTypes";
+import type { Dispatch, RootState } from "../../../redux/reducers/_helpers/createReducer";
 // style and css //
 import styles from "./css/servicesIndexContainer.module.css";
 
-const ServicesIndexContainer = (props) => {
+type WrapperProps ={|
+  serviceState: ServiceState
+|}
+type OwnProps = {|
+  ...WrapperProps,
+  history: RouterHistory,
+|}
+type Props = {
+  ...OwnProps,
+  fetchServices: () => Promise<boolean>,
+  clearServiceData: () => void,
+  handleOpenService: (createdServices: Array<ServiceData>, serviceId: string) => void,
+  handleServiceDelete: (serviceId: string, serviceState: ServiceState) => Promise<boolean>
+};
+
+const ServicesIndexContainer = (props: Props) => {
   const { 
     history,
     serviceState
   } = props;
   const {
-    fetchServices, clearServiceData, handleOpenService, handleNewService,
-    handleServiceUpdate, handleServiceDelete
+    fetchServices, clearServiceData, handleOpenService, handleServiceDelete
   } = props;
 
   const { createdServices, serviceData } = serviceState;
-  const [servicInfoOpen, setServiceInfoOpen] = useState(false);
-  const [newServiceFormOpen, setNewServiceFormOpen] = useState(false);
+  const [servicInfoOpen, setServiceInfoOpen] = React.useState(false);
+  const [newServiceFormOpen, setNewServiceFormOpen] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     // services api call //
     let mounted = true;
     if (mounted) {
       fetchServices();
     }
-    return () => mounted = false;
+    return () => { mounted = false };
   }, []);
-  useEffect(() => {
+  React.useEffect(() => {
     console.log(48);
     console.log(serviceData);
   }, [ serviceData ]);
@@ -80,7 +93,7 @@ const ServicesIndexContainer = (props) => {
     setServiceInfoOpen(true);
   };
   const deleteService = (serviceId) => {
-    handleServiceDelete(serviceId, createdServices);
+    handleServiceDelete(serviceId, serviceState);
     setServiceInfoOpen(false);
   };
   // END form handlers //
@@ -155,24 +168,28 @@ const ServicesIndexContainer = (props) => {
   );
 };
 // PropTypes validation //
-
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state: RootState) => {
   return {
-   clearServiceData: () => dispatch(clearServiceData()),
-   handleOpenService: (createdServices, serviceId) => {
-     return dispatch(openService(createdServices, serviceId));
-   },
-   fetchServices: () => fetchServices(dispatch),
-   handleNewService: (serviceData, history) => {
-     return handleNewService(dispatch, serviceData, history);
-   },
-   handleServiceDelete: (serviceId, createdServices) => {
-     return deleteService(dispatch, serviceId, createdServices);
-   },
-   handleServiceUpdate: (serviceData, serviceImages, createdServices) => {
-     return updateHotelService(dispatch, serviceData, serviceImages, createdServices);
-   }
+
+  }
+}
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    clearServiceData: () => dispatch(clearServiceData()),
+    handleOpenService: (createdServices: Array<ServiceData>, serviceId: string) => {
+      return dispatch(openService(createdServices, serviceId));
+    },
+    fetchServices: () => fetchServices(dispatch),
+    /*
+    handleNewService: (serviceData, history) => {
+      return handleNewService(dispatch, serviceData, history);
+    },
+    */
+    handleServiceDelete: (serviceId: string, serviceState: ServiceState) => {
+      return deleteService(dispatch, serviceId, serviceState);
+    }
   };
 };
+type ComponentType = typeof ServicesIndexContainer;
 
-export default withRouter(connect(null, mapDispatchToProps)(ServicesIndexContainer));
+export default (withRouter((connect<Props, OwnProps, _, _, _, _>(mapStateToProps, mapDispatchToProps)(ServicesIndexContainer):  React.AbstractComponent<OwnProps>)): React.AbstractComponent<WrapperProps>)

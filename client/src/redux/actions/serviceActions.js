@@ -7,14 +7,15 @@ import type {
   ServiceImgData, ServiceData, ServiceState,
   ServiceImgUplSuccess, ServiceImgDelSuccess,
   ServiceAPIRequest, ServiceCreated, ServiceUpdated, ServiceDeleted,
-  OpenService, SetServices, ClearServiceData, SetServiceImages, ServiceError
+  OpenService, SetServices, ClearServiceData, SetServiceImages, ServiceError,
+  ClientServiceFormData
 } from "../reducers/service/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 // helpers //
 import { normalizeErrorMessages, setAxiosError } from "./helpers/errorHelpers";
 import { generateEmptyService } from "../reducers/_helpers/emptyDataGenerators";
 
-export const serviceImgUploadSuccess = (data : { status: number, loading: boolean, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData | null, createdServices: Array<ServiceData> | null }): ServiceImgUplSuccess => {
+export const serviceImgUploadSuccess = (data : { status: number, loading: boolean, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgUplSuccess => {
   return {
     type: "ServiceImgUplSuccess",
     payload: data
@@ -40,7 +41,7 @@ export const serviceRequest = (): ServiceAPIRequest => {
   };
 };
 
-export const serviceCreated = (data : { status: number, loading: boolean, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData>, serviceImages: Array<ServiceImgData> }): ServiceCreated => {
+export const serviceCreated = (data : { status: number, loading: boolean, responseMsg: string, newServiceData: ServiceData }): ServiceCreated => {
   return {
     type: "ServiceCreated",
     payload: data
@@ -58,12 +59,10 @@ export const addNewService = (data: { status: number, loading: boolean, response
 };   
 */
 
-export const setServices = (createdServices: Array<ServiceData>): SetServices => {
+export const setServices = (data : { status: number, loading: boolean, responseMsg: string, createdServices: Array<ServiceData>, numberOfServices: number }): SetServices => {
   return {
     type: "SetServices",
-    payload: {
-      createdServices: createdServices
-    }
+    payload: data
   };
 };
 
@@ -74,7 +73,7 @@ export const serviceUpdated = (data : { status: number, loading: boolean, respon
   };
 };
 
-export const serviceDeleted = (data : { status: number, loading: boolean, responseMsg: string, serviceData: ServiceData | null, createdServices: Array<ServiceData> }): ServiceDeleted => {
+export const serviceDeleted = (data : { status: number, loading: boolean, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData>, numberOfServices: number }): ServiceDeleted => {
   return {
     type: "ServiceDeleted",
     payload: data
@@ -163,8 +162,8 @@ export const uploadServiceImage = (dispatch: Dispatch, file: File, currentServic
         loading: false,
         responseMsg: responseMsg,
         serviceImages: updatedServiceImages,
-        updatedService: updatedServiceData ? updatedServiceData : null,
-        createdServices: updatedServices ? updatedServices : null
+        updatedService: updatedServiceData ? updatedServiceData : serviceData,
+        createdServices: updatedServices ? updatedServices : createdServices,
       };
       dispatch(serviceImgUploadSuccess(stateData));
       return true;
@@ -229,8 +228,7 @@ export const handleNewService= (dispatch: Dispatch, hotelServiceData : { service
         status: status,
         loading: false,
         responseMsg: responseMsg,
-        serviceData: newService,
-        serviceImages: [ ...newService.images ],
+        newServiceData: newService,
       };
       dispatch(serviceCreated(stateData));
       return true;
@@ -243,37 +241,39 @@ export const handleNewService= (dispatch: Dispatch, hotelServiceData : { service
    
 };
 
-export const fetchServices = (dispatch) => {
-  console.log("calling feth")
+export const fetchServices = (dispatch: Dispatch): Promise<boolean> => {
   const requestOptions = {
     method: "get",
     url: "/api/services"
   };
   dispatch(serviceRequest());
+
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, services } = data;
+      const { responseMsg, services } : { responseMsg: string, services: Array<ServiceData>} = data;
       const stateData = {
         status: status,
         loading: false,
         responseMsg: responseMsg,
-        createdServices: services || [],
-        error: null
+        createdServices: services,
+        numberOfServices: services.length
       };
       dispatch(setServices(stateData))
+      return Promise.resolve(true);
     })
     .catch((error) => {
-      console.error(error);
       dispatch(serviceError(error));
+      return Promise.resolve(false);
     });
 };
 
-export const updateHotelService = (dispatch, serviceData, serviceImages = [], currentServices = []) => {
-  const serviceId = serviceData._id
+export const updateHotelService = (dispatch: Dispatch, serviceData: ClientServiceFormData, serviceImages: Array<ServiceImgData>, serviceState: ServiceState): Promise<boolean> => {
+  const serviceId = serviceData._id; 
+  const currentServices = serviceState.createdServices;
   const requestOptions = {
     method: "patch",
-    url: "/api/services/" + serviceId,
+    url: "/api/services/" + (serviceId || ""),
     data: {
       serviceData: serviceData,
       serviceImages: serviceImages
@@ -283,7 +283,7 @@ export const updateHotelService = (dispatch, serviceData, serviceImages = [], cu
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedService } = data;
+      const { responseMsg, updatedService } : { responseMsg: string, updatedService: ServiceData } = data;
       const updatedServices = currentServices.map((service) => {
         if (service._id == updatedService._id) {
           return {
@@ -298,55 +298,49 @@ export const updateHotelService = (dispatch, serviceData, serviceImages = [], cu
         loading: false,
         responseMsg: responseMsg,
         serviceData: updatedService,
-        serviceImages: updatedService.images,
-        createdServices: updatedServices,
-        error: null
+        serviceImages: [ ...updatedService.images ],
+        createdServices: [ ...updatedServices ],
       };
       dispatch(serviceUpdated(serviceStateData));
-      dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
       return true;
     })
     .catch((error) => {
-      console.error(error);
       dispatch(serviceError(error));
-      dispatch(setAppError({ status: 500, responseMsg: "An error occured", error: error }));
       return false;
     });
 };
 
-export const deleteService = (dispatch, serviceId, currentServices = []) => {
-  const serviceImages = currentServices.filter((service) => serviceId == service._id)[0].images;
+export const deleteService = (dispatch: Dispatch, serviceId: string, serviceState: ServiceState): Promise<boolean> => {
+  const currentServices = serviceState.createdServices;
   const requestOptions = {
     method: "delete",
     url: "/api/services/" + serviceId,
-    data: {
-      serviceImages: serviceImages
-    }
   };
+
   dispatch(serviceRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedService } = data;
+      const { responseMsg, deletedService } : { responseMsg: string, deletedService: ServiceData } = data;
+
       const updatedServices = currentServices.filter((service) => {
-        return deletedService._id != service._id;
+        return deletedService._id !== service._id;
       });
+
       const serviceStateData = {
         status: status,
         loading: false,
         responseMsg: responseMsg,
-        serviceData: {},
+        serviceData: generateEmptyService(),
         serviceImages: [],
         createdServices: updatedServices,
-        error: null
+        numberOfServices: updatedServices.length
       };
       dispatch(serviceDeleted(serviceStateData));
-      dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
       return true;
     })
     .catch((error) => {
       dispatch(serviceError(error));
-      dispatch(setAppError(({ status: 500, responseMsg: error.message, error: error })));
       return false;
     });
 };
