@@ -1,0 +1,6 @@
+.onlineLabel {
+  border-radius: 50%;
+}
+.onlineLabel > i {
+  margin: 0 auto !important;
+}

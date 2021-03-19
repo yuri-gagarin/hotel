@@ -15,7 +15,7 @@ export default function (router) {
   // @description Updates a Service and all of its corresponding images //
   // @access PRIVATE //
   router
-    .route("/api/services/:serviceId")
+    .route("/api/services/:serviceId?")
     .patch(servicesController.updateService);
   
     // @route POST "/api/services/createHotelService"

@@ -11,7 +11,7 @@ export default {
       .populate("images", ["_id", "path"])
       .then((services) => {
         return res.status(200).json({
-          responseMsg: "Success",
+          responseMsg: "Loaded all Services",
           services: services
         });
       })
@@ -68,8 +68,8 @@ export default {
   updateService: (req, res) => {
     let status, editedService;
     const { serviceId } = req.params;
-    const { serviceData = {}, serviceImages = {}, changeOnlineStatus } = req.body;
-    const updatedImages = serviceImages.currentImages.map((img) => `${img._id}` );
+    const { serviceData = {}, serviceImages = {}, changeOnlineStatus, changeAllOnlineStatus } = req.body;
+    const updatedImages = serviceImages.currentImages ? serviceImages.currentImages.map((img) => `${img._id}` ) : [];
 
     if (changeOnlineStatus) {
       const { status = false } = changeOnlineStatus;
@@ -88,6 +88,28 @@ export default {
         });
       });
     };
+
+    if (changeAllOnlineStatus) {
+      const { status = false } = changeAllOnlineStatus;
+      return HotelService.update({}, { live: status }, { multi: true })
+        .then((res) => {
+          console.log(res);
+          return HotelService.find({}).populate("images").exec();
+        })
+        .then((updatedServices) => {
+          const { live } = updatedServices[0];
+          return res.status(200).json({
+            responseMsg: `All Hotel <Services> are now ${ live ? "ONLINE" : "OFFLIME" }`,
+            updatedServices: updatedServices
+          });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            responseMsg: "An error occured",
+            error: error
+          });
+        });
+    }
 
     return HotelService.findOneAndUpdate(
       { _id: serviceId },

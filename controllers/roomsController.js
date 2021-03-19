@@ -10,7 +10,7 @@ export default {
       .then((rooms) => {
         //console.log(rooms);
         return res.status(200).json({
-          responseMsg: "Success",
+          responseMsg: "Loaded all Rooms",
           rooms: rooms
         });
       })

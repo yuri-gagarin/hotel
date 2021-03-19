@@ -1,0 +1,44 @@
+// @flow
+import * as React from "react";
+import { Button, Content, Header, Icon, Modal } from "semantic-ui-react";
+// styles and css//
+import styles from "./css/confirmDeleteModal.module.css";
+// helpers //
+import { capitalizeString } from "../../helpers/displayHelpers";
+
+type Props = {
+  open: boolean,
+  modelName: "room" | "service" | "dining" | "extra",
+  confirmAction: () => Promise<void>,
+  cancelAction: () => void,
+  customHeader?: string,
+  customContent?: string
+}
+
+export const ConfirmDeleteModal = ({ open, modelName, customHeader, customContent, confirmAction, cancelAction }: Props): React.Node => {
+ 
+  return (
+    <Modal className={ styles.confirmDelModal } size="tiny" open={ open }>
+      <Header icon="warning circle" content="Confirm Delete Action"  color="red" />
+        <Modal.Content>
+          <span className={ styles.textContent }>
+            {
+            `This will delete the selected ${capitalizeString(modelName)} all of its data and images. This action is permanent`
+            }
+          </span>
+        </Modal.Content>
+        <Modal.Actions className={ styles.actionsContainer }>
+          <Button color="grey" onClick={ cancelAction } >
+            <Icon name="cancel" />
+            Cancel
+          </Button>
+          <Button color="red" onClick={ confirmAction } >
+            <Icon name="trash alternate outline" />
+            Confirm Delete
+          </Button>
+        </Modal.Actions>
+    </Modal>
+  );
+};
+
+export default ConfirmDeleteModal;

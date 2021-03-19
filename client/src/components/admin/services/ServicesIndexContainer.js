@@ -4,21 +4,25 @@ import PropTypes from "prop-types";
 import { Button, Card, Grid, Popup } from "semantic-ui-react";
 // additional imports //
 import ServiceForm from "./ServiceForm";
-import ServiceHolder from "./ServiceHolder";
+import ServiceHolder from "./ServiceCard";
 import ServiceDisplay from "./ServiceDisplay";
 import OnlinePopupControls from "../shared/OnlinePopupControls";
 import EditViewControls from "../shared/EditViewControls";
+import APIMessage from "../shared/ApiMessage";
+import ModelDeleteBtn from "../shared/ModelDeleteBtn";
+import ConfirmDeleteModal from "../shared/ConfirmDeleteModal";
 // redux imports //
 import { connect } from "react-redux"; 
 // router imports //
 import { withRouter, Route } from "react-router-dom";
-import type { RouterHistory } from "react-router-dom";
 import { 
   clearServiceData, openService, fetchServices,
-  handleNewService, updateHotelService, deleteService
+  handleNewService, updateHotelService, deleteService, takeServiceOnline, takeServiceOffline, toggleAllServicesOnlineStatus
 } from "./../../../redux/actions/serviceActions";
-import type { ServiceState, ServiceData, ServiceImgData, ClientServiceFormData } from "../../../redux/reducers/service/flowTypes";
+// types //
+import type { ServiceState, ServiceData, ServiceImgData, ClientServiceFormData, ServiceAction } from "../../../redux/reducers/service/flowTypes";
 import type { Dispatch, RootState } from "../../../redux/reducers/_helpers/createReducer";
+import type { RouterHistory } from "react-router-dom";
 // style and css //
 import styles from "./css/servicesIndexContainer.module.css";
 
@@ -34,21 +38,30 @@ type Props = {
   fetchServices: () => Promise<boolean>,
   clearServiceData: () => void,
   handleOpenService: (createdServices: Array<ServiceData>, serviceId: string) => void,
-  handleServiceDelete: (serviceId: string, serviceState: ServiceState) => Promise<boolean>
+  handleServiceDelete: (serviceId: string, serviceState: ServiceState) => Promise<boolean>,
+  takeServiceOnline: (serviceToActivate: ServiceData, serviceState: ServiceState) => Promise<boolean>,
+  takeServiceOffline: (serviceToDeactivate: ServiceData, serviceState: ServiceState) => Promise<boolean>,
+  toggleAllServicesOnlineStatus: (newStats: boolean) => Promise<boolean>
+};
+
+type LocalState = {
+  serviceInfoOpen: boolean,
+  newServiceFormOpen: boolean,
+  confirmModalOpen: boolean,
+  serviceIdToDelete: string
 };
 
 const ServicesIndexContainer = (props: Props) => {
-  const { 
-    history,
-    serviceState
-  } = props;
+  const { history, serviceState } = props;
   const {
-    fetchServices, clearServiceData, handleOpenService, handleServiceDelete
+    fetchServices, clearServiceData, handleOpenService, handleServiceDelete, 
+    takeServiceOnline, takeServiceOffline, toggleAllServicesOnlineStatus
   } = props;
+  const { createdServices, serviceData } : { createdServices: Array<ServiceData>, serviceData: ServiceData } = serviceState;
 
-  const { createdServices, serviceData } = serviceState;
-  const [servicInfoOpen, setServiceInfoOpen] = React.useState(false);
-  const [newServiceFormOpen, setNewServiceFormOpen] = React.useState(false);
+  const [ localState, setLocalState ] = React.useState<LocalState>({ 
+    serviceInfoOpen: false, newServiceFormOpen: false, confirmModalOpen: false, serviceIdToDelete: ""
+  });
 
   React.useEffect(() => {
     // services api call //
@@ -58,47 +71,67 @@ const ServicesIndexContainer = (props: Props) => {
     }
     return () => { mounted = false };
   }, []);
-  React.useEffect(() => {
-    console.log(48);
-    console.log(serviceData);
-  }, [ serviceData ]);
+  
   // online/live online - offline api calls //
   const takeAllServicesOnline = () => {
-
+    return toggleAllServicesOnlineStatus(true);
   };
   const takeAllServicesOffline = () => {
-    
-  };
-  const takeServiceOnline = () => {
+    return toggleAllServicesOnlineStatus(false);
 
   };
-  const takeServiceOffline = () => {
-
+  const handleTakeServiceOnline = (service: ServiceData) => {
+    return takeServiceOnline(service, serviceState);
+  };
+  const handleTakeServiceOffline = (serviceToDeactivate: ServiceData) => {
+    return takeServiceOffline(serviceToDeactivate, serviceState);
   };
   // form handlers //
   const openNewServiceForm = () => {
     clearServiceData();
     history.push("/admin/services/new");
-    setNewServiceFormOpen(true);
-    setServiceInfoOpen(false);
+    setLocalState({ ...localState, newServiceFormOpen: true, serviceInfoOpen: false });
   };
   const goBackToServices = () => {
     clearServiceData();
     history.push("/admin/services");
-    setNewServiceFormOpen(false);
+    setLocalState({ ...localState, newServiceFormOpen: false });
   };
   const openService = (serviceId) => {
     handleOpenService(createdServices, serviceId);
     history.push("/admin/services/edit");
-    setServiceInfoOpen(true);
+    setLocalState({ ...localState, serviceInfoOpen: true });
   };
-  const deleteService = (serviceId) => {
-    handleServiceDelete(serviceId, serviceState);
-    setServiceInfoOpen(false);
+  
+  const confirmDeleteAction = () => {
+    const { serviceIdToDelete, serviceInfoOpen } = localState;
+    setLocalState({ ...localState, confirmModalOpen: false });
+    return handleServiceDelete(serviceIdToDelete, serviceState)
+      .then(() => {
+        if (serviceInfoOpen) {
+          setLocalState({ ...localState, serviceInfoOpen: false, serviceIdToDelete: "" });
+        } else {
+          setLocalState({ ...localState, serviceIdToDelete: "" });
+        }
+      })
+  }
+  const cancelDeleteAction = () => {
+    setLocalState({ ...localState, confirmModalOpen: false, serviceIdToDelete: "" });
+  }
+  const triggerDeleteService = (serviceId: string) => {
+    setLocalState({ ...localState, confirmModalOpen: true, serviceIdToDelete: serviceId });
   };
   // END form handlers //
   return (
     <React.Fragment>
+      <APIMessage currentLocalState={ serviceState }/>
+      <ConfirmDeleteModal 
+        open={ localState.confirmModalOpen } 
+        modelName="service" 
+        confirmAction={ confirmDeleteAction } 
+        cancelAction={ cancelDeleteAction } 
+      />
+    
       <Grid.Row>
         <Grid.Column width={15} className={ styles.headerCol }>
           <h5>Current additional services offered by your hotel</h5>
@@ -126,7 +159,7 @@ const ServicesIndexContainer = (props: Props) => {
                     key={service._id} 
                     service={service}
                     openService={openService}
-                    deleteService={deleteService}
+                    triggerDeleteService={ triggerDeleteService }
                     history={history}
                   />
                 );
@@ -157,8 +190,8 @@ const ServicesIndexContainer = (props: Props) => {
         <Grid.Row>
           <Grid.Column width={15}>
             <div className={ styles.indexViewControlsDiv }>
-              <EditViewControls handleBack={ goBackToServices } modelType="service" model={ serviceData } takeOnline={ takeServiceOnline } takeOffline={ takeServiceOffline } />
-
+              <EditViewControls handleBack={ goBackToServices } modelType="service" model={ serviceData } takeOnline={ handleTakeServiceOnline } takeOffline={ handleTakeServiceOffline } />
+              <ModelDeleteBtn modelName={"service"} modelId={ serviceData._id} handleModelDelete={ triggerDeleteService } />
             </div>
             <ServiceDisplay  service={serviceData} history={history} />
           </Grid.Column>
@@ -173,7 +206,7 @@ const mapStateToProps = (state: RootState) => {
 
   }
 }
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch<ServiceAction>) => {
   return {
     clearServiceData: () => dispatch(clearServiceData()),
     handleOpenService: (createdServices: Array<ServiceData>, serviceId: string) => {
@@ -187,9 +220,17 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     */
     handleServiceDelete: (serviceId: string, serviceState: ServiceState) => {
       return deleteService(dispatch, serviceId, serviceState);
+    },
+    takeServiceOnline: (serviceToActivate: ServiceData, serviceState: ServiceState) => {
+      return takeServiceOnline(dispatch, serviceToActivate, serviceState);
+    },
+    takeServiceOffline: (serviceToDeactivate: ServiceData, serviceState: ServiceState) => {
+      return takeServiceOffline(dispatch, serviceToDeactivate, serviceState);
+    },
+    toggleAllServicesOnlineStatus: (newStatus: boolean) => {
+      return toggleAllServicesOnlineStatus(dispatch, newStatus);
     }
   };
 };
-type ComponentType = typeof ServicesIndexContainer;
 
 export default (withRouter((connect<Props, OwnProps, _, _, _, _>(mapStateToProps, mapDispatchToProps)(ServicesIndexContainer):  React.AbstractComponent<OwnProps>)): React.AbstractComponent<WrapperProps>)

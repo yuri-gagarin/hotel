@@ -17,6 +17,7 @@ export type ServiceImgData = {
 };
 export type ServiceData = {
   _id: string,
+  live: boolean,
   serviceType: string,
   hours: string,
   price: string,
@@ -136,8 +137,38 @@ export type SetServiceImages = {
     serviceImages: Array<ServiceImgData>
   }
 };
+export type TakeServiceOnline = {
+  +type: "TakeServiceOnline",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    updatedService: ServiceData,
+    createdServices: Array<ServiceData>
+  }
+};
+export type TakeServiceOffline = {
+  +type: "TakeServiceOffline",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    updatedService: ServiceData,
+    createdServices: Array<ServiceData>
+  }
+};
+export type ToggleAllServicesOnlineOffline = {
+  +type: "ToggleAllServicesOnlineOffline",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    updatedServices: Array<ServiceData>
+  }
+};
 // union service action type //
 export type ServiceAction = (
   ServiceAPIRequest | SetServices | ServiceError | ServiceCreated | ServiceUpdated | ServiceDeleted |
-  ServiceImgUplSuccess | ServiceImgDelSuccess | OpenService | ClearServiceData | SetServiceImages
-)
+  ServiceImgUplSuccess | ServiceImgDelSuccess | OpenService | ClearServiceData | SetServiceImages |
+  TakeServiceOnline | TakeServiceOffline | ToggleAllServicesOnlineOffline
+);

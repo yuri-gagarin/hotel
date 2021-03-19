@@ -2,7 +2,7 @@
 import type { ServiceAction, ServiceState } from "../service/flowTypes";
 export type AppAction = ServiceAction;
 export type Reducer<S, A: AppAction> = (S, A) => S;
-export type Dispatch = (action: AppAction) => any;
+export type Dispatch<A> = (action: A) => any;
 
 export type RootState = {
   serviceState: ServiceState

@@ -1,4 +1,5 @@
-export const setUploadedImgPath = (path) => {
+// @flow
+export const setUploadedImgPath = (path: string): string => {
   if (!path) {
     return "/assets/images/roomStock1.jpeg";
   } else {
@@ -7,7 +8,7 @@ export const setUploadedImgPath = (path) => {
   }
 };
 
-export const simplifyPath = (path) => {
+export const simplifyPath = (path: string): string => {
   if (!path) {
     return "/assets/images/roomStock1.jpeg";
   } else {
@@ -16,11 +17,8 @@ export const simplifyPath = (path) => {
   }
 };
 
-export const matchNestedRoute = (path) => {
-  
-}
 
-export const setImagePath = (path) => {
+export const setImagePath = (path: string): string => {
   const imagePathArr = path.split("/");
   return "/" + imagePathArr.slice(1).join("/")
 }
@@ -30,7 +28,7 @@ export const setImagePath = (path) => {
  * @param {string} string String to trim.
  * @param {number} length Length to trim to.
  */
-export const trimStringToSpecificLength = (string, length) => {
+export const trimStringToSpecificLength = (string: string, length: number): string => {
   if (!string) {
     return "No string to trim..."
   }
@@ -48,7 +46,7 @@ export const trimStringToSpecificLength = (string, length) => {
  * Capitalizes the string
  * @param {string} string String to capitalize
  */
-export const capitalizeString = (string) => {
+export const capitalizeString = (string: string): string => {
   if (string && typeof string === "string") {
     return string.slice(0, 1).toUpperCase() + string.slice(1);
   } else {
@@ -57,7 +55,7 @@ export const capitalizeString = (string) => {
 };
 
 
-export const isEmpty = (obj) => {
+export const isEmpty = (obj: any): boolean => {
   console.log(Object.keys(obj))
   return obj && Object.keys(obj).length === 0;
 };

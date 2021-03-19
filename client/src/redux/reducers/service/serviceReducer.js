@@ -1,13 +1,5 @@
 // @flow 
 import { serviceConstants } from "../../constants";
-const {
-  SERVICE_REQUEST, SERVICE_CREATED, SERVICE_UPDATED,
-  SERVICE_DELETED, SERVICE_ERROR, SERVICE_IMG_REQUEST,
-  SERVICE_IMG_UPLOADED, SERVICE_IMG_DELETED,
-  SERVICE_IMG_ERROR, ADD_SERVICE_TO_STATE,
-  OPEN_SERVICE, CLOSE_SERVICE, SET_SERVICES,
-  SET_SERVICES_IMAGES, CLEAR_SERVICES_DATA
-} = serviceConstants;
 import type { ServiceState, ServiceAction } from "./flowTypes";
 
 const initialState: ServiceState = { 
@@ -16,6 +8,7 @@ const initialState: ServiceState = {
   responseMsg: "",
   serviceData: {
     _id: "",
+    live: false,
     serviceType: "",
     hours: "",
     price: "",
@@ -133,6 +126,38 @@ const serviceReducer = (state: ServiceState = initialState, action: ServiceActio
       return {
         ...state,
         serviceImages: action.payload.serviceImages,
+        error: null
+      };
+    };
+    case "TakeServiceOnline": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        serviceData: action.payload.updatedService,
+        createdServices: action.payload.createdServices,
+        error: null
+      };
+    };
+    case "TakeServiceOffline": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        serviceData: action.payload.updatedService,
+        createdServices: action.payload.createdServices,
+        error: null
+      };
+    };
+    case "ToggleAllServicesOnlineOffline": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        createdServices: [ ...action.payload.updatedServices ],
         error: null
       };
     };

@@ -1,28 +1,28 @@
-import React, { useState, useRef, useEffect } from "react";
+// @flow
+import * as React from "react";
 import PropTypes from "prop-types";
 // semantic react imports //
-import {
-  Icon,
-  Message
-} from "semantic-ui-react";
+import { Icon, Message } from "semantic-ui-react";
+// 
+import type { ServiceState } from "../../../redux/reducers/service/flowTypes";
 // styles and css //
 import styles from "./css/apiMessage.module.css";
 
+type LocalState = ServiceState;
 
-const APIMessage = ({ currentLocalState }) => {
-  const [ messageVisible, setMessageVisible ] = useState(true);
-  const stateRef = useRef(currentLocalState);
+const APIMessage = ({ currentLocalState } : { currentLocalState: ServiceState }): React.Node => {
+  const [ messageVisible, setMessageVisible ] = React.useState(true);
+  const stateRef = React.useRef(currentLocalState);
 
   const { loading, responseMsg, error } = currentLocalState;
   
-  useEffect(() => {
+  React.useEffect(() => {
     if (currentLocalState.loading !== stateRef.current.loading) {
-      console.log(21)
       setMessageVisible(true);
     }
   }, [ currentLocalState ]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!currentLocalState.loading && !currentLocalState.error && messageVisible) {
       setTimeout(() => {
         handleDismiss();
@@ -38,14 +38,14 @@ const APIMessage = ({ currentLocalState }) => {
     messageVisible 
     ? 
       <div className={ styles.apiMessageContainer } id="message">
-        <Message icon onDismiss={ handleDismiss } negative={ error ? true : false }>
+        <Message icon onDismiss={ handleDismiss } negative={ error ? true : false } positive={ !error ? true : false }>
           {
             loading
             ? <Icon name='circle notched' loading={loading} />
             : (
               error 
               ? <Icon name="exclamation circle" color="red" />
-              : <Icon name="check circle" /> 
+              : <Icon name="check circle" color="green" /> 
             )
           }
           <Message.Content>

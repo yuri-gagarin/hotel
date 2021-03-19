@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// @flow
+import * as React from "react";
 import PropTypes from "prop-types";
 // semantic ui react //
 import {
@@ -6,6 +7,9 @@ import {
 } from "semantic-ui-react";
 // additional component imports //
 import EditServiceDisplay from "./EditServiceDisplay";
+// types //
+import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
+import type { RouterHistory } from "react-router-dom";
 // styles //
 import styles from "./css/serviceDisplay.module.css";
 // helpers //
@@ -22,22 +26,25 @@ const PopupWithButton = ({ contentString, buttonContent, buttonOnClick, color })
   )
 }
 
-const ServiceDisplay = (props) => {
-  const { service, history } = props;
+type Props = {
+  service: ServiceData,
+  history: RouterHistory
+}
+const ServiceDisplay = ({ service, history } : Props): React.Node => {
   const { images } = service;
 
   // local form state //
-  const [formOpen, setFormOpen] = useState(false);
+  const [formOpen, setFormOpen] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     // close the service form on state change //
     setFormOpen(false);
   }, [service]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     // will scroll down the document when edit service form is open //
-    if (formOpen) {
-      window.scrollTo(0,document.body.scrollHeight);
+    if (formOpen && document.body) {
+      window.scrollTo(0, document.body.scrollHeight);
     } else {
       window.scrollTo(0, 0);
     }

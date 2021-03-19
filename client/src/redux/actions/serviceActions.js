@@ -8,7 +8,8 @@ import type {
   ServiceImgUplSuccess, ServiceImgDelSuccess,
   ServiceAPIRequest, ServiceCreated, ServiceUpdated, ServiceDeleted,
   OpenService, SetServices, ClearServiceData, SetServiceImages, ServiceError,
-  ClientServiceFormData
+  ClientServiceFormData, TakeServiceOnline, TakeServiceOffline, ToggleAllServicesOnlineOffline,
+  ServiceAction
 } from "../reducers/service/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 // helpers //
@@ -124,7 +125,27 @@ export const clearServiceData = (): ClearServiceData => {
   };
 };
 
-export const uploadServiceImage = (dispatch: Dispatch, file: File, currentServiceState: ServiceState): Promise<boolean> => {
+export const takeServiceOnlineAction = (data : { status: number, loading: boolean, responseMsg: string, updatedService: ServiceData, createdServices: Array<ServiceData> }): TakeServiceOnline => {
+  return {
+    type: "TakeServiceOnline",
+    payload: data
+  };
+};
+export const takeServiceOfflineAction = (data: { status: number, loading: boolean, responseMsg: string, updatedService: ServiceData, createdServices: Array<ServiceData> }): TakeServiceOffline => {
+  return {
+    type: "TakeServiceOffline",
+    payload: data
+  };
+};
+
+export const toggleAllServicesOnlineOfflineAction = (data: { status: number, loading: boolean, responseMsg: string, updatedServices: Array<ServiceData> }): ToggleAllServicesOnlineOffline => {
+  return {
+    type: "ToggleAllServicesOnlineOffline",
+    payload: data
+  }
+} 
+
+export const uploadServiceImage = (dispatch: Dispatch<ServiceAction>, file: File, currentServiceState: ServiceState): Promise<boolean> => {
   const { serviceData, serviceImages, createdServices } : { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
   const { _id : serviceId } = serviceData;
   const requestOptions = {
@@ -175,7 +196,7 @@ export const uploadServiceImage = (dispatch: Dispatch, file: File, currentServic
     });
 };
 
-export const deleteServiceImage = (dispatch: Dispatch, imageId: string, currentServiceState: ServiceState): Promise<boolean> => {
+export const deleteServiceImage = (dispatch: Dispatch<ServiceAction>, imageId: string, currentServiceState: ServiceState): Promise<boolean> => {
   const { serviceData, serviceImages, createdServices } : { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
 
   const requestOptions = {
@@ -211,7 +232,7 @@ export const deleteServiceImage = (dispatch: Dispatch, imageId: string, currentS
     });
 };
 
-export const handleNewService= (dispatch: Dispatch, hotelServiceData : { serviceType: string, price: string, description: string, serviceImages: Array<ServiceImgData> }): Promise<boolean> => {
+export const handleNewService= (dispatch: Dispatch<ServiceAction>, hotelServiceData : { serviceType: string, price: string, description: string, serviceImages: Array<ServiceImgData> }): Promise<boolean> => {
   const requestOptions = {
     method: "post",
     url: "/api/services/createHotelService",
@@ -241,7 +262,7 @@ export const handleNewService= (dispatch: Dispatch, hotelServiceData : { service
    
 };
 
-export const fetchServices = (dispatch: Dispatch): Promise<boolean> => {
+export const fetchServices = (dispatch: Dispatch<ServiceAction>): Promise<boolean> => {
   const requestOptions = {
     method: "get",
     url: "/api/services"
@@ -268,7 +289,7 @@ export const fetchServices = (dispatch: Dispatch): Promise<boolean> => {
     });
 };
 
-export const updateHotelService = (dispatch: Dispatch, serviceData: ClientServiceFormData, serviceImages: Array<ServiceImgData>, serviceState: ServiceState): Promise<boolean> => {
+export const updateHotelService = (dispatch: Dispatch<ServiceAction>, serviceData: ClientServiceFormData, serviceImages: Array<ServiceImgData>, serviceState: ServiceState): Promise<boolean> => {
   const serviceId = serviceData._id; 
   const currentServices = serviceState.createdServices;
   const requestOptions = {
@@ -310,7 +331,7 @@ export const updateHotelService = (dispatch: Dispatch, serviceData: ClientServic
     });
 };
 
-export const deleteService = (dispatch: Dispatch, serviceId: string, serviceState: ServiceState): Promise<boolean> => {
+export const deleteService = (dispatch: Dispatch<ServiceAction>, serviceId: string, serviceState: ServiceState): Promise<boolean> => {
   const currentServices = serviceState.createdServices;
   const requestOptions = {
     method: "delete",
@@ -342,5 +363,124 @@ export const deleteService = (dispatch: Dispatch, serviceId: string, serviceStat
     .catch((error) => {
       dispatch(serviceError(error));
       return false;
+    });
+};
+
+// take online and offline //
+// can probably be refactored into a single action eh?? //
+// definitely will redo into one function //
+export const takeServiceOnline = (dispatch: Dispatch<ServiceAction>, serviceToActivate: ServiceData, serviceState: ServiceState): Promise<boolean> => {
+  const { _id: serviceId } = serviceToActivate;
+  const { createdServices } = serviceState;
+  const axiosRequest = {
+    url: "/api/services/" + serviceId,
+    method: "patch",
+    data: {
+      changeOnlineStatus: {
+        status: true
+      }
+    }
+  };
+  dispatch(serviceRequest());
+
+  return axios(axiosRequest)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedService } : { responseMsg: string, updatedService: ServiceData } = data;
+
+      const updatedServiceData = { ...updatedService, images: [ ...updatedService.images ]};
+      const updatedServicesArray = createdServices.map((service) => {
+        if (service._id === updatedServiceData._id) {
+          return updatedServiceData;
+        } else {
+          return service;
+        }
+      });
+
+      const stateData = {
+        status: status,
+        responseMsg: responseMsg,
+        loading: false,
+        updatedService: updatedServiceData,
+        createdServices: updatedServicesArray
+      };
+      dispatch(takeServiceOnlineAction(stateData))
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(serviceError(error));
+      return Promise.resolve(false);
+    });
+};
+
+export const takeServiceOffline = (dispatch: Dispatch<ServiceAction>, serviceToDeactivate: ServiceData, serviceState: ServiceState): Promise<boolean> => {
+  const { _id: serviceId } = serviceToDeactivate;
+  const { createdServices } = serviceState;
+  const axiosRequest = {
+    url: "/api/services/" + serviceId,
+    method: "patch",
+    data: {
+      changeOnlineStatus: {
+        status: false
+      }
+    }
+  };
+  dispatch(serviceRequest());
+
+  return axios(axiosRequest)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedService } : { responseMsg: string, updatedService: ServiceData } = data;
+
+      const updatedServiceData = { ...updatedService, images: [ ...updatedService.images ]};
+      const updatedServicesArray = createdServices.map((service) => {
+        if (service._id === updatedServiceData._id) {
+          return updatedServiceData;
+        } else {
+          return service;
+        }
+      });
+
+      const stateData = {
+        status: status,
+        responseMsg: responseMsg,
+        loading: false,
+        updatedService: updatedServiceData,
+        createdServices: updatedServicesArray
+      };
+      dispatch(takeServiceOnlineAction(stateData))
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(serviceError(error));
+      return Promise.resolve(false);
+    });
+};
+
+export const toggleAllServicesOnlineStatus = (dispatch: Dispatch<ServiceAction> , newStatus: boolean): Promise<boolean> => {
+  const axiosRequest = {
+    url: "/api/services/",
+    method: "patch",
+    data: {
+      changeAllOnlineStatus: {
+        status: newStatus
+      }
+    }
+  };
+
+  dispatch(serviceRequest());
+  return axios(axiosRequest)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedServices } : { responseMsg: string, updatedServices: Array<ServiceData> } = data;
+
+      const updatedState = { status: status, loading: false, responseMsg: responseMsg, updatedServices: updatedServices };
+      dispatch(toggleAllServicesOnlineOfflineAction(updatedState));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      console.error(error)
+      dispatch(serviceError(error));
+      return Promise.resolve(false);
     });
 };

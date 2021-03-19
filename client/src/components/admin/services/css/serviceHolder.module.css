@@ -1,0 +1,41 @@
+.serviceCardOnlineStatus {
+  display: flex;
+  height: px;
+  width: 100%;
+  align-items: center;
+}
+.serviceCardOnlineBlinker {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+}
+.serviceOnline {
+  background-color: green;
+  opacity: 1;
+  animation: blinkStatus 3s linear 0s infinite;
+  -webkit-animation: blinkStatus 3s linear 0s infinite;
+}
+.serviceOffline {
+  background-color: red;
+  opacity: 1;
+}
+
+@keyframes blinkStatus {
+  50% {
+    opacity: 0.0;
+  }
+}
+@-webkit-keyframes blinkStatus {
+  50% {
+    opacity: 0.0;
+  }
+}
+
+.serviceCardOnlineStatusText {
+  margin-left: 1em;
+  font-size: 1em;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 400;
+  flex-grow: 1;
+  text-align: center;
+}

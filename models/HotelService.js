@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const hotelServiceSchema = new Schema({
+  live: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   serviceType: {
     type: String,
     required: true
@@ -23,10 +28,12 @@ const hotelServiceSchema = new Schema({
   },
   createdAt: {
     type: Date,
+    required: true,
     default: new Date(Date.now())
   },
   editedAt: {
     type: Date,
+    required: true,
     default: new Date(Date.now())
   }
 });

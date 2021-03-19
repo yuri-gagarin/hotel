@@ -1,4 +1,5 @@
-import React from "react";
+// @flow
+import * as React from "react";
 import PropTypes from "prop-types";
 // semantic ui react imports //
 import {
@@ -7,7 +8,14 @@ import {
 // helpers //
 import { capitalizeString } from "../../helpers/displayHelpers";
 
-const OnlinePopupControls = ({ handleFormOpen, modelType, createdModelsLength, takeAllOnline, takeAllOffline }) => {
+type Props = {|
+  modelType: "room" | "service" | "dining",
+  createdModelsLength: number,
+  handleFormOpen: () => void;
+  takeAllOnline: () => Promise<boolean | void>,
+  takeAllOffline: () => Promise<boolean | void>
+|}
+const OnlinePopupControls = ({ handleFormOpen, modelType, createdModelsLength, takeAllOnline, takeAllOffline } : Props): React.Node => {
 
   return (
     <React.Fragment>
