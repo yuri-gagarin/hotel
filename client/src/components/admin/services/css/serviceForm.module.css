@@ -1,5 +1,32 @@
+.serviceForm {
+  border-right: 1px solid grey;
+  border-bottom: 1px solid grey;
+  border-left: 1px solid grey;
+  padding: 1em;
+}
+
+.formHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid grey;
+  margin-bottom: 1em;
+}
+
 .formPreviewImgsDiv {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.formButtons {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #f9fafb;
+ 
+}
+.saveAndCloseBtn {
+  position: relative;
 }

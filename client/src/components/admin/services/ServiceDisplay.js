@@ -2,12 +2,13 @@
 import * as React from "react";
 // semantic ui react //
 import {
-  Button, Header, Icon, Image, Segment, Popup
+  Button, Header, Icon, Image, Modal, Segment, Popup
 } from "semantic-ui-react";
 // additional component imports //
 import EditServiceDisplay from "./EditServiceDisplay";
 import ServiceForm from "./ServiceForm";
 import GenericImgModal from "../shared/GenericImgModal";
+import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
 // types //
 import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
 import type { RouterHistory } from "react-router-dom";
@@ -78,19 +79,7 @@ const ServiceDisplay = ({ formOpen, service, history, toggleForm } : Props): Rea
         <hr />
         <div className={ styles.serviceImagesDiv}>
           <h4>Uploaded Service Images</h4>
-          {
-            images.length > 0 
-            ? 
-              images.map((img) => <Image key={img._id} className={ styles.serviceImage } size='medium' src={ setImagePath(img.path) } onClick={ () => toggleImageModal(img.path) } />)
-            : 
-              <Segment placeholder className={ styles.defaultNoImagesSegment }>
-                <Header icon>
-                  <Icon name="image outline" />
-                  No images are uploded for this service
-                </Header>
-                
-              </Segment>
-          }
+          <PreviewImagesCarousel images={ service.images } toggleImageModal={ toggleImageModal } />
         </div>
       </div>
       <div className={ styles.editServiceFormToggleDiv }>
@@ -103,7 +92,19 @@ const ServiceDisplay = ({ formOpen, service, history, toggleForm } : Props): Rea
       }
       </div>
       { 
-        formOpen ? <ServiceForm history={ history }/> : <></>
+        <Modal 
+          className={ styles.editServiceFormModal }
+          open={ formOpen }
+          
+        >
+          <ServiceForm history={ history }/>
+          <Modal.Actions>
+            <Popup
+              content="Cancel and close. Changes will NOT be saved"
+              trigger={ <Button color="red" icon="cancel" content="Cancel" onClick={ toggleForm } /> }
+            />
+          </Modal.Actions>
+        </Modal>
       }
     </React.Fragment>
   );

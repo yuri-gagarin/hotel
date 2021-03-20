@@ -1,0 +1,36 @@
+.imagesCarouselWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  position: relative;
+}
+.imagesControl {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.imagesControl > i {
+  font-size: 2em;
+  color: rgb(14, 92, 14);
+}
+.imagesControlLeft { 
+  width: 60px;
+}
+.imagesControlRight {
+  width: 60px;
+}
+.imagesWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+}
+.carouselPreviewImage {
+  border: 5px solid  rgb(104, 159, 230);
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  margin-right: 0.5em;
+}

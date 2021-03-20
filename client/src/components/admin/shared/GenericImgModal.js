@@ -25,7 +25,9 @@ const GenericImgModal = ({ open, imgURL, handleClose } : Props): React.Node => {
       onClose={ () => handleClose() }
       open={open}
     >
-      <Image size="huge" rounded src={ imgURL } />
+      <Modal.Content image>
+        <Image centered size="huge" rounded src={ imgURL }/>
+      </Modal.Content>
     </Modal>
   );
 };

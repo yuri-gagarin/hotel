@@ -122,7 +122,7 @@ const ServiceForm = (props: Props): React.Node => {
   };
 
   return (
-    <Form>
+    <Form className={ styles.serviceForm }>
       <ConfirmDeleteModal 
         open={ deleteImgModalState.modalOpen } 
         modelName="image" 
@@ -130,6 +130,10 @@ const ServiceForm = (props: Props): React.Node => {
         cancelAction={ cancelDeleteAction } 
         customContent={ "This will delete the selected Image" }
       />
+      <div className={ styles.formHeader }>
+        <h4>Edit Section</h4>
+        <span>Edit all of the data here</span>
+      </div>
       <Form.Group widths='equal'>
         <Form.Field
           control={Input}
@@ -177,12 +181,11 @@ const ServiceForm = (props: Props): React.Node => {
         }
       </div>
       
-      <Form.Field style={{marginTop: "0.5em"}}
-        id='form-button-control-public'
-        control={Button}
-        content='Save All'
-        onClick={handleFormSubmit}
-      />
+      <Form.Field style={{marginTop: "0.5em"}}>
+        <div className={ styles.formButtons }>
+          <Button className={ styles.saveAndCloseBtn } positive content="Save and Close" onClick={handleFormSubmit} />
+        </div>
+      </Form.Field>
      
     </Form>
   )
