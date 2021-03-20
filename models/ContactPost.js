@@ -22,10 +22,22 @@ const contactPostSchema = new Schema({
   read: {
     type: Boolean,
   },
+  sentAt: {
+    type: Date,
+    default: new Date(Data.now())
+  },
+  repliedAt: {
+    type: Date
+  }
   createdAt: {
     type: Date,
-    default: Date.now
+    default: new Date(Date.now())
   },
+  editedAt: {
+    type: Date,
+    default: new Date(Date.now())
+  },
+  
 });
 
 export default mongoose.model("ContactPost",  contactPostSchema);

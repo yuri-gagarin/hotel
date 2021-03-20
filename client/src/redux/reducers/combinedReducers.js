@@ -5,7 +5,7 @@ import diningModelReducer from "./diningReducer";
 import roomReducer from "./roomReducer";
 import appGeneralReducer from "./appGeneralReducer";
 import clientReducer from "./clientReducer";
-import contactPostReducer from "./contactPostReducer";
+import contactPostReducer from "./contact_posts/contactPostReducer";
 import conversationReducer from "./conversationReducer";
 import messageReducer from "./messageReducer";
 import serviceReducer from "./service/serviceReducer";

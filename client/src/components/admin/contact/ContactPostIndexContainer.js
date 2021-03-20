@@ -1,9 +1,8 @@
+// @flow
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // semantic ui imports //
-import {
-  Card, Grid
-} from "semantic-ui-react";
+import { Card, Grid } from "semantic-ui-react";
 // additional components //
 import ContactPostHolder from "./ContactPostHolder";
 import ContactPostView from "./ContactPostView";
@@ -12,7 +11,7 @@ import { connect } from "react-redux";
 import { 
   openContactPost, closeContactPost, handleContactPostDelete, fetchContactPosts
 } from "../../../redux/actions/contactPostActions";
-import { operationSuccessful, setAppError } from "./../../../redux/actions/appGeneralActions";
+import { operationSuccessful, setAppError } from "../../../redux/actions/appGeneralActions";
 // style imports //
 import {
   contactScreenStyle
@@ -21,11 +20,7 @@ import {
 const ContactPostContainer = (props) => {
   const { contactPostState } = props;
   // reducer functions //
-  const { 
-    fetchContactPosts, openContactPost, 
-    closeContactPost, handleContactPostDelete,
-    operationSuccessful, setAppError
-  } = props
+  const { fetchContactPosts, openContactPost,  closeContactPost, handleContactPostDelete } = props
   const { createdPosts } = contactPostState;
   // local state //
   const [postOpen, setPostOpen] = useState(false);
