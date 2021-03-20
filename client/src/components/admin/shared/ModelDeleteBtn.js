@@ -29,6 +29,7 @@ const ModelDeleteBtn = ({ modelName, modelId, handleModelDelete, className } : P
             color="red"
             onClick={ triggerDelete }
             content="Delete"
+            icon="trash alternate outline"
           />
         }
       />

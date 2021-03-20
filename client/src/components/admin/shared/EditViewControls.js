@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import PropTypes from "prop-types";
 // semantic ui react imports //
 import { Button, Icon, Label, Popup } from "semantic-ui-react";
 // types //
@@ -29,7 +28,7 @@ const EditViewControls = ({ handleBack, modelType, model, takeOnline, takeOfflin
   }
   return (
     <React.Fragment>
-      <Button inverted color="blue" onClick={ handleBack }>Back</Button>
+      <Button inverted color="blue" onClick={ handleBack } icon="arrow left" content="Back" />
       <Button.Group>
         <Popup 
           content={`Current <${capitalizeString(modelType)}> will be displayed to clients`}
@@ -48,7 +47,7 @@ const EditViewControls = ({ handleBack, modelType, model, takeOnline, takeOfflin
         trigger={
           <Label color={ live ? "green" : "red" } className={ styles.onlineLabel }>
             {
-              live ? <Icon name="check circle" size="large"/> : <Icon name="ban" size="large" />
+              live ? <Icon name="eye" size="large"/> : <Icon name="hide" size="large" />
             }
           </Label>
         }
@@ -56,14 +55,6 @@ const EditViewControls = ({ handleBack, modelType, model, takeOnline, takeOfflin
       </Button.Group>
     </React.Fragment>
   );
-};
-
-EditViewControls.propTypes = {
-  handleBack: PropTypes.func.isRequired,
-  modelType: PropTypes.string.isRequired,
-  model: PropTypes.object.isRequired,
-  takeOnline: PropTypes.func.isRequired,
-  takOffline: PropTypes.func.isRequired
 };
 
 export default EditViewControls;

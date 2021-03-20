@@ -68,8 +68,9 @@ export default {
   updateService: (req, res) => {
     let status, editedService;
     const { serviceId } = req.params;
-    const { serviceData = {}, serviceImages = {}, changeOnlineStatus, changeAllOnlineStatus } = req.body;
-    const updatedImages = serviceImages.currentImages ? serviceImages.currentImages.map((img) => `${img._id}` ) : [];
+    console.log(req.body)
+    const { serviceData = {}, serviceImages = [], changeOnlineStatus, changeAllOnlineStatus } = req.body;
+    const updatedImages = serviceImages.length > 0 ? serviceImages.map((img) => `${img._id}`) : [];
 
     if (changeOnlineStatus) {
       const { status = false } = changeOnlineStatus;

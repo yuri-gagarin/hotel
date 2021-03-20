@@ -18,7 +18,8 @@ export const simplifyPath = (path: string): string => {
 };
 
 
-export const setImagePath = (path: string): string => {
+export const setImagePath = (path?: string): string => {
+  if (!path) return "";
   const imagePathArr = path.split("/");
   return "/" + imagePathArr.slice(1).join("/")
 }
@@ -47,8 +48,10 @@ export const trimStringToSpecificLength = (string: string, length: number): stri
  * @param {string} string String to capitalize
  */
 export const capitalizeString = (string: string): string => {
-  if (string && typeof string === "string") {
+  if (string && typeof string === "string" && string.length > 0) {
     return string.slice(0, 1).toUpperCase() + string.slice(1);
+  } else if (string && typeof string === "string" && string.length === 0) {
+    return "";
   } else {
     throw new Error("Invalid argument, expected a string");
   }

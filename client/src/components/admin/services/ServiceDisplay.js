@@ -1,12 +1,13 @@
 // @flow
 import * as React from "react";
-import PropTypes from "prop-types";
 // semantic ui react //
 import {
   Button, Header, Icon, Image, Segment, Popup
 } from "semantic-ui-react";
 // additional component imports //
 import EditServiceDisplay from "./EditServiceDisplay";
+import ServiceForm from "./ServiceForm";
+import GenericImgModal from "../shared/GenericImgModal";
 // types //
 import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
 import type { RouterHistory } from "react-router-dom";
@@ -27,19 +28,21 @@ const PopupWithButton = ({ contentString, buttonContent, buttonOnClick, color })
 }
 
 type Props = {
+  formOpen: boolean,
   service: ServiceData,
-  history: RouterHistory
+  history: RouterHistory,
+  toggleForm: () => void
 }
-const ServiceDisplay = ({ service, history } : Props): React.Node => {
+type LocalState = {
+  imgModalOpen: boolean,
+  imgURL: string
+}
+const ServiceDisplay = ({ formOpen, service, history, toggleForm } : Props): React.Node => {
   const { images } = service;
 
   // local form state //
-  const [formOpen, setFormOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    // close the service form on state change //
-    setFormOpen(false);
-  }, [service]);
+  const [ localState, setLocalState ] = React.useState<LocalState>({ imgModalOpen: false, imgURL: "" });
+  const imagesRef = React.useRef(images);
 
   React.useEffect(() => {
     // will scroll down the document when edit service form is open //
@@ -48,14 +51,19 @@ const ServiceDisplay = ({ service, history } : Props): React.Node => {
     } else {
       window.scrollTo(0, 0);
     }
-  }, [formOpen]);
+  }, [ formOpen ]);
 
-  const toggleForm = () => {
-    setFormOpen(!formOpen);
-  };
+  const toggleImageModal = (imgModelPath?: string) => {
+    setLocalState({ 
+      ...localState,  
+      imgURL: imgModelPath ? setImagePath(imgModelPath) : "", 
+      imgModalOpen: !localState.imgModalOpen 
+    })
+  }
 
   return (
     <React.Fragment>
+      <GenericImgModal open={ localState.imgModalOpen } imgURL={ localState.imgURL } handleClose={ toggleImageModal } />
       <div className={ styles.serviceDisplayCol }>
         <div className={ styles.serviceDetailsDiv }>
           <h4>Details</h4>
@@ -73,7 +81,7 @@ const ServiceDisplay = ({ service, history } : Props): React.Node => {
           {
             images.length > 0 
             ? 
-              images.map((img) => <Image key={img._id} className={ styles.serviceImage } size='medium' src={ setImagePath(img.path) } />)
+              images.map((img) => <Image key={img._id} className={ styles.serviceImage } size='medium' src={ setImagePath(img.path) } onClick={ () => toggleImageModal(img.path) } />)
             : 
               <Segment placeholder className={ styles.defaultNoImagesSegment }>
                 <Header icon>
@@ -95,16 +103,10 @@ const ServiceDisplay = ({ service, history } : Props): React.Node => {
       }
       </div>
       { 
-        formOpen ? <EditServiceDisplay history={history} service={service} /> : null 
+        formOpen ? <ServiceForm history={ history }/> : <></>
       }
     </React.Fragment>
   );
 };
-// PropTypes validations //
-ServiceDisplay.propTypes = {
-  service: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
-};
-
 
 export default ServiceDisplay;

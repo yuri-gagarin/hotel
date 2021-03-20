@@ -5,6 +5,8 @@ export type ClientServiceFormData = {
   serviceType: string,
   hours: string,
   price: string,
+  description: string,
+  images: Array<ServiceImgData>,
   createdAt?: string,
   editedAt?: string
 }

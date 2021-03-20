@@ -145,7 +145,7 @@ export const toggleAllServicesOnlineOfflineAction = (data: { status: number, loa
   }
 } 
 
-export const uploadServiceImage = (dispatch: Dispatch<ServiceAction>, file: File, currentServiceState: ServiceState): Promise<boolean> => {
+export const uploadServiceImage = (dispatch: Dispatch<ServiceAction>, file: FormData, currentServiceState: ServiceState): Promise<boolean> => {
   const { serviceData, serviceImages, createdServices } : { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
   const { _id : serviceId } = serviceData;
   const requestOptions = {
@@ -232,7 +232,7 @@ export const deleteServiceImage = (dispatch: Dispatch<ServiceAction>, imageId: s
     });
 };
 
-export const handleNewService= (dispatch: Dispatch<ServiceAction>, hotelServiceData : { serviceType: string, price: string, description: string, serviceImages: Array<ServiceImgData> }): Promise<boolean> => {
+export const handleNewService= (dispatch: Dispatch<ServiceAction>, hotelServiceData : { serviceType: string, price: string, description: string, images: Array<ServiceImgData> }): Promise<boolean> => {
   const requestOptions = {
     method: "post",
     url: "/api/services/createHotelService",
@@ -289,9 +289,10 @@ export const fetchServices = (dispatch: Dispatch<ServiceAction>): Promise<boolea
     });
 };
 
-export const updateHotelService = (dispatch: Dispatch<ServiceAction>, serviceData: ClientServiceFormData, serviceImages: Array<ServiceImgData>, serviceState: ServiceState): Promise<boolean> => {
+export const updateHotelService = (dispatch: Dispatch<ServiceAction>, serviceData: ClientServiceFormData, serviceState: ServiceState): Promise<boolean> => {
   const serviceId = serviceData._id; 
   const currentServices = serviceState.createdServices;
+  const serviceImages = serviceState.serviceImages;
   const requestOptions = {
     method: "patch",
     url: "/api/services/" + (serviceId || ""),

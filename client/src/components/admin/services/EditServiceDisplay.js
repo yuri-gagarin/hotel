@@ -1,9 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
+// @flow
+import * as React from "react";
 import ServiceForm from "./ServiceForm";
+// 
+import type { RouterHistory } from "react-router-dom";
+import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
 
-const EditServiceDisplay = (props) => {
-  const { service, history } = props;
+const EditServiceDisplay = ({ service, history } : { service: ServiceData, history: RouterHistory }): React.Node => {
   return (
     <div>
       <hr />
@@ -13,9 +15,6 @@ const EditServiceDisplay = (props) => {
     </div>
   )
 };
-// PropTypes validations //
-EditServiceDisplay.propTypes = {
-  service: PropTypes.object.isRequired
-};
+
 
 export default EditServiceDisplay;

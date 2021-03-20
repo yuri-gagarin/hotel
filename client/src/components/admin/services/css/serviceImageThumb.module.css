@@ -1,0 +1,19 @@
+.serviceImageThumb {
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 0.5em;
+  display: flex;
+  position: relative;
+  margin-top: 0.5em;
+  margin-right: 1.5em;
+}
+.deleteIcon {
+  font-size: 30px;
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  cursor: pointer;
+  color: red;
+  display: flex;
+  z-index: 999;
+}

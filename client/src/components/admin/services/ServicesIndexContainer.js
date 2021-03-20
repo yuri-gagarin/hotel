@@ -25,6 +25,7 @@ import type { Dispatch, RootState } from "../../../redux/reducers/_helpers/creat
 import type { RouterHistory } from "react-router-dom";
 // style and css //
 import styles from "./css/servicesIndexContainer.module.css";
+import { ServiceEditContainer } from "./ServiceEditContainer";
 
 type WrapperProps ={|
   serviceState: ServiceState
@@ -46,12 +47,12 @@ type Props = {
 
 type LocalState = {
   serviceInfoOpen: boolean,
-  newServiceFormOpen: boolean,
+  serviceFormOpen: boolean,
   confirmModalOpen: boolean,
   serviceIdToDelete: string
 };
 
-const ServicesIndexContainer = (props: Props) => {
+const ServicesIndexContainer = (props: Props): React.Node => {
   const { history, serviceState } = props;
   const {
     fetchServices, clearServiceData, handleOpenService, handleServiceDelete, 
@@ -60,7 +61,7 @@ const ServicesIndexContainer = (props: Props) => {
   const { createdServices, serviceData } : { createdServices: Array<ServiceData>, serviceData: ServiceData } = serviceState;
 
   const [ localState, setLocalState ] = React.useState<LocalState>({ 
-    serviceInfoOpen: false, newServiceFormOpen: false, confirmModalOpen: false, serviceIdToDelete: ""
+    serviceInfoOpen: false, serviceFormOpen: false, confirmModalOpen: false, serviceIdToDelete: ""
   });
 
   React.useEffect(() => {
@@ -86,6 +87,9 @@ const ServicesIndexContainer = (props: Props) => {
   const handleTakeServiceOffline = (serviceToDeactivate: ServiceData) => {
     return takeServiceOffline(serviceToDeactivate, serviceState);
   };
+  const toggleForm = () => {
+    return setLocalState({ ...localState, serviceFormOpen: !localState.serviceFormOpen });
+  }
   // form handlers //
   const openNewServiceForm = () => {
     clearServiceData();
@@ -141,9 +145,9 @@ const ServicesIndexContainer = (props: Props) => {
         <Grid.Row>
           <Grid.Column width={15} className={ styles.buttonsCol }>
             <OnlinePopupControls 
-              modelType="service" 
+              modelType="service"
+              createdModels={ createdServices }
               handleFormOpen={ openNewServiceForm }
-              createdModelsLength={ createdServices.length } 
               takeAllOnline={ takeAllServicesOnline } 
               takeAllOffline={ takeAllServicesOffline } 
             />
@@ -187,15 +191,13 @@ const ServicesIndexContainer = (props: Props) => {
         </Grid.Row>
       </Route>
       <Route path={"/admin/services/edit"}>
-        <Grid.Row>
-          <Grid.Column width={15}>
-            <div className={ styles.indexViewControlsDiv }>
-              <EditViewControls handleBack={ goBackToServices } modelType="service" model={ serviceData } takeOnline={ handleTakeServiceOnline } takeOffline={ handleTakeServiceOffline } />
-              <ModelDeleteBtn modelName={"service"} modelId={ serviceData._id} handleModelDelete={ triggerDeleteService } />
-            </div>
-            <ServiceDisplay  service={serviceData} history={history} />
-          </Grid.Column>
-        </Grid.Row>
+        <ServiceEditContainer 
+          history={ history }
+          serviceState={ serviceState }
+          handleTakeServiceOnline={ handleTakeServiceOnline }
+          handleTakeServiceOffline={ handleTakeServiceOffline }
+          triggerDeleteService={ triggerDeleteService }
+        />
       </Route>
     </React.Fragment>
   );
@@ -233,4 +235,4 @@ const mapDispatchToProps = (dispatch: Dispatch<ServiceAction>) => {
   };
 };
 
-export default (withRouter((connect<Props, OwnProps, _, _, _, _>(mapStateToProps, mapDispatchToProps)(ServicesIndexContainer):  React.AbstractComponent<OwnProps>)): React.AbstractComponent<WrapperProps>)
+export default (withRouter((connect(mapStateToProps, mapDispatchToProps)(ServicesIndexContainer):  React.AbstractComponent<OwnProps>)): React.AbstractComponent<WrapperProps>)

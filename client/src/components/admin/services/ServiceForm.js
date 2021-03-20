@@ -1,55 +1,51 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  TextArea
-} from "semantic-ui-react";
+// @flow
+import * as React from "react";
+import { Button, Checkbox, Form, Input, TextArea } from "semantic-ui-react";
 // additional component imports  //
 import ServiceImageThumb from "./ServiceImageThumb";
 import FileInput from "../rooms/FileInput";
+import ConfirmDeleteModal from "../shared/ConfirmDeleteModal";
 // redux imports  //
 import { connect } from "react-redux";
-import { 
-  uploadServiceImage,
-  deleteServiceImage,
-  handleNewService,
-  updateHotelService, 
-  setServicesImages
-} from "../../../redux/actions/serviceActions";
+import { uploadServiceImage, deleteServiceImage, handleNewService, updateHotelService, setServicesImages } from "../../../redux/actions/serviceActions";
+// flow types //
+import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
+import type { ServiceState, ServiceData, ServiceImgData, ClientServiceFormData, ServiceAction } from "../../../redux/reducers/service/flowTypes";
+import type { RouterHistory } from "react-router-dom";
+// styles and css//
+import styles from "./css/serviceForm.module.css";
 // helpers //
+import { generateEmptyService } from "../../../redux/reducers/_helpers/emptyDataGenerators";
 
-const ServiceForm = (props) => {
-  const { 
-    serviceState, 
-    history,
-    uploadServiceImage, 
-    deleteServiceImage,
-    handleNewService, 
-    updateHotelService, 
-    setServicesImages
-  } = props;
-  const { serviceData = {}, serviceImages } = serviceState;
-
-  const initialFormState = {
-    serviceType: serviceData.serviceType || "",
-    hours: serviceData.hours || "",
-    price: serviceData.price || "",
-    description: serviceData.description || ""
-  };
+type OwnProps = {|
+  history: RouterHistory,
+|};
+type Props = {|
+  ...OwnProps,
+  serviceState: ServiceState,
+  handleNewService: (serviceData: ClientServiceFormData, history: RouterHistory) => Promise<boolean>,
+  updateHotelService: (serviceData: ClientServiceFormData, serviceState: ServiceState) => Promise<boolean>,
+  uploadServiceImage: (file: FormData, currentServiceState: ServiceState) => Promise<boolean>,
+  deleteServiceImage: (imageId: string, currentServiceState: ServiceState) => Promise<boolean>,
+  setServicesImages: (serviceImages: Array<ServiceImgData>) => void 
+|}
+const ServiceForm = (props: Props): React.Node => {
+  const { serviceState, history } = props;
+  const { handleNewService, updateHotelService, uploadServiceImage,  deleteServiceImage, setServicesImages } = props;
+  const { serviceData, serviceImages } = serviceState;
 
   // local form state //
-  const [serviceDetails, setServiceDetails] = useState(initialFormState);
-
-  useEffect(() => {
+  const [ serviceDetails, setServiceDetails ] = React.useState(serviceData);
+  const [ deleteImgModalState, setDeleteImgModalState ] = React.useState({ modalOpen: false, imgIdToDelete: "" });
+  React.useEffect(() => {
     if (serviceData && serviceData.images && Array.isArray(serviceData.images)) {
       // set the images array //
-      console.log("called set service images");
       setServicesImages(serviceData.images);
     }
   }, []);
+  React.useEffect(() => {
+    console.log(serviceDetails)
+  }, [ serviceDetails ])
   
   // text input handlers //
   const handleServiceType = (e, data) => {
@@ -78,51 +74,62 @@ const ServiceForm = (props) => {
   };
   
   const handleFormSubmit = () => {
-    const serviceId = serviceState.serviceData._id;
-    const createdServices = serviceState.createdServices;
+    const { serviceData, createdServices, serviceImages } = serviceState;
+    const { _id: serviceId } = serviceData;
 
-    const serviceImages = serviceState.serviceImages.map((img) => img._id );
-    const serviceData = {
+    const serviceFormData: ClientServiceFormData = {
       ...serviceDetails,
       images: serviceImages
     };
 
     if (!serviceId) {
       // new room being created //
-      handleNewService(serviceData, history)
+      handleNewService(serviceFormData, history)
         .then((success) => {
           if (success) {
             history.push("/admin/services");
-          } else {
-            return;
           }
         });
     } else {
       // existing room being edited with existing data //
-      const serviceImages = { currentImages: serviceState.serviceImages };
-      updateHotelService({ ...serviceData, _id: serviceId }, serviceImages, createdServices)
+      updateHotelService({ ...serviceFormData, _id: serviceId }, serviceState)
         .then((success) => {
           if (success) {
             history.push("/admin/services");
-          } else {
-            return;
           }
         });
     }
   };  
-
-  const handleImageDelete = (imageId) => {
-    const { serviceImages } = serviceState;
-    const confirm = window.confirm("Are you Sure?");
-    if (confirm) {
-      deleteServiceImage(imageId, serviceImages);
+  
+  // image delete actions //
+  const handleImageDelete = (imageId: string) => {
+    // need ac confirmation modal here //
+    setDeleteImgModalState({ ...deleteImgModalState, modalOpen: true, imgIdToDelete: imageId });
+  };
+  const confirmImageDelete = () => {
+    const { modalOpen, imgIdToDelete } = deleteImgModalState;
+    if (modalOpen && imgIdToDelete) {
+      return deleteServiceImage(imgIdToDelete, serviceState)
+        .then((success) => {
+          setDeleteImgModalState({ ...deleteImgModalState, modalOpen: false, imgIdToDelete: "" });
+        })
     } else {
-      return;
+      return Promise.resolve(true);
     }
+  };
+  const cancelDeleteAction = () => {
+    setDeleteImgModalState({ ...deleteImgModalState, modalOpen: false, imgIdToDelete: "" });
   };
 
   return (
     <Form>
+      <ConfirmDeleteModal 
+        open={ deleteImgModalState.modalOpen } 
+        modelName="image" 
+        confirmAction={ confirmImageDelete } 
+        cancelAction={ cancelDeleteAction } 
+        customContent={ "This will delete the selected Image" }
+      />
       <Form.Group widths='equal'>
         <Form.Field
           control={Input}
@@ -155,18 +162,21 @@ const ServiceForm = (props) => {
         value={serviceDetails.description}
 
       />
-      <FileInput uploadImage={uploadServiceImage} dataName={"serviceImage"} />
-      { 
-        serviceImages.map((serviceImg) => {
-          return (
-            <ServiceImageThumb 
-              key={serviceImg._id} 
-              serviceImage={serviceImg} 
-              handleImageDelete={handleImageDelete} 
-            />
-          );
-        })
-      }
+      <FileInput uploadImage={uploadServiceImage} dataName={"serviceImage"} modelState={ serviceState } />
+      <div className={ styles.formPreviewImgsDiv }>
+        { 
+          serviceImages.map((serviceImg) => {
+            return (
+              <ServiceImageThumb 
+                key={serviceImg._id} 
+                serviceImage={serviceImg} 
+                handleImageDelete={handleImageDelete} 
+              />
+            );
+          })
+        }
+      </div>
+      
       <Form.Field style={{marginTop: "0.5em"}}
         id='form-button-control-public'
         control={Button}
@@ -178,40 +188,31 @@ const ServiceForm = (props) => {
   )
 };
 
-ServiceForm.propTypes = {
-  history: PropTypes.object.isRequired,
-  uploadServiceImage: PropTypes.func.isRequired,
-  deleteServiceImage: PropTypes.func.isRequired,
-  setServicesImages: PropTypes.func.isRequired,
-  handleNewService: PropTypes.func.isRequired,
-  updateHotelService: PropTypes.func.isRequired
-}
-
 // redux functionality //
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
     serviceState: state.serviceState
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch<ServiceAction>) => {
   return {
-    uploadServiceImage: (imageData) => {
-      return uploadServiceImage(dispatch, imageData);
+    uploadServiceImage: (imageData: FormData, currentServiceState: ServiceState) => {
+      return uploadServiceImage(dispatch, imageData, currentServiceState);
     },
-    deleteServiceImage: (imageId, oldImageState) => {
-      return deleteServiceImage(dispatch, imageId, oldImageState);
+    deleteServiceImage: (imageId: string, currentServiceState: ServiceState) => {
+      return deleteServiceImage(dispatch, imageId, currentServiceState);
     },
-    setServicesImages: (previewImages) => {
+    setServicesImages: (previewImages: Array<ServiceImgData>) => {
       return setServicesImages(previewImages);
     },
-    handleNewService: (serviceData, history) => {
-      return handleNewService(dispatch, serviceData, history);
+    handleNewService: (serviceData: ClientServiceFormData) => {
+      return handleNewService(dispatch, serviceData);
     },
-    updateHotelService: (serviceData, serviceImages, currentServices) => {
-      return updateHotelService(dispatch, serviceData, serviceImages, currentServices);
+    updateHotelService: (serviceData: ClientServiceFormData, serviceState: ServiceState) => {
+      return updateHotelService(dispatch, serviceData, serviceState);
     }
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ServiceForm);
+export default (connect(mapStateToProps, mapDispatchToProps)(ServiceForm): React.AbstractComponent<OwnProps>);
 

@@ -1,61 +1,70 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+// @flow
+import * as React from "react";
 import { Button } from "semantic-ui-react";
 //
 import ImgUploadControls from "../shared/ImgUploadControls";
+//
+import type { ServiceState } from "../../../redux/reducers/service/flowTypes";
 // css an styles //
 import styles from "./css/fileInput.module.css";
 
-const FileInput = (props) => {
-  const { uploadImage, dataName, state } = props;
-  const [ file, setFile ] = useState(null);
-  const [ objectURL, setObjectURL] = useState(null);
+type Props = {
+  uploadImage: (data: FormData, currentState: ServiceState) => Promise<boolean>,
+  dataName: "roomImage" | "serviceImage" | "diningImage",
+  modelState: ServiceState
+}
+type LocalState = {
+  file:  | null,
+  objectURL: string
+}
+const FileInput = ({ uploadImage, dataName, modelState }: Props): React.Node => {
+  const [ localState, setLocalState ] = React.useState<LocalState>({ file: null, objectURL: "" });
 
+  
   const onChange = (e) => {
     if (e.target && e.target.files) {
-      setFile(e.target.files[0]);
-      setObjectURL(URL.createObjectURL(e.target.files[0]));
+      setLocalState({ ...localState, file: e.target.files[0], objectURL: URL.createObjectURL(e.target.files[0]) });
     }
   };
   
 
   const uploadFile = () => {
-    if (!file) return;
-    let data = new FormData();
-    data.append(dataName, file);
-    return uploadImage(data, state)
-      .then((success) => {
-        if (success) {
-          // clear the input //
-          const input = document.getElementById("fileInput");
-          if (input) {
-            input.value = "";
-            setFile(null);
-            setObjectURL(null);
-          } else {
-            setFile(null);
-            setObjectURL(null);
+    if (localState.file) {
+      let data = new FormData();
+      data.append(dataName, localState.file);
+      return uploadImage(data, modelState)
+        .then((success) => {
+          if (success) {
+            const input = document.getElementById("modelImgUplFileInput");
+            if (input instanceof HTMLInputElement) {
+              input.value = "";
+            }
+            // clear the input //
+            setLocalState({ ...localState, file: null, objectURL: "" });
           }
-          
-        }
-      });
+        });
+      }
   };
 
   const cancelFile = () => {
-    setFile(null);
+    const input = document.getElementById("modelImgUplFileInput");
+    if (input instanceof HTMLInputElement) {
+      input.value = "";
+    }
+    setLocalState({ ...localState, file: null, objectURL: "" });
   }
 
   return (
     <div className={ styles.fileInputContainer }>
-      <input type="file" id="fileInput" hidden onChange={onChange} />   
+      <input type="file" id="modelImgUplFileInput" hidden onChange={onChange} />   
       {
-        file 
+        localState.file 
         ?
         <div className={ styles.uploadControlsContainer }>
           <ImgUploadControls handleUpload={ uploadFile } handleCancel = { cancelFile } />
-          <div className={ styles.fileName}>{file.name}</div>
+          <div className={ styles.fileName}>{ localState.file.name }</div>
           {
-            objectURL ? <img className={ styles.uplPreviewThumb } src={ objectURL }></img> : null
+            localState.objectURL ? <img className={ styles.uplPreviewThumb } src={ localState.objectURL }></img> : null
           }
         </div>
         :
@@ -63,11 +72,11 @@ const FileInput = (props) => {
           <div>Upload Images</div>
           <Button 
             as="label" 
-            htmlFor="fileInput"
+            htmlFor="modelImgUplFileInput"
             icon="file" 
             type="button">
           </Button>
-          <span style={{marginLeft: "1em"}}>{( file && file.name ) ? file.name : "No file"}</span>
+          <span style={{marginLeft: "1em"}}>{( localState.file && localState.file.name ) ? localState.file.name : "No file"}</span>
         </div>
       }
         

@@ -1,42 +1,30 @@
-import React from "react";
-import { Image, Icon } from "semantic-ui-react";
+// @flow
+import * as React from "react";
+import { Icon, Image, Popup } from "semantic-ui-react";
+// flow types //
+import type { ServiceImgData } from "../../../redux/reducers/service/flowTypes";
+// styles //
+import styles from "./css/serviceImageThumb.module.css";
+// helpers //
+import { setImagePath } from "../../helpers/displayHelpers";
 
-const serviceImageThumbStyle = {
-  border: "1px solid grey",
-  borderRadius: "5px",
-  padding: "0.5em",
-  position: "relative",
-  display: "inline-block",
-  marginTop: "0.5em",
-  marginRight: "0.5em"
-};
-const deleteIconStyle = {
-  fontSize: "35px",
-  position: "absolute",
-  top: "-15%",
-  right: "-15%",
-  cursor: "pointer",
-  color: "red",
-  zIndex: "999"
-};
-
-const ServiceImageThumb = (props) => {
-  const { serviceImage, handleImageDelete } = props;
-  console.log(25)
-  // 
-  const normalizePath = (uploadPath) => {
-    if (uploadPath) {
-      const imgSourcePath = uploadPath.split("/");
-      return  "/" + imgSourcePath[1] + "/" + imgSourcePath[2] + "/" + imgSourcePath[3];
-    } else {
-      return "";
-    }
-  };
-  //
+type Props = {
+  serviceImage: ServiceImgData,
+  handleImageDelete: (imgId: string) => void
+}
+const ServiceImageThumb = ({ serviceImage, handleImageDelete} : Props): React.Node => {
   return (
-    <div style={serviceImageThumbStyle}>
-      <Icon name="trash" style={deleteIconStyle} onClick={() => handleImageDelete(serviceImage._id)}></Icon>
-      <Image src={normalizePath(serviceImage.path)} size="small"></Image>
+    <div className={ styles.serviceImageThumb }>
+      <Popup 
+        content="Delete Image"
+        trigger={
+          <span className={ styles.deleteIcon }>
+            <i className={ `${"fas fa-trash-alt"}`} onClick={() => handleImageDelete(serviceImage._id)} />
+          </span>
+        }
+      />
+     
+      <Image src={setImagePath(serviceImage.path)} size="small"></Image>
     </div>
   )
 };

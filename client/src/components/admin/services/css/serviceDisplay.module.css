@@ -49,13 +49,14 @@
   flex-direction: row;
   flex-wrap: wrap;
 }
-.serviceImagesDiv > h3 {
+.serviceImagesDiv > h4 {
   width: 100%;
 }
 .serviceImage {
   border: 5px solid  rgb(104, 159, 230);
   border-radius: 5px;
   cursor: pointer;
+  margin-right: 0.5em;
 }
 .defaultNoImagesSegment {
   width: 100%;

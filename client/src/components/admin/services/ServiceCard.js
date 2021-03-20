@@ -20,15 +20,13 @@ const ServiceCard = ({ service, openService, triggerDeleteService } : Props): Re
 
   React.useEffect(() => {
     if (service.images[0]) {
-      setLocalState({ ...localState, imageUrl: service.images[0].path });
+      setLocalState({ ...localState, imageURL: setImagePath(service.images[0].path) });
     } else {
       setLocalState({ ...localState, imageURL: "/assets/images/roomStock1.jpeg" });
     }
    
   }, []);
 
-  const confirmDeleteAction = () => {}
-  
   return (
     <Card>
       <Card.Content textAlign="center">
@@ -44,12 +42,8 @@ const ServiceCard = ({ service, openService, triggerDeleteService } : Props): Re
       </Card.Content>
       <Card.Content>
         <div className='ui two buttons'>
-          <Button basic color='green' onClick={() => openService(serviceId)} icon="file">
-            Open
-          </Button>
-          <Button basic color='red' onClick={() => triggerDeleteService(serviceId)} icon="trash">
-            Delete
-          </Button>
+          <Button basic color='green' onClick={() => openService(serviceId)} icon="file" content="Open" />           
+          <Button basic color='red' onClick={() => triggerDeleteService(serviceId)} icon="trash" content="Delete" />
         </div>
       </Card.Content>
       <Card.Content>

@@ -10,14 +10,6 @@
   padding: 1em;
 }
 
-.indexViewControlsDiv {
-  display: flex;
-  border: 1px solid rgb(104, 159, 230);
-  border-radius: 3px;
-  padding: 1em;
-  margin-bottom: 1em;
-}
-
 .serviceFormColumn {
   border: 1px solid rgb(104, 159, 230);
   border-radius: 3px;
