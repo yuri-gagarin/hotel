@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec babel-node ./server.js",
-    "test": "NODE_ENV=test nodemon --exec babel-node mocha"
+    "test": "NODE_ENV=test nodemon --exec babel-node mocha",
+    "seedModels": "NODE_ENV=development babel-node ./helpers/data_generation/generateData.js"
   },
   "author": "yuri-gagarin",
   "license": "ISC",
@@ -17,19 +18,22 @@
     "@babel/preset-env": "^7.8.4",
     "@babel/register": "^7.8.3",
     "eslint": "^6.8.0",
-    "express": "^4.17.1",
     "nodemon": "^2.0.2"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
+    "chalk": "^4.1.0",
+    "express": "^4.17.1",
     "express-session": "^1.17.0",
+    "faker": "^5.4.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.8.11",
+    "mongoose": "^5.12.1",
     "multer": "^1.4.2",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "progress": "^2.0.3",
     "redis": "^3.0.2",
     "socket.io": "^2.3.0"
   }

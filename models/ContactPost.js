@@ -24,11 +24,11 @@ const contactPostSchema = new Schema({
   },
   sentAt: {
     type: Date,
-    default: new Date(Data.now())
+    default: new Date(Date.now())
   },
   repliedAt: {
     type: Date
-  }
+  },
   createdAt: {
     type: Date,
     default: new Date(Date.now())
