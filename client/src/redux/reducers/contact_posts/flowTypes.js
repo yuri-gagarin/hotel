@@ -72,6 +72,7 @@ export type ContactPostCreated = {
     newContactPostData: ContactPostData
   }
 };
+
 export type ContactPostUpdated = {
   +type: "ContactPostUpdated",
   payload: {

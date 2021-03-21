@@ -1,35 +1,41 @@
-import React, { useState } from "react";
+// @flow 
+import * as React from "react";
 import PropTypes from "prop-types";
 // semantic ui react imports //
-import {
-  Container, Button
-} from "semantic-ui-react";
+import { Container, Button, Popup, Segment, FormInput, Icon } from "semantic-ui-react";
 // ck editor imports //
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// flow types //
+import type { ContactPostData } from "../../../redux/reducers/contact_posts/flowTypes";
 // style imports //
-import {
-  backgroundStyle, contactForm, contactEmail, contactPhone, contactBody
-} from "./style/styles";
+import styles from "./css/contactPostViewStyles.module.css";
+// helpers //
+import { objectValuesEmpty } from "../../helpers/displayHelpers";
+import { formatDate }  from "../../helpers/dateHelpers";
 
-const iconStyle = {
-  color: "rgb(3, 152, 252)",
-  fontSize: "1.5em",
-  marginRight: "0.5em"
-}
-const setInitialMessage = (post) => {
+const setInitialMessage = () => {
   return (
     `
     <p>your response ... </p>
     `
   );
 }
-const ContactPostView = (props) => {
-  const { 
-    postOpen, post, 
-    handleClosePost, sendContactReply 
-  } = props;
-  const [data, setData] = useState(setInitialMessage(post));
+type Props = {
+  contactPost: ContactPostData,
+  handleClosePost: () => void,
+  sendContactReply: () => void // this will be vastly different
+}
+
+const ContactPostView = ({ contactPost, handleClosePost, sendContactReply } : Props): React.Node => {
+  const { useState, useEffect } = React;
+  const [ data, setData ] = useState(setInitialMessage());
+
+  useEffect(() => {
+    
+    const emtpy = objectValuesEmpty(contactPost);
+    
+  }, [contactPost]);
 
   const handleInit = (e, editor) => {
    
@@ -38,61 +44,77 @@ const ContactPostView = (props) => {
     setData(editor.getData());
   };
   const handleSend = () => {
-    sendContactReply(data);
+    sendContactReply();
+  };
+  const toggleReplyModal = () => {
+
+  };
+  const handleArchivePost = () => {
+
+  };
+  const handleDeletePost = () => {
+
   };
 
-
-  if (postOpen) {
+  if (!objectValuesEmpty(contactPost)) {
     return (
-      <React.Fragment>
-        <Container fluid>
-          <div style={contactForm}>
-            <i className="fas fa-sticky-note" style={iconStyle}></i>
-            <span>  Message from: {post.name}</span>
+      <Segment className={ styles.contactPostViewSegment }>
+        <div className={ styles.messageControlsDiv }>
+          <Button.Group>
+            <Button content="Reply" positive onClick={ toggleReplyModal } />
+            <Button content="Close" color="grey" onClick={ handleClosePost } />
+            <Popup 
+              content="Archive message. Will NOT delete"
+              trigger={
+                <Button icon="archive" content="Archive" color="orange" onClick={ handleArchivePost } />
+              }
+            />
+            <Popup 
+              content="Delete Message"
+              trigger={
+                <Button icon="trash" content="Delete" color="red" onClick={ handleDeletePost } />
+              }
+            />
+          </Button.Group>
+        </div>
+        <div className={ styles.contactPostMessageInfoDiv }>
+          <div className={ styles.contactPostMessageInfo }>
+            <i className="fas fa-sticky-note"></i>
+            <span>Message from: {contactPost.name}</span>
           </div>
-          <div style={contactEmail}>  
-            <i className="fas fa-envelope-square"  style={iconStyle}></i>            
-            <span>Email: </span><a href="#" style={{color: "blue"}}>{post.email}</a>
+          <div className={ styles.contactPostMessageInfo }>  
+            <i className="fas fa-envelope-square" ></i>            
+            <span>Email: </span><a href="#" style={{color: "blue"}}>{contactPost.email}</a>
           </div>
-          <div style={contactPhone}>
-            <i className="fas fa-phone-square"  style={iconStyle}></i>
-            <span>  Phone: {post.phoneNumber || "No phone number given"} </span>
+          <div className={ styles.contactPostMessageInfo }>
+            <i className="fas fa-phone-square" ></i>
+            <span>Phone: { contactPost.phoneNumber || "No phone number given"} </span>
           </div>
-        </Container>
-        <Container>
-          <h4>Request from: {post.name}</h4>
-          <div style={contactBody}>
-            {post.content}
+          <div className={ styles.contactPostMessageInfo }>
+            <i className="far fa-calendar-alt"></i>           
+            <span>Sent at: { formatDate(contactPost.sentAt, { military: true }) || "Can't resolve date" } </span>
           </div>
-        </Container>
-        <Container fluid>
-          <h4>Write your reply</h4>
-          <CKEditor style={{height: "500px" }}
-            editor={ ClassicEditor }
-            data={setInitialMessage(post)}
-           
-            onInit={handleInit}
-            onChange={handleEditorChange}
-            onBlur={ ( event, editor ) => {
-                console.log( 'Blur.', editor );
-            } }
-            onFocus={ ( event, editor ) => {
-                console.log( 'Focus.', editor );
-            } }
-          />
-        </Container>
-        <Container style={{ marginTop: "1em" }}>
-          <Button onClick={sendContactReply}>Send Reply</Button>
-          <Button onClick={() => handleClosePost(post._id)}>Close Screen</Button>
-        </Container>
-      </React.Fragment>
-      
+        </div>
+        <div className={ styles.messageContentDiv }>
+          <div className={ styles.messageContentHeader}>
+            <span>{contactPost.name}</span><span>wrote:</span>
+          </div>
+          <div className={ styles.messageContent }>
+            { contactPost.content }
+          </div>
+          <div className={ styles.messageContentMeta }>
+            <span>received at: { formatDate(contactPost.createdAt, { military: true }) }</span>
+            <span>replied: { formatDate(contactPost.repliedAt, { military: true }) }</span>
+          </div>
+        </div>
+      </Segment>  
     )
   } else {
     return (
-      <div 
-        style={backgroundStyle}>
-      </div>
+      <Segment className={ styles.contactPostEmptyViewSegment }>
+        <Icon size="huge" name="mail square" color="blue" />
+        <span>Open a message to view its contents...</span>
+      </Segment>
     );
   }
 };

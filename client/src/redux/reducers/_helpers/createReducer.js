@@ -1,14 +1,16 @@
 // @flow
 import type { ServiceAction, ServiceState, ServiceData } from "../service/flowTypes";
-export type AppAction = ServiceAction;
+import type { ContactPostAction, ContactPostState, ContactPostData } from "../contact_posts/flowTypes";
+export type AppAction = ServiceAction | ContactPostAction;
 export type Reducer<S, A: AppAction> = (S, A) => S;
 export type Dispatch<A> = (action: A) => any;
 
 export type RootState = {
-  serviceState: ServiceState
+  serviceState: ServiceState,
+  contatPostState: ContactPostState
 };
 
-export type GenericModelData = ServiceData;
+export type GenericModelData = (ServiceData | ContactPostData);
 
 export default function createReducer<S, A: *>(initialState: S, handlers: { [key: string]: Reducer<S, A> }): Reducer<S, A> {
   return function reducer(state: S = initialState, action: A): S {

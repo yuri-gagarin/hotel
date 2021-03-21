@@ -1,43 +1,67 @@
+// @flow 
 import axios from "axios";
-import { operationSuccessful, setAppError } from "./appGeneralActions";
-import { contactPostActions } from "../constants";
 import { normalizeErrorMessages } from "./helpers/errorHelpers";
+import { generateEmptyContactPost } from "../reducers/_helpers/emptyDataGenerators";
+// flow types 
+import type { 
+  ContactPostData, ContactPostState,
+  ContactPostAPIRequest, SetContactPosts, ContactPostError,
+  ContactPostCreated, ContactPostUpdated, ContactPostDeleted,
+  OpenContactPost, ClearContactPostData, ContactPostAction, ClientContactPostFormData
+} from "../reducers/contact_posts/flowTypes";
+import type { Dispatch } from "../reducers/_helpers/createReducer";
 
-const {
-  CONTACT_POST_REQUEST,
-  CONTACT_POST_SUCCESS,
-  SET_CONTACT_POSTS,
-  OPEN_CONTACT_POST,
-  CLOSE_CONTACT_POST,
-  DELETE_CONTACT_POST,
-  CONTACT_POST_ERROR
-} = contactPostActions;
-
-export const sendContactRequest = () => {
+export const sendContactPostRequest = (): ContactPostAPIRequest => {
   return {
-    type: CONTACT_POST_REQUEST,
+    type: "ContactPostAPIRequest",
     payload: {
+      status: 202,
       loading: true,
-      error: null
     }
   };
 };
 
-export const sendContactSuccess = ({ status, responseMsg }) => {
+export const setContactPosts = (data : { status: number, responseMsg: string, createdContactPosts: Array<ContactPostData>, numberOfContactPosts: number }): SetContactPosts => {
   return {
-    type: CONTACT_POST_SUCCESS,
+    type: "SetContactPosts",
     payload: {
-      status: status,
+      status: data.status,
       loading: false,
-      responseMsg: responseMsg,
-      error: null
+      responseMsg: data.responseMsg,
+      createdContactPosts: data.createdContactPosts,
+      numberOfContactPosts: data.numberOfContactPosts
     }
   };
 };
 
-export const sendContactError = (error) => {
+export const openContactPost = (data : { contactPostData: ContactPostData }): OpenContactPost => {
   return {
-    type: CONTACT_POST_ERROR,
+    type: "OpenContactPost",
+    payload: {
+      contactPostData: data.contactPostData,
+    }
+  };
+};
+
+export const clearContactPostData = (): ClearContactPostData => {
+  return {
+    type: "ClearContactPostData",
+    payload: {
+      contactPostData: generateEmptyContactPost()
+    }
+  };
+};
+
+export const deleteContactPost = (data : { status: number, responseMsg: string, createdContactPosts: Array<ContactPostData>, numberOfContactPosts: number } ): ContactPostDeleted => {
+  return {
+    type: "ContactPostDeleted",
+    payload: { ...data, loading: false, contactPostData: generateEmptyContactPost() }
+  };
+};
+
+export const setContactPostError = (error: any): ContactPostError => {
+  return {
+    type: "ContactPostError",
     payload: {
       status: 500,
       loading: false,
@@ -47,62 +71,15 @@ export const sendContactError = (error) => {
   };
 };
 
-export const setContactPosts = ({ status, responseMsg, contactPosts = [] }) => {
-  return {
-    type: SET_CONTACT_POSTS,
-    payload: {
-      status: status,
-      loading: false,
-      responseMsg: responseMsg,
-      contactPost: {},
-      createdPosts: contactPosts,
-      numberOfPosts: contactPosts.length,
-      error: null
-    }
-  };
+export const handleOpenContactPost = (dispatch: Dispatch<ContactPostAction>, contactPostId: string, contactPostState: ContactPostState): void => {
+  const contactPostData = contactPostState.createdContactPosts.filter((post) => post._id === contactPostId)[0];
+  dispatch(openContactPost({ contactPostData: { ...contactPostData } } ));
+};
+export const handleCloseContactPost = (dispatch: Dispatch<ContactPostAction>): void => {
+  dispatch(clearContactPostData());
 };
 
-export const openContactPost = (postId, contactPosts = []) => {
-  const contactPost = contactPosts.filter((contactPost) => contactPost._id == postId)[0];
-  return {
-    type: OPEN_CONTACT_POST,
-    payload: {
-      loading: false,
-      responseMsg: "Post Opened",
-      contactPost: contactPost,
-      error: null
-    }
-  };
-};
-
-export const closeContactPost = (postId) => {
-  return {
-    type: CLOSE_CONTACT_POST,
-    payload: {
-      loading: false,
-      responseMsg: "Close contact post",
-      contactPost: {},
-      error: null
-    }
-  };
-};
-
-export const deleteContactPost = ({ status, responseMsg, createdPosts }) => {
-  return {
-    type: DELETE_CONTACT_POST,
-    payload: {
-      status: status,
-      loading: false,
-      responseMsg: responseMsg,
-      contactPost: {},
-      createdPosts: createdPosts,
-      numberOfPosts: createdPosts.length,
-      error: null
-    }
-  };
-};
-
-export const sendContactFormData = (dispatch, formData) => {
+export const handleCreateContactPost = (dispatch: Dispatch<ContactPostAction>, formData: ClientContactPostFormData): Promise<boolean> => {
   const requestOptions = {
     method: "post",
     url: "/api/contactPosts",
@@ -110,74 +87,74 @@ export const sendContactFormData = (dispatch, formData) => {
       formData: formData
     }
   };
-  dispatch(sendContactRequest());
+  dispatch(sendContactPostRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
       const { responseMsg } = data;
-      dispatch(sendContactSuccess({
-        status: status,
-        responseMsg: responseMsg
-      })); 
-      dispatch(operationSuccessful({ status: status, responseMsg: responseMsg }));
-      return true;
+      return Promise.resolve(true);
     })
     .catch((err) => {
       const { status, data } = err.response;
       const { responseMsg, error } = data;
       const errorMessages = normalizeErrorMessages(data);
-      dispatch(sendContactError(error)); 
-      dispatch(setAppError({ status: status, responseMsg: responseMsg, errorMessages: errorMessages, error: error }));
+      dispatch(setContactPostError(error)); 
       return false;
     });
 };
 
-export const fetchContactPosts = (dispatch) => {
+export const handleFetchContactPosts = (dispatch: Dispatch<ContactPostAction>): Promise<boolean> => {
   const requestOptions = {
     method: "get",
     url: "/api/contactPosts",
   };
 
-  dispatch(sendContactRequest());
+  dispatch(sendContactPostRequest());
   return axios(requestOptions) 
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg } = data;
+      const { responseMsg, contactPosts } : { responseMsg: string, contactPosts: Array<ContactPostData> } = data;
       const stateData = {
         status: status,
         responseMsg: responseMsg,
-        contactPosts: data.contactPosts
+        createdContactPosts: contactPosts,
+        numberOfContactPosts: contactPosts.length
       };
       dispatch(setContactPosts(stateData))
+      return Promise.resolve(true);
     })
     .catch((error) => {
-      dispatch(sendContactError(error));
+      dispatch(setContactPostError(error));
+      return Promise.resolve(false);
     });
 };
 
-export const handleContactPostDelete = (dispatch, postId, createdPosts = []) => {
+export const handleContactPostDelete = (dispatch: Dispatch<ContactPostAction>, postId: string, contactPostState: ContactPostState): Promise<boolean>  => {
+  const { createdContactPosts } =  contactPostState;
   const requestOptions = {
     method: "delete",
     url: "/api/contactPosts/" + postId
   };
   
-  dispatch(sendContactRequest());
+  dispatch(sendContactPostRequest());
   return axios(requestOptions) 
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedContactPost } = data;
-      const updatedPosts = createdPosts.filter((post) => post._id != deletedContactPost._id );
+      const { responseMsg, deletedContactPost } : { responseMsg: string, deletedContactPost: ContactPostData } = data;
+      const updatedPosts = createdContactPosts.filter((post) => post._id !== deletedContactPost._id );
 
       const stateData = {
         status: status,
         responseMsg: responseMsg,
-        createdPosts: updatedPosts,
+        createdContactPosts: updatedPosts,
+        numberOfContactPosts: updatedPosts.length
       }
       dispatch(deleteContactPost(stateData));
-      dispatch(operationSuccessful(responseMsg));
+      return Promise.resolve(true);
     })
     .catch((error) => {
-      dispatch(sendContactError(error));
+      dispatch(setContactPostError(error));
+      return Promise.resolve(false);
     });
 };
 

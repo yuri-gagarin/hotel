@@ -21,7 +21,7 @@ import {
 } from "./../../../redux/actions/serviceActions";
 // types //
 import type { ServiceState, ServiceData, ServiceImgData, ClientServiceFormData, ServiceAction } from "../../../redux/reducers/service/flowTypes";
-import type { Dispatch, RootState } from "../../../redux/reducers/_helpers/createReducer";
+import type { Dispatch, RootState, GenericModelData } from "../../../redux/reducers/_helpers/createReducer";
 import type { RouterHistory } from "react-router-dom";
 // style and css //
 import styles from "./css/servicesIndexContainer.module.css";

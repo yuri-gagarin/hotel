@@ -1,125 +1,123 @@
 // @flow
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import PropTypes from "prop-types";
 // semantic ui imports //
 import { Card, Grid } from "semantic-ui-react";
 // additional components //
-import ContactPostHolder from "./ContactPostHolder";
+import { ContactPostCards } from "./ContactPostCards";
 import ContactPostView from "./ContactPostView";
+import ConfirmDeleteModal from "../shared/ConfirmDeleteModal";
 // redux imports //
 import { connect } from "react-redux";
-import { 
-  openContactPost, closeContactPost, handleContactPostDelete, fetchContactPosts
-} from "../../../redux/actions/contactPostActions";
+import { handleOpenContactPost, handleCloseContactPost, clearContactPostData, handleContactPostDelete, handleFetchContactPosts } from "../../../redux/actions/contactPostActions";
 import { operationSuccessful, setAppError } from "../../../redux/actions/appGeneralActions";
+// flow types //
+import type { ContactPostState, ContactPostData, ContactPostAction } from "../../../redux/reducers/contact_posts/flowTypes";
+import type { Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 // style imports //
-import {
-  contactScreenStyle
-} from "./style/styles";
+import styles from "./css/contactPostsIndexContainer.module.css";
+// helpers //
 
-const ContactPostContainer = (props) => {
+const { useEffect, useState } = React;
+
+type OwnProps = {|
+  contactPostState: ContactPostState
+|};
+type Props = {|
+  ...OwnProps,
+  handleFetchContactPosts: () => Promise<boolean>,
+  handleCloseContactPost: () => void,
+  handleOpenContactPost: (contactPostId: string, contactPostState: ContactPostState) => void,
+  handleContactPostDelete: (contactPostId: string, contactPostState: ContactPostState) => Promise<boolean>
+|};
+type LocalState = {
+  confirmDeleteModalOpen: boolean,
+  contactPostIdToDelete: string
+}
+const ContactPostContainer = (props : Props): React.Node => {
   const { contactPostState } = props;
   // reducer functions //
-  const { fetchContactPosts, openContactPost,  closeContactPost, handleContactPostDelete } = props
-  const { createdPosts } = contactPostState;
+  const { handleFetchContactPosts, handleOpenContactPost,  handleCloseContactPost, handleContactPostDelete } = props
+  const { createdContactPosts } = contactPostState;
   // local state //
-  const [postOpen, setPostOpen] = useState(false);
+  const [ localState, setLocalState ] = useState<LocalState>({ confirmDeleteModalOpen: false, contactPostIdToDelete: "" });
   // load posts on component mount //
+
   useEffect(() => {
-    fetchContactPosts();
+    handleFetchContactPosts();
   }, []);
 
-  const handleOpenPost = (contactPostId) => {
-    const { createdPosts } = contactPostState;
-    openContactPost(contactPostId, createdPosts);
-    setPostOpen(true);
+  const openContactPost = (contactPostId: string) => {
+    return handleOpenContactPost(contactPostId, contactPostState);
   };
-  const handleDeletePost = (contactPostId) => {
-    const  { createdPosts } = contactPostState;
-    handleContactPostDelete(contactPostId, createdPosts);
+  const deleteContactPost = (contactPostId: string) => {
+    return handleContactPostDelete(contactPostId, contactPostState);
   };
-  const handleClosePost = (contactPostId) => {
-    closeContactPost(contactPostId);
-    setPostOpen(false);
+  const closeContactPost = () => {
+    handleCloseContactPost();
   };
-  const sendContactReply = (postData) => {
-    operationSuccessful({ status: "200", responseMsg: "Reply sent" });
+  const sendContactReply = () => {
+
   };
+  const triggerContactPostDelete = (postIdToDelete: string) => {
+    setLocalState({ ...localState, confirmDeleteModalOpen: true, contactPostIdToDelete: postIdToDelete });
+  }
+  const cancelDeleteAction = () => {
+    setLocalState({ ...localState, confirmDeleteModalOpen: false, contactPostIdToDelete: "" });
+  }
+  const confirmDeleteContactPost = () => {
+    const { confirmDeleteModalOpen, contactPostIdToDelete  } = localState;
+    if (confirmDeleteModalOpen && contactPostIdToDelete) {
+      return handleContactPostDelete(contactPostIdToDelete, contactPostState);
+    } else {
+      return Promise.resolve(false);
+    }
+  }
 
   return (
-    <React.Fragment>
-      <Grid.Row style={contactScreenStyle.headerRow}>
-        <Grid.Column width={16} textAlign="center" style={contactScreenStyle.headerText}>
-          Contact Information Requests
-        </Grid.Column>
-      </Grid.Row>
+    <Grid className={ styles.contactPostsIndexContainer }>
+      <ConfirmDeleteModal 
+        open={ localState.confirmDeleteModalOpen } 
+        modelName="contact" 
+        confirmAction={ confirmDeleteContactPost }
+        cancelAction={ cancelDeleteAction }
+      />
       <Grid.Row>
-        <Grid.Column width={5} style={contactScreenStyle.cardColumn}>
-          <Card.Group style={contactScreenStyle.cardGroup}>
-          {
-            createdPosts.map((post) => {
-              return (
-                <ContactPostHolder 
-                  key={post._id}
-                  post={post}
-                  handleOpenPost={handleOpenPost}
-                  handleDeletePost={handleDeletePost}
-                />
-              );
-            })
-          }
-          </Card.Group>
-          
+        <Grid.Column width={ 6 } className={ styles.postsColumn }>
+          <div className={ styles.postsColumnInner }>
+            <ContactPostCards 
+              createdContactPosts={ createdContactPosts } 
+              openContactPost={ openContactPost }
+              triggerContactPostDelete={ triggerContactPostDelete } />
+          </div>
         </Grid.Column>
-        <Grid.Column width={11} style={{ padding: 0 }}>  
+        <Grid.Column width={ 10 } style={{ padding: 0 }}>  
           <ContactPostView 
-            postOpen={postOpen} 
-            post={contactPostState.contactPost} 
-            handleClosePost={handleClosePost}
-            sendContactReply={sendContactReply}
+            contactPost={ contactPostState.contactPostData } 
+            handleClosePost={ closeContactPost }
+            sendContactReply={ sendContactReply }
           />
         </Grid.Column>
       </Grid.Row>
-      
-
-    </React.Fragment>
-    
+    </Grid>        
   );
 };
-// PropTypes validation //
-ContactPostContainer.propTypes = {
-  contactPostState: PropTypes.object.isRequired,
-  openContactPost: PropTypes.func.isRequired,
-  closeContactPost: PropTypes.func.isRequired,
-  handleContactPostDelete: PropTypes.func.isRequired
-};
-// redux mapping functions //
-const mapStateToProps = (state) => {
-  return {
 
-  }
-};
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch<ContactPostAction>) => {
   return {
-    fetchContactPosts: () => {
-      return fetchContactPosts(dispatch);
+    handleFetchContactPosts: () => {
+      return handleFetchContactPosts(dispatch);
     },
-    openContactPost: (postId, createdPosts) => {
-      return dispatch(openContactPost(postId, createdPosts));
+    handleOpenContactPost: (postId: string, contactPostState: ContactPostState) => {
+      return handleOpenContactPost(dispatch, postId, contactPostState);
     },
-    closeContactPost: (postId) => {
-      return dispatch(closeContactPost(postId));
+    handleCloseContactPost: () => {
+      return handleCloseContactPost(dispatch);
     },
-    handleContactPostDelete: (postId, createdPosts) => {
-      return handleContactPostDelete(dispatch, postId, createdPosts);
-    },
-    operationSuccessful: (status, responseMsg) =>  {
-      return dispatch(operationSuccessful(status, responseMsg));
-    },
-    setAppError: (status, responseMsg) => {
-      return dispatch(setAppError(status, responseMsg));
+    handleContactPostDelete: (postId: string, contactPostState) => {
+      return handleContactPostDelete(dispatch, postId, contactPostState);
     }
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactPostContainer);
+export default (connect(null, mapDispatchToProps)(ContactPostContainer) : React.AbstractComponent<OwnProps>);

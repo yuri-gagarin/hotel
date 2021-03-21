@@ -53,7 +53,7 @@ const contactPostReducer = (state: ContactPostState = initialState, action: Cont
         status: action.payload.status,
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
-        createdPosts: action.payload.createdContactPosts,
+        createdContactPosts: action.payload.createdContactPosts,
         numberContactPosts: action.payload.numberOfContactPosts,
         error: null
       }

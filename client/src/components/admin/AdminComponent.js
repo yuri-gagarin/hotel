@@ -15,7 +15,7 @@ import ErrorComponent from "./../display_components/ErrorComponent";
 import { connect } from "react-redux";
 import { logOutUser, setAdmin } from "../../redux/actions/apiActions";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
-import ContactPostContainer from "./contact/ContactPostContainer";
+import ContactPostContainer from "./contact/ContactPostIndexContainer";
 import ServicesIndexContainer from "./services/ServicesIndexContainer";
 // socket io client //
 import { socket } from "./../../App";
@@ -65,7 +65,7 @@ const AdminComponent = (props) => {
     }
     // event listener for closed window //
     window.addEventListener("beforeunload", saveAdminState);
-    history.push("/admin/services");
+    history.push("/admin/contact_requests");
     return function () {
       window.removeEventListener("beforeunload", saveAdminState);
     }

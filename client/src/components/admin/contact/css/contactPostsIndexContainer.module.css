@@ -1,0 +1,21 @@
+.contactPostsIndexContainer {
+  display: flex;
+  height: 90vh;
+  overflow-y: hidden;
+}
+
+.postsColumn {
+  height: 80vh;
+  overflow: hidden;
+  padding: 0 !important;
+}
+.postsColumnInner {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: 20px; 
+  padding-left: 5px;
+  padding-top: 10px;
+  box-sizing: content-box;
+}

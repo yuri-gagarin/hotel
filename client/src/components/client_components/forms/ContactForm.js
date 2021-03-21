@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 // redux imports //
 import { connect } from "react-redux";
-import { sendContactFormData } from "./../../../redux/actions/contactPostActions"; 
+import { handleCreateContactPost } from "./../../../redux/actions/contactPostActions"; 
 import { setAppError } from "./../../../redux/actions/appGeneralActions";
 
 const ContactForm = (props) => {
@@ -158,7 +158,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    sendContactFormData: (formData) => sendContactFormData(dispatch, formData),
+    sendContactFormData: (formData) => handleCreateContactPost(dispatch, formData),
     setAppError: (errorData) => dispatch(setAppError(errorData))
   };
 };

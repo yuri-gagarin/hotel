@@ -1,0 +1,88 @@
+.contactPostEmptyViewSegment {
+  border: 1px solid grey !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* contact post view segment */
+.contactPostViewSegment {
+  border: 1px solid grey !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* message controls div */
+.messageControlsDiv {
+  display: flex;
+  flex-direction: row;
+}
+/* message info div */
+.contactPostMessageInfoDiv {
+  border: 1px solid grey;
+  border-radius: 2px;
+  margin-top: 0.5em;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+}
+.contactPostMessageInfo {
+  border: 0.5px solid grey;
+  padding: 0.5em;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+.contactPostMessageInfo > i {
+  color: rgb(26, 97, 26);
+  font-size: 2em;
+}
+.contactPostMessageInfo > span {
+  margin-left: 1em;
+}
+
+/* message content div */
+.messageContentDiv {
+  border-left: 1px solid grey;
+  border-bottom: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+  border-radius: 2px;
+  margin-top: 1em;
+  flex-grow: 1;
+}
+.messageContentHeader {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.messageContentHeader > span:first-child {
+  text-align: left;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 1.25em;
+  font-weight: bold;
+}
+.messageContentHeader > span:nth-child(2) {
+  text-align: left;
+  margin-left: 0.5em;
+  font-style: italic;
+}
+.messageContent {
+  display: flex;
+  justify-content: flex-start;
+  text-align: left;
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+.messageContentMeta {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+  color: grey;
+  font-size: 0.75em;
+}

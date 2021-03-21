@@ -63,3 +63,25 @@ export const isEmpty = (obj: any): boolean => {
   return obj && Object.keys(obj).length === 0;
 };
 
+export const objectValuesEmpty = (obj: any): boolean => {
+  if (obj && typeof obj === "object") {
+    const keys = Object.keys(obj);
+    if (keys.length > 0) {
+      const values = Object.values(obj);
+      console.log(values)
+      if (values.length == 0) {
+        return true;
+      } else {
+        for (const val of values) {
+          if (val) return false;
+        }
+        return true;
+      }
+    } else {
+      return true;
+    }
+  } else {
+    throw new TypeError("Invalid argument, expected type <object>");
+  }
+};
+

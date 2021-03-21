@@ -6,11 +6,7 @@ const PostsIndexContainer = (props) => {
 
     return (
       <React.Fragment>
-        <Grid.Row>
-          <Grid.Column width={16}>
-            <h5>Hello from Posts Index</h5>
-          </Grid.Column>
-        </Grid.Row>
+        
         <Grid.Row>
           <Grid.Column width={6}>
             <Segment style={{height: "100px", width: "300px"}}>1</Segment>

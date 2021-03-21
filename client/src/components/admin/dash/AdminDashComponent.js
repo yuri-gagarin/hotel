@@ -8,7 +8,7 @@ import {
 } from "./style/styles";
 // redux imports //
 import { connect } from "react-redux";
-import { fetchContactPosts } from "./../../../redux/actions/contactPostActions";
+import { handleFetchContactPosts } from "./../../../redux/actions/contactPostActions";
 import { fetchRooms } from "./../../../redux/actions/roomActions";
 import { fetchAllConversations } from "./../../../redux/actions/conversationActions";
 // aditional component imports //
@@ -49,9 +49,11 @@ const AdminDashComponent = (props) => {
 
   useEffect(() => {
     // fetch all the related information to the dash component //
-    fetchContactPosts();
-    fetchRooms();
-    fetchAllConversations();
+    Promise.all([
+      fetchContactPosts(),
+      fetchRooms(),
+      fetchAllConversations()
+    ]);
   }, []);
   // navigational buttons //
   const goToContactPosts = () => {
@@ -168,7 +170,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchContactPosts: () => fetchContactPosts(dispatch),
+    fetchContactPosts: () => handleFetchContactPosts(dispatch),
     fetchAllConversations: () => fetchAllConversations(dispatch),
     fetchRooms: () => fetchRooms(dispatch)
   };

@@ -50,10 +50,10 @@ export const formatDate = (date, options) => {
   if(options.military) {
     hour = addZero(hour);
     minutes = addZero(minutes);
-    return `${month} ${day} ${year}, ${hour}:${minutes}`;
+    return `${month}-${day}-${year}, ${hour}:${minutes}`;
   }
   else {
     let timeOfDay = formatAMPM({hour: hour, minutes: minutes});
-    return  `${month} ${day} ${year}, ${timeOfDay}`;
+    return  `${month}-${day}-${year}, ${timeOfDay}`;
   }
 };
