@@ -4,10 +4,19 @@
   overflow-y: hidden;
 }
 
-.postsColumn {
-  height: 80vh;
+.postsCardColumn {
+  height: 85vh;
   overflow: hidden;
   padding: 0 !important;
+  border: 2px solid rgb(140, 165, 233);
+  border-radius: 4px;
+}
+.postsViewColumn {
+  height: 85vh;
+  overflow: hidden;
+  padding: 0 !important;
+  border: 2px solid rgb(140, 165, 233);
+  border-radius: 4px;
 }
 .postsColumnInner {
   width: 100%;

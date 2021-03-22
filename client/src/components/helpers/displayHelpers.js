@@ -68,7 +68,6 @@ export const objectValuesEmpty = (obj: any): boolean => {
     const keys = Object.keys(obj);
     if (keys.length > 0) {
       const values = Object.values(obj);
-      console.log(values)
       if (values.length == 0) {
         return true;
       } else {

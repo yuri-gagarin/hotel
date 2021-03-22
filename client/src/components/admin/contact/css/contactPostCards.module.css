@@ -1,3 +1,9 @@
+.contactPostCardActive {
+  background: #ECE9E6 !important;
+  background: -webkit-linear-gradient(to right, #FFFFFF, #ECE9E6) !important;
+  background: linear-gradient(to right, #FFFFFF, #ECE9E6) !important;
+}
+
 .cardHeader {
   border-radius: 5px;
 }

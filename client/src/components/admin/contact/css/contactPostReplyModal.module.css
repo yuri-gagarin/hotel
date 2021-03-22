@@ -1,0 +1,76 @@
+.contactPostReplyModal {
+  position: fixed;
+  display: flex !important;
+  height: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgb(76, 178, 236) !important;
+}
+
+.replyControlsDiv {
+  display: flex;
+  padding: 0 1em;
+  margin-top: 1em;
+}
+
+/* header data */
+.replyFormDataDiv {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1em;
+  padding-right: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.replyFormDataDiv .input {
+  border: 3px solid green !important;
+  margin-bottom: 0.5em !important;
+}
+.replyInputLabel {
+  width: 100px;
+  font-size: 0.85em !important;
+  display: flex;
+  align-items: center;
+}
+/* contact post data and editor */
+.contactPostDataContainer {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+.contactPostUserMessage {
+  border-left: 1px solid grey;
+  border-top: 1px solid grey;
+  border-right: 1px solid grey;
+  border-radius: 5px 5px 0 0 ;
+  padding: 1em;
+}
+.contactPostUserMessageHeader > span:first-child {
+  color: rgb(69, 111, 189);
+  text-decoration: underline;
+}
+.contactPostUserMessageHeader > span:nth-child(2) {
+  margin-left: 0.5em;
+  font-size: 0.75em;
+  font-style: italic;
+}
+.contactPostUserMessageContent {
+  color: rgb(14, 117, 14);
+  margin-top: 1em;
+  font-style: italic;
+}
+
+.contactPostAdminResponse {
+  display: flex;
+  height: 300px;
+  flex-direction: column;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+/* button popups */
+.cancelPopup {
+  color: red !important;
+  font-weight: bolder !important;
+}

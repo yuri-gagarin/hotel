@@ -59,6 +59,11 @@ const ContactPostContainer = (props : Props): React.Node => {
   const sendContactReply = () => {
 
   };
+  /* archive and hide */
+  const archiveContactPost = (postIdToArchive: string) => {
+    return Promise.resolve(true);
+  }
+  /* delete functionality */
   const triggerContactPostDelete = (postIdToDelete: string) => {
     setLocalState({ ...localState, confirmDeleteModalOpen: true, contactPostIdToDelete: postIdToDelete });
   }
@@ -83,15 +88,16 @@ const ContactPostContainer = (props : Props): React.Node => {
         cancelAction={ cancelDeleteAction }
       />
       <Grid.Row>
-        <Grid.Column width={ 6 } className={ styles.postsColumn }>
+        <Grid.Column width={ 6 } className={ styles.postsCardColumn }>
           <div className={ styles.postsColumnInner }>
             <ContactPostCards 
-              createdContactPosts={ createdContactPosts } 
+              contactPostState={ contactPostState } 
               openContactPost={ openContactPost }
+              archiveContactPost={ archiveContactPost }
               triggerContactPostDelete={ triggerContactPostDelete } />
           </div>
         </Grid.Column>
-        <Grid.Column width={ 10 } style={{ padding: 0 }}>  
+        <Grid.Column width={ 10 } className={ styles.postsViewColumn }>  
           <ContactPostView 
             contactPost={ contactPostState.contactPostData } 
             handleClosePost={ closeContactPost }

@@ -3,9 +3,8 @@ import * as React from "react";
 import PropTypes from "prop-types";
 // semantic ui react imports //
 import { Container, Button, Popup, Segment, FormInput, Icon } from "semantic-ui-react";
-// ck editor imports //
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// additional components //
+import { ContactPostReplyModal } from "./ContactPostReplyModal";
 // flow types //
 import type { ContactPostData } from "../../../redux/reducers/contact_posts/flowTypes";
 // style imports //
@@ -26,28 +25,19 @@ type Props = {
   handleClosePost: () => void,
   sendContactReply: () => void // this will be vastly different
 }
+type LocalState = {
+  replyModalOpen: boolean,
+}
 
 const ContactPostView = ({ contactPost, handleClosePost, sendContactReply } : Props): React.Node => {
   const { useState, useEffect } = React;
-  const [ data, setData ] = useState(setInitialMessage());
+  const [ localState, setLocalState ] = useState<LocalState>({ replyModalOpen: true });
 
-  useEffect(() => {
-    
-    const emtpy = objectValuesEmpty(contactPost);
-    
-  }, [contactPost]);
-
-  const handleInit = (e, editor) => {
-   
-  };
-  const handleEditorChange = (e, editor) =>{
-    setData(editor.getData());
-  };
   const handleSend = () => {
     sendContactReply();
   };
   const toggleReplyModal = () => {
-
+    setLocalState({ ...localState, replyModalOpen: !localState.replyModalOpen });
   };
   const handleArchivePost = () => {
 
@@ -59,6 +49,12 @@ const ContactPostView = ({ contactPost, handleClosePost, sendContactReply } : Pr
   if (!objectValuesEmpty(contactPost)) {
     return (
       <Segment className={ styles.contactPostViewSegment }>
+        <ContactPostReplyModal 
+          replyModalOpen= { localState.replyModalOpen }
+          contactPostData= { contactPost }
+          handleCloseModal= { toggleReplyModal }
+          sendContactReply= { handleSend }
+        />
         <div className={ styles.messageControlsDiv }>
           <Button.Group>
             <Button content="Reply" positive onClick={ toggleReplyModal } />

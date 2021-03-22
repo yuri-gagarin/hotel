@@ -75,6 +75,7 @@ app.on("dbReady", () => {
     console.info(`App listening at Port: ${PORT}`);
   });
   global.io = socketIo.listen(server);
+  io.set("origins","*:*");
   io.attach(redisClient);
   // IO functionality //
   io.sockets.on("connection", (socket) => {
