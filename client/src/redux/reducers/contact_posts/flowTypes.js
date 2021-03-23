@@ -12,6 +12,12 @@ export type ClientContactPostFormData = {
   createdAt?: string,
   editedAt?: string
 }
+export type FetchContactPostParams = {
+  read?: boolean,
+  archived?: boolean,
+  date?: "asc" | "desc",
+  limit?: number
+};
 // expected data from server //
 
 export type ContactPostData = {
@@ -21,6 +27,7 @@ export type ContactPostData = {
   phoneNumber: string,
   content: string,
   read: boolean,
+  archived: boolean,
   sentAt: string,
   repliedAt: string,
   createdAt: string,

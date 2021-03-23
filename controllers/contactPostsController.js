@@ -3,10 +3,11 @@ import { validateContactPost } from "./helpers/validationHelpers";
 
 export default {
   getContactPosts: (req, res) => {
-    return ContactPost.find({})
+    const { archived = false } = req.query;
+    return ContactPost.find({ archived: archived }).exec()
       .then((contactPosts) => {
         return res.status(200).json({
-          responseMsg: "Got all the contact requests",
+          responseMsg: `Retreived all ${ Boolean(archived) ? 'archived' : 'new'} contact requests`,
           contactPosts: contactPosts
         });
       })
@@ -51,6 +52,37 @@ export default {
           error: error
         });
       });
+  },
+
+  updateContactPost: (req, res) => {
+    const { contactPostId } = req.params;
+    const { contactPostArchiveStatus, replyData } = req.body;
+    if (contactPostArchiveStatus) {
+      const { status } = contactPostArchiveStatus;
+      return ContactPost.findOneAndUpdate(
+        { _id: contactPostId }, 
+        { $set: { archived: status, read: true, editedAt: new Date(Date.now()) } }, 
+        { new: true }
+      ).exec()
+      .then((updatedPost) => {
+        return res.status(200).json({
+          responseMsg: "Post archived",
+          updatedContactPost: updatedPost
+        });
+      })
+      .catch((error) => {
+        return res.status(200).json({
+          responseMsg: "An error occured",
+          error: error
+        });
+      });
+    } else if (replyData) {
+      // handle a reply //
+      return res.status(200).json({
+        responseMsg: "Done"
+      })
+    }
+
   },
   
   deleteContactPost: (req, res) => {

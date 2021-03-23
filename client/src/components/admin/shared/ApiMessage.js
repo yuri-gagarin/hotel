@@ -5,28 +5,28 @@ import PropTypes from "prop-types";
 import { Icon, Message } from "semantic-ui-react";
 // 
 import type { ServiceState } from "../../../redux/reducers/service/flowTypes";
+import type { ContactPostState } from "../../../redux/reducers/contact_posts/flowTypes";
 // styles and css //
 import styles from "./css/apiMessage.module.css";
 
-type LocalState = ServiceState;
+type LocalState = ServiceState | ContactPostState;
 
-const APIMessage = ({ currentLocalState } : { currentLocalState: ServiceState }): React.Node => {
+const APIMessage = ({ currentLocalState } : { currentLocalState: LocalState }): React.Node => {
   const [ messageVisible, setMessageVisible ] = React.useState(true);
-  const stateRef = React.useRef(currentLocalState);
 
   const { loading, responseMsg, error } = currentLocalState;
   
   React.useEffect(() => {
-    if (currentLocalState.loading !== stateRef.current.loading) {
+    if (currentLocalState.loading) {
       setMessageVisible(true);
     }
-  }, [ currentLocalState ]);
+  }, [ currentLocalState.loading ]);
 
   React.useEffect(() => {
     if (!currentLocalState.loading && !currentLocalState.error && messageVisible) {
       setTimeout(() => {
         handleDismiss();
-      }, 1000);
+      }, 2000);
     }
   }, [ currentLocalState.loading, currentLocalState.error ]);
 

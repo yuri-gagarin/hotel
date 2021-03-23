@@ -7,7 +7,8 @@ import type {
   ContactPostData, ContactPostState,
   ContactPostAPIRequest, SetContactPosts, ContactPostError,
   ContactPostCreated, ContactPostUpdated, ContactPostDeleted,
-  OpenContactPost, ClearContactPostData, ContactPostAction, ClientContactPostFormData
+  OpenContactPost, ClearContactPostData, ContactPostAction, 
+  ClientContactPostFormData, FetchContactPostParams
 } from "../reducers/contact_posts/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 
@@ -103,10 +104,11 @@ export const handleCreateContactPost = (dispatch: Dispatch<ContactPostAction>, f
     });
 };
 
-export const handleFetchContactPosts = (dispatch: Dispatch<ContactPostAction>): Promise<boolean> => {
+export const handleFetchContactPosts = (dispatch: Dispatch<ContactPostAction>, options? : FetchContactPostParams ): Promise<boolean> => {
   const requestOptions = {
     method: "get",
     url: "/api/contactPosts",
+    params:  options ? { ...options } : {}
   };
 
   dispatch(sendContactPostRequest());
@@ -150,6 +152,41 @@ export const handleContactPostDelete = (dispatch: Dispatch<ContactPostAction>, p
         numberOfContactPosts: updatedPosts.length
       }
       dispatch(deleteContactPost(stateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(setContactPostError(error));
+      return Promise.resolve(false);
+    });
+};
+
+export const handleContactPostArchive = (dispatch: Dispatch<ContactPostAction>, { postId, archive } : { postId: string, archive: boolean }, contactPostState: ContactPostState): Promise<boolean>  => {
+  const { createdContactPosts } = contactPostState;
+  const requestOptions = {
+    method: "patch",
+    url: "/api/contactPosts/" + postId,
+    data: { 
+      contactPostArchiveStatus: {
+        status: archive
+      }
+    }
+  };
+
+  dispatch(sendContactPostRequest())
+  return axios(requestOptions) 
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedContactPost } : { responseMsg: string, updatedContactPost: ContactPostData } = data;
+
+      const updatedPosts = createdContactPosts.filter((contactPost) => contactPost._id !== updatedContactPost._id);
+
+      const stateData = {
+        status: status,
+        responseMsg: responseMsg,
+        createdContactPosts: updatedPosts,
+        numberOfContactPosts: updatedPosts.length
+      };
+      dispatch(setContactPosts(stateData));
       return Promise.resolve(true);
     })
     .catch((error) => {

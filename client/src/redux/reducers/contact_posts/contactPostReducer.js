@@ -54,10 +54,11 @@ const contactPostReducer = (state: ContactPostState = initialState, action: Cont
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
         createdContactPosts: action.payload.createdContactPosts,
+        contactPostData: generateEmptyContactPost(),
         numberContactPosts: action.payload.numberOfContactPosts,
         error: null
-      }
-    }
+      };
+    };
     case "ContactPostError": {
       return {
         ...state,

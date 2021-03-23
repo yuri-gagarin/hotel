@@ -23,15 +23,16 @@ const setInitialMessage = () => {
 type Props = {
   contactPost: ContactPostData,
   handleClosePost: () => void,
+  handleContactPostArchiveStatus: (contactPostId: string) => Promise<boolean>,
   sendContactReply: () => void // this will be vastly different
 }
 type LocalState = {
   replyModalOpen: boolean,
 }
 
-const ContactPostView = ({ contactPost, handleClosePost, sendContactReply } : Props): React.Node => {
+const ContactPostView = ({ contactPost, handleClosePost, sendContactReply, handleContactPostArchiveStatus } : Props): React.Node => {
   const { useState, useEffect } = React;
-  const [ localState, setLocalState ] = useState<LocalState>({ replyModalOpen: true });
+  const [ localState, setLocalState ] = useState<LocalState>({ replyModalOpen: false });
 
   const handleSend = () => {
     sendContactReply();
@@ -39,9 +40,12 @@ const ContactPostView = ({ contactPost, handleClosePost, sendContactReply } : Pr
   const toggleReplyModal = () => {
     setLocalState({ ...localState, replyModalOpen: !localState.replyModalOpen });
   };
-  const handleArchivePost = () => {
-
-  };
+  const triggerAutoResponse = () => {
+    /** TODO  
+     * this should trigger the response modal with email as default
+     * implement after response action is tested
+    */
+  }
   const handleDeletePost = () => {
 
   };
@@ -57,14 +61,25 @@ const ContactPostView = ({ contactPost, handleClosePost, sendContactReply } : Pr
         />
         <div className={ styles.messageControlsDiv }>
           <Button.Group>
-            <Button content="Reply" positive onClick={ toggleReplyModal } />
-            <Button content="Close" color="grey" onClick={ handleClosePost } />
-            <Popup 
-              content="Archive message. Will NOT delete"
-              trigger={
-                <Button icon="archive" content="Archive" color="orange" onClick={ handleArchivePost } />
-              }
-            />
+            <Button content="Reply" icon="reply" positive onClick={ toggleReplyModal } />
+            <Button content="Close" icon="cancel" color="grey" onClick={ handleClosePost } />
+            {
+              contactPost.archived 
+              ?
+              <Popup 
+                content="Restore message"
+                trigger={
+                  <Button icon="archive" content="Restore" color="blue" onClick={ () => handleContactPostArchiveStatus(contactPost._id) } />
+                }   
+              />
+              :
+              <Popup 
+                content="Archive message. Will NOT delete"
+                trigger={
+                  <Button icon="archive" content="Archive" color="orange" onClick={ () => handleContactPostArchiveStatus(contactPost._id) } />
+                }
+              />
+            }
             <Popup 
               content="Delete Message"
               trigger={
@@ -76,19 +91,19 @@ const ContactPostView = ({ contactPost, handleClosePost, sendContactReply } : Pr
         <div className={ styles.contactPostMessageInfoDiv }>
           <div className={ styles.contactPostMessageInfo }>
             <i className="fas fa-sticky-note"></i>
-            <span>Message from: {contactPost.name}</span>
+            <span>Message from:</span><span>{contactPost.name}</span>
           </div>
           <div className={ styles.contactPostMessageInfo }>  
             <i className="fas fa-envelope-square" ></i>            
-            <span>Email: </span><a href="#" style={{color: "blue"}}>{contactPost.email}</a>
+            <span>Email:</span><span className={ styles.emailSpan } onClick={ triggerAutoResponse }>{contactPost.email}</span>
           </div>
           <div className={ styles.contactPostMessageInfo }>
             <i className="fas fa-phone-square" ></i>
-            <span>Phone: { contactPost.phoneNumber || "No phone number given"} </span>
+            <span>Phone:</span><span>{contactPost.phoneNumber || "No phone number given"}</span>
           </div>
           <div className={ styles.contactPostMessageInfo }>
             <i className="far fa-calendar-alt"></i>           
-            <span>Sent at: { formatDate(contactPost.sentAt, { military: true }) || "Can't resolve date" } </span>
+            <span>Sent at:</span><span>{formatDate(contactPost.sentAt, { military: true }) || "Can't resolve date"}</span>
           </div>
         </div>
         <div className={ styles.messageContentDiv }>

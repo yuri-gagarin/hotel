@@ -24,6 +24,7 @@ export const generateEmptyContactPost = (): ContactPostData => {
     phoneNumber: "",
     content: "",
     read: false,
+    archived: false,
     sentAt: "",
     repliedAt: "",
     createdAt: "",

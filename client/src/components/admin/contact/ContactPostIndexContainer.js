@@ -2,17 +2,18 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 // semantic ui imports //
-import { Card, Grid } from "semantic-ui-react";
+import { Card, Form, Grid, Popup, Radio } from "semantic-ui-react";
 // additional components //
 import { ContactPostCards } from "./ContactPostCards";
 import ContactPostView from "./ContactPostView";
 import ConfirmDeleteModal from "../shared/ConfirmDeleteModal";
+import ApiMessage from "../shared/ApiMessage";
 // redux imports //
 import { connect } from "react-redux";
-import { handleOpenContactPost, handleCloseContactPost, clearContactPostData, handleContactPostDelete, handleFetchContactPosts } from "../../../redux/actions/contactPostActions";
+import { handleOpenContactPost, handleCloseContactPost, clearContactPostData, handleContactPostDelete, handleFetchContactPosts, handleContactPostArchive } from "../../../redux/actions/contactPostActions";
 import { operationSuccessful, setAppError } from "../../../redux/actions/appGeneralActions";
 // flow types //
-import type { ContactPostState, ContactPostData, ContactPostAction } from "../../../redux/reducers/contact_posts/flowTypes";
+import type { ContactPostState, ContactPostData, ContactPostAction, FetchContactPostParams } from "../../../redux/reducers/contact_posts/flowTypes";
 import type { Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 // style imports //
 import styles from "./css/contactPostsIndexContainer.module.css";
@@ -25,27 +26,35 @@ type OwnProps = {|
 |};
 type Props = {|
   ...OwnProps,
-  handleFetchContactPosts: () => Promise<boolean>,
+  handleFetchContactPosts: (fetchParams?: FetchContactPostParams) => Promise<boolean>,
   handleCloseContactPost: () => void,
   handleOpenContactPost: (contactPostId: string, contactPostState: ContactPostState) => void,
-  handleContactPostDelete: (contactPostId: string, contactPostState: ContactPostState) => Promise<boolean>
+  handleContactPostDelete: (contactPostId: string, contactPostState: ContactPostState) => Promise<boolean>,
+  handleContactPostArchive: (contactPostId: string, archived: boolean, contactPostState: ContactPostState) => Promise<boolean>
 |};
 type LocalState = {
   confirmDeleteModalOpen: boolean,
+  viewNewPosts: boolean,
   contactPostIdToDelete: string
 }
 const ContactPostContainer = (props : Props): React.Node => {
   const { contactPostState } = props;
   // reducer functions //
-  const { handleFetchContactPosts, handleOpenContactPost,  handleCloseContactPost, handleContactPostDelete } = props
+  const { handleFetchContactPosts, handleOpenContactPost,  handleCloseContactPost, handleContactPostDelete, handleContactPostArchive } = props
   const { createdContactPosts } = contactPostState;
   // local state //
-  const [ localState, setLocalState ] = useState<LocalState>({ confirmDeleteModalOpen: false, contactPostIdToDelete: "" });
+  const [ localState, setLocalState ] = useState<LocalState>({ confirmDeleteModalOpen: false, contactPostIdToDelete: "", viewNewPosts: true });
   // load posts on component mount //
 
   useEffect(() => {
-    handleFetchContactPosts();
-  }, []);
+    if (localState.viewNewPosts) {
+      // fetch new unarchived posts //
+      handleFetchContactPosts({ archived: false });
+    } else {
+      // fetch archived posts //
+      handleFetchContactPosts({ archived: true })
+    }
+  },[ localState.viewNewPosts ])
 
   const openContactPost = (contactPostId: string) => {
     return handleOpenContactPost(contactPostId, contactPostState);
@@ -60,8 +69,13 @@ const ContactPostContainer = (props : Props): React.Node => {
 
   };
   /* archive and hide */
-  const archiveContactPost = (postIdToArchive: string) => {
-    return Promise.resolve(true);
+  const handleContactPostArchiveStatus = (postIdToToggle: string) => {
+    const { archived } = contactPostState.createdContactPosts.filter((post) => post._id === postIdToToggle)[0];
+    return handleContactPostArchive(postIdToToggle, !archived, contactPostState)
+      .then(() => {
+        console.log("processed");
+        return Promise.resolve(true);
+      });
   }
   /* delete functionality */
   const triggerContactPostDelete = (postIdToDelete: string) => {
@@ -78,9 +92,13 @@ const ContactPostContainer = (props : Props): React.Node => {
       return Promise.resolve(false);
     }
   }
+  const handleArchiveToggle = (e:any, data: any):void => {
+    setLocalState({ ...localState, viewNewPosts: !localState.viewNewPosts });
+  }
 
   return (
     <Grid className={ styles.contactPostsIndexContainer }>
+      <ApiMessage currentLocalState={ contactPostState } />
       <ConfirmDeleteModal 
         open={ localState.confirmDeleteModalOpen } 
         modelName="contact" 
@@ -88,12 +106,26 @@ const ContactPostContainer = (props : Props): React.Node => {
         cancelAction={ cancelDeleteAction }
       />
       <Grid.Row>
-        <Grid.Column width={ 6 } className={ styles.postsCardColumn }>
+        <Grid.Column width={ 6 } className={ styles.postsCardsColumn }>
+          <div className={ `${styles.archivePostsToggle} ${ localState.viewNewPosts ? styles.activeBg : styles.archiveBg }`}>
+            <span>
+              <Popup 
+                content={ `${ localState.viewNewPosts ? "View archived messages" : "View new messages"}`}
+                trigger={
+                  <Radio 
+                  toggle 
+                  checked={ localState.viewNewPosts }
+                  onClick={ handleArchiveToggle } />
+                }
+              />
+            </span>
+            <span>{`${localState.viewNewPosts ? "New and Unread" : "Archived"}`}</span>
+          </div>
           <div className={ styles.postsColumnInner }>
             <ContactPostCards 
               contactPostState={ contactPostState } 
               openContactPost={ openContactPost }
-              archiveContactPost={ archiveContactPost }
+              handleContactPostArchiveStatus={ handleContactPostArchiveStatus }
               triggerContactPostDelete={ triggerContactPostDelete } />
           </div>
         </Grid.Column>
@@ -101,6 +133,7 @@ const ContactPostContainer = (props : Props): React.Node => {
           <ContactPostView 
             contactPost={ contactPostState.contactPostData } 
             handleClosePost={ closeContactPost }
+            handleContactPostArchiveStatus = { handleContactPostArchiveStatus }
             sendContactReply={ sendContactReply }
           />
         </Grid.Column>
@@ -111,8 +144,8 @@ const ContactPostContainer = (props : Props): React.Node => {
 
 const mapDispatchToProps = (dispatch: Dispatch<ContactPostAction>) => {
   return {
-    handleFetchContactPosts: () => {
-      return handleFetchContactPosts(dispatch);
+    handleFetchContactPosts: (fetchParams?: FetchContactPostParams) => {
+      return handleFetchContactPosts(dispatch, fetchParams);
     },
     handleOpenContactPost: (postId: string, contactPostState: ContactPostState) => {
       return handleOpenContactPost(dispatch, postId, contactPostState);
@@ -120,8 +153,11 @@ const mapDispatchToProps = (dispatch: Dispatch<ContactPostAction>) => {
     handleCloseContactPost: () => {
       return handleCloseContactPost(dispatch);
     },
-    handleContactPostDelete: (postId: string, contactPostState) => {
+    handleContactPostDelete: (postId: string, contactPostState: ContactPostState) => {
       return handleContactPostDelete(dispatch, postId, contactPostState);
+    },
+    handleContactPostArchive: (postId: string, archive: boolean, contactPostState: ContactPostState) => {
+      return handleContactPostArchive(dispatch, { postId, archive }, contactPostState);
     }
   };
 };

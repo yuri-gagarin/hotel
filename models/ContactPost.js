@@ -19,8 +19,21 @@ const contactPostSchema = new Schema({
     type: String,
     required: true
   },
+  replyContent: {
+    type: String,
+    default: ""
+  },
   read: {
     type: Boolean,
+    default: false
+  },
+  archived: {
+    type: Boolean,
+    default: false,
+  },
+  replied: {
+    type: Boolean,
+    default: false
   },
   sentAt: {
     type: Date,

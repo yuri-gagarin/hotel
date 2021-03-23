@@ -16,6 +16,13 @@ export default function (router) {
     .route("/api/contactPosts")
     .post(contactPostsController.sendContactPost);
   
+  // @route PATCH "/api/contactPosts/:contactPostId" //
+  // @desc Edits the current ContactPost model //
+  // @access PRIVATE //
+  router
+    .route("/api/contactPosts/:contactPostId")
+    .patch(contactPostsController.updateContactPost);
+  
   // @route DELETE "/api/contactPosts/:contactPostId" //
   // @desc Delets a ContactPost from the database //
   // @access PRIVATE //

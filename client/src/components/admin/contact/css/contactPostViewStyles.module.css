@@ -41,7 +41,11 @@
   font-size: 2em;
 }
 .contactPostMessageInfo > span {
-  margin-left: 1em;
+  margin-left: 0.5em;
+}
+.contactPostMessageInfo > span:nth-child(2) {
+  color: gray;
+  font-style: italic;
 }
 
 /* message content div */
@@ -70,6 +74,11 @@
   text-align: left;
   margin-left: 0.5em;
   font-style: italic;
+}
+.emailSpan {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
 }
 .messageContent {
   display: flex;
