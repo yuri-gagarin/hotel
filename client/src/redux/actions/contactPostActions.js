@@ -195,3 +195,21 @@ export const handleContactPostArchive = (dispatch: Dispatch<ContactPostAction>, 
     });
 };
 
+export const handleSendContactPostReplyEmail = (dispatch: Dispatch<ContactPostAction>, data: any): Promise<boolean> => {
+  const requestOptions = {
+    method: "post",
+    url: "/api/mailer/send_contact_post_reply"
+  };
+  dispatch(sendContactPostRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg } : { responseMsg : string } = data;
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(setContactPostError(error))
+      return Promise.resolve(false);
+    })
+}
+

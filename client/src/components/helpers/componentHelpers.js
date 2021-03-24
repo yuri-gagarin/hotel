@@ -1,3 +1,6 @@
+import { useEffect, useRef } from "react";
+
+// @flow 
 export const navbarCollapseListener = () => {
   // Navbar collapse implementation // 
   const mainNav = $("#mainNav");
@@ -21,5 +24,12 @@ export const navbarCollapseListener = () => {
     })();
 
   }
-  
-}
+};
+
+export function usePrevious<S>(value: S) {
+  const ref = useRef(null);
+  useEffect(() => {
+    ref.current = value;
+  })
+  return ref.current;
+};

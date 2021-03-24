@@ -113,8 +113,14 @@ export type ClearContactPostData = {
     contactPostData: ContactPostData,
   }
 };
+export type SendEmailResponse = {
+  +type: "SendEmailResponse",
+  payload: {
+    contactPostData: ContactPostData
+  }
+};
 // union contactPost action type //
 export type ContactPostAction = (
   ContactPostAPIRequest | SetContactPosts | ContactPostError | ContactPostCreated | ContactPostUpdated | ContactPostDeleted |
-  OpenContactPost | ClearContactPostData
+  OpenContactPost | ClearContactPostData | SendEmailResponse
 );

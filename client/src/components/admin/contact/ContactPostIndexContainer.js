@@ -10,7 +10,7 @@ import ConfirmDeleteModal from "../shared/ConfirmDeleteModal";
 import ApiMessage from "../shared/ApiMessage";
 // redux imports //
 import { connect } from "react-redux";
-import { handleOpenContactPost, handleCloseContactPost, clearContactPostData, handleContactPostDelete, handleFetchContactPosts, handleContactPostArchive } from "../../../redux/actions/contactPostActions";
+import { handleOpenContactPost, handleCloseContactPost, clearContactPostData, handleContactPostDelete, handleFetchContactPosts, handleContactPostArchive, handleSendContactPostReplyEmail } from "../../../redux/actions/contactPostActions";
 import { operationSuccessful, setAppError } from "../../../redux/actions/appGeneralActions";
 // flow types //
 import type { ContactPostState, ContactPostData, ContactPostAction, FetchContactPostParams } from "../../../redux/reducers/contact_posts/flowTypes";
@@ -31,7 +31,8 @@ type Props = {|
   handleCloseContactPost: () => void,
   handleOpenContactPost: (contactPostId: string, contactPostState: ContactPostState) => void,
   handleContactPostDelete: (contactPostId: string, contactPostState: ContactPostState) => Promise<boolean>,
-  handleContactPostArchive: (contactPostId: string, archived: boolean, contactPostState: ContactPostState) => Promise<boolean>
+  handleContactPostArchive: (contactPostId: string, archived: boolean, contactPostState: ContactPostState) => Promise<boolean>,
+  handleSendContactPostReplyEmail: (data: any) => Promise<boolean>
 |};
 type LocalState = {
   confirmDeleteModalOpen: boolean,
@@ -42,7 +43,7 @@ type LocalState = {
 const ContactPostContainer = (props : Props): React.Node => {
   const { contactPostState } = props;
   // reducer functions //
-  const { handleFetchContactPosts, handleOpenContactPost,  handleCloseContactPost, handleContactPostDelete, handleContactPostArchive } = props
+  const { handleFetchContactPosts, handleOpenContactPost,  handleCloseContactPost, handleContactPostDelete, handleContactPostArchive, handleSendContactPostReplyEmail } = props
   const { createdContactPosts } = contactPostState;
   // local state //
   const [ localState, setLocalState ] = useState<LocalState>({ confirmDeleteModalOpen: false, contactPostIdToDelete: "", viewNewPosts: true, sortSelection: "desc" });
@@ -67,8 +68,8 @@ const ContactPostContainer = (props : Props): React.Node => {
   const closeContactPost = () => {
     handleCloseContactPost();
   };
-  const sendContactReply = () => {
-
+  const sendContactReply = (postId: string, data: any) => {
+    return handleSendContactPostReplyEmail(data);
   };
   const handleSortSelect = (_, data: any) => {
     return handleFetchContactPosts({ archived: !localState.viewNewPosts, sort: data.value })
@@ -174,6 +175,9 @@ const mapDispatchToProps = (dispatch: Dispatch<ContactPostAction>) => {
     },
     handleContactPostArchive: (postId: string, archive: boolean, contactPostState: ContactPostState) => {
       return handleContactPostArchive(dispatch, { postId, archive }, contactPostState);
+    },
+    handleSendContactPostReplyEmail: (replyData: any) => {
+      return handleSendContactPostReplyEmail(dispatch, replyData);
     }
   };
 };

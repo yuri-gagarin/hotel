@@ -12,6 +12,8 @@ import serviceRoutes from "./serviceRoutes";
 import diningRoutes from "./diningRoutes";
 import diningImageRoutes from "./diningImageRoutes";
 import menuImageRoutes from "./menuImageRoutes";
+// mailer //
+import mailRoutes from "./mailRoutes";
 // test routes
 import testRoutes from "./testRoutes";
 
@@ -21,6 +23,7 @@ export default function (router) {
   conversationRoutes(router);
   diningRoutes(router);
   diningImageRoutes(router);
+  mailRoutes(router);
   menuImageRoutes(router);
   messageRoutes(router);
   roomImageRoutes(router);

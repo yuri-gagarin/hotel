@@ -1,5 +1,4 @@
-import "../controllers/contactPostsController"
-import contactPostsController from "../controllers/contactPostsController"
+import contactPostsController from "../controllers/contactPostsController";
 
 export default function (router) {
   // @route GET "/api/contactPosts" //

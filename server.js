@@ -10,7 +10,9 @@ import session from "express-session";
 import passportSrategy from "./controllers/helpers/authHelper";
 import appConfig from "./config/appConfig";
 import combineRoutes from "./routes/combineRoutes";
+import dotenv from "dotenv"
 
+dotenv.config();
 const app = express();
 const router = express.Router();
 const PORT = process.env.PORT || 8080;

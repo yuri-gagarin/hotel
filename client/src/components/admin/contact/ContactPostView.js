@@ -24,7 +24,7 @@ type Props = {
   contactPost: ContactPostData,
   handleClosePost: () => void,
   handleContactPostArchiveStatus: (contactPostId: string) => Promise<boolean>,
-  sendContactReply: () => void // this will be vastly different
+  sendContactReply: (postId: string, data: any) => Promise<boolean> 
 }
 type LocalState = {
   replyModalOpen: boolean,
@@ -34,9 +34,6 @@ const ContactPostView = ({ contactPost, handleClosePost, sendContactReply, handl
   const { useState, useEffect } = React;
   const [ localState, setLocalState ] = useState<LocalState>({ replyModalOpen: false });
 
-  const handleSend = () => {
-    sendContactReply();
-  };
   const toggleReplyModal = () => {
     setLocalState({ ...localState, replyModalOpen: !localState.replyModalOpen });
   };
@@ -57,7 +54,7 @@ const ContactPostView = ({ contactPost, handleClosePost, sendContactReply, handl
           replyModalOpen= { localState.replyModalOpen }
           contactPostData= { contactPost }
           handleCloseModal= { toggleReplyModal }
-          sendContactReply= { handleSend }
+          sendContactReply= { sendContactReply }
         />
         <div className={ styles.messageControlsDiv }>
           <Button.Group>

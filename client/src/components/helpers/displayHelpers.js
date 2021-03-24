@@ -84,3 +84,13 @@ export const objectValuesEmpty = (obj: any): boolean => {
   }
 };
 
+export const validateEmail = (emailAdress: string): boolean => { 
+  if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(emailAdress)) {
+    return true;
+  }
+  return false;
+};
+export const checkEmptyString = (string: string): boolean => {
+  return (typeof string === "string") && (string.length > 0) ? false : true;
+};
+
