@@ -3,8 +3,10 @@ import { validateContactPost } from "./helpers/validationHelpers";
 
 export default {
   getContactPosts: (req, res) => {
-    const { archived = false } = req.query;
-    return ContactPost.find({ archived: archived }).exec()
+    const { archived = false, sort = "desc" } = req.query;
+    console.log(req.query)
+
+    return ContactPost.find({ archived: archived }).sort({ createdAt: sort }).exec()
       .then((contactPosts) => {
         return res.status(200).json({
           responseMsg: `Retreived all ${ Boolean(archived) ? 'archived' : 'new'} contact requests`,

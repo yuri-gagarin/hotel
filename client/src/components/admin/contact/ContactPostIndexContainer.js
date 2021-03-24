@@ -2,7 +2,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 // semantic ui imports //
-import { Card, Form, Grid, Popup, Radio } from "semantic-ui-react";
+import { Card, Dropdown, Form, Grid, Icon, Popup, Radio } from "semantic-ui-react";
 // additional components //
 import { ContactPostCards } from "./ContactPostCards";
 import ContactPostView from "./ContactPostView";
@@ -15,6 +15,7 @@ import { operationSuccessful, setAppError } from "../../../redux/actions/appGene
 // flow types //
 import type { ContactPostState, ContactPostData, ContactPostAction, FetchContactPostParams } from "../../../redux/reducers/contact_posts/flowTypes";
 import type { Dispatch } from "../../../redux/reducers/_helpers/createReducer";
+import type { DropdownItemProps } from "semantic-ui-react";
 // style imports //
 import styles from "./css/contactPostsIndexContainer.module.css";
 // helpers //
@@ -35,7 +36,8 @@ type Props = {|
 type LocalState = {
   confirmDeleteModalOpen: boolean,
   viewNewPosts: boolean,
-  contactPostIdToDelete: string
+  contactPostIdToDelete: string,
+  sortSelection: "asc" | "desc"
 }
 const ContactPostContainer = (props : Props): React.Node => {
   const { contactPostState } = props;
@@ -43,16 +45,16 @@ const ContactPostContainer = (props : Props): React.Node => {
   const { handleFetchContactPosts, handleOpenContactPost,  handleCloseContactPost, handleContactPostDelete, handleContactPostArchive } = props
   const { createdContactPosts } = contactPostState;
   // local state //
-  const [ localState, setLocalState ] = useState<LocalState>({ confirmDeleteModalOpen: false, contactPostIdToDelete: "", viewNewPosts: true });
+  const [ localState, setLocalState ] = useState<LocalState>({ confirmDeleteModalOpen: false, contactPostIdToDelete: "", viewNewPosts: true, sortSelection: "desc" });
   // load posts on component mount //
 
   useEffect(() => {
     if (localState.viewNewPosts) {
       // fetch new unarchived posts //
-      handleFetchContactPosts({ archived: false });
+      handleFetchContactPosts({ archived: false, date: localState.sortSelection });
     } else {
       // fetch archived posts //
-      handleFetchContactPosts({ archived: true })
+      handleFetchContactPosts({ archived: true, date: localState.sortSelection })
     }
   },[ localState.viewNewPosts ])
 
@@ -68,6 +70,12 @@ const ContactPostContainer = (props : Props): React.Node => {
   const sendContactReply = () => {
 
   };
+  const handleSortSelect = (_, data: any) => {
+    return handleFetchContactPosts({ archived: !localState.viewNewPosts, sort: data.value })
+      .then(() => {
+        setLocalState({ ...localState, sortSelection: data.value });
+      })
+  }
   /* archive and hide */
   const handleContactPostArchiveStatus = (postIdToToggle: string) => {
     const { archived } = contactPostState.createdContactPosts.filter((post) => post._id === postIdToToggle)[0];
@@ -120,6 +128,14 @@ const ContactPostContainer = (props : Props): React.Node => {
               />
             </span>
             <span>{`${localState.viewNewPosts ? "New and Unread" : "Archived"}`}</span>
+            <span>
+              <Dropdown labeled text={ `${ localState.sortSelection === "asc" ? "Oldest" : "Newest"}` }>
+                <Dropdown.Menu>
+                  <Dropdown.Item content="Newest First" value="desc" onClick={ handleSortSelect } />
+                  <Dropdown.Item content="Oldest First" value="asc" onClick={ handleSortSelect } />
+                </Dropdown.Menu>
+              </Dropdown>
+            </span>
           </div>
           <div className={ styles.postsColumnInner }>
             <ContactPostCards 

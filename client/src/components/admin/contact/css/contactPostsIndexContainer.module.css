@@ -43,12 +43,21 @@
   align-items: center;
   height: 30px;
 }
+.archivePostsToggle > span:nth-child(1) {
+  padding-top: 10px;
+}
 
 .archivePostsToggle > span:nth-child(2) {
   margin-left: 1em;
-  margin-bottom: 10px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
+}
+.archivePostsToggle > span:nth-child(3) {
+  margin-left: 1em;
+  font-weight: bold;
+  border: 1px solid white;
+  padding: 1em;
+  border-radius: 2px;
 }
 /* inner column with cards */
 .postsColumnInner {

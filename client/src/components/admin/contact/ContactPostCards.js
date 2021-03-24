@@ -58,10 +58,12 @@ export const ContactPostCards = ({ contactPostState, openContactPost, handleCont
                       </div>
                     :
                     <div className={ styles.cardButtonsDiv }>
-                      <Button color="green" icon labelPosition="right"  onClick={() => openContactPost(post._id) }>
-                        <Icon name="right arrow" />
-                        Open
-                      </Button>
+                      <Button.Group>
+                        <Button color="green" icon labelPosition="right"  onClick={() => openContactPost(post._id) }>
+                          <Icon name="right arrow" />
+                          Open
+                        </Button>
+                      </Button.Group>
                       <Button.Group>
                         {
                           post.archived 
