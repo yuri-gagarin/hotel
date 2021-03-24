@@ -8,7 +8,7 @@ import { FormErrorMessages } from "../shared/FormErrorMessages";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 // type //
-import type { ContactPostData } from "../../../redux/reducers/contact_posts/flowTypes";
+import type { ContactPostData, AdminContactPostReplyData } from "../../../redux/reducers/contact_posts/flowTypes";
 // styles and css //
 import styles from "./css/contactPostReplyModal.module.css";
 // helpers //
@@ -18,7 +18,7 @@ type Props = {
   replyModalOpen: boolean,
   contactPostData: ContactPostData,
   handleCloseModal: () => void,
-  sendContactReply: (contactPostId: string, data: any) => Promise<boolean>
+  sendContactReply: (data: AdminContactPostReplyData) => Promise<boolean>
 };
 type LocalState = {
   recipientEmail: string,
@@ -36,6 +36,8 @@ type ErrorComponentState = {
   errorMessages: Array<string>
 };
 
+const initialString = `<p>Initial Email</p><p>Thank you for your interest. This is our response. We really Appreciate your email</p><p>Administrator</p>`;
+
 export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleCloseModal, sendContactReply } : Props): React.Node => {
   const { useState, useEffect, useRef } = React;
   // this may be bad practice to reassign prop data to state but //
@@ -44,13 +46,16 @@ export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleC
     recipientEmail: contactPostData.email,
     senderEmail: "admin@email.com",
     emailSubject: "Re: your message ...",
-    emailBodyHTML: ""
+    emailBodyHTML: initialString
   });
   const [ errorState, setErrorState ] = useState<ErrorState>({ recipientEmailError: null, senderEmailError: null, emailSubjectError: null });
   const [ errorComponentState, setErrorComponentState ] = useState<ErrorComponentState>({ visible: false, errorMessages: [] });
 
   const previousLocalState = usePrevious<LocalState>(localState);
 
+  const setInitialData = () => {
+    return initialString;
+  };
   /* form validators */
   /* more concise later ? */
   useEffect(() => {
@@ -90,7 +95,17 @@ export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleC
   const handleReplySend = () => {
     if (objectValuesEmpty(errorState)) {
       // no input errors process response //
-      console.log("process send reply email")
+      const { _id: postId } =contactPostData;
+      console.log("process send reply email");
+      const contactPostReplyData: AdminContactPostReplyData = { 
+        postId: postId,
+        recipientEmail: localState.recipientEmail,
+        senderEmail: localState.senderEmail,
+        originalContent: contactPostData.content,
+        emailSubject: localState.emailSubject,
+        replyContent: localState.emailBodyHTML
+      }
+      sendContactReply(contactPostReplyData);
     } else {
       const errorMessages: Array<string> = Object.keys(errorState)
         .map((key) => {
@@ -100,15 +115,10 @@ export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleC
         .filter((val) => val !== "");
       
       setErrorComponentState({ ...errorComponentState, visible: true, errorMessages: errorMessages })
-      
-      
     }
-    const { _id: postId } = contactPostData;
-    sendContactReply(postId, localState);
   };
   /* input fields listeners */
   const handleRecipientEmailChange = (_, data: any) => {
-    if (data.value)
     setLocalState({ ...localState, recipientEmail: data.value });
   };
   const handleSenderEmailChange = (_, data: { value : string }) => {
@@ -118,7 +128,7 @@ export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleC
     setLocalState({ ...localState, emailSubject: data.value })
   }
   const handleEditorChange = (_, editor: any) =>{
-    setLocalState({ ...localState, editorData: editor.getData() });
+    setLocalState({ ...localState, emailBodyHTML: editor.getData() });
   };
   return (
     <Modal className={ styles.contactPostReplyModal } open={ replyModalOpen }> 
@@ -202,6 +212,7 @@ export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleC
         <CKEditor
           editor={ ClassicEditor }
           onChange={ handleEditorChange }
+          data={ setInitialData() }
         />        
       </div>
     </Modal>      

@@ -11,6 +11,14 @@ export type ClientContactPostFormData = {
   repliedAt?: string,
   createdAt?: string,
   editedAt?: string
+};
+export type AdminContactPostReplyData = {
+  postId: string,
+  recipientEmail: string,
+  senderEmail: string,
+  emailSubject: string,
+  originalContent: string,
+  replyContent: string,
 }
 export type FetchContactPostParams = {
   read?: boolean,

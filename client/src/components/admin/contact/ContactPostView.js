@@ -6,25 +6,18 @@ import { Container, Button, Popup, Segment, FormInput, Icon } from "semantic-ui-
 // additional components //
 import { ContactPostReplyModal } from "./ContactPostReplyModal";
 // flow types //
-import type { ContactPostData } from "../../../redux/reducers/contact_posts/flowTypes";
+import type { ContactPostData, AdminContactPostReplyData } from "../../../redux/reducers/contact_posts/flowTypes";
 // style imports //
 import styles from "./css/contactPostViewStyles.module.css";
 // helpers //
 import { objectValuesEmpty } from "../../helpers/displayHelpers";
 import { formatDate }  from "../../helpers/dateHelpers";
 
-const setInitialMessage = () => {
-  return (
-    `
-    <p>your response ... </p>
-    `
-  );
-}
 type Props = {
   contactPost: ContactPostData,
   handleClosePost: () => void,
   handleContactPostArchiveStatus: (contactPostId: string) => Promise<boolean>,
-  sendContactReply: (postId: string, data: any) => Promise<boolean> 
+  sendContactReply: (data: AdminContactPostReplyData) => Promise<boolean> 
 }
 type LocalState = {
   replyModalOpen: boolean,
@@ -58,7 +51,7 @@ const ContactPostView = ({ contactPost, handleClosePost, sendContactReply, handl
         />
         <div className={ styles.messageControlsDiv }>
           <Button.Group>
-            <Button content="Reply" icon="reply" positive onClick={ toggleReplyModal } />
+            <Button content="Write Reply" icon="reply" positive onClick={ toggleReplyModal } />
             <Button content="Close" icon="cancel" color="grey" onClick={ handleClosePost } />
             {
               contactPost.archived 

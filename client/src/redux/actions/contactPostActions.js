@@ -8,9 +8,11 @@ import type {
   ContactPostAPIRequest, SetContactPosts, ContactPostError,
   ContactPostCreated, ContactPostUpdated, ContactPostDeleted,
   OpenContactPost, ClearContactPostData, ContactPostAction, 
-  ClientContactPostFormData, FetchContactPostParams
+  ClientContactPostFormData, FetchContactPostParams, AdminContactPostReplyData
 } from "../reducers/contact_posts/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
+// helpers //
+import { generateReplyEmailBody } from "./helpers/generateReplyEmailBody";
 
 export const sendContactPostRequest = (): ContactPostAPIRequest => {
   return {
@@ -195,11 +197,22 @@ export const handleContactPostArchive = (dispatch: Dispatch<ContactPostAction>, 
     });
 };
 
-export const handleSendContactPostReplyEmail = (dispatch: Dispatch<ContactPostAction>, data: any): Promise<boolean> => {
+export const handleSendContactPostReplyEmail = (dispatch: Dispatch<ContactPostAction>, replyData: AdminContactPostReplyData): Promise<boolean> => {
+  const { originalContent, replyContent } = replyData;
+  const emailBodyData = generateReplyEmailBody({ originalMessageBody: originalContent, responseEmailBody: replyContent });
+
   const requestOptions = {
     method: "post",
-    url: "/api/mailer/send_contact_post_reply"
+    url: "/api/mailer/send_contact_post_reply",
+    data: {
+      emailData: {
+        ...replyData,
+        emailHTML: emailBodyData
+      }
+    }
   };
+
+  // this is parsed and return as HTML !!!!!!! //
   dispatch(sendContactPostRequest());
   return axios(requestOptions)
     .then((response) => {

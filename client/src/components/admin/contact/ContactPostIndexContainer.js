@@ -13,7 +13,7 @@ import { connect } from "react-redux";
 import { handleOpenContactPost, handleCloseContactPost, clearContactPostData, handleContactPostDelete, handleFetchContactPosts, handleContactPostArchive, handleSendContactPostReplyEmail } from "../../../redux/actions/contactPostActions";
 import { operationSuccessful, setAppError } from "../../../redux/actions/appGeneralActions";
 // flow types //
-import type { ContactPostState, ContactPostData, ContactPostAction, FetchContactPostParams } from "../../../redux/reducers/contact_posts/flowTypes";
+import type { ContactPostState, ContactPostData, ContactPostAction, FetchContactPostParams, AdminContactPostReplyData } from "../../../redux/reducers/contact_posts/flowTypes";
 import type { Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { DropdownItemProps } from "semantic-ui-react";
 // style imports //
@@ -68,7 +68,7 @@ const ContactPostContainer = (props : Props): React.Node => {
   const closeContactPost = () => {
     handleCloseContactPost();
   };
-  const sendContactReply = (postId: string, data: any) => {
+  const sendContactReply = (data: AdminContactPostReplyData) => {
     return handleSendContactPostReplyEmail(data);
   };
   const handleSortSelect = (_, data: any) => {
@@ -176,7 +176,7 @@ const mapDispatchToProps = (dispatch: Dispatch<ContactPostAction>) => {
     handleContactPostArchive: (postId: string, archive: boolean, contactPostState: ContactPostState) => {
       return handleContactPostArchive(dispatch, { postId, archive }, contactPostState);
     },
-    handleSendContactPostReplyEmail: (replyData: any) => {
+    handleSendContactPostReplyEmail: (replyData: AdminContactPostReplyData) => {
       return handleSendContactPostReplyEmail(dispatch, replyData);
     }
   };
