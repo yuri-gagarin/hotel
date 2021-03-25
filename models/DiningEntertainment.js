@@ -1,7 +1,12 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const diningModelSchema = new Schema({
+const diningEntertainmentModelSchema = new Schema({
+  live: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   title: {
     type: String,
     required: true,
@@ -14,6 +19,11 @@ const diningModelSchema = new Schema({
     type: String,
     required: true
   },
+  address: {
+    type: String,
+    required: false,
+    default: ""
+  },
   images: [{
     type: Schema.Types.ObjectId,
     ref: "DiningModelImage"
@@ -22,6 +32,11 @@ const diningModelSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "MenuImage"
   }],
+  optionType: {
+    type: String,
+    enum: ["restaurant", "cafe", "lounge" ],
+    default: "restaurant"
+  },
   createdAt: {
     type: Date,
     default: new Date(Date.now()),
@@ -34,4 +49,4 @@ const diningModelSchema = new Schema({
   }
 });
 
-export default mongoose.model("DiningModel",  diningModelSchema);
+export default mongoose.model("DiningEntertainmentModel",  diningEntertainmentModelSchema);

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const menuImageSchema = new Schema({
   diningModel: {
     type: Schema.Types.ObjectId,
-    ref: "DiningModel"
+    ref: "DiningEntertainmentModel"
   },
   path: {
     type: String,

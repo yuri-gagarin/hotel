@@ -1,4 +1,4 @@
-import { diningModelConstants } from "../constants";
+import { diningModelConstants } from "../../constants";
 const {
   DINING_MODEL_REQUEST,
   DINING_MODEL_CREATED,

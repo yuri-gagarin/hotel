@@ -1,4 +1,4 @@
-import DiningModel from "../models/DiningModel";
+import DiningEntertainmentModel from "../models/DiningEntertainment";
 import DiningModelImage from "../models/DiningImage";
 import MenuImage from "../models/MenuImage";
 // helpers //
@@ -6,7 +6,7 @@ import { deleteFile } from "./helpers/apiHelpers";
 
 export default {
   getDiningModels: (_req, res) => {
-    return DiningModel.find({})
+    return DiningEntertainmentModel.find({})
       .populate("images", ["_id", "path"])
       .populate("menuImages", ["_id", "path"])
       .then((foundModels) => {
@@ -25,7 +25,7 @@ export default {
   createDiningModel: (req, res) => {
     const  { diningModelData } = req.body;
     
-    return DiningModel.create({ ...diningModelData, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()) })
+    return DiningEntertainmentModel.create({ ...diningModelData, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()) })
       .then((createdModel) => {
         return createdModel
           .populate({ path:'images', model: "DiningModelImage" })
@@ -60,7 +60,7 @@ export default {
     ];
 
     const updatedDiningModelImages = diningModelImages.currentImages.map((img) => `${img._id}` );
-    return DiningModel.findOneAndUpdate(
+    return DiningEntertainmentModel.findOneAndUpdate(
       { _id: diningModelId },
       {
         $set: { 
@@ -75,7 +75,7 @@ export default {
       { new: true }
     )
     .then((updatedDiningModel) => {
-      return DiningModel.populate(updatedDiningModel, populateQuery).execPopulate();
+      return DiningEntertainmentModel.populate(updatedDiningModel, populateQuery).execPopulate();
     })
     .then((diningModel) => {
       return res.status(200).json({
@@ -101,7 +101,7 @@ export default {
     const menuImageIds = [];
 
     return (
-      DiningModel.findOne({ _id: diningModelId })
+      DiningEntertainmentModel.findOne({ _id: diningModelId })
         .populate("images").populate("menuImages").execPopulate()
     )
     .then((modelToDelete) => {
@@ -144,7 +144,7 @@ export default {
       }
     })
     .then((_res) => {
-      return DiningModel.findOneAndDelete({ _id: diningModelId }).exec()
+      return DiningEntertainmentModel.findOneAndDelete({ _id: diningModelId }).exec()
     })
     .then((deletedDiningModel) => {
       return res.status(200).json({
