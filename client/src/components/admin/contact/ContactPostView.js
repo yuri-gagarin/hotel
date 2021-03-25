@@ -17,6 +17,7 @@ import { formatDate }  from "../../helpers/dateHelpers";
 type Props = {
   contactPost: ContactPostData,
   handleClosePost: () => void,
+  handleMarkReadUnread: (contactPostId: string) => Promise<boolean>,
   handleContactPostArchiveStatus: (contactPostId: string) => Promise<boolean>,
   sendContactReply: (data: AdminContactPostReplyData) => Promise<boolean> 
 }
@@ -24,7 +25,7 @@ type LocalState = {
   replyModalOpen: boolean,
 }
 
-const ContactPostView = ({ contactPost, handleClosePost, sendContactReply, handleContactPostArchiveStatus } : Props): React.Node => {
+const ContactPostView = ({ contactPost, handleClosePost, handleMarkReadUnread, sendContactReply, handleContactPostArchiveStatus } : Props): React.Node => {
   const { useState, useEffect } = React;
   const [ localState, setLocalState ] = useState<LocalState>({ replyModalOpen: false });
 
@@ -54,6 +55,15 @@ const ContactPostView = ({ contactPost, handleClosePost, sendContactReply, handl
           <Button.Group>
             <Button content="Write Reply" icon="reply" positive onClick={ toggleReplyModal } />
             <Button content="Close" icon="cancel" color="grey" onClick={ handleClosePost } />
+          </Button.Group>
+          <Button 
+            basic 
+            icon="envelope open" 
+            color="blue" 
+            content={ contactPost.read ? "Mark as Unread" : "Mark as Read" } 
+            onClick={ () => handleMarkReadUnread(contactPost._id) } 
+          />
+          <Button.Group>
             {
               contactPost.archived 
               ?

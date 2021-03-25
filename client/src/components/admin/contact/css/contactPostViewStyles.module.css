@@ -19,6 +19,7 @@
 .messageControlsDiv {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 /* message info div */
 .contactPostMessageInfoDiv {

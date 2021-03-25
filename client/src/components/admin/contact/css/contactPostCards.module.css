@@ -1,7 +1,9 @@
+/* contact post card custom overrides */
 .contactPostCard {
   margin-top: 5px !important;
   margin-bottom: 0 !important;
   border: 3px solid  #2193b0 !important;
+  max-height: 250px !important;
 }
 
 .contactPostCardActive {

@@ -1,16 +1,31 @@
 import ContactPost from "../models/ContactPost";
 import { validateContactPost } from "./helpers/validationHelpers";
 
+const sortReadUnread = (sortOption, contactPosts) => {
+  switch (sortOption) {
+    case "read": {
+      return contactPosts.filter((contactPost) => contactPost.read === true);
+    }
+    case "unread": {
+      return contactPosts.filter((contactPost) => contactPost.read === false);
+    }
+    default: {
+      return contactPosts;
+    }
+  }
+};
+
 export default {
   getContactPosts: (req, res) => {
-    const { archived = false, sort = "desc" } = req.query;
+    const { archived = false, sort = "desc", readSort = "view all" } = req.query;
     console.log(req.query)
 
     return ContactPost.find({ archived: archived }).sort({ createdAt: sort }).exec()
       .then((contactPosts) => {
+        const filteredPosts = sortReadUnread(readSort, contactPosts);
         return res.status(200).json({
           responseMsg: `Retreived all ${ Boolean(archived) ? 'archived' : 'new'} contact requests`,
-          contactPosts: contactPosts
+          contactPosts: filteredPosts
         });
       })
       .catch((error) => {
@@ -59,6 +74,7 @@ export default {
   updateContactPost: (req, res) => {
     const { contactPostId } = req.params;
     const { contactPostArchiveStatus, updateData } = req.body;
+    // needs to be rewritten perhaps with helper methods //
     if (contactPostArchiveStatus) {
       const { status } = contactPostArchiveStatus;
       return ContactPost.findOneAndUpdate(
@@ -81,23 +97,46 @@ export default {
     } else if (updateData) {
       // handle a reply //
       const { read, replied, replyContent } = updateData;
-      return ContactPost.findOneAndUpdate(
-        { _id: contactPostId },
-        { $set: { read: read, replied: replied, replyContent: replyContent } },
-        { new: true }
-      )
-      .then((updatedContactPost) => {
-        return res.status(200).json({
-          responseMsg: "Done",
-          updatedContactPost: updatedContactPost
+      if (replyContent) {
+        return ContactPost.findOneAndUpdate(
+          { _id: contactPostId },
+          { $set: { read: read, replied: replied, replyContent: replyContent } },
+          { new: true }
+        )
+        .then((updatedContactPost) => {
+          return res.status(200).json({
+            responseMsg: "Done",
+            updatedContactPost: updatedContactPost
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+          return res.status(500).json({
+            responseMsg: "An error occured",
+            error: error
+          });
         });
-      })
-      .catch((error) => {
-        return res.status(500).json({
-          responseMsg: "An error occured",
-          error: error
+
+      } else {
+        return ContactPost.findOneAndUpdate(
+          { _id: contactPostId },
+          { $set: { read: read } },
+          { new: true }
+        )
+        .then((updatedContactPost) => {
+          return res.status(200).json({
+            responseMsg: "Done",
+            updatedContactPost: updatedContactPost
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+          return res.status(500).json({
+            responseMsg: "An error occured",
+            error: error
+          });
         });
-      });
+      }
      
     }
 

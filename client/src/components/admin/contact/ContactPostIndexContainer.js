@@ -12,7 +12,7 @@ import ApiMessage from "../shared/ApiMessage";
 import { connect } from "react-redux";
 import {
   handleOpenContactPost, handleCloseContactPost, clearContactPostData,
-  handleUpdateContactPost, handleContactPostDelete, handleFetchContactPosts, handleContactPostArchive, handleSendContactPostReplyEmail 
+  handleUpdateContactPost, handleContactPostDelete, handleFetchContactPosts, handleSendContactPostReplyEmail, updateContactPost 
   } from "../../../redux/actions/contactPostActions";
 import { operationSuccessful, setAppError } from "../../../redux/actions/appGeneralActions";
 // flow types //
@@ -21,6 +21,7 @@ import type { Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { DropdownItemProps } from "semantic-ui-react";
 // style imports //
 import styles from "./css/contactPostsIndexContainer.module.css";
+import { capitalizeString } from "../../helpers/displayHelpers";
 // helpers //
 
 const { useEffect, useState } = React;
@@ -35,22 +36,22 @@ type Props = {|
   handleOpenContactPost: (contactPostId: string, contactPostState: ContactPostState) => void,
   handleUpdateContactPost: (updateData: ContactPostUpdateData, contactPostState: ContactPostState) => Promise<boolean>,
   handleContactPostDelete: (contactPostId: string, contactPostState: ContactPostState) => Promise<boolean>,
-  handleContactPostArchive: (contactPostId: string, archived: boolean, contactPostState: ContactPostState) => Promise<boolean>,
-  handleSendContactPostReplyEmail: (data: any) => Promise<boolean>
+  handleSendContactPostReplyEmail: (data: AdminContactPostReplyData) => Promise<boolean>
 |};
 type LocalState = {
   confirmDeleteModalOpen: boolean,
   viewNewPosts: boolean,
   contactPostIdToDelete: string,
-  sortSelection: "asc" | "desc"
+  sortSelection: "asc" | "desc",
+  readUnreadFilterSelection: string
 }
 const ContactPostContainer = (props : Props): React.Node => {
   const { contactPostState } = props;
   // reducer functions //
-  const { handleFetchContactPosts, handleOpenContactPost,  handleCloseContactPost, handleUpdateContactPost, handleContactPostDelete, handleContactPostArchive, handleSendContactPostReplyEmail } = props
+  const { handleFetchContactPosts, handleOpenContactPost,  handleCloseContactPost, handleUpdateContactPost, handleContactPostDelete, handleSendContactPostReplyEmail } = props
   const { createdContactPosts } = contactPostState;
   // local state //
-  const [ localState, setLocalState ] = useState<LocalState>({ confirmDeleteModalOpen: false, contactPostIdToDelete: "", viewNewPosts: true, sortSelection: "desc" });
+  const [ localState, setLocalState ] = useState<LocalState>({ confirmDeleteModalOpen: false, contactPostIdToDelete: "", viewNewPosts: true, sortSelection: "desc", readUnreadFilterSelection: "View all" });
   // load posts on component mount //
 
   useEffect(() => {
@@ -84,15 +85,22 @@ const ContactPostContainer = (props : Props): React.Node => {
       .then(() => {
         setLocalState({ ...localState, sortSelection: data.value });
       })
+  };
+  const handleReadUnreadFilter = (_, data: any) => {
+    return handleFetchContactPosts({ archived: !localState.viewNewPosts, readSort: data.value })
+      .then(() => {
+        setLocalState({ ...localState, readUnreadFilterSelection: capitalizeString(data.value) });
+      });
   }
   /* archive and hide */
   const handleContactPostArchiveStatus = (postIdToToggle: string) => {
     const { archived } = contactPostState.createdContactPosts.filter((post) => post._id === postIdToToggle)[0];
-    return handleContactPostArchive(postIdToToggle, !archived, contactPostState)
-      .then(() => {
-        console.log("processed");
-        return Promise.resolve(true);
-      });
+    return handleUpdateContactPost({ postId: postIdToToggle, archived: !archived }, contactPostState);
+  };
+  /* mark as read on unread */
+  const toggleContactPostReadUnread = (postIdToMark: string) => {
+    const contactPost = contactPostState.createdContactPosts.filter((post) => post._id === postIdToMark)[0];
+    return handleUpdateContactPost({ postId: postIdToMark, read: !contactPost.read }, contactPostState);
   }
   /* delete functionality */
   const triggerContactPostDelete = (postIdToDelete: string) => {
@@ -136,12 +144,22 @@ const ContactPostContainer = (props : Props): React.Node => {
                 }
               />
             </span>
-            <span>{`${localState.viewNewPosts ? "New and Unread" : "Archived"}`}</span>
+            <span>{`${localState.viewNewPosts ? "Active" : "Archived"}`}</span>
             <span>
-              <Dropdown labeled text={ `${ localState.sortSelection === "asc" ? "Oldest" : "Newest"}` }>
+              <Dropdown className={ styles.dropdownBtn } button labeled text={ `${ localState.sortSelection === "asc" ? "Oldest" : "Newest"}` }>
                 <Dropdown.Menu>
                   <Dropdown.Item content="Newest First" value="desc" onClick={ handleSortSelect } />
                   <Dropdown.Item content="Oldest First" value="asc" onClick={ handleSortSelect } />
+                </Dropdown.Menu>
+              </Dropdown>
+            </span>
+            <span>
+              <Dropdown className={ styles.dropdownBtn } button labeled text={ localState.readUnreadFilterSelection }>
+                <Dropdown.Menu>
+                  <Dropdown.Item content="Unread" value="unread" onClick={ handleReadUnreadFilter } />
+                  <Dropdown.Item content="Read" value="read" onClick={ handleReadUnreadFilter } />
+                  <Dropdown.Divider />
+                  <Dropdown.Item content="View All" value="view all" onClick={ handleReadUnreadFilter } />
                 </Dropdown.Menu>
               </Dropdown>
             </span>
@@ -158,6 +176,7 @@ const ContactPostContainer = (props : Props): React.Node => {
           <ContactPostView 
             contactPost={ contactPostState.contactPostData } 
             handleClosePost={ closeContactPost }
+            handleMarkReadUnread= { toggleContactPostReadUnread }
             handleContactPostArchiveStatus = { handleContactPostArchiveStatus }
             sendContactReply={ sendContactReply }
           />
@@ -183,9 +202,6 @@ const mapDispatchToProps = (dispatch: Dispatch<ContactPostAction>) => {
     },
     handleContactPostDelete: (postId: string, contactPostState: ContactPostState) => {
       return handleContactPostDelete(dispatch, postId, contactPostState);
-    },
-    handleContactPostArchive: (postId: string, archive: boolean, contactPostState: ContactPostState) => {
-      return handleContactPostArchive(dispatch, { postId, archive }, contactPostState);
     },
     handleSendContactPostReplyEmail: (replyData: AdminContactPostReplyData) => {
       return handleSendContactPostReplyEmail(dispatch, replyData);

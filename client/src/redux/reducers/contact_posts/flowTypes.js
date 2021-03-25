@@ -14,9 +14,10 @@ export type ClientContactPostFormData = {
 };
 export type ContactPostUpdateData = {
   postId: string,
-  replied: boolean,
-  read: boolean,
-  replyContent: string
+  replied?: boolean,
+  archived?: boolean,
+  read?: boolean,
+  replyContent?: string
 }
 export type AdminContactPostReplyData = {
   postId: string,
@@ -27,7 +28,7 @@ export type AdminContactPostReplyData = {
   replyContent: string,
 }
 export type FetchContactPostParams = {
-  read?: boolean,
+  readSort?: "read" | "unread" | "view all",
   archived?: boolean,
   date?: "asc" | "desc",
   limit?: number

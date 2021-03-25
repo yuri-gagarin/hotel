@@ -23,12 +23,12 @@ export const ContactPostCards = ({ contactPostState, openContactPost, handleCont
   // local state and effect hooks //
 
   return (
-    <Card.Group>
+    <Card.Group style={{ width: "100%" }}>
       {
         contactPostState.createdContactPosts.map((post) => {
           return (
             <Card className={ `${styles.contactPostCard} ${ post._id === contactPostData._id ? styles.contactPostCardActive : "" } ${ post.archived ? styles.contactPostCardArchived : "" }` } key={ post._id } fluid > 
-              <CardInfo read={ true } replied={ true } />
+              <CardInfo read={ post.read } replied={ ( post.replyContent ? true : false ) } />
               <Card.Content>
                 <Card.Header className={ styles.cardHeader } textAlign="left">
                   <div className={ styles.cardHeaderFrom }>

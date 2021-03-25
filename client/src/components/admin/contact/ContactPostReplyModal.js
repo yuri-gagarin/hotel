@@ -96,7 +96,6 @@ export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleC
     if (objectValuesEmpty(errorState)) {
       // no input errors process response //
       const { _id: postId } =contactPostData;
-      console.log("process send reply email");
       const contactPostReplyData: AdminContactPostReplyData = { 
         postId: postId,
         recipientEmail: localState.recipientEmail,
@@ -105,7 +104,10 @@ export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleC
         emailSubject: localState.emailSubject,
         replyContent: localState.emailBodyHTML
       }
-      sendContactReply(contactPostReplyData);
+      sendContactReply(contactPostReplyData)
+        .then((success) => {
+          if (success) handleCloseModal();
+        });
     } else {
       const errorMessages: Array<string> = Object.keys(errorState)
         .map((key) => {
