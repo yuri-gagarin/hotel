@@ -2,6 +2,7 @@
 import * as React from "react";
 // semantic ui comps //
 import { Button, Card, Icon, Popup } from "semantic-ui-react";
+import { CardInfo } from "./CardInfo";
 // types //
 import type { ContactPostState, ContactPostData } from "../../../redux/reducers/contact_posts/flowTypes";
 // styles and css //
@@ -27,6 +28,7 @@ export const ContactPostCards = ({ contactPostState, openContactPost, handleCont
         contactPostState.createdContactPosts.map((post) => {
           return (
             <Card className={ `${styles.contactPostCard} ${ post._id === contactPostData._id ? styles.contactPostCardActive : "" } ${ post.archived ? styles.contactPostCardArchived : "" }` } key={ post._id } fluid > 
+              <CardInfo read={ true } replied={ true } />
               <Card.Content>
                 <Card.Header className={ styles.cardHeader } textAlign="left">
                   <div className={ styles.cardHeaderFrom }>

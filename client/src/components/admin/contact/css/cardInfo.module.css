@@ -1,0 +1,36 @@
+.cardInfoWrapper {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  justify-content: space-between;
+  align-items: center;
+  top: 5px;
+  right: 5px;
+}
+.cardInfoWrapper > span {
+  margin-right: 3px;
+  font-size: 0.75em;
+  font-style: italic;
+  font-weight: 600;
+  color: #2193b0;
+}
+.cardInfoWrapper > div:nth-child(2) {
+  margin-right: 5px;
+}
+
+.iconDiv {
+  height: 25px;
+  width: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
+}
+
+.positive {
+  background-color: green;
+}
+.negative {
+  background-color: rgb(255, 81, 0);
+}

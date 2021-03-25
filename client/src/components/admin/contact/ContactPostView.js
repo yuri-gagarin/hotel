@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { Container, Button, Popup, Segment, FormInput, Icon } from "semantic-ui-react";
 // additional components //
 import { ContactPostReplyModal } from "./ContactPostReplyModal";
+import { ContactPostReplyMarkup } from "./ContactPostReplyMarkup";
 // flow types //
 import type { ContactPostData, AdminContactPostReplyData } from "../../../redux/reducers/contact_posts/flowTypes";
 // style imports //
@@ -107,6 +108,11 @@ const ContactPostView = ({ contactPost, handleClosePost, sendContactReply, handl
             <span>received at: { formatDate(contactPost.createdAt, { military: true }) }</span>
             <span>replied: { formatDate(contactPost.repliedAt, { military: true }) }</span>
           </div>
+          {
+            contactPost.replyContent 
+            ?  <ContactPostReplyMarkup rawHTMLString={contactPost.replyContent} />
+            : null
+          }
         </div>
       </Segment>  
     )

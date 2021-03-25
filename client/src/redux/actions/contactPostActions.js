@@ -8,7 +8,7 @@ import type {
   ContactPostAPIRequest, SetContactPosts, ContactPostError,
   ContactPostCreated, ContactPostUpdated, ContactPostDeleted,
   OpenContactPost, ClearContactPostData, ContactPostAction, 
-  ClientContactPostFormData, FetchContactPostParams, AdminContactPostReplyData
+  ClientContactPostFormData, FetchContactPostParams, AdminContactPostReplyData, ContactPostUpdateData
 } from "../reducers/contact_posts/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 // helpers //
@@ -52,6 +52,13 @@ export const clearContactPostData = (): ClearContactPostData => {
     payload: {
       contactPostData: generateEmptyContactPost()
     }
+  };
+};
+
+export const updateContactPost = (data: { status: number, responseMsg: string, updatedContactPost: ContactPostData, updatedContactPosts: Array<ContactPostData> }): ContactPostUpdated => {
+  return {
+    type: "ContactPostUpdated",
+    payload: { ...data, loading: false }
   };
 };
 
@@ -104,6 +111,41 @@ export const handleCreateContactPost = (dispatch: Dispatch<ContactPostAction>, f
       dispatch(setContactPostError(error)); 
       return false;
     });
+};
+
+export const handleUpdateContactPost = (dispatch: Dispatch<ContactPostAction>, updateData: ContactPostUpdateData, contactPostState: ContactPostState): Promise<boolean> => {
+  const { postId, read, replied, replyContent } = updateData;
+  const requestOptions = {
+    method: "patch",
+    url: "/api/contactPosts/" + postId,
+    data: {
+      updateData: {
+        read, replied, replyContent
+      }
+    }
+  };
+  dispatch(sendContactPostRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedContactPost } : { responseMsg: string, updatedContactPost: ContactPostData } = data;
+
+      const updatedContactPosts = contactPostState.createdContactPosts.map((contactPost) => {
+        if (contactPost._id === updatedContactPost._id) {
+          return updatedContactPost;
+        } else {
+          return contactPost;
+        }
+      });
+
+      const stateUpdate = { status, responseMsg, updatedContactPost, updatedContactPosts };
+      dispatch(updateContactPost(stateUpdate));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(setContactPostError(error));
+      return Promise.resolve(false);
+    })
 };
 
 export const handleFetchContactPosts = (dispatch: Dispatch<ContactPostAction>, options? : FetchContactPostParams ): Promise<boolean> => {

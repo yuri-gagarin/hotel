@@ -12,6 +12,12 @@ export type ClientContactPostFormData = {
   createdAt?: string,
   editedAt?: string
 };
+export type ContactPostUpdateData = {
+  postId: string,
+  replied: boolean,
+  read: boolean,
+  replyContent: string
+}
 export type AdminContactPostReplyData = {
   postId: string,
   recipientEmail: string,
@@ -34,6 +40,7 @@ export type ContactPostData = {
   email: string,
   phoneNumber: string,
   content: string,
+  replyContent: string,
   read: boolean,
   archived: boolean,
   sentAt: string,
@@ -87,17 +94,16 @@ export type ContactPostCreated = {
     newContactPostData: ContactPostData
   }
 };
-
 export type ContactPostUpdated = {
   +type: "ContactPostUpdated",
   payload: {
     status: number,
     loading: boolean,
     responseMsg: string,
-    contactPostData: ContactPostData,
-    createdContactPosts: Array<ContactPostData>
+    updatedContactPost: ContactPostData,
+    updatedContactPosts: Array<ContactPostData>
   }
-}
+};
 export type ContactPostDeleted = {
   +type: "ContactPostDeleted",
   payload: {

@@ -9,13 +9,12 @@ export default {
     const sendGridEmailMsgData = {
       to: "kibza25@yahoo.com",
       from: "ymivanov@icloud.com",
-      subject: emailSubject,
+      subject: "response to your question about rooms",
       html: emailHTML
     }
 
     return sgMail.send(sendGridEmailMsgData)
       .then((response) => {
-        console.log(response);
         return res.status(200).json({
           responseMsg: "Reply email successfully sent"
         });

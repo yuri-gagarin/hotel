@@ -58,6 +58,7 @@
   border-radius: 2px;
   margin-top: 1em;
   flex-grow: 1;
+  overflow-y: scroll;
 }
 .messageContentHeader {
   display: flex;
@@ -85,7 +86,6 @@
   justify-content: flex-start;
   text-align: left;
   flex-grow: 1;
-  overflow-y: scroll;
 }
 .messageContentMeta {
   display: flex;

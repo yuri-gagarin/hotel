@@ -58,7 +58,7 @@ export default {
 
   updateContactPost: (req, res) => {
     const { contactPostId } = req.params;
-    const { contactPostArchiveStatus, replyData } = req.body;
+    const { contactPostArchiveStatus, updateData } = req.body;
     if (contactPostArchiveStatus) {
       const { status } = contactPostArchiveStatus;
       return ContactPost.findOneAndUpdate(
@@ -78,11 +78,27 @@ export default {
           error: error
         });
       });
-    } else if (replyData) {
+    } else if (updateData) {
       // handle a reply //
-      return res.status(200).json({
-        responseMsg: "Done"
+      const { read, replied, replyContent } = updateData;
+      return ContactPost.findOneAndUpdate(
+        { _id: contactPostId },
+        { $set: { read: read, replied: replied, replyContent: replyContent } },
+        { new: true }
+      )
+      .then((updatedContactPost) => {
+        return res.status(200).json({
+          responseMsg: "Done",
+          updatedContactPost: updatedContactPost
+        });
       })
+      .catch((error) => {
+        return res.status(500).json({
+          responseMsg: "An error occured",
+          error: error
+        });
+      });
+     
     }
 
   },

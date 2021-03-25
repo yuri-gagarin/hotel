@@ -84,7 +84,7 @@ export const generateReplyEmailBody = ({ emailHeader, originalMessageBody, respo
           >
             <h5 style="font-style: italic">Hotel responded:</h4>
             <!-- response body here -->
-            <div style="display: flex; text-align: left;">
+            <div style="display: flex; text-align: left; flex-direction: row; flex-wrap: wrap;">
               ${ responseEmailBody }
             </div>
           </div>

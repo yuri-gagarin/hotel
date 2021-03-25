@@ -1,0 +1,16 @@
+.contactPostReplyMarkupWrapper {
+  border: 1px solid #2193b0;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 1em 0.5em;
+}
+.replyHeader {
+  font-size: 1.25em;
+  font-style: italic;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: 400;
+}

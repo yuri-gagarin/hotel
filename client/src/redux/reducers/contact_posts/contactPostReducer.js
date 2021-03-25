@@ -35,6 +35,17 @@ const contactPostReducer = (state: ContactPostState = initialState, action: Cont
         error: null
       };
     };
+    case "ContactPostUpdated": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        contactPostData: action.payload.updatedContactPost,
+        createdContactPosts: action.payload.updatedContactPosts,
+        error: null
+      };
+    };
     case "ContactPostDeleted": {
       return {
         ...state,
