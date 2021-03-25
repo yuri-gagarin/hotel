@@ -75,6 +75,7 @@ export default {
     const { contactPostId } = req.params;
     const { contactPostArchiveStatus, updateData } = req.body;
     // needs to be rewritten perhaps with helper methods //
+    console.log(contactPostArchiveStatus)
     if (contactPostArchiveStatus) {
       const { status } = contactPostArchiveStatus;
       return ContactPost.findOneAndUpdate(

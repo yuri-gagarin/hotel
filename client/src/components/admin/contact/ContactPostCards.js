@@ -1,7 +1,7 @@
 // @flow 
 import * as React from "react";
 // semantic ui comps //
-import { Button, Card, Icon, Popup } from "semantic-ui-react";
+import { Button, Card, Header, Icon, Popup, Segment } from "semantic-ui-react";
 import { CardInfo } from "./CardInfo";
 // types //
 import type { ContactPostState, ContactPostData } from "../../../redux/reducers/contact_posts/flowTypes";
@@ -25,6 +25,8 @@ export const ContactPostCards = ({ contactPostState, openContactPost, handleCont
   return (
     <Card.Group style={{ width: "100%" }}>
       {
+        (contactPostState.createdContactPosts.length > 0) 
+        ?
         contactPostState.createdContactPosts.map((post) => {
           return (
             <Card className={ `${styles.contactPostCard} ${ post._id === contactPostData._id ? styles.contactPostCardActive : "" } ${ post.archived ? styles.contactPostCardArchived : "" }` } key={ post._id } fluid > 
@@ -98,6 +100,12 @@ export const ContactPostCards = ({ contactPostState, openContactPost, handleCont
             </Card>
           )
         })
+        : <Segment placeholder style={{ width: "100%" }}>
+            <Header icon>
+              <Icon name='search' />
+              No data matched your query
+            </Header>
+          </Segment>
       }
     </Card.Group>
   )

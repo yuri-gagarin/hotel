@@ -128,18 +128,29 @@ export const handleUpdateContactPost = (dispatch: Dispatch<ContactPostAction>, u
   dispatch(sendContactPostRequest());
   return axios(requestOptions)
     .then((response) => {
+      let updatedContactPostsArr: Array<ContactPostData>; let updatedContactPostData: ContactPostData;
       const { status, data } = response;
       const { responseMsg, updatedContactPost } : { responseMsg: string, updatedContactPost: ContactPostData } = data;
-
-      const updatedContactPosts = contactPostState.createdContactPosts.map((contactPost) => {
-        if (contactPost._id === updatedContactPost._id) {
-          return updatedContactPost;
-        } else {
-          return contactPost;
-        }
-      });
-
-      const stateUpdate = { status, responseMsg, updatedContactPost, updatedContactPosts };
+      // check if post was archived or unarchived //
+      // in that case the post should be removed from state //
+      // otherwise contactPostData and createdContactPosts //
+      console.log(archived)
+      console.log(typeof archived)
+      if (typeof archived === "boolean") {
+        updatedContactPostsArr = contactPostState.createdContactPosts.filter((post) => post._id !== updatedContactPost._id);
+        updatedContactPostData = generateEmptyContactPost();
+      } else {
+        updatedContactPostsArr = contactPostState.createdContactPosts.map((contactPost) => {
+          if (contactPost._id === updatedContactPost._id) {
+            return updatedContactPost;
+          } else {
+            return contactPost;
+          }
+        });
+        updatedContactPostData = updatedContactPost;
+      }
+    
+      const stateUpdate = { status, responseMsg, updatedContactPost: updatedContactPostData, updatedContactPosts: updatedContactPostsArr };
       dispatch(updateContactPost(stateUpdate));
       return Promise.resolve(true);
     })
