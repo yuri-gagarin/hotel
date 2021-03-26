@@ -1,39 +1,37 @@
-import React from 'react'
+// @flow
+import * as React from 'react'
 import { Button, Card, Image } from 'semantic-ui-react';
+// types //
+import type { DiningEntertainmentState, DiningEntModelData } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // helpers //
-import { setImagePath } from "../../helpers/displayHelpers";
+import { setImagePath, trimStringToSpecificLength } from "../../helpers/displayHelpers";
 
-const DiningEntertainmentContainer = (props) => {
-  const { diningModel, openDiningModel, deleteDiningModel } = props;
-  const diningModelId = diningModel._id;
-  let firstDiningModelImagePath, imgSourcePath, imgPath;
+type Props = {
+  diningEntModel: DiningEntModelData,
+  openDiningEntModel: (modelId: string) => void,
+  deleteDiningEntModel: (modelIdToDelete: string) => Promise<boolean>
+}
+const DiningEntertainmentContainer = ({ diningEntModel, openDiningEntModel, deleteDiningEntModel } : Props): React.Node => {
 
-  if (diningModel.images[0]) {
-    firstDiningModelImagePath = diningModel.images[0].path;
-    imgSourcePath = setImagePath(firstDiningModelImagePath);
-  } else {
-    imgPath = "/assets/images/dining/restaurant_stock3.jpeg";
-  }
- 
   return (
     <Card >
       <Card.Content textAlign="center">
-        <Card.Header>{diningModel.title}</Card.Header>
+        <Card.Header>{diningEntModel.title}</Card.Header>
         <Image
           rounded
           size="big"
-          src={imgPath}
+          src={setImagePath(diningEntModel.images[0].path)}
         />
         <Card.Description>
-          {diningModel.description}
+          { trimStringToSpecificLength(diningEntModel.description, 15)}
         </Card.Description>
       </Card.Content>
       <Card.Content extra>
         <div className='ui two buttons'>
-          <Button basic color='green' onClick={() => openDiningModel(diningModelId)}>
+          <Button basic color='green' onClick={() => openDiningEntModel(diningEntModel._id)}>
             Open
           </Button>
-          <Button basic color='red' onClick={() => deleteDiningModel(diningModelId)}>
+          <Button basic color='red' onClick={() => deleteDiningEntModel(diningEntModel._id)}>
             Delete
           </Button>
         </div>

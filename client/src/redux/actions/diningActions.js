@@ -233,7 +233,7 @@ export const handleFetchDiningModels = (dispatch: Dispatch<DiningEntModelAction>
     });
 };
 
-export const handeUpdateDiningModel = (dispatch: Dispatch<DiningEntModelAction>, clientFormData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState): Promise<boolean> => {
+export const handleUpdateDiningModel = (dispatch: Dispatch<DiningEntModelAction>, clientFormData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState): Promise<boolean> => {
   const { _id: diningModelId } = clientFormData;
   const { diningEntModelData, diningEntImages, createdDiningEntModels } = currentDiningEntState;
   const requestOptions = {

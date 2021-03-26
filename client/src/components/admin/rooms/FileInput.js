@@ -5,13 +5,16 @@ import { Button } from "semantic-ui-react";
 import ImgUploadControls from "../shared/ImgUploadControls";
 //
 import type { ServiceState } from "../../../redux/reducers/service/flowTypes";
+import type { DiningEntertainmentState } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // css an styles //
 import styles from "./css/fileInput.module.css";
 
+type UnionState = (DiningEntertainmentState | ServiceState);
+
 type Props = {
-  uploadImage: (data: FormData, currentState: ServiceState) => Promise<boolean>,
+  uploadImage: <S>(data: FormData, currentState: S) => Promise<boolean>,
   dataName: "roomImage" | "serviceImage" | "diningImage",
-  modelState: ServiceState
+  modelState: UnionState
 }
 type LocalState = {
   file:  | null,

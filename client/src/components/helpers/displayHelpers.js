@@ -19,10 +19,13 @@ export const simplifyPath = (path: string): string => {
 
 
 export const setImagePath = (path?: string): string => {
-  if (!path) return "";
-  const imagePathArr = path.split("/");
-  return "/" + imagePathArr.slice(1).join("/")
-}
+  if (path && typeof path === "string" && path.length > 0) {
+    const imagePathArr = path.split("/");
+    return "/" + imagePathArr.slice(1).join("/")
+  } else {
+    return "/assets/images/roomStock1.jpeg";
+  }    
+};
 
 /**
  * Trims string to specific length.

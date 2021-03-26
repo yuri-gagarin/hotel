@@ -1,53 +1,49 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import {
-  Button,
-  Form,
-  Input,
-  TextArea
-} from "semantic-ui-react";
+// @flow
+import * as React from "react";
+import { Button, Input, Form, TextArea } from "semantic-ui-react";
 // additional component imports  //
 import DiningEntertainmentImageThumb from "./DiningEntertainmentImgThumb";
 import DiningEntertainmentTypeDropdown from "./form_components/DiningEntertainmentTypeDropdown";
 import FileInput from "../rooms/FileInput";
 // redux imports  //
 import { connect } from "react-redux";
-import { 
-  uploadDiningModelImage,
-  deleteDiningModelImage,
-  handleNewDiningModel,
-  updateDiningModel,
-  setPreviewImages
-} from "../../../redux/actions/diningActions";
+import { handleUploadDiningModelImage, handleDeleteDiningModelImage, handleCreateDiningModel, handleUpdateDiningModel } from "../../../redux/actions/diningActions";
+// types //
+import type { DiningEntertainmentState, DiningImgData, MenuImageData, ClientDiningEntFormData, DiningEntModelAction } from "../../../redux/reducers/dining_entertainment/flowTypes";
+import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
+import type { RouterHistory } from "react-router-dom";
 // helpers //
+import { objectValuesEmpty } from "../../helpers/displayHelpers";
 
-const DiningEntertainmentForm = (props) => {
-  const { 
-    diningState, 
-    history,
-    uploadDiningModelImage, 
-    deleteDiningModelImage,
-    handleNewDiningModel, 
-    updateDiningModel, 
-    setPreviewImages
-  } = props;
-  const { diningModelData = {}, diningModelImages } = diningState;
 
-  const initialFormState = {
-    title: diningModelData.title || "",
-    hours: diningModelData.hours || "",
-    description: diningModelData.description || ""
-  };
+type OwnProps = {
+  diningEntState: DiningEntertainmentState,
+  history: RouterHistory
+};
+// from <connectDispatchToProps> //
+type Props = {
+  ...OwnProps,
+  _handleUploadDiningModelImage: <DiningEntertainmentState>(file: FormData, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>,
+  _handleDeleteDiningModelImage: (imageId: string, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>,
+  _handleCreateDiningModel: (modelCreateData: ClientDiningEntFormData) => Promise<boolean>,
+  _handleUpdateDiningModel: (modelUpdateData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>
+};
+
+const DiningEntertainmentForm = ({ diningEntState, history, _handleUploadDiningModelImage, _handleDeleteDiningModelImage, _handleCreateDiningModel, _handleUpdateDiningModel }: Props): React.Node => {
+  const { useEffect, useState } = React;
+  const { diningEntModelData } = diningEntState;
 
   // local form state //
-  const [ diningModelDetails, setDiningModelDetails ] = useState(initialFormState);
+  const [ diningModelDetails, setDiningModelDetails ] = useState({ ...diningEntModelData });
 
+  /*
   useEffect(() => {
     if (diningModelData && diningModelData.images && Array.isArray(diningModelData.images)) {
       // set the images array //
       setPreviewImages(diningModelData.images);
     }
   }, []);
+  */
   
   // text input handlers //
   const handleDiningModelTitle = (_e, data) => {
@@ -77,47 +73,32 @@ const DiningEntertainmentForm = (props) => {
   };
   
   const handleFormSubmit = () => {
-    const diningModelId = diningState.diningModelData._id;
-    const createdDiningModels = diningState.createdDiningModels;
+    const {  _id: modelId } = diningEntModelData;
+    const { createdDiningEntModels, menuImages, diningEntImages } = diningEntState;
 
-    const diningModelImages = diningState.diningModelImages.map((img) => img._id );
-    const diningModelData = {
+    const diningModelData: ClientDiningEntFormData = {
       ...diningModelDetails,
-      images: diningModelImages
+      images: diningEntImages,
+      menuImages: menuImages
     };
 
-    if (!diningModelId) {
+    if (!modelId) {
       // new model being created //
-      handleNewDiningModel(diningModelData, history)
+      return _handleCreateDiningModel(diningModelData)
         .then((success) => {
-          if (success) {
-            history.push("/admin/dining_entertainment");
-          } else {
-            return;
-          }
+          if (success) history.push("/admin/dining_entertainment");
         });
     } else {
       // existing model being edited with existing data //
-      const diningModelImages = { currentImages: diningState.diningModelImages };
-      updateDiningModel({ ...diningModelData, _id: diningModelId }, diningModelImages, createdDiningModels)
+      return _handleUpdateDiningModel(diningModelData, diningEntState)
         .then((success) => {
-          if (success) {
-            history.push("/admin/dining_entertainment");
-          } else {
-            return;
-          }
+          if (success) history.push("/admin/dining_entertainment");
         });
     }
   };  
 
-  const handleImageDelete = (imageId) => {
-    const { diningModelImages } = diningModelState;
-    const confirm = window.confirm("Are you Sure?");
-    if (confirm) {
-      deleteDiningModelImage(imageId, diningModelImages);
-    } else {
-      return;
-    }
+  const handleImageDelete = (imageId: string) => {
+    return _handleDeleteDiningModelImage(imageId, diningEntState);
   };
 
   return (
@@ -127,15 +108,15 @@ const DiningEntertainmentForm = (props) => {
           control={Input}
           label='Title'
           placeholder="Name or title of dining/entertainment option"
-          onChange={handleDiningModelTitle}
-          value={diningModelDetails.title}
+          onChange={ handleDiningModelTitle }
+          value={diningModelDetails.title }
         />
         <Form.Field
           control={Input}
           label='Hours'
           placeholder='Hours available ...'
-          onChange={handleDiningModelHours}
-          value={diningModelDetails.hours}
+          onChange={ handleDiningModelHours } 
+          value={ diningModelDetails.hours }
         />
       </Form.Group>
       <DiningEntertainmentTypeDropdown 
@@ -151,9 +132,9 @@ const DiningEntertainmentForm = (props) => {
         value={diningModelDetails.description}
 
       />
-      <FileInput uploadImage={uploadDiningModelImage} dataName={"diningModelImage"} />
+      <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } />
       { 
-        diningModelImages.map((diningModelImg) => {
+        diningEntState.diningEntImages.map((diningModelImg) => {
           return (
             <DiningEntertainmentImageThumb 
               key={diningModelImg._id} 
@@ -174,40 +155,29 @@ const DiningEntertainmentForm = (props) => {
   )
 };
 
-DiningEntertainmentForm.propTypes = {
-  history: PropTypes.object.isRequired,
-  uploadDiningModelImage: PropTypes.func.isRequired,
-  deleteDiningModelImage: PropTypes.func.isRequired,
-  setPreviewImages: PropTypes.func.isRequired,
-  handleNewDiningModel: PropTypes.func.isRequired,
-  updateDiningModel: PropTypes.func.isRequired
-}
-
 // redux functionality //
-const mapStateToProps = (state) => {
+
+const mapDispatchToProps = (dispatch: Dispatch<DiningEntModelAction>) => {
   return {
-    diningState: state.diningState
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    uploadDiningModelImage: (imageData) => {
-      return uploadDiningModelImage(dispatch, imageData);
+    _handleUploadDiningModelImage: (imageData: FormData, currentDiningEntState: DiningEntertainmentState) => {
+      return handleUploadDiningModelImage(dispatch, imageData, currentDiningEntState);
     },
-    deleteDiningModelImage: (imageId, oldImageState) => {
-      return deleteDiningModelImage(dispatch, imageId, oldImageState);
+    _handleDeleteDiningModelImage: (imageId: string, currentDiningEntState: DiningEntertainmentState) => {
+      return handleDeleteDiningModelImage(dispatch, imageId, currentDiningEntState);
     },
+    /*
     setPreviewImages: (previewImages) => {
       return setPreviewImages(previewImages);
     },
-    handleNewDiningModel: (diningModelData, history) => {
-      return handleNewDiningModel(dispatch, diningModelData, history);
+    */
+    _handleCreateDiningModel: (diningModelData: ClientDiningEntFormData) => {
+      return handleCreateDiningModel(dispatch, diningModelData);
     },
-    updateDiningModel: (diningModelData, diningModelImages, currentDiningModels) => {
-      return updateDiningModel(dispatch, diningModelData, diningModelImages, currentDiningModels);
+    _handleUpdateDiningModel: (diningModelData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState) => {
+      return handleUpdateDiningModel(dispatch, diningModelData, currentDiningEntState);
     }
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DiningEntertainmentForm);
+export default (connect(null, mapDispatchToProps)(DiningEntertainmentForm): React.AbstractComponent<OwnProps>);
 

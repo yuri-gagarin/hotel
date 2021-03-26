@@ -1,34 +1,22 @@
-import React from "react";
+// @flow
+import * as React from "react";
 import { Image, Icon } from "semantic-ui-react";
+// styles and css //
+import styles from "./css/diningEntertainmentImgThumb.module.css";
+// types //
+import type { DiningImgData } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
 
-const diningModelImageThumbStyle = {
-  border: "1px solid grey",
-  borderRadius: "5px",
-  padding: "0.5em",
-  position: "relative",
-  display: "inline-block",
-  marginTop: "0.5em",
-  marginRight: "0.5em"
-};
-const deleteIconStyle = {
-  fontSize: "35px",
-  position: "absolute",
-  top: "-15%",
-  right: "-15%",
-  cursor: "pointer",
-  color: "red",
-  zIndex: "999"
-};
-
-const DiningEntertainmentImageThumb = (props) => {
-  const { diningModelImage, handleImageDelete } = props;
-
+type Props = {
+  diningModelImage: DiningImgData,
+  handleImageDelete: (imageIdToDelete: string) => Promise<boolean>
+}
+const DiningEntertainmentImageThumb = ({ diningModelImage, handleImageDelete } : Props): React.Node => {
   //
   return (
-    <div style={diningModelImageThumbStyle}>
-      <Icon name="trash" style={deleteIconStyle} onClick={() => handleImageDelete(diningModelImage._id)}></Icon>
+    <div className={ styles.diningModelImageThumbStyle }>
+      <Icon className={ styles.deleteIconStyle }  name="trash" conClick={() => handleImageDelete(diningModelImage._id)}></Icon>
       <Image src={setImagePath(diningModelImage.path)} size="small"></Image>
     </div>
   )

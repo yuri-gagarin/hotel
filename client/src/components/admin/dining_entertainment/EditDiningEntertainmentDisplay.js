@@ -1,21 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
+// @flow
+import * as React from "react";
 import DiningEntertainmentForm from "./DiningEntertainmentForm";
+// types //
+import type { DiningEntModelData, DiningEntertainmentState } from "../../../redux/reducers/dining_entertainment/flowTypes";
+import type { RouterHistory } from "react-router-dom";
 
-const EditDiningEntertainmentDisplay = (props) => {
-  const { diningModel, history } = props;
+type Props = {
+  diningEntState: DiningEntertainmentState,
+  history: RouterHistory
+};
+
+const EditDiningEntertainmentDisplay = ({ diningEntState, history } : Props): React.Node => {
+  const { diningEntModelData } = diningEntState;
   return (
     <div>
       <hr />
-      <h3>Editing {diningModel.title ? diningModel.title : "No Name"}</h3>
-        <DiningEntertainmentForm history={history} />
+      <h3>Editing { diningEntModelData.title ?  diningEntModelData.title : "No Name"}</h3>
+        <DiningEntertainmentForm history={history} diningEntState={ diningEntState } />
       <hr />
     </div>
   )
-};
-// PropTypes validations //
-EditDiningEntertainmentDisplay.propTypes = {
-  diningModel: PropTypes.object.isRequired
 };
 
 export default EditDiningEntertainmentDisplay;

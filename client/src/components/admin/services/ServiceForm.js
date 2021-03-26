@@ -25,7 +25,7 @@ type Props = {|
   serviceState: ServiceState,
   handleNewService: (serviceData: ClientServiceFormData, history: RouterHistory) => Promise<boolean>,
   updateHotelService: (serviceData: ClientServiceFormData, serviceState: ServiceState) => Promise<boolean>,
-  uploadServiceImage: (file: FormData, currentServiceState: ServiceState) => Promise<boolean>,
+  uploadServiceImage: <ServiceState>(file: FormData, currentServiceState: ServiceState) => Promise<boolean>,
   deleteServiceImage: (imageId: string, currentServiceState: ServiceState) => Promise<boolean>,
   setServicesImages: (serviceImages: Array<ServiceImgData>) => void 
 |}
@@ -35,7 +35,7 @@ const ServiceForm = (props: Props): React.Node => {
   const { serviceData, serviceImages } = serviceState;
 
   // local form state //
-  const [ serviceDetails, setServiceDetails ] = React.useState(serviceData);
+  const [ serviceDetails, setServiceDetails ] = React.useState({ ...serviceData });
   const [ deleteImgModalState, setDeleteImgModalState ] = React.useState({ modalOpen: false, imgIdToDelete: "" });
   React.useEffect(() => {
     if (serviceData && serviceData.images && Array.isArray(serviceData.images)) {

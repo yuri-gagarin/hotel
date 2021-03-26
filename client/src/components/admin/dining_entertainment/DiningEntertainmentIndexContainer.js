@@ -26,43 +26,43 @@ export type RouterProps = {
 };
 export type Props = {
   ...RouterProps,
-  handleFetchDiningModels: () => Promise<void>,
-  handleOpenDiningModel: (idToOpen: string, diningEntModelState: DiningEntertainmentState) => void,
-  handleClearDiningModelData: () => void,
-  handleDeleteDiningModel: (modelIdToDelete: string, diningEntModelState: DiningEntertainmentState) => Promise<boolean>
+  _handleFetchDiningModels: () => Promise<void>,
+  _handleOpenDiningModel: (idToOpen: string, diningEntModelState: DiningEntertainmentState) => void,
+  _handleClearDiningModelData: () => void,
+  _handleDeleteDiningModel: (modelIdToDelete: string, diningEntModelState: DiningEntertainmentState) => Promise<boolean>
 };
 
 const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   const { useEffect, useState } = React;
   const { adminState, diningEntertainmentState, history } = props;
-  const { handleFetchDiningModels, handleOpenDiningModel, handleClearDiningModelData, handleDeleteDiningModel } = props;
+  const { _handleFetchDiningModels, _handleOpenDiningModel, _handleClearDiningModelData, _handleDeleteDiningModel } = props;
   //const [ diningModelInfoOpen, setDiningModelInfoOpen ] = useState(false);
   //const [ newDiningModelFormOpen, setNewDiningModelFormOpen ] = useState(false);
   const { diningEntModelData, createdDiningEntModels } = diningEntertainmentState;
 
 
   useEffect(() => {
-   handleFetchDiningModels();
+   _handleFetchDiningModels();
   }, []);
 
   const openNewDiningModelForm = () => {
-    handleClearDiningModelData();
+    _handleClearDiningModelData();
     history.push("/admin/dining_entertainment/new");
     // setNewDiningModelFormOpen(true);
     // setDiningModelInfoOpen(false);
   };
   const goBackToDiningModels = () => {
-    handleClearDiningModelData();
+    _handleClearDiningModelData();
     history.push("/admin/dining_entertainment");
     // setNewDiningModelFormOpen(false);
   };
   const openDiningModel = (diningModelId: string) => {
-    handleOpenDiningModel(diningModelId, diningEntertainmentState);
+    _handleOpenDiningModel(diningModelId, diningEntertainmentState);
     history.push("/admin/dining_entertainment/edit");
     //setDiningModelInfoOpen(true);
   };
   const deleteDiningModel = (diningModelId) => {
-    handleDeleteDiningModel(diningModelId, diningEntertainmentState);
+    return _handleDeleteDiningModel(diningModelId, diningEntertainmentState);
     // setDiningModelInfoOpen(false);
   };
 
@@ -87,9 +87,9 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
                 return ( 
                   <DiningEntertainmentContainer 
                     key={diningModel._id} 
-                    diningModel={diningModel}
-                    openDiningModel={openDiningModel}
-                    deleteDiningModel={deleteDiningModel}
+                    diningEntModel={diningModel}
+                    openDiningEntModel={openDiningModel}
+                    deleteDiningEntModel={deleteDiningModel}
                     history={history}
                   />
                 );
@@ -107,7 +107,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={14}>
-            <DiningEntertainmentForm history={history} />
+            <DiningEntertainmentForm diningEntState={ diningEntertainmentState } history={history} />
           </Grid.Column>
         </Grid.Row>
       </Route>
@@ -117,7 +117,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
             <Button onClick={goBackToDiningModels}>Back</Button>
           </Grid.Column>
         </Grid.Row>
-        <DiningEntertainmentDisplay diningModel={ diningEntModelData } history={ history } />
+        <DiningEntertainmentDisplay diningEntState={ diningEntertainmentState } history={ history } />
       </Route>
     </React.Fragment>
   );
@@ -126,16 +126,16 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
 
 const mapDispatchToProps = (dispatch: Dispatch<DiningEntModelAction>) => {
   return {
-    handleFetchDiningModels: () => {
+    _handleFetchDiningModels: () => {
       return handleFetchDiningModels(dispatch);
     },
-    handleClearDiningModelData: () => {
+    _handleClearDiningModelData: () => {
       return handleClearDiningModelData(dispatch);
     },
-    handleOpenDiningModel: (modelId: string, diningEntState: DiningEntertainmentState) => {
+    _handleOpenDiningModel: (modelId: string, diningEntState: DiningEntertainmentState) => {
       return handleOpenDiningModel(dispatch, modelId, diningEntState);
     },
-    handleDeleteDiningModel: (modelId: string, diningEntState: DiningEntertainmentState) => {
+    _handleDeleteDiningModel: (modelId: string, diningEntState: DiningEntertainmentState) => {
       return handleDeleteDiningModel(dispatch, modelId, diningEntState);
     }
   };

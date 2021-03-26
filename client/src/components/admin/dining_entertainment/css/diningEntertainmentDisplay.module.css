@@ -1,0 +1,27 @@
+.metaStyle {
+  border: 2px solid grey;
+  padding: 0.5em;
+  margin-right: 0.5em;
+  margin-bottom: 0.5em;
+  display: inline-block;
+}
+
+.diningModelDescription {
+  border: 2px solid grey;
+  padding: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  font-size: 18px;
+}
+
+.diningModelImage {
+  border: 1px solid grey;
+  margin-right: 0.5em;
+  margin-bottom: 1em;
+  display: inline-block;
+}
+
+.formButton {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}

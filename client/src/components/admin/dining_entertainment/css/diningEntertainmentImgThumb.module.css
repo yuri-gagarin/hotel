@@ -1,0 +1,19 @@
+.diningModelImageThumbStyle {
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 0.5em;
+  position: relative;
+  display: inline-block;
+  margin-top: 0.5em;
+  margin-right: 0.5em;
+}
+
+.deleteIconStyle {
+  font-size: 35px;
+  position: absolute;
+  top: -15%;
+  right: -15%;
+  cursor: pointer;
+  color: red;
+  z-index: 999;
+};
