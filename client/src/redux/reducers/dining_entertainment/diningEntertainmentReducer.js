@@ -1,159 +1,162 @@
-import { diningModelConstants } from "../../constants";
-const {
-  DINING_MODEL_REQUEST,
-  DINING_MODEL_CREATED,
-  DINING_MODEL_UPDATED,
-  DINING_MODEL_DELETED,
-  DINING_MODEL_ERROR,
-  DINING_MODEL_IMG_REQUEST,
-  DINING_MODEL_IMG_UPLOADED,
-  DINING_MODEL_IMG_DELETED,
-  DINING_MODEL_IMG_ERROR,
-  SET_DINING_MODELS,
-  SET_PREVIEW_IMAGES,
-  CLEAR_DINING_MODEL_DATA,
-  ADD_DINING_MODEL_TO_STATE,
-  OPEN_DINING_MODEL
-} = diningModelConstants;
-
-const initialState = {
-  status: status,
+// @flow
+import { generateEmptyDiningEntModel } from "../_helpers/emptyDataGenerators";
+import type { DiningEntertainmentState, DiningEntModelAction } from "./flowTypes";
+const initialState: DiningEntertainmentState = {
+  status: 0,
   loading: false,
   responseMsg: "",
-  diningModelData: {},
-  diningModelImages: [],
-  diningModelMenuImages: [],
-  createdDiningModels: [],
-  numberOfDiningModels: 0,
+  diningEntModelData: generateEmptyDiningEntModel(),
+  diningEntImages: [],
+  menuImages: [],
+  createdDiningEntModels: [],
+  numberOfDiningEntModels: 0,
   error: null
 }
 
-const diningModelReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case ADD_DINING_MODEL_TO_STATE: {
+const diningModelReducer = (state: DiningEntertainmentState = initialState, action: DiningEntModelAction): DiningEntertainmentState => {
+  switch (action.type) {
+    case "DiningEntModelAPIRequest": {
       return {
         ...state,
-        createdDiningModels: [ ...state.createdDiningModels, payload.newDiningModel ]
-      };
-    };
-    case SET_DINING_MODELS: {
-      return {
-        ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        createdDiningModels: [ ...payload.createdDiningModels ],
-        numberOfDiningModels: payload.createdDiningModels.length,
-        error: payload.error
-      };
-    };
-    case CLEAR_DINING_MODEL_DATA: {
-      return {
-        ...state,
-        loading: payload.loading,
-        diningModelData: { ...payload.diningModelData },
-        diningModelImages: [ ...payload.diningModelImages ],
-        error: payload.error
-      };
-    };
-    case SET_PREVIEW_IMAGES: {
-      return {
-        ...state,
-        loading: payload.loading,
-        diningModelImages: [ ...payload.diningModelImages ],
+        status: action.payload.status,
+        loading: action.payload.loading,
         error: null
       };
     };
-    case OPEN_DINING_MODEL: {
+    case "SetDiningEntModels": {
       return {
         ...state,
-        loading: payload.loading,
-        diningModelData: { ...payload.diningModelData },
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        createdDiningEntModels: action.payload.createdDiningEntModels,
+        numberOfDiningModels: action.payload.numberOfDiningEntModels,
+        error: null
       };
     };
-    case DINING_MODEL_REQUEST: {
+    case "ClearDiningEntModelData": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        error: payload.error
+        diningEntModelData: action.payload.diningEntModelData,
+        diningEntImages: action.payload.diningEntImages,
+        error: null
       };
     };
-    case DINING_MODEL_CREATED: {
+    case "SetDiningEntModelImages": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        error: payload.error
+        diningEntImages: action.payload.diningEntImages,
+        error: null
       };
     };
-    case DINING_MODEL_UPDATED: {
+    case "OpenDiningEntModel": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        diningModelData: { ...payload.diningModelData },
-        createdDiningModels: [ ...payload.createdDiningModels ],
-        diningModelImages: [ ...payload.diningModelImages ],
-        error: payload.error
+        diningEntModelData: action.payload.diningEntModelData,
+        error: null
       };
     };
-    case DINING_MODEL_DELETED: {
+    case "DiningEntModelCreated": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        diningModelData: { ...payload.diningModelData },
-        diningModelImages: [ ...payload.diningModelImages ],
-        createdDiningModels: [ ...payload.createdDiningModels ],
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        diningEntModelData: action.payload.newDiningEntModelData,
+        createdDiningEntModels: [ ...state.createdDiningEntModels, { ...action.payload.newDiningEntModelData } ],
+        error: null
       };
     };
-    case DINING_MODEL_ERROR: {
+    case "DiningEntModelUpdated": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        error: payload.error
-      }
-    }
-    case DINING_MODEL_IMG_REQUEST: {
-      return {
-        ...state,
-        loading: payload.loading,
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        diningEntImages: [ ...action.payload.updatedDiningEntModelData.images ],
+        menuImages: [ ...action.payload.updatedDiningEntModelData.menuImages ],
+        diningEntModelData: { ...action.payload.updatedDiningEntModelData },
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        error: null
       };
     };
-    case DINING_MODEL_IMG_UPLOADED: {
+    case "DiningEntModelDeleted": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        diningModelImages: [ ...state.diningModelImages, payload.newImage ],
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        diningEntImages: [],
+        menuImages: [],
+        diningEntModelData: generateEmptyDiningEntModel(),
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        numberOfDiningEntModels: action.payload.numberOfDiningEntModels,
+        error: null
+      };
+    };
+    case "DiningEntModelImgUplSuccess": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        diningModelImages: action.payload.diningEntImages,
+        diningEntModelData: { ...action.payload.updatedDiningEntModel },
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        error: null
       };
     };  
-    case DINING_MODEL_IMG_DELETED: {
+    case "DiningEntModelImgDelSuccess": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        diningModelImages: [ ...payload.diningModelImages ],
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        diningModelImages: action.payload.diningEntImages,
+        diningEntModelData: { ...action.payload.updatedDiningEntModel },
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        error: null
       };
     };
-    case DINING_MODEL_IMG_ERROR: {
+    case "DiningEntModelError": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        error: action.payload.error
+      };
+    };
+    case "TakeDiningEntModelOnline": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        diningEntModelData: { ...action.payload.updatedDiningEntModel },
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        error: null
+      };
+    };
+    case "TakeDiningEntModelOffline": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        diningEntModelData: { ...action.payload.updatedDiningEntModel },
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        error: null
+      };
+    };
+    case "ToggleAllDiningEntModelsOnlineOffline": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        error: null
       };
     };
     default: {

@@ -75,6 +75,7 @@ export type DiningEntModelError = {
   +type: "DiningEntModelError",
   payload: {
     status: number,
+    loading: boolean,
     responseMsg: string,
     error: any
   }
@@ -116,8 +117,8 @@ export type DiningEntModelImgUplSuccess = {
     loading: boolean,
     responseMsg: string,
     diningEntImages: Array<DiningImgData>,
-    updatedDiningEntModelsArr: DiningEntModelData,
-    createdDiningEntModels: Array<DiningEntModelData>
+    updatedDiningEntModel: DiningEntModelData,
+    updatedDiningEntModelsArr: Array<DiningEntModelData>
   }
 };
 export type DiningEntModelImgDelSuccess = {

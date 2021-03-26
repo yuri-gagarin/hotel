@@ -1,6 +1,7 @@
 // @flow
 import type { ServiceData } from "../service/flowTypes";
 import type { ContactPostData } from "../contact_posts/flowTypes";
+import type { DiningEntModelData } from "../dining_entertainment/flowTypes";
 
 export const generateEmptyService = (): ServiceData => {
   return {
@@ -28,6 +29,22 @@ export const generateEmptyContactPost = (): ContactPostData => {
     archived: false,
     sentAt: "",
     repliedAt: "",
+    createdAt: "",
+    editedAt: ""
+  };
+};
+
+export const generateEmptyDiningEntModel = (): DiningEntModelData => {
+  return {
+    _id: "",
+    live: false,
+    title: "",
+    hours: "",
+    address: "",
+    description: "",
+    images: [],
+    menuImages: [],
+    optionType: "restaurant",
     createdAt: "",
     editedAt: ""
   };
