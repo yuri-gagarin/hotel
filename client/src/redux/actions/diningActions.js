@@ -1,155 +1,124 @@
+// @flow 
 import axios from "axios";
-import { diningModelConstants } from "../constants";
-const {
-  UPDATE_STATE,
-  CLEAR_DINING_MODEL_DATA,
-  DINING_MODEL_REQUEST,
-  DINING_MODEL_CREATED,
-  DINING_MODEL_UPDATED,
-  DINING_MODEL_DELETED,
-  DINING_MODEL_ERROR,
-  DINING_MODEL_IMG_REQUEST,
-  DINING_MODEL_IMG_UPLOADED,
-  DINING_MODEL_IMG_DELETED,
-  DINING_MODEL_IMG_ERROR,
-  ADD_DINING_MODEL_TO_STATE,
-  SET_DINING_MODELS,
-  SET_PREVIEW_IMAGES,
-  OPEN_DINING_MODEL,
-  CLOSE_DINING_MODEL
-} = diningModelConstants;
-//import history from "../history";
+import type { 
+  DiningEntertainmentState, ClientDiningEntFormData,
+  DiningEntModelAPIRequest, DiningEntModelError, SetDiningEntModels, DiningEntModelCreated, DiningEntModelUpdated, DiningEntModelDeleted, DiningEntModelData,
+  OpenDiningEntModel, ClearDiningEntModelData, DiningImgData, MenuImageData, SetDiningEntModelImages, DiningEntModelImgUplSuccess, DiningEntModelImgDelSuccess, DiningEntModelAction
+} from "../reducers/dining_entertainment/flowTypes";
+import type { Dispatch } from "../reducers/_helpers/createReducer";
+// helpers //
+import { generateEmptyDiningEntModel } from "../reducers/_helpers/emptyDataGenerators";
 
-export const uploadRequest = () => {
+/* API request actions and error handling */
+const diningModelAPIRequest = (): DiningEntModelAPIRequest => {
   return {
-    type: DINING_MODEL_IMG_REQUEST,
+    type: "DiningEntModelAPIRequest",
     payload: {
+      status: 202,
       loading: true,
       error: null
     }
   };
 };
-
-export const diningModelImgUploadSucess = (stateData) => {
+const diningModelError = ({ responseMsg, error } : { responseMsg: string, error: any }): DiningEntModelError => {
   return {
-    type: DINING_MODEL_IMG_UPLOADED,
-    payload: stateData
-  };
-};
-
-export const diningModelImgDeleteSuccess = (stateData) => {
-  return {
-    type: DINING_MODEL_IMG_DELETED,
-    payload: stateData
-  };
-};
-
-export const diningModelImgUploadError = (error) => {
-  return {
-    type: DINING_MODEL_IMG_ERROR,
+    type: "DiningEntModelError",
     payload: {
       status: 500,
-      responseMsg: "An error occured",
+      responseMsg: responseMsg,
+      loading: false,
       error: error
     }
   };
 };
+/* */
 
-export const diningModelRequest = () => {
+/* CRUD actions */
+const diningModelCreated = (stateData: { status: number, responseMsg: string, newDiningEntModelData: DiningEntModelData }): DiningEntModelCreated => {
   return {
-    type: DINING_MODEL_REQUEST,
-    payload: {
-      status: null,
-      loading: true,
-      error: null
-    }
+    type: "DiningEntModelCreated",
+    payload: { ...stateData, loading: false }
   };
 };
 
-export const diningModelCreated = (stateData) => {
+const diningModelUpdated = (stateData: { status: number, responseMsg: string, updatedDiningEntModelData: DiningEntModelData, updatedDiningEntModelsArr: Array<DiningEntModelData> }): DiningEntModelUpdated => {
   return {
-    type: DINING_MODEL_CREATED,
-    payload: stateData
+    type: "DiningEntModelUpdated",
+    payload: { ...stateData, loading: false }
   };
 };
 
-export const addNewDiningModel = (diningModelState) => {
+const diningModelDeleted = (stateData: { status: number, responseMsg: string, updatedDiningEntModelsArr: Array<DiningEntModelData> }): DiningEntModelDeleted => {
   return {
-    type: ADD_DINING_MODEL_TO_STATE,
-    payload: {
-      newDiningModel: diningModelState
-    }
-  };
-};   
-
-export const setDiningModels = (stateData) => {
-  return {
-    type: SET_DINING_MODELS,
-    payload: stateData
+    type: "DiningEntModelDeleted",
+    payload: { ...stateData, loading: false, numberOfDiningEntModels: stateData.updatedDiningEntModelsArr.length }
   };
 };
+/* */
 
-export const diningModelUpdated = (stateData) => {
+/* image upload api actions */
+const diningModelImgUploadSucess = (stateData: { status: number, responseMsg: string, diningEntImages: Array<DiningImgData>, updatedDiningEntModel: DiningEntModelData, updatedDiningEntModelsArr: Array<DiningEntModelData> }): DiningEntModelImgUplSuccess => {
   return {
-    type: DINING_MODEL_UPDATED,
-    payload: stateData
+    type: "DiningEntModelImgUplSuccess",
+    payload: { ...stateData, loading: false }
   };
 };
-
-export const diningModelDeleted = (stateData) => {
+const diningModelImgDeleteSuccess = (stateData: { status: number, responseMsg: string, diningEntImages: Array<DiningImgData>, updatedDiningEntModel: DiningEntModelData, updatedDiningEntModelsArr: Array<DiningEntModelData> }): DiningEntModelImgDelSuccess => {
   return {
-    type: DINING_MODEL_DELETED,
-    payload: stateData
+    type: "DiningEntModelImgDelSuccess",
+    payload: { ...stateData, loading: false }
   };
 };
+/* */
 
-export const diningModelError = (error) => {
-  console.error(error);
+
+/* non API actions */
+const setDiningModels = (stateData: { status: number, responseMsg: string, createdDiningEntModels: Array<DiningEntModelData> }): SetDiningEntModels => {
   return {
-    type: DINING_MODEL_ERROR,
-    payload: {
-      status: 500,
-      error: error
-    }
+    type: "SetDiningEntModels",
+    payload: { ...stateData, loading: false, numberOfDiningEntModels: stateData.createdDiningEntModels.length }
   };
 };
-
-export const openDiningModel = (diningModels, diningModelId) => {
-  const diningModelData = diningModels.filter((diningModel) => diningModel._id == diningModelId)[0];
+const openDiningModel = (stateData: { diningEntImages: Array<DiningImgData>, menuImages: Array<MenuImageData>, diningEntModelData: DiningEntModelData }): OpenDiningEntModel => {
   return {
-    type: OPEN_DINING_MODEL,
-    payload: {
-      loading: false,
-      diningModelData: diningModelData,
-      error: null
-    }
+    type: "OpenDiningEntModel",
+    payload: { ...stateData }
   };
 };
-
-export const setPreviewImages = (diningModelImages = []) => {
+const setPreviewImages = (diningEntImages: Array<DiningImgData>): SetDiningEntModelImages => {
   return {
-    type: SET_PREVIEW_IMAGES,
-    payload: {
-      loading: false,
-      diningModelImages: diningModelImages,
-      error: null
-    }
+    type: "SetDiningEntModelImages",
+    payload: { diningEntImages }
   };
 };
-
-export const clearDiningModelData = () => {
+const clearDiningModelData = (stateData : { diningEntImages: Array<DiningImgData>, menuImages: Array<MenuImageData>, diningEntModelData: DiningEntModelData }): ClearDiningEntModelData => {
   return {
-    type: CLEAR_DINING_MODEL_DATA,
-    payload: {
-      loading: false,
-      diningModelData: {},
-      diningModelImages: [],
-      error: null
-    }
+    type: "ClearDiningEntModelData",
+    payload: { ...stateData }
   };
 };
+/* */
 
-export const uploadDiningModelImage = (dispatch, file) => {
+/* action exports */
+/* non API related requests */
+export const handleOpenDiningModel = (dispatch: Dispatch<DiningEntModelAction>, modelIdToOpen: string, currentDiningEntState: DiningEntertainmentState): void => {
+  const diningEntDataToOpen = currentDiningEntState.createdDiningEntModels.filter((model) => model._id === modelIdToOpen)[0];
+  const stateUpdateData = { 
+    diningEntModelData: { ...diningEntDataToOpen, images: [ ...diningEntDataToOpen.images ], menuImages: [ ...diningEntDataToOpen.menuImages ]},
+    diningEntImages: [ ...diningEntDataToOpen.images ],
+    menuImages: [ ...diningEntDataToOpen.menuImages ]
+  };
+
+  dispatch(openDiningModel(stateUpdateData));
+};
+export const handleClearDiningModelData = (dispatch: Dispatch<DiningEntModelAction>): void => {
+
+  dispatch(clearDiningModelData({ diningEntModelData: generateEmptyDiningEntModel(), diningEntImages: [], menuImages: [] }));
+}
+
+/* API related requests */
+export const handleUploadDiningModelImage = (dispatch: Dispatch<DiningEntModelAction>, file: FormData, currentDiningEntState: DiningEntertainmentState): Promise<boolean> => {
+  const { diningEntImages, createdDiningEntModels } = currentDiningEntState;
   const requestOptions = {
     method: "post",
     url: "/api/uploadDiningModelImage",
@@ -157,182 +126,173 @@ export const uploadDiningModelImage = (dispatch, file) => {
       'content-type': 'multipart/form-data'
     },
     data: file
-  }
-  dispatch(uploadRequest());
+  };
+
+  dispatch(diningModelAPIRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newImage } = data;
-      const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        newImage: newImage,
-        error: null
-      };
+      const { responseMsg, newImage, updatedDiningEntModel } : { responseMsg: string, newImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
+
+      const updatedDiningEntImages = [ ...diningEntImages, newImage ];
+      const updatedDiningEntModelsArr = createdDiningEntModels.map((model) => {
+        if (model._id === updatedDiningEntModel._id) {
+          return { ...updatedDiningEntModel, images: [ ...updatedDiningEntModel.images ], menuImages: [ ...updatedDiningEntModel.menuImages ] };
+        } else {
+          return model;
+        }
+      });
+      const stateData = { status, responseMsg, updatedDiningEntModel, updatedDiningEntModelsArr, diningEntImages: updatedDiningEntImages };
       dispatch(diningModelImgUploadSucess(stateData));
       return Promise.resolve(true);
     })
     .catch((error) => {
-      console.error(error);
-      dispatch(diningModelImgUploadError(error));
+      dispatch(diningModelError({ responseMsg: "An error occured", error: error }));
       return Promise.resolve(false);
     });
 };
 
-export const deleteDiningModelImage = (dispatch, imageId, oldImageState = []) => {
+export const handleDeleteDiningModelImage = (dispatch: Dispatch<DiningEntModelAction>, imageId: string, currentDiningEntState: DiningEntertainmentState): Promise<boolean> => {
+  const { diningEntImages, createdDiningEntModels } = currentDiningEntState;
   const requestOptions = {
     method: "delete",
     url: "/api/deleteDiningModelImage/" + imageId
   };
-  dispatch(uploadRequest());
+
+  dispatch(diningModelAPIRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg } = data;
-      const newImageState = oldImageState.filter((image) => imageId != image._id)
-      const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        diningModelImages: newImageState,
-        error: null
-      };
+      const { responseMsg, deletedImage, updatedDiningEntModel } : { responseMsg: string, deletedImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
+
+      const updatedDiningEntImages = diningEntImages.filter((imgData) => imgData._id !== deletedImage._id);
+      const updatedDiningEntModelsArr = createdDiningEntModels.map((model) => {
+        if (model._id === updatedDiningEntModel._id) {
+          return { ...updatedDiningEntModel, images: [ ...updatedDiningEntModel.images ], menuImages: [ ...updatedDiningEntModel.menuImages ]};
+        } else {
+          return model;
+        }
+      });
+      const stateData = { status, responseMsg, updatedDiningEntModel, updatedDiningEntModelsArr, diningEntImages: updatedDiningEntImages };
       dispatch(diningModelImgDeleteSuccess(stateData));
+      return Promise.resolve(true);
     })
     .catch((error) => {
       console.error(error);
-      dispatch(diningModelImgUploadError(error));
+      dispatch(diningModelError({ responseMsg: "An error occured" , error: error }));
+      return Promise.resolve(false);
     });
-}
+};
 
-export const handleNewDiningModel = (dispatch, diningModelData, history) => {
+export const handleCreateDiningModel = (dispatch: Dispatch<DiningEntModelAction>, clientFormData: ClientDiningEntFormData): Promise<boolean> => {
   const requestOptions = {
     method: "post",
     url: "/api/createDiningModel",
     data: {
-      diningModelData: diningModelData,
+      diningModelData: clientFormData,
     }
   };
-  dispatch(diningModelRequest());
+
+  dispatch(diningModelAPIRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newDiningModel } = data;
-      const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        diningModelData: newDiningModel,
-        diningModelImages: newDiningModel.images,
-        error: null
-      };
+      const { responseMsg, newDiningEntModel } : { responseMsg: string, newDiningEntModel: DiningEntModelData } = data;
+      const stateData = { status, responseMsg, newDiningEntModelData: newDiningEntModel };
+
       dispatch(diningModelCreated(stateData));
-      dispatch(addNewDiningModel(newDiningModel));
-      history.push("/admin/diningModels");
+      return Promise.resolve(true);
     })
     .catch((error) => {
       console.error(error);
-      dispatch(diningModelError(error));
+      dispatch(diningModelError({ responseMsg: "An error occured", error: error }));
+      return Promise.resolve(false);
     });
 };
 
-export const fetchDiningModels = (dispatch) => {
+export const handleFetchDiningModels = (dispatch: Dispatch<DiningEntModelAction>): Promise<boolean> => {
   const requestOptions = {
     method: "get",
     url: "/api/diningModels"
   };
-  dispatch(diningModelRequest());
+
+  dispatch(diningModelAPIRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, diningModels } = data;
-      const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        createdDiningModels: diningModels,
-        error: null
-      };
-      dispatch(setDiningModels(stateData))
+      const { responseMsg, diningEntModels } : { responseMsg: string, diningEntModels: Array<DiningEntModelData> } = data;
+      const stateData = { status, responseMsg, createdDiningEntModels: diningEntModels };
+
+      dispatch(setDiningModels(stateData));
+      return Promise.resolve(true);
     })
     .catch((error) => {
       console.error(error);
-      dispatch(diningModelError(error));
+      dispatch(diningModelError({ responseMsg: "An error occurred", error: error }));
+      return Promise.resolve(false);
     });
 };
 
-export const updateDiningModel = (dispatch, diningModelData, diningModelImages = {}, currentDiningModels = []) => {
-  const diningModelId = diningModelData._id
+export const handeUpdateDiningModel = (dispatch: Dispatch<DiningEntModelAction>, clientFormData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState): Promise<boolean> => {
+  const { _id: diningModelId } = clientFormData;
+  const { diningEntModelData, diningEntImages, createdDiningEntModels } = currentDiningEntState;
   const requestOptions = {
     method: "patch",
-    url: "/api/diningModels/" + diningModelId,
+    url: "/api/diningModels/" + (diningModelId ? diningModelId : ""),
     data: {
-      diningModelData: diningModelData,
-      diningModelImages: diningModelImages
+      diningModelData: clientFormData,
+      diningModelImages: diningEntImages
     }
-  }
-  dispatch(diningModelRequest());
+  };
+
+  dispatch(diningModelAPIRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedDiningModel } = data;
-      const updatedDiningModels = currentDiningModels.map((diningModel) => {
-        if (diningModel._id == updatedDiningModel._id) {
+      const { responseMsg, updatedDiningEntModel } : { responseMsg: string, updatedDiningEntModel: DiningEntModelData }= data;
+      const updatedDiningEntModelsArr = createdDiningEntModels.map((model) => {
+        if (model._id == updatedDiningEntModel._id) {
           return {
-            ...updatedDiningModel
+            ...updatedDiningEntModel, images: [ ...updatedDiningEntModel.images ], menuImages: [ ...updatedDiningEntModel.menuImages ]
           };
         } else {
-          return diningModel;
+          return model;
         }
       })
-      const diningModelStateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        diningModelData: updatedDiningModel,
-        diningModelImages: updatedDiningModel.images,
-        createdDiningModels: updatedDiningModels,
-        error: null
-      };
+      const diningModelStateData = { status, responseMsg, updatedDiningEntModelsArr, updatedDiningEntModelData: updatedDiningEntModel };
+       
       dispatch(diningModelUpdated(diningModelStateData));
+      return Promise.resolve(true);
     })
     .catch((error) => {
       console.error(error);
-      dispatch(diningModelError(error));
+      dispatch(diningModelError({ responseMsg: "An error occurred", error: error }));
+      return Promise.resolve(false);
     })
 };
 
-export const deleteDiningModel = (dispatch, diningModelId, currentDiningModels = []) => {
-  const diningModelImages = currentDiningModels.filter((diningModel) => diningModelId == diningModel._id)[0].images;
+export const handleDeleteDiningModel = (dispatch: Dispatch<DiningEntModelAction>, modelIdToDelete: string, currentDiningEntState: DiningEntertainmentState): Promise<boolean> => {
+  const { createdDiningEntModels } = currentDiningEntState;
   const requestOptions = {
     method: "delete",
-    url: "/api/diningModels/" + diningModelId,
-    data: {
-      diningModelImages: diningModelImages
-    }
+    url: "/api/diningModels/" + modelIdToDelete,
   };
-  dispatch(diningModelRequest());
+
+  dispatch(diningModelAPIRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedDiningModel } = data;
-      const updatedDiningModels = currentDiningModels.filter((diningModel) => {
-        return deletedDiningModel._id != diningModel._id;
-      });
-      const diningModelStateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        diningModelData: {},
-        diningModelImages: [],
-        createdDiningModels: updatedDiningModels,
-        error: null
-      };
-      dispatch(diningModelDeleted(diningModelStateData));
+      const { responseMsg, deletedDiningEntModel } : { responseMsg: string, deletedDiningEntModel: DiningEntModelData } = data;
+      const updatedDiningEntModelsArr = createdDiningEntModels.filter((model) => model._id !== deletedDiningEntModel._id);
+      const updatedStateData = { status, responseMsg, updatedDiningEntModelsArr };
+
+      dispatch(diningModelDeleted(updatedStateData));
+      return Promise.resolve(true);
     })
     .catch((error) => {
-      dispatch(diningModelError(error));
+      console.error(error);
+      dispatch(diningModelError({ responseMsg: "An error occured", error: error }));
+      return Promise.resolve(false);
     });
 };
 

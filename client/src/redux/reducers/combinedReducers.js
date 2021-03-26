@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import adminReducer from "../reducers/adminReducer";
 import adminConversation from "./adminConversationsReducer";
-import diningModelReducer from "./diningReducer";
+import diningModelReducer from "./dining_entertainment/diningEntertainmentReducer";
 import roomReducer from "./roomReducer";
 import appGeneralReducer from "./appGeneralReducer";
 import clientReducer from "./clientReducer";

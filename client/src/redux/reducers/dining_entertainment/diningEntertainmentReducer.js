@@ -34,14 +34,6 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
         error: null
       };
     };
-    case "ClearDiningEntModelData": {
-      return {
-        ...state,
-        diningEntModelData: action.payload.diningEntModelData,
-        diningEntImages: action.payload.diningEntImages,
-        error: null
-      };
-    };
     case "SetDiningEntModelImages": {
       return {
         ...state,
@@ -53,6 +45,16 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
       return {
         ...state,
         diningEntModelData: action.payload.diningEntModelData,
+        diningEntImages: action.payload.diningEntImages,
+        menuImages: action.payload.menuImages,
+        error: null
+      };
+    };
+    case "ClearDiningEntModelData": {
+      return {
+        ...state,
+        diningEntModelData: action.payload.diningEntModelData,
+        diningEntImages: action.payload.diningEntImages,
         error: null
       };
     };
@@ -91,6 +93,30 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
         diningEntModelData: generateEmptyDiningEntModel(),
         createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
         numberOfDiningEntModels: action.payload.numberOfDiningEntModels,
+        error: null
+      };
+    };
+    case "MenuImgUplSuccess": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        menuImages: action.payload.updatedMenuImages,
+        dininingEntModelData: { ...action.payload.updatedDiningEntModel },
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        error: null
+      };
+    };
+    case "MenuImgDelSuccess": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        reponseMsg: action.payload.responseMsg,
+        menuImages: action.payload.updatedMenuImages,
+        diningEntModelData: { ...action.payload.updatedDiningEntModel },
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
         error: null
       };
     };

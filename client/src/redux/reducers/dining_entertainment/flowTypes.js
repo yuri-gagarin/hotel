@@ -105,11 +105,35 @@ export type DiningEntModelDeleted = {
     status: number,
     loading: boolean,
     responseMsg: string,
-    deletedDiningEntModelData: DiningEntModelData,
     updatedDiningEntModelsArr: Array<DiningEntModelData>,
     numberOfDiningEntModels: number
   }
 };
+
+export type MenuImgUplSuccess = {
+  +type: "MenuImgUplSuccess",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    updatedMenuImages: Array<MenuImageData>,
+    updatedDiningEntModel: DiningEntModelData,
+    updatedDiningEntModelsArr: Array<DiningEntModelData>
+  }
+};
+
+export type MenuImgDelSuccess = {
+  +type: "MenuImgDelSuccess",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    updatedMenuImages: Array<MenuImageData>,
+    updatedDiningEntModel: DiningEntModelData,
+    updatedDiningEntModelsArr: Array<DiningEntModelData>
+  }
+};
+
 export type DiningEntModelImgUplSuccess = {
   +type: "DiningEntModelImgUplSuccess",
   payload: {
@@ -137,7 +161,8 @@ export type OpenDiningEntModel = {
   +type: "OpenDiningEntModel",
   payload: {
     diningEntModelData: DiningEntModelData,
-    diningEntImages: Array<DiningImgData>
+    diningEntImages: Array<DiningImgData>,
+    menuImages: Array<MenuImageData>
   }
 };
 export type ClearDiningEntModelData = {
@@ -145,6 +170,7 @@ export type ClearDiningEntModelData = {
   payload: {
     diningEntModelData: DiningEntModelData,
     diningEntImages: Array<DiningImgData>,
+    menuImages: Array<MenuImageData>
   }
 };
 export type SetDiningEntModelImages = {
@@ -185,6 +211,6 @@ export type ToggleAllDiningEntModelsOnlineOffline = {
 // union service action type //
 export type DiningEntModelAction = (
   DiningEntModelAPIRequest | SetDiningEntModels | DiningEntModelError | DiningEntModelCreated | DiningEntModelUpdated | DiningEntModelDeleted |
-  DiningEntModelImgUplSuccess | DiningEntModelImgDelSuccess | OpenDiningEntModel | ClearDiningEntModelData | SetDiningEntModelImages |
+  DiningEntModelImgUplSuccess | DiningEntModelImgDelSuccess | MenuImgUplSuccess | MenuImgDelSuccess | OpenDiningEntModel | ClearDiningEntModelData | SetDiningEntModelImages |
   TakeDiningEntModelOnline | TakeDiningEntModelOffline | ToggleAllDiningEntModelsOnlineOffline
 );
