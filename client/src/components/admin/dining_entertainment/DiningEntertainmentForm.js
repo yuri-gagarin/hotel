@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Button, Input, Form, TextArea } from "semantic-ui-react";
+import { Button,Header, Icon, Input, Form, TextArea, Segment } from "semantic-ui-react";
 // additional component imports  //
 import DiningEntertainmentImageThumb from "./DiningEntertainmentImgThumb";
 import DiningEntertainmentTypeDropdown from "./form_components/DiningEntertainmentTypeDropdown";
@@ -12,6 +12,8 @@ import { handleUploadDiningModelImage, handleDeleteDiningModelImage, handleCreat
 import type { DiningEntertainmentState, DiningImgData, MenuImageData, ClientDiningEntFormData, DiningEntModelAction } from "../../../redux/reducers/dining_entertainment/flowTypes";
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { RouterHistory } from "react-router-dom";
+// styles and css //
+import styles from "./css/diningEntertainmentForm.module.css";
 // helpers //
 import { objectValuesEmpty } from "../../helpers/displayHelpers";
 
@@ -132,18 +134,54 @@ const DiningEntertainmentForm = ({ diningEntState, history, _handleUploadDiningM
         value={diningModelDetails.description}
 
       />
-      <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } />
-      { 
-        diningEntState.diningEntImages.map((diningModelImg) => {
-          return (
-            <DiningEntertainmentImageThumb 
-              key={diningModelImg._id} 
-              diningModelImage={diningModelImg} 
-              handleImageDelete={handleImageDelete} 
-            />
-          );
-        })
-      }
+      <div className={ styles.menuImageUploadInputDiv }>
+        <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } textContent={ "Upload menu images" }/>
+        {
+          diningEntState.menuImages.length > 0 
+          ?
+          diningEntState.menuImages.map((imgData) => {
+            return (
+              <DiningEntertainmentImageThumb 
+                key={ imgData._id } 
+                diningModelImage={ imgData } 
+                handleImageDelete={handleImageDelete} 
+              />
+            );
+          })
+          :
+          <Segment textAlign="center">
+            <Header icon>
+              <Icon name='file' />
+                No Images Uploaded. Upload some menu images.
+            </Header>
+          </Segment>
+        }
+      </div>
+      <div className={ styles.diningImageUploadInputDiv}> 
+        <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } textContent={ "Upload general images" } />
+        { 
+          diningEntState.diningEntImages.length > 0 
+          ?
+          diningEntState.diningEntImages.map((diningModelImg) => {
+            return (
+              <DiningEntertainmentImageThumb 
+                key={diningModelImg._id} 
+                diningModelImage={diningModelImg} 
+                handleImageDelete={handleImageDelete} 
+              />
+            );
+          })
+          :
+          <Segment textAlign="center">
+            <Header icon>
+              <Icon name='file' />
+                No Images Uploaded. Upload some descriptive images.
+            </Header>
+          </Segment>
+        }
+      
+      </div>
+      
       <Form.Field style={{marginTop: "0.5em"}}
         id='form-button-control-public'
         control={Button}

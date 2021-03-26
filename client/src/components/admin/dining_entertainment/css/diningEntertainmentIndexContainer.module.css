@@ -1,0 +1,34 @@
+/* no items segment view */
+.defaultNoItemsSegment {
+  width: 100%;
+  text-align: center;
+  min-height: 400px !important;
+}
+
+/* general container styles */
+.headerColumn {
+  border-right: 1px solid grey;
+  border-left: 1px solid grey;
+}
+.buttonsColumn {
+  border: 1px solid rgb(81, 148, 79);
+  border-radius: 3px;
+  padding: 1em;
+}
+.mainViewColumn {
+  border: 1px solid rgb(81, 148, 79);
+  border-radius: 3px;
+  padding: 1em;
+}
+
+/* new form view */
+.newFormControlsColumn {
+  border: 1px solid rgb(81, 148, 79);
+  border-radius: 3px;
+  padding: 1em;
+}
+.newFormColumn {
+  border: 1px solid rgb(81, 148, 79);
+  border-radius: 3px;
+  padding: 1em;
+}

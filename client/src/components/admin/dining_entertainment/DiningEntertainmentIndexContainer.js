@@ -1,20 +1,24 @@
 // @flow 
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Button, Card, Grid, Segment } from "semantic-ui-react";
+import { Button, Card, Grid, Header, Icon, Segment } from "semantic-ui-react";
+// router imports //
+import { withRouter, Route } from "react-router-dom";
 // additional imports //
 import DiningEntertainmentForm from "./DiningEntertainmentForm";
 import DiningEntertainmentDisplay from "./DiningEntertainmentDisplay";
 import DiningEntertainmentContainer from "./DiningEntertainmentContainer";
+import OnlinePopupControls from "../shared/OnlinePopupControls";
 // redux imports //
 import { connect } from "react-redux"; 
 import { handleFetchDiningModels, handleOpenDiningModel, handleDeleteDiningModel, handleClearDiningModelData } from "../../../redux/actions/diningActions";
-// 
+// types //
 import type { Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { DiningEntertainmentState, DiningEntModelAction } from "../../../redux/reducers/dining_entertainment/flowTypes";
 import type { RouterHistory } from "react-router-dom";
-// router imports //
-import { withRouter, Route } from "react-router-dom";
+// styles and css //
+import styles from "./css/diningEntertainmentIndexContainer.module.css";
+
 
 export type OwnProps = {
   adminState: any,
@@ -45,6 +49,16 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
    _handleFetchDiningModels();
   }, []);
 
+  const toggleForm = () => {
+
+  };
+  const handleTakeAllOnline = () => {
+    return Promise.resolve(true);
+  };
+  const handleTakeAllOffline = () => {
+    return Promise.resolve(true);
+  };
+
   const openNewDiningModelForm = () => {
     _handleClearDiningModelData();
     history.push("/admin/dining_entertainment/new");
@@ -69,44 +83,62 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   return (
     <React.Fragment>
       <Grid.Row>
-        <Grid.Column width={15}>
+        <Grid.Column className={ styles.headerColumn } width={15}>
           <h5>Current Dining and Entertainment options in Hotel</h5>
         </Grid.Column>
       </Grid.Row>
       <Route path={"/admin/dining_entertainment"} exact={true}>
         <Grid.Row>
-          <Grid.Column width={15}>
-            <Button onClick={openNewDiningModelForm}>Add New Dining or Entertainment option</Button>
+          <Grid.Column className={ styles.buttonsColumn } width={15}>
+            <OnlinePopupControls 
+              handleFormOpen={ openNewDiningModelForm } 
+              takeAllOnline={ handleTakeAllOnline }
+              takeAllOffline= { handleTakeAllOffline }
+              createdModels={ createdDiningEntModels } 
+              modelType={"dining"} 
+            />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={15}>
-            <Card.Group>
+          <Grid.Column className={ styles.mainViewColumn } width={15}>
             {
-              diningEntertainmentState.createdDiningEntModels.map((diningModel) => {
-                return ( 
-                  <DiningEntertainmentContainer 
-                    key={diningModel._id} 
-                    diningEntModel={diningModel}
-                    openDiningEntModel={openDiningModel}
-                    deleteDiningEntModel={deleteDiningModel}
-                    history={history}
-                  />
-                );
-              })
+              diningEntertainmentState.createdDiningEntModels.length > 0 
+              ?
+              <Card.Group>
+              {
+                diningEntertainmentState.createdDiningEntModels.map((diningModel) => {
+                  return ( 
+                    <DiningEntertainmentContainer 
+                      key={diningModel._id} 
+                      diningEntModel={diningModel}
+                      openDiningEntModel={openDiningModel}
+                      deleteDiningEntModel={deleteDiningModel}
+                      history={history}
+                    />
+                  );
+                })
+              }
+              </Card.Group>
+              : 
+              <Segment placeholder className={ styles.defaultNoItemsSegment }>
+                <Header icon>
+                  <Icon name='search' />
+                  We don't have any documents matching your query.
+                </Header>
+              </Segment>
             }
-            </Card.Group>
+          
           </Grid.Column>
         </Grid.Row>
       </Route>
       <Route path={"/admin/dining_entertainment/new"}>
         <Grid.Row>
-          <Grid.Column width={14}>
+          <Grid.Column className={ styles.newFormControlsColumn } width={15}>
             <Button onClick={goBackToDiningModels}>Back</Button>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={14}>
+          <Grid.Column className={ styles.newFormColumn } width={15}>
             <DiningEntertainmentForm diningEntState={ diningEntertainmentState } history={history} />
           </Grid.Column>
         </Grid.Row>

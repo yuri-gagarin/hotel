@@ -28,7 +28,7 @@ const AdminComponent = (props) => {
   const { 
     history, adminState, adminConvState,
     roomState, appGeneralState,
-    contactPostState, serviceState, diningState
+    contactPostState, serviceState, diningEntertainmentState
   } = props;
   // redux action functions //
   const {
@@ -65,7 +65,7 @@ const AdminComponent = (props) => {
     }
     // event listener for closed window //
     window.addEventListener("beforeunload", saveAdminState);
-    history.push("/admin/contact_requests");
+    history.push("/admin/dining_entertainment");
     return function () {
       window.removeEventListener("beforeunload", saveAdminState);
     }
@@ -156,7 +156,7 @@ const AdminComponent = (props) => {
         <RoomsIndexContainer adminState={adminState} roomState={roomState} />
       </Route>
       <Route path="/admin/dining_entertainment">
-        <DiningEntertainmentIndexContainer adminState={adminState} diningState={diningState} />
+        <DiningEntertainmentIndexContainer adminState={adminState} diningEntertainmentState={  diningEntertainmentState } />
       </Route>
       <Route path="/admin/posts">
         <PostsIndexContainer />
@@ -183,7 +183,7 @@ const mapStateToProps = (state) => {
   return {
     adminConvState: state.adminConvState,
     roomState: state.roomState,
-    diningState: state.diningState,
+    diningEntertainmentState: state.diningEntertainmentState,
     adminState: state.adminState,
     appGeneralState: state.appGeneralState,
     contactPostState: state.contactPostState,

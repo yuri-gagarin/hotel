@@ -14,13 +14,14 @@ type UnionState = (DiningEntertainmentState | ServiceState);
 type Props = {
   uploadImage: <S>(data: FormData, currentState: S) => Promise<boolean>,
   dataName: "roomImage" | "serviceImage" | "diningImage",
-  modelState: UnionState
+  modelState: UnionState,
+  textContent?: string
 }
 type LocalState = {
   file:  | null,
   objectURL: string
 }
-const FileInput = ({ uploadImage, dataName, modelState }: Props): React.Node => {
+const FileInput = ({ uploadImage, dataName, modelState, textContent }: Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ file: null, objectURL: "" });
 
   
@@ -72,7 +73,7 @@ const FileInput = ({ uploadImage, dataName, modelState }: Props): React.Node => 
         </div>
         :
         <div className={ styles.uploadControlsContainer}>
-          <div>Upload Images</div>
+          <div className={ styles.textContent }>{ textContent ? textContent : "Upload Images"}</div>
           <Button 
             as="label" 
             htmlFor="modelImgUplFileInput"

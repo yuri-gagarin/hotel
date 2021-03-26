@@ -7,6 +7,7 @@ import {
 // flow types//
 import type { GenericModelData } from "../../../redux/reducers/_helpers/createReducer";
 import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
+import type { DiningEntModelData } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // styles //
 import styles from "./css/onlinePopupControls.module.css";
 // helpers //
@@ -14,7 +15,7 @@ import { capitalizeString } from "../../helpers/displayHelpers";
 
 type Props = {|
   modelType: "room" | "service" | "dining",
-  createdModels: Array<ServiceData>,
+  createdModels: Array<ServiceData> | Array<DiningEntModelData>,
   handleFormOpen: () => void;
   takeAllOnline: () => Promise<boolean | void>,
   takeAllOffline: () => Promise<boolean | void>
