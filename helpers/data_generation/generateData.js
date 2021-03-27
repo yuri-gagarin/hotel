@@ -3,6 +3,8 @@ import chalk from "chalk";
 import mongoose from "mongoose";
 //
 import { generateMockContactPosts } from "./generateMockContactPosts";
+import { generateMockDiningEntOptions } from "./generateMockDiningEntOptions";
+
 import appConfig from "../../config/appConfig";
 
 const { dbSettings } = appConfig;
@@ -71,8 +73,19 @@ class SeedModels {
         return false;
       }
       case "3": {
-        console.log(chalk.bgRed.bold.white("Not supported yet"));
-        return false;
+        return new Promise((resolve, reject) => {
+          rl.question("How many 'Dining Entertainment' mock options to create?: ", (value) => {
+            return generateMockDiningEntOptions(parseInt(value, 10))
+              .then((result) => {
+                console.log(result.length);
+                resolve(result);
+              })
+              .catch((error) => {
+                console.log(error)
+                reject(error);
+              });
+          });
+        });
       }
       case "4": {
         console.log(chalk.bgRed.bold.white("Not supported yet"));
@@ -80,8 +93,7 @@ class SeedModels {
       }
       case "5": {
         return new Promise((res, rej) => {
-          rl.question("How many 'Contact Post models to create: ", (value) => {
-            console.log("ran")
+          rl.question("How many 'Contact Post models to create?: ", (value) => {
             return res(generateMockContactPosts(parseInt(value, 10)));
           });
         });

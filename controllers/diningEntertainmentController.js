@@ -12,7 +12,7 @@ export default {
       .then((foundModels) => {
         return res.status(200).json({
           responseMsg: "Success",
-          diningModels: foundModels
+          diningEntModels: foundModels
         });
       })
       .catch((error) => {

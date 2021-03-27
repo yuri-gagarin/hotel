@@ -32,7 +32,7 @@ export const setImagePath = (path?: string): string => {
  * @param {string} string String to trim.
  * @param {number} length Length to trim to.
  */
-export const trimStringToSpecificLength = (string: string, length: number): string => {
+export const trimStringToSpecificLength = (string: string, length?: number): string => {
   if (!string) {
     return "No string to trim..."
   }

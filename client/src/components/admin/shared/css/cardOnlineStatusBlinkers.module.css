@@ -1,0 +1,33 @@
+.cardOnlineStatusWrapper {
+  display: flex;
+}
+
+.cardOnlineBlinker {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+.modelOnline {
+  background-color: green;
+  animation: blinkStatus 3s linear 0s infinite;
+  -webkit-animation: blinkStatus 3s linear 0s infinite;
+}
+.modelOffline {
+  background-color: red;
+}
+
+.cardOnlineStatusText {
+  margin-left: 0.25em;
+  color: gray;
+}
+
+@keyframes blinkStatus {
+  50% {
+    opacity: 0.0;
+  }
+}
+@-webkit-keyframes blinkStatus {
+  50% {
+    opacity: 0.0;
+  }
+}

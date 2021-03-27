@@ -1,0 +1,11 @@
+.hoursContent {
+  display: flex;
+  flex-direction: column;
+}
+.hoursContent > span:nth-child(1) {
+  font-size: 0.75em;
+  font-style: italic;
+}
+.hoursContent > span:nth-child(2) {
+  color: rgb(30, 112, 30);
+}

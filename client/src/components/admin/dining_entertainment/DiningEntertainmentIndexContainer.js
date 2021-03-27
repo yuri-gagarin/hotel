@@ -7,7 +7,7 @@ import { withRouter, Route } from "react-router-dom";
 // additional imports //
 import DiningEntertainmentForm from "./DiningEntertainmentForm";
 import DiningEntertainmentDisplay from "./DiningEntertainmentDisplay";
-import DiningEntertainmentContainer from "./DiningEntertainmentContainer";
+import { DiningEntertainmentCards } from "./DiningEntertainmentCards";
 import OnlinePopupControls from "../shared/OnlinePopupControls";
 // redux imports //
 import { connect } from "react-redux"; 
@@ -104,21 +104,11 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
             {
               diningEntertainmentState.createdDiningEntModels.length > 0 
               ?
-              <Card.Group>
-              {
-                diningEntertainmentState.createdDiningEntModels.map((diningModel) => {
-                  return ( 
-                    <DiningEntertainmentContainer 
-                      key={diningModel._id} 
-                      diningEntModel={diningModel}
-                      openDiningEntModel={openDiningModel}
-                      deleteDiningEntModel={deleteDiningModel}
-                      history={history}
-                    />
-                  );
-                })
-              }
-              </Card.Group>
+              <DiningEntertainmentCards 
+                diningEntState={ diningEntertainmentState }
+                openDiningEntModel={ openDiningModel }
+                deleteDiningEntModel={ deleteDiningModel }
+              />
               : 
               <Segment placeholder className={ styles.defaultNoItemsSegment }>
                 <Header icon>
