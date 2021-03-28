@@ -4,13 +4,14 @@ import * as React from "react";
 import { Header, Icon, Image, Segment } from "semantic-ui-react";
 // flow types //
 import type { ServiceImgData } from "../../../redux/reducers/service/flowTypes";
+import type { DiningImgData, MenuImageData } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // styles and css //
 import styles from "./css/previewImagesCarousel.module.css";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
 
 type Props = {
-  images: Array<ServiceImgData>,
+  images: Array<ServiceImgData> | Array<DiningImgData> | Array<MenuImageData>,
   toggleImageModal: (imgPath: string) => void
 }
 type LocalState = {

@@ -1,9 +1,11 @@
 // @flow
 import * as React from "react";
-import { Button,Header, Icon, Input, Form, TextArea, Segment } from "semantic-ui-react";
+import { Button,Header, Icon, Input, Form, TextArea, Segment, Label, Dropdown } from "semantic-ui-react";
 // additional component imports  //
 import DiningEntertainmentImageThumb from "./DiningEntertainmentImgThumb";
-import DiningEntertainmentTypeDropdown from "./form_components/DiningEntertainmentTypeDropdown";
+import { DiningEntertainmentTypeDropdown } from "./form_components/DiningEntertainmentTypeDropdown";
+import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
+import GenericImgModal from "../shared/GenericImgModal";
 import FileInput from "../rooms/FileInput";
 // redux imports  //
 import { connect } from "react-redux";
@@ -15,7 +17,7 @@ import type { RouterHistory } from "react-router-dom";
 // styles and css //
 import styles from "./css/diningEntertainmentForm.module.css";
 // helpers //
-import { objectValuesEmpty } from "../../helpers/displayHelpers";
+import { objectValuesEmpty, setImagePath } from "../../helpers/displayHelpers";
 
 
 type OwnProps = {
@@ -31,13 +33,18 @@ type Props = {
   _handleUpdateDiningModel: (modelUpdateData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>
 };
 
+type ImageModalState = {
+  imgModalOpen: boolean,
+  openImageURL: string
+}
+
 const DiningEntertainmentForm = ({ diningEntState, history, _handleUploadDiningModelImage, _handleDeleteDiningModelImage, _handleCreateDiningModel, _handleUpdateDiningModel }: Props): React.Node => {
   const { useEffect, useState } = React;
   const { diningEntModelData } = diningEntState;
 
   // local form state //
   const [ diningModelDetails, setDiningModelDetails ] = useState({ ...diningEntModelData });
-
+  const [ imageModalState, setImageModalState ] = useState({ imgModalOpen: false, openImageURL: "" });
   /*
   useEffect(() => {
     if (diningModelData && diningModelData.images && Array.isArray(diningModelData.images)) {
@@ -67,11 +74,12 @@ const DiningEntertainmentForm = ({ diningEntState, history, _handleUploadDiningM
     });
   };
   // select handlers //
-  const handleSelect = (_e, data) => {
-    console.log(data.value);
-  };
-  const handleClear = (_e, data) => {
-    console.log(data);
+  const handleSelect = (_e, data: any) => {
+    if (data.value) {
+      setDiningModelDetails({ ...diningModelDetails, optionType: data.value });
+    } else {
+      setDiningModelDetails({ ...diningModelDetails, optionType: "" });
+    }
   };
   
   const handleFormSubmit = () => {
@@ -103,93 +111,86 @@ const DiningEntertainmentForm = ({ diningEntState, history, _handleUploadDiningM
     return _handleDeleteDiningModelImage(imageId, diningEntState);
   };
 
-  return (
-    <Form>
-      <Form.Group widths='equal'>
-        <Form.Field
-          control={Input}
-          label='Title'
-          placeholder="Name or title of dining/entertainment option"
-          onChange={ handleDiningModelTitle }
-          value={diningModelDetails.title }
-        />
-        <Form.Field
-          control={Input}
-          label='Hours'
-          placeholder='Hours available ...'
-          onChange={ handleDiningModelHours } 
-          value={ diningModelDetails.hours }
-        />
-      </Form.Group>
-      <DiningEntertainmentTypeDropdown 
-        handleSelect={ handleSelect }
-        handleClear={ handleClear }
-      />
-      <Form.Field
-        id='form-textarea-control-opinion'
-        control={TextArea}
-        label='Description'
-        placeholder='Description of the dining or entertainment option provided ...'
-        onChange={handleDiningModelDescription}
-        value={diningModelDetails.description}
+  const toggleImageModal = (imagePath?: string) => {
+    setImageModalState({ 
+      ...imageModalState, 
+      imgModalOpen: !imageModalState.imgModalOpen, 
+      openImageURL: imageModalState.openImageURL ? "" : setImagePath(imagePath)
+    });
+  }
 
-      />
-      <div className={ styles.menuImageUploadInputDiv }>
-        <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } textContent={ "Upload menu images" }/>
-        {
-          diningEntState.menuImages.length > 0 
-          ?
-          diningEntState.menuImages.map((imgData) => {
-            return (
-              <DiningEntertainmentImageThumb 
-                key={ imgData._id } 
-                diningModelImage={ imgData } 
-                handleImageDelete={handleImageDelete} 
-              />
-            );
-          })
-          :
-          <Segment textAlign="center">
-            <Header icon>
-              <Icon name='file' />
-                No Images Uploaded. Upload some menu images.
-            </Header>
-          </Segment>
-        }
-      </div>
-      <div className={ styles.diningImageUploadInputDiv}> 
-        <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } textContent={ "Upload general images" } />
-        { 
-          diningEntState.diningEntImages.length > 0 
-          ?
-          diningEntState.diningEntImages.map((diningModelImg) => {
-            return (
-              <DiningEntertainmentImageThumb 
-                key={diningModelImg._id} 
-                diningModelImage={diningModelImg} 
-                handleImageDelete={handleImageDelete} 
-              />
-            );
-          })
-          :
-          <Segment textAlign="center">
-            <Header icon>
-              <Icon name='file' />
-                No Images Uploaded. Upload some descriptive images.
-            </Header>
-          </Segment>
-        }
+  return (
+    <React.Fragment>
+      <GenericImgModal open={ imageModalState.imgModalOpen } imgURL={ imageModalState.openImageURL } handleClose={ toggleImageModal }/>
+      <Form>
+        <Form.Group widths='equal'>
+          <Form.Field
+            control={Input}
+            label='Title'
+            placeholder="Name or title of dining/entertainment option"
+            onChange={ handleDiningModelTitle }
+            value={diningModelDetails.title }
+          />
+          <Form.Field
+            control={Input}
+            label='Hours'
+            placeholder='Hours available ...'
+            onChange={ handleDiningModelHours } 
+            value={ diningModelDetails.hours }
+          />
+        </Form.Group>
+        <div className={styles.typeDropdown }>
+          <div>Option type:</div>
+          <div>
+            <DiningEntertainmentTypeDropdown 
+              selectedOption={ diningModelDetails.optionType }
+              handleSelect={ handleSelect }
+            />
+          </div>
+        </div>
       
-      </div>
-      
-      <Form.Field style={{marginTop: "0.5em"}}
-        id='form-button-control-public'
-        control={Button}
-        content='Save All'
-        onClick={handleFormSubmit}
-      />
-     
-    </Form>
+        <Form.Field
+          className={ styles.descriptionTextField }
+          control={TextArea}
+          label="Description:"
+          placeholder='Description of the dining or entertainment option provided ...'
+          onChange={ handleDiningModelDescription }
+          value={ diningModelDetails.description }
+
+        />
+        <div className={ styles.imageUploadInputDiv }>
+          <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } textContent={ "Upload menu images" }/>
+          {
+            diningEntModelData.menuImages.length > 0 
+            ?
+            <PreviewImagesCarousel images={ diningEntModelData.menuImages } toggleImageModal={ toggleImageModal } />
+            :
+            <Segment textAlign="center">
+              <Header icon>
+                <Icon name='file' />
+                  No Images Uploaded. Upload some menu images.
+              </Header>
+            </Segment>
+          }
+        </div>
+        <div className={ styles.imageUploadInputDiv}> 
+          <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } textContent={ "Upload general images" } />
+          { 
+            diningEntModelData.images.length > 0 
+            ?
+            <PreviewImagesCarousel images={ diningEntModelData.images } toggleImageModal={ toggleImageModal }/>
+            :
+            <Segment textAlign="center">
+              <Header icon>
+                <Icon name='file' />
+                  No Images Uploaded. Upload some descriptive images.
+              </Header>
+            </Segment>
+          }
+        
+        </div>
+      </Form>
+    </React.Fragment>
   )
 };
 

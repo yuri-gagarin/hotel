@@ -1,32 +1,31 @@
-import React from 'react';
-import PropTypes from "prop-types";
+// @flow
+import * as React from 'react';
 // smenatic react //
 import { Dropdown } from 'semantic-ui-react';
 // 
+import { capitalizeString } from "../../../helpers/displayHelpers";
 
 const options = [
   { key: 1, text: "Restaurant", value: "restaurant" },
-  { key: 2, text: "Night Club", value: "nightClub" },
+  { key: 2, text: "Lounge", value: "lounge" },
   { key: 3, text: "Cafe", value: "cafe" },
 ]
 
-const DiningEntertainmentTypeDropdown = ({ handleSelect, handleClear }) => {
+type Props = {
+  selectedOption: string,
+  handleSelect: () => void,
+}
+export const DiningEntertainmentTypeDropdown = ({ selectedOption, handleSelect } : Props): React.Node => {
   
-
   return (
     <Dropdown 
+      labeled
+      text={ capitalizeString(selectedOption) }
+      placeholder={ selectedOption ? "" : "Select an option ..."}
       clearable 
       options={options} 
       selection 
       onChange={ handleSelect }
-      placeholder={ "Select tyoe..." }
     />
   )
 };
-
-DiningEntertainmentTypeDropdown.propTypes = {
-  handleSelect: PropTypes.func.isRequired,
-  handleClear: PropTypes.func.isRequired
-};
-
-export default DiningEntertainmentTypeDropdown;

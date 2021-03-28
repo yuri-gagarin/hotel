@@ -30,7 +30,7 @@ export const DiningEntertainmentCards = ({ diningEntState, openDiningEntModel, d
     {
       createdDiningEntModels.map((diningModel) => {
         return ( 
-          <Card>
+          <Card key={ diningModel._id }>
             <Card.Content textAlign="center">
               <Card.Header>{diningModel.title}</Card.Header>
               <Image

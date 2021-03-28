@@ -14,7 +14,7 @@ import styles from "./css/onlinePopupControls.module.css";
 import { capitalizeString } from "../../helpers/displayHelpers";
 
 type Props = {|
-  modelType: "room" | "service" | "dining",
+  modelType: "room" | "service" | "dining_entertainment_model",
   createdModels: Array<ServiceData> | Array<DiningEntModelData>,
   handleFormOpen: () => void;
   takeAllOnline: () => Promise<boolean | void>,
@@ -37,29 +37,29 @@ const OnlinePopupControls = ({ handleFormOpen, modelType, createdModels, takeAll
       <Popup 
         content={ `Create a new ${capitalizeString(modelType)}`}
         trigger={
-          <Button color="green" onClick={ handleFormOpen } icon="plus" content={ `Add New ${capitalizeString(modelType)}` }></Button>
+          <Button color="green" onClick={ handleFormOpen } icon="plus" content={ `Create New` }></Button>
         }
       />
       <Button.Group>
         <Popup 
           content={`All saved hotel ${modelType}s will be displayed to visiting clients`}
           trigger={
-            <Button color="blue" content={`Take all hotel ${modelType}s online`} disabled={ localState.numOffline === 0} onClick={ takeAllOnline } />
+            <Button color="blue" content={`Take all online`} disabled={ localState.numOffline === 0} onClick={ takeAllOnline } />
           }
         />
         <Popup 
           content={`No ${modelType}s will be displayed to clients. This does not erase any data.`}
           trigger={
-            <Button color="orange" content={`Take all ${modelType}s offline`} disabled={ localState.numOnline === 0} onClick={ takeAllOffline } />
+            <Button color="orange" content={`Take all offline`} disabled={ localState.numOnline === 0} onClick={ takeAllOffline } />
           }
         />
       </Button.Group>
       <div className={ styles.onlineOfflineDiv }>
-        <span>Number of <strong>{`${capitalizeString(modelType)}s`}</strong> online:</span>
+        <span>Number online:</span>
         <div className={ `${styles.onlineOfflineCounter} ${styles.online}` }><span>{ localState.numOnline }</span></div>
       </div>
       <div className={ styles.onlineOfflineDiv }>
-        <span>Number of <strong>{`${capitalizeString(modelType)}s`}</strong> offline:</span>
+        <span>Number offline:</span>
         <div className={ `${styles.onlineOfflineCounter} ${styles.offline}` }><span>{ localState.numOffline }</span></div>
       </div>
     </div>

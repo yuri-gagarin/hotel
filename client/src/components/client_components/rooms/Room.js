@@ -8,7 +8,7 @@ import {
 import { roomStyle } from "./style/styles";
 import styles from "./style/room.module.css";
 // helper functions //
-import { setUploadedImgPath } from "../../helpers/displayHelpers";
+import { setImagePath} from "../../helpers/displayHelpers";
 // translations //
 import { useTranslation } from "react-i18next";
 
@@ -84,7 +84,7 @@ const Room = (props) => {
                   <Carousel.Item key={index}>
                     <img
                       style={carouselImgStyle}
-                      src={setUploadedImgPath(imgPath)}
+                      src={ setImagePath(imgPath)}
                       alt="First slide"
                       onClick={handleOpenModal}
                       data-index={index}
@@ -99,7 +99,7 @@ const Room = (props) => {
           <div style={sideImgHolder}>
             <img 
               style={sideImg} 
-              src={setUploadedImgPath(roomImagePaths[1])} 
+              src={ setImagePath(roomImagePaths[1])} 
               onClick={handleOpenModal}
               data-index={1}
             />
@@ -107,7 +107,7 @@ const Room = (props) => {
           <div style={sideImgHolder}>
             <img 
               style={sideImg}
-              src={setUploadedImgPath(roomImagePaths[2])} 
+              src={ setImagePath(roomImagePaths[2])} 
               onClick={handleOpenModal}
               data-index={2}
             />
@@ -115,7 +115,7 @@ const Room = (props) => {
           <div style={sideImgHolder}>
             <img 
               style={sideImg} 
-              src={setUploadedImgPath(roomImagePaths[3])} 
+              src={ setImagePath(roomImagePaths[3])} 
               onClick={handleOpenModal}
               data-index={3}
             />

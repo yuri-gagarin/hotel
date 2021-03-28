@@ -8,6 +8,7 @@ import { withRouter, Route } from "react-router-dom";
 import DiningEntertainmentForm from "./DiningEntertainmentForm";
 import DiningEntertainmentDisplay from "./DiningEntertainmentDisplay";
 import { DiningEntertainmentCards } from "./DiningEntertainmentCards";
+import { EditDiningEntertainmentDisplay } from "./EditDiningEntertainmentDisplay";
 import OnlinePopupControls from "../shared/OnlinePopupControls";
 // redux imports //
 import { connect } from "react-redux"; 
@@ -84,7 +85,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
     <React.Fragment>
       <Grid.Row>
         <Grid.Column className={ styles.headerColumn } width={15}>
-          <h5>Current Dining and Entertainment options in Hotel</h5>
+          <span>Dining and entertainment options editor</span>
         </Grid.Column>
       </Grid.Row>
       <Route path={"/admin/dining_entertainment"} exact={true}>
@@ -95,7 +96,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
               takeAllOnline={ handleTakeAllOnline }
               takeAllOffline= { handleTakeAllOffline }
               createdModels={ createdDiningEntModels } 
-              modelType={"dining"} 
+              modelType={"dining_entertainment_model"} 
             />
           </Grid.Column>
         </Grid.Row>
@@ -134,12 +135,11 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
         </Grid.Row>
       </Route>
       <Route path={"/admin/dining_entertainment/edit"}>
-        <Grid.Row>
-          <Grid.Column width={14}>
-            <Button onClick={goBackToDiningModels}>Back</Button>
-          </Grid.Column>
-        </Grid.Row>
-        <DiningEntertainmentDisplay diningEntState={ diningEntertainmentState } history={ history } />
+        <EditDiningEntertainmentDisplay 
+          diningEntState={ diningEntertainmentState } 
+          goBackToDiningModels={ goBackToDiningModels }
+          history= {history }
+        />
       </Route>
     </React.Fragment>
   );

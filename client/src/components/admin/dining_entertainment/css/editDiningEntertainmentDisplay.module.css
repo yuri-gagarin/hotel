@@ -1,0 +1,32 @@
+.editColumn {
+  display: flex !important;
+  border: 1px solid rgb(81, 148, 79);
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+.editModal {
+  height: 90vh;
+  top: auto;
+  left: auto;
+  bottom: auto;
+  right: auto;
+}
+
+.modalControlsDiv {
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 1em;
+  box-sizing: content-box;
+}
+.modalFormDiv {
+  border: 3px solid blue;
+  height: 90%;
+  padding: 1em;
+  overflow-y: scroll;
+}
+
+

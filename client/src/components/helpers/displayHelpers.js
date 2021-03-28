@@ -1,22 +1,4 @@
 // @flow
-export const setUploadedImgPath = (path: string): string => {
-  if (!path) {
-    return "/assets/images/roomStock1.jpeg";
-  } else {
-    const pathArr = path.split("/");
-    return "/" + pathArr[1] + "/" + pathArr[2] + "/" + pathArr[3];
-  }
-};
-
-export const simplifyPath = (path: string): string => {
-  if (!path) {
-    return "/assets/images/roomStock1.jpeg";
-  } else {
-    const pathArr = path.split("/");
-    return "/" + pathArr[3] + "/" + pathArr[4] + "/" + pathArr[5];
-  }
-};
-
 
 export const setImagePath = (path?: string): string => {
   if (path && typeof path === "string" && path.length > 0) {
@@ -53,7 +35,7 @@ export const trimStringToSpecificLength = (string: string, length?: number): str
 export const capitalizeString = (string: string): string => {
   if (string && typeof string === "string" && string.length > 0) {
     return string.slice(0, 1).toUpperCase() + string.slice(1);
-  } else if (string && typeof string === "string" && string.length === 0) {
+  } else if (typeof string === "string" && string.length === 0) {
     return "";
   } else {
     throw new Error("Invalid argument, expected a string");

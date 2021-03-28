@@ -16,19 +16,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 35px;
+  width: 35px;
   border-radius: 50%;
-  height: 30px;
-  width: 30px;
-  color: white;
 }
 .onlineOfflineCounter > span {
   display: flex;
-  font-size: 1.5em;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25em;
   font-weight: bold;
 }
 .online {
- background-color: rgb(52, 143, 52)
+  border: 1px solid rgb(52, 143, 52);
+  color: rgb(52, 143, 52);
 }
 .offline {
-  background-color: rgb(248, 44, 44);
+  border: 1px solid rgb(248, 44, 44);
+  color: rgb(248, 44, 44);
 }

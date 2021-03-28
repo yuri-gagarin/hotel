@@ -5,7 +5,7 @@ import {
   Button, Modal, Image, Carousel
 } from "react-bootstrap";
 // helper functions //
-import { setUploadedImgPath, simplifyPath } from "./../../helpers/displayHelpers";
+import { setImagePath, simplifyPath } from "./../../helpers/displayHelpers";
 
 const pictureModal = {
   width: "auto",
@@ -40,7 +40,7 @@ const RoomImgModal = (props) => {
                 return (
                   <Carousel.Item key={i}>
                     <img
-                      src={setUploadedImgPath(path)}
+                      src={setImagePath(path)}
                       alt="First slide"
                     />
                   </Carousel.Item>

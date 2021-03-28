@@ -34,3 +34,6 @@ div.row {
 .ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before:hover {
   background-color: rgb(255, 81, 0);
 }
+.dimmed.dimmable > .ui.modals.dimmer.visible {
+  display: flex !important;
+}

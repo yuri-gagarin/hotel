@@ -1,11 +1,8 @@
 // @flow
 import * as React from "react";
-import { Button, Grid, Image } from "semantic-ui-react";
-// additional component imports //
-import EditDiningEntertainmentDisplay from "./EditDiningEntertainmentDisplay";
+import { Button, Header, Image, Segment } from "semantic-ui-react";
 // types //
 import type { DiningEntModelData, DiningEntertainmentState } from "../../../redux/reducers/dining_entertainment/flowTypes";
-import type { RouterHistory } from "react-router-dom";
 // styles and css //
 import styles from "./css/diningEntertainmentDisplay.module.css";
 // helpers //
@@ -13,53 +10,64 @@ import { setImagePath } from "../../helpers/displayHelpers";
 
 type Props = {
   diningEntState: DiningEntertainmentState,
-  history: RouterHistory
 }
-const DiningEntertainmentDisplay = ({ diningEntState, history }: Props): React.Node => {
-  const { useState, useEffect } = React;
+const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
   // local form state //
-  const [formOpen, setFormOpen] = useState(false);
   const { diningEntModelData } = diningEntState;
-  useEffect(() => {
-    // close the diningModel form on state change //
-    setFormOpen(false);
-  }, [ diningEntModelData ]);
-
-  useEffect(() => {
-    // will scroll down the document when edit diningModel form is open //
-    if (formOpen && document.body) {
-      window.scrollTo(0, document.body.scrollHeight);
-    } else {
-      window.scrollTo(0, 0);
-    }
-  }, [ formOpen ]);
-
-  const openForm = () => {
-    setFormOpen(!formOpen);
-  };
-
+  
   return (
-    <Grid.Column width={15}>
-      <div>
-          <h4>Details</h4>
-          <div>
-            <div className={ styles.metaStyle }>Title: { diningEntModelData.title }</div>
-            <div className={ styles.metaStyle }>Hours: { diningEntModelData.hours }</div>
-          </div>
-          <h4>Description</h4>
-          <div className={ styles.diningModelDescription }>{diningEntModelData.description}</div>
-          <hr />
-            <div>Uploaded Images</div>
-          <hr />
-          {
-            diningEntModelData.images.map((img) => <Image key={img._id} className={ styles.diningModelImage } size='medium' src={ setImagePath(img.path) } />)
-          }
+    <div>
+      <div className={ styles.detailsDivsWrapper }>
+        <h5>Details</h5>
+        <div className={ styles.detailsDiv }>
+          <span>Title: </span>
+          <span>{ diningEntModelData.title }</span>
+          
+        </div>
+        <div className={ styles.detailsDiv }>
+          <span><i className="far fa-clock"></i>Hours: </span>
+          <span>{ diningEntModelData.hours }</span>
+        </div>
+        <div className={ styles.detailsDiv }>
+          <span>Type: </span>
+          <span>{ diningEntModelData.optionType }</span>
+        </div>
       </div>
-      {
-        formOpen ? <Button className={ styles.formButton } onClick={ openForm }>Close</Button> : <Button className={ styles.formButton } onClick={openForm}>Edit Dining/Entertainment option</Button>
-      }
-      { formOpen ? <EditDiningEntertainmentDisplay history={history} diningEntState={ diningEntState } /> : null }
-    </Grid.Column>
+      <div className={ styles.descriptionWrapper }>
+        <h5>Description</h5>
+        <p className={ styles.diningModelDescription }>{diningEntModelData.description}</p>
+      </div>
+      <div className={ styles.imgsPreviewDiv }>
+        <span>Uploaded menu images:</span>
+        {
+          diningEntModelData.menuImages.length > 0
+          ? 
+          diningEntModelData.menuImages.map((imgData) => {
+            return <Image key={imgData._id} className={ styles.diningModelImage } size='medium' src={ setImagePath(imgData.path) } />
+          })
+          : 
+          <Segment className={ styles.imgPreviewDefaultSegment }>
+            <span>No menu images uploaded...</span>
+            <i className="far fa-image"></i>
+          </Segment>
+        }
+      </div>
+      <div className={ styles.imgsPreviewDiv }>
+        <span>Uploaded general images: </span>
+        {
+          diningEntModelData.images.length > 0
+          ?
+          diningEntModelData.images.map((imgData) => {
+            return <Image key={imgData._id} className={ styles.diningModelImage } size='medium' src={ setImagePath(imgData.path) } />
+          })
+          : 
+          <Segment className={ styles.imgPreviewDefaultSegment }>
+            <span>No general images upoaded...</span>
+            <i className="far fa-image"></i>
+          </Segment>
+        }
+      </div>
+    </div>
   );
 };
 

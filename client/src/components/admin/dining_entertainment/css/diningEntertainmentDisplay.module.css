@@ -1,13 +1,50 @@
-.metaStyle {
-  border: 2px solid grey;
+.infoDisplayColumn {
+  border: 1px solid rgb(81, 148, 79);
+  border-radius: 4px;
+}
+
+/* details divs */
+.detailsDivsWrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.detailsDivsWrapper > h5 {
+  width: 100%;
+}
+.detailsDiv {
+  display: flex;
+  border: 1px solid grey;
+  border-radius: 2px;
   padding: 0.5em;
   margin-right: 0.5em;
   margin-bottom: 0.5em;
-  display: inline-block;
+}
+.detailsDiv > span {
+  display: flex;
+  align-items: center;
+}
+.detailsDiv > span > i {
+  margin-right: 2px;
+}
+.detailsDiv > span:nth-child(1) {
+  color: rgb(57, 57, 201);
+  font-style: italic;
+}
+.detailsDiv > span:nth-child(2) {
+  margin-left: 0.5em;
+  font-weight: 800;
 }
 
+/* descriptions divs */
+.descriptionWrapper {
+  margin-bottom: 1em;
+}
+.descriptionWrapper > h5 {  
+  width: 100%;
+}
 .diningModelDescription {
-  border: 2px solid grey;
+  border: 1px solid grey;
   padding: 0.5em;
   margin-top: 0.5em;
   margin-bottom: 1em;
@@ -24,4 +61,28 @@
 .formButton {
   margin-top: 1em;
   margin-bottom: 1em;
+}
+
+.imgsPreviewDiv {
+  border: 1px solid grey;
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+}
+.imgsPreviewDiv > span {
+  font-size: 0.75em;
+  font-style: italic;
+}
+
+.imgPreviewDefaultSegment {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.imgPreviewDefaultSegment > span {
+  color: gray;
+  font-size: 0.75em;
+}
+.imgPreviewDefaultSegment > i {
+  font-size: 3em;
+  color: rgb(27, 56, 134)
 }

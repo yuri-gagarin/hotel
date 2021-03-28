@@ -9,6 +9,7 @@
 .headerColumn {
   border-right: 1px solid grey;
   border-left: 1px solid grey;
+  display: flex;
 }
 .buttonsColumn {
   border: 1px solid rgb(81, 148, 79);

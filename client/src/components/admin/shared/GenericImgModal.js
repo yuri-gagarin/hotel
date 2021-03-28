@@ -10,7 +10,7 @@ import { setImagePath } from "../../helpers/displayHelpers";
 type Props = {
   open: boolean,
   imgURL: string,
-  handleClose: () => void
+  handleClose: (imageId?: string) => void
 }
 const GenericImgModal = ({ open, imgURL, handleClose } : Props): React.Node => {
 
@@ -22,7 +22,7 @@ const GenericImgModal = ({ open, imgURL, handleClose } : Props): React.Node => {
       basic
       closeIcon
       closeOnDimmerClick
-      onClose={ () => handleClose() }
+      onClose={ handleClose }
       open={open}
     >
       <Modal.Content image>

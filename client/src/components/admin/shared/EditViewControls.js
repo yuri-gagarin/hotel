@@ -4,6 +4,7 @@ import * as React from "react";
 import { Button, Icon, Label, Popup } from "semantic-ui-react";
 // types //
 import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
+import type { DiningEntModelData } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // css //
 import styles from "./css/editViewControls.module.css";
 // helpers //
@@ -11,13 +12,14 @@ import { capitalizeString } from "../../helpers/displayHelpers";
 
 type Props =  {
   handleBack: () => void,
+  handleOpenEditModal?: () => void,
   modelType: "room" | "service" | "dining",
-  model: ServiceData,
-  takeOnline: (modelData: ServiceData ) => Promise<boolean | void>,
-  takeOffline: (modelData: ServiceData ) => Promise<boolean | void> 
+  model: ServiceData | DiningEntModelData,
+  takeOnline: (modelData: any) => Promise<boolean | void>,
+  takeOffline: (modelData: any) => Promise<boolean | void> 
 }
 
-const EditViewControls = ({ handleBack, modelType, model, takeOnline, takeOffline } : Props): React.Node => {
+const EditViewControls = ({ handleBack, handleOpenEditModal, modelType, model, takeOnline, takeOffline } : Props): React.Node => {
   const { live } = model;
 
   const handleOnlineClick = () => {
@@ -25,10 +27,12 @@ const EditViewControls = ({ handleBack, modelType, model, takeOnline, takeOfflin
   }
   const handleOfflineClick = () => {
     takeOffline(model);
-  }
+  };
+
   return (
     <React.Fragment>
       <Button inverted color="blue" onClick={ handleBack } icon="arrow left" content="Back" />
+      <Button inverted color="green" onClick={ handleOpenEditModal } icon="edit" content="Edit" />
       <Button.Group>
         <Popup 
           content={`Current <${capitalizeString(modelType)}> will be displayed to clients`}

@@ -1,9 +1,33 @@
-.menuImageUploadInputDiv {
-  border-top: 1px solid rgb(81, 148, 79);
+.typeDropdown {
+  display: flex;
+  flex-direction: column;
+}
+.typeDropdown > div {
+  width: 100%;
+  margin-bottom: 0.25em;
+}
+.typeDropdown > div:nth-child(1) {
+  font-weight: bold;
+}
+
+.imageUploadInputDiv {
+  border: 1px solid rgb(81, 148, 79);
+  padding: 1em;
+  border-radius: 4px;
   margin-top: 1em;
 }
 
-.diningImageUploadInputDiv {
-  border-top: 1px solid rgb(81, 148, 79);
-  margin-top: 1em;
+/* description field */
+.descriptionTextField {
+  min-height: 300px;
+  position: relative;
+  margin-top: 1em !important;
+}
+.descriptionTextField > textarea {
+  position: absolute;
+  left: 0;
+  top: 20px;
+  right: 0;
+  bottom: 0;
+  resize: none ;
 }

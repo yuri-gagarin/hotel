@@ -81,10 +81,10 @@ const ServicesIndexContainer = (props: Props): React.Node => {
     return toggleAllServicesOnlineStatus(false);
 
   };
-  const handleTakeServiceOnline = (service: ServiceData) => {
+  const handleTakeServiceOnline = function(service: ServiceData) {
     return takeServiceOnline(service, serviceState);
   };
-  const handleTakeServiceOffline = (serviceToDeactivate: ServiceData) => {
+  const handleTakeServiceOffline = function(serviceToDeactivate: ServiceData) {
     return takeServiceOffline(serviceToDeactivate, serviceState);
   };
   const toggleForm = () => {

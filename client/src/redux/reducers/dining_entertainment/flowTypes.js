@@ -8,7 +8,7 @@ export type ClientDiningEntFormData = {
   hours: string,
   address?: string,
   menuImages: Array<MenuImageData>,
-  optionType: "restaurant" | "cafe" |"lounge",
+  optionType: "restaurant" | "cafe" | "lounge" | "",
   images: Array<DiningImgData>,
   createdAt?: string,
   editedAt?: string
