@@ -65,6 +65,8 @@ export const objectValuesEmpty = (obj: any): boolean => {
       return true;
     }
   } else {
+    console.log("display helpers 68:");
+    console.log(typeof obj)
     throw new TypeError("Invalid argument, expected type <object>");
   }
 };

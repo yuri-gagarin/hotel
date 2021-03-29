@@ -23,29 +23,40 @@ export default {
       });
   },
   createDiningModel: (req, res) => {
-    const  { diningModelData } = req.body;
+    const  { title, hours, address, description, optionType } = req.body.diningModelData;
     
-    return DiningEntertainmentModel.create({ ...diningModelData, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()) })
-      .then((createdModel) => {
-        return createdModel
-          .populate({ path:'images', model: "DiningModelImage" })
-          .populate({ path: "menuImages" , model: "MenuImage" })
-          .execPopulate()
+    return DiningEntertainmentModel.create({
+      title, 
+      hours,
+      address,
+      description,
+      optionType,
+      live: false,
+      createdAt: new Date(Date.now()), 
+      editedAt: new Date(Date.now()) 
+    })
+    .then((createdModel) => {
+      return DiningEntertainmentModel.findOne(
+        { _id: createdModel._id }
+      )
+      .populate("images")
+      .populate("menuImages")
+      .exec()       
+    })
+    .then((newDiningModel) => {
+      return res.status(200).json({
+        responseMsg: "New Dining/Entertainment option created",
+        newDiningEntModel: newDiningModel
+      });
+    })
+    .catch((error) => {
+      console.error(error)
+      return res.status(500).json({
+        responseMsg: "It seems an error occured",
+        error: error
       })
-      .then((newDiningModel) => {
-        return res.status(200).json({
-          responseMsg: "New Dining/Entertainment option created",
-          newDiningModel: newDiningModel
-        });
-      })
-      .catch((error) => {
-        console.error(error)
-        return res.status(500).json({
-          responseMsg: "It seems an error occured",
-          error: error
-        })
-      }); 
-      
+    }); 
+    
   },
 
   updateDiningModel: (req, res) => {
@@ -100,8 +111,10 @@ export default {
     const menuImageIds = [];
 
     return (
-      DiningEntertainmentModel.findOne({ _id: diningModelId })
-        .populate("images").populate("menuImages").execPopulate()
+      DiningEntertainmentModel
+        .findOne({ _id: diningModelId })
+        .populate("images").populate("menuImages")
+        .exec()
     )
     .then((modelToDelete) => {
       if (!modelToDelete) {
@@ -148,7 +161,7 @@ export default {
     .then((deletedDiningModel) => {
       return res.status(200).json({
         responseMsg: "Successfully deleted",
-        deletedDiningModel: deletedDiningModel
+        deletedDiningEntModel: deletedDiningModel
       })
     })
     .catch((error) => {

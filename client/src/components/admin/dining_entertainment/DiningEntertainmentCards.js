@@ -3,6 +3,7 @@ import * as React from 'react'
 import { Button, Card, Image } from 'semantic-ui-react';
 //
 import { CardOnlineStatusBlinkers } from "../shared/CardOnlineStatusBlinkers";
+import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 // types //
 import type { DiningEntertainmentState, DiningEntModelData } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // styles and css //
@@ -13,7 +14,7 @@ import { setImagePath, trimStringToSpecificLength } from "../../helpers/displayH
 type Props = {
   diningEntState: DiningEntertainmentState,
   openDiningEntModel: (modelId: string) => void,
-  deleteDiningEntModel: (modelIdToDelete: string) => Promise<boolean>
+  deleteDiningEntModel: (modelIdToDelete: string) => void
 }
 export const DiningEntertainmentCards = ({ diningEntState, openDiningEntModel, deleteDiningEntModel } : Props): React.Node => {
   const { createdDiningEntModels } = diningEntState;

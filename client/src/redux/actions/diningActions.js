@@ -312,7 +312,7 @@ export const handleCreateDiningModel = (dispatch: Dispatch<DiningEntModelAction>
       const { status, data } = response;
       const { responseMsg, newDiningEntModel } : { responseMsg: string, newDiningEntModel: DiningEntModelData } = data;
       const stateData = { status, responseMsg, newDiningEntModelData: newDiningEntModel };
-
+      
       dispatch(diningModelCreated(stateData));
       return Promise.resolve(true);
     })

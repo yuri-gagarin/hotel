@@ -57,7 +57,12 @@ const DiningEntertainmentForm = ({ diningEntState, history, toggleEditModal, _ha
   */
   
   const handleFormCancel = () => {
-    if (toggleEditModal) return toggleEditModal();
+    if (toggleEditModal && !objectValuesEmpty(diningEntModelData)) {
+      toggleEditModal();
+    } else {
+      history.goBack();
+    }
+    // else its a new form 
   }
   // text input handlers //
   const handleDiningModelTitle = (_e, data) => {

@@ -9,6 +9,7 @@ import DiningEntertainmentForm from "./DiningEntertainmentForm";
 import DiningEntertainmentDisplay from "./DiningEntertainmentDisplay";
 import { DiningEntertainmentCards } from "./DiningEntertainmentCards";
 import { EditDiningEntertainmentDisplay } from "./EditDiningEntertainmentDisplay";
+import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import OnlinePopupControls from "../shared/OnlinePopupControls";
 // redux imports //
 import { connect } from "react-redux"; 
@@ -37,6 +38,11 @@ export type Props = {
   _handleDeleteDiningModel: (modelIdToDelete: string, diningEntModelState: DiningEntertainmentState) => Promise<boolean>
 };
 
+type ConfirmDeleteModalState = {
+  confirmDelModalOpen: boolean,
+  modelIdToDelete: string
+}
+
 const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   const { useEffect, useState } = React;
   const { adminState, diningEntertainmentState, history } = props;
@@ -45,6 +51,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   //const [ newDiningModelFormOpen, setNewDiningModelFormOpen ] = useState(false);
   const { diningEntModelData, createdDiningEntModels } = diningEntertainmentState;
 
+  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = useState<ConfirmDeleteModalState>({ confirmDelModalOpen: false, modelIdToDelete: "" });
 
   useEffect(() => {
    _handleFetchDiningModels();
@@ -76,13 +83,25 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
     history.push("/admin/dining_entertainment/edit");
     //setDiningModelInfoOpen(true);
   };
-  const deleteDiningModel = (diningModelId) => {
-    return _handleDeleteDiningModel(diningModelId, diningEntertainmentState);
+
+  /* handle model delete actions */
+  const triggerDiningModelDelete = (diningModelId) => {
     // setDiningModelInfoOpen(false);
+    setConfirmDeleteModalState({ ...confirmDeleteModalState, confirmDelModalOpen: true, modelIdToDelete: diningModelId });
+  };
+  const confirmModelDelete = () => {
+    return _handleDeleteDiningModel(confirmDeleteModalState.modelIdToDelete, diningEntertainmentState)
+      .then((success) => {
+        if (success) setConfirmDeleteModalState({ ...confirmDeleteModalState, confirmDelModalOpen: false, modelIdToDelete: "" });
+      })
+  };
+  const cancelDeleteAction = () => {
+    setConfirmDeleteModalState({ ...confirmDeleteModalState, confirmDelModalOpen: false, modelIdToDelete: "" });
   };
 
   return (
     <React.Fragment>
+      <ConfirmDeleteModal open={ confirmDeleteModalState.confirmDelModalOpen } modelName="dining" confirmAction={ confirmModelDelete } cancelAction={ cancelDeleteAction } />
       <Grid.Row>
         <Grid.Column className={ styles.headerColumn } width={15}>
           <span>Dining and entertainment options editor</span>
@@ -108,7 +127,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
               <DiningEntertainmentCards 
                 diningEntState={ diningEntertainmentState }
                 openDiningEntModel={ openDiningModel }
-                deleteDiningEntModel={ deleteDiningModel }
+                deleteDiningEntModel={ triggerDiningModelDelete }
               />
               : 
               <Segment placeholder className={ styles.defaultNoItemsSegment }>
