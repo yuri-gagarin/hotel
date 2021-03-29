@@ -3,6 +3,9 @@ import * as React from "react";
 import { Button, Header, Image, Segment } from "semantic-ui-react";
 // types //
 import type { DiningEntModelData, DiningEntertainmentState } from "../../../redux/reducers/dining_entertainment/flowTypes";
+// additonal components //
+import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
+import GenericImgModal from "../shared/GenericImgModal";
 // styles and css //
 import styles from "./css/diningEntertainmentDisplay.module.css";
 // helpers //
@@ -11,12 +14,22 @@ import { setImagePath } from "../../helpers/displayHelpers";
 type Props = {
   diningEntState: DiningEntertainmentState,
 }
+type ImgModalState = {
+  imgModalOpen: boolean,
+  imgURL: string
+}
+
 const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
   // local form state //
   const { diningEntModelData } = diningEntState;
+  const [ imgModalState, setImgModalState ] = React.useState<ImgModalState>({ imgModalOpen: false, imgURL: "" });
   
+  const toggleImageModal = (imagePath?: string): void => {
+
+  }
   return (
     <div>
+      <GenericImgModal open={ imgModalState.imgModalOpen } imgURL={ imgModalState.imgURL } handleClose={ toggleImageModal } />
       <div className={ styles.detailsDivsWrapper }>
         <h5>Details</h5>
         <div className={ styles.detailsDiv }>
@@ -42,9 +55,7 @@ const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
         {
           diningEntModelData.menuImages.length > 0
           ? 
-          diningEntModelData.menuImages.map((imgData) => {
-            return <Image key={imgData._id} className={ styles.diningModelImage } size='medium' src={ setImagePath(imgData.path) } />
-          })
+          <PreviewImagesCarousel images={ diningEntModelData.menuImages } toggleImageModal= { toggleImageModal } />
           : 
           <Segment className={ styles.imgPreviewDefaultSegment }>
             <span>No menu images uploaded...</span>
@@ -57,9 +68,7 @@ const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
         {
           diningEntModelData.images.length > 0
           ?
-          diningEntModelData.images.map((imgData) => {
-            return <Image key={imgData._id} className={ styles.diningModelImage } size='medium' src={ setImagePath(imgData.path) } />
-          })
+          <PreviewImagesCarousel images={ diningEntModelData.images } toggleImageModal={ toggleImageModal } />
           : 
           <Segment className={ styles.imgPreviewDefaultSegment }>
             <span>No general images upoaded...</span>

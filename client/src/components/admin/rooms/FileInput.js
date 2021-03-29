@@ -13,7 +13,7 @@ type UnionState = (DiningEntertainmentState | ServiceState);
 
 type Props = {
   uploadImage: <S>(data: FormData, currentState: S) => Promise<boolean>,
-  dataName: "roomImage" | "serviceImage" | "diningImage",
+  dataName: "roomImage" | "serviceImage" | "diningImage" | "menuImage",
   modelState: UnionState,
   textContent?: string
 }
@@ -39,7 +39,7 @@ const FileInput = ({ uploadImage, dataName, modelState, textContent }: Props): R
       return uploadImage(data, modelState)
         .then((success) => {
           if (success) {
-            const input = document.getElementById("modelImgUplFileInput");
+            const input = document.getElementById(`${dataName}FileInput`);
             if (input instanceof HTMLInputElement) {
               input.value = "";
             }
@@ -51,7 +51,7 @@ const FileInput = ({ uploadImage, dataName, modelState, textContent }: Props): R
   };
 
   const cancelFile = () => {
-    const input = document.getElementById("modelImgUplFileInput");
+    const input = document.getElementById(`${dataName}FileInput`);
     if (input instanceof HTMLInputElement) {
       input.value = "";
     }
@@ -60,7 +60,7 @@ const FileInput = ({ uploadImage, dataName, modelState, textContent }: Props): R
 
   return (
     <div className={ styles.fileInputContainer }>
-      <input type="file" id="modelImgUplFileInput" hidden onChange={onChange} />   
+      <input type="file" id={`${dataName}FileInput`} hidden onChange={onChange} />   
       {
         localState.file 
         ?
@@ -76,7 +76,7 @@ const FileInput = ({ uploadImage, dataName, modelState, textContent }: Props): R
           <div className={ styles.textContent }>{ textContent ? textContent : "Upload Images"}</div>
           <Button 
             as="label" 
-            htmlFor="modelImgUplFileInput"
+            htmlFor={`${dataName}FileInput`}
             icon="file" 
             type="button">
           </Button>

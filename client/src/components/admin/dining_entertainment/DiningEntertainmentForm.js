@@ -159,7 +159,7 @@ const DiningEntertainmentForm = ({ diningEntState, history, _handleUploadDiningM
 
         />
         <div className={ styles.imageUploadInputDiv }>
-          <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } textContent={ "Upload menu images" }/>
+          <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "menuImage" } modelState={ diningEntState } textContent={ "Upload menu images" }/>
           {
             diningEntModelData.menuImages.length > 0 
             ?

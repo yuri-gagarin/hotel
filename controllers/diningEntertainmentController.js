@@ -161,23 +161,60 @@ export default {
   },
 
   uploadImage: (req, res) => {
-    const imageUploadResult = req.locals.diningModelImageUpload;
-    if (imageUploadResult.success) {
-      return DiningModelImage.create({
-        path: imageUploadResult.imagePath
-      })
-      .then((diningModelImage) => {
-        return res.status(200).json({
-          responseMsg: "Uploaded an image",
-          newImage: diningModelImage
+    const { diningModelId } = req.params;
+    const { success, imagePath } = req.locals.diningModelImageUpload;
+
+    let uploadedImage; let updatedDiningEntModel;
+    console.log(168)
+    if (success) {
+      // check if id is present and upload is performed on existing model /
+      if (diningModelId) {
+        return (
+          DiningModelImage.create({ diningModel: diningModelId, path: imagePath, uploadedAt: new Date(Date.now()) })
+        )
+        .then((imageData) => {
+          uploadedImage = imageData;
+          return (
+            DiningEntertainmentModel.findOneAndUpdate(
+              { _id: diningModelId },
+              { $push: { images: uploadedImage._id } },
+              { new: true }
+            )
+          );
+        })
+        .then((diningEntModel) => {
+          updatedDiningEntModel = diningEntModel;
+          return res.status(200).json({
+            responseMsg: "Image uploaded",
+            newImage: uploadedImage,
+            updatedDiningEntModel: updatedDiningEntModel
+          });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            responseMsg: "A database error occured",
+            error: error
+          });
         });
-      })
-      .catch((error) => {
-        return res.status(500).json({
-          responseMsg: "A database error occured",
-          error: error
+      } else {
+        // image is being uploaded on a new not created model //
+        return DiningModelImage.create({
+          path: imagePath,
+          uploadedAt: new Date(Date.now())
+        })
+        .then((diningModelImage) => {
+          return res.status(200).json({
+            responseMsg: "Uploaded an image",
+            newImage: diningModelImage
+          });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            responseMsg: "A database error occured",
+            error: error
+          });
         });
-      });
+      }
     } else {
       return res.status(500).json({
         responseMsg: "Upload not successful"
