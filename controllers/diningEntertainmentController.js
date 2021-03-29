@@ -50,16 +50,14 @@ export default {
 
   updateDiningModel: (req, res) => {
     let status, foundDiningModel;
+    console.log(req.body)
     const { diningModelId } = req.params;
     const { diningModelData, diningModelImages = [], menuImages = [] } = req.body;
     const { title, description, hours } = diningModelData;
-    // 
-    const populateQuery = [
-      { path:'images', model: "DiningModelImage" }, 
-      { path: "menuImages" , model: "MenuImage" }
-    ];
 
-    const updatedDiningModelImages = diningModelImages.currentImages.map((img) => `${img._id}` );
+    const updatedDiningModelImages = diningModelImages.map((img) => img._id );
+    const updatedMenuImages = menuImages.map((img) => img._id);
+
     return DiningEntertainmentModel.findOneAndUpdate(
       { _id: diningModelId },
       {
@@ -74,13 +72,14 @@ export default {
       },
       { new: true }
     )
-    .then((updatedDiningModel) => {
-      return DiningEntertainmentModel.populate(updatedDiningModel, populateQuery).execPopulate();
-    })
+    .populate("images")
+    .populate("menuImages")
+    .exec()
     .then((diningModel) => {
+      console.log(diningModel)
       return res.status(200).json({
         responseMsg: "Dining/Entertainment option updated",
-        updatedDiningModel: diningModel
+        updatedDiningEntModel: diningModel
       });
     })
     .catch((error) => {
@@ -180,6 +179,7 @@ export default {
               { $push: { images: uploadedImage._id } },
               { new: true }
             )
+            .populate("images").exec()
           );
         })
         .then((diningEntModel) => {

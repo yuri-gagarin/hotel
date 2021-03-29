@@ -45,6 +45,7 @@ export const PreviewImagesCarousel = ({ images, toggleImageModal } : Props): Rea
     }
   }, [ images, imagesWrapperRef.current ]);
   */
+  
   const scrollToNext = () => {
     if (imagesWrapperRef.current) {
       const scrollWidth: number = imagesWrapperRef.current.scrollWidth;
@@ -56,7 +57,6 @@ export const PreviewImagesCarousel = ({ images, toggleImageModal } : Props): Rea
         setScrollState(scrollWidth);
       }
     }
-    return;
   };
   const scrollToPrevious = () => {
     if (imagesWrapperRef.current) {
@@ -67,7 +67,6 @@ export const PreviewImagesCarousel = ({ images, toggleImageModal } : Props): Rea
         setScrollState(scrollState - 300);
       }
     }
-    return;
   };
 
   return (

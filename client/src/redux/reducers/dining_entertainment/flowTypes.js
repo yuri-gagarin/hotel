@@ -36,7 +36,7 @@ export type DiningEntModelData = {
   description: string,
   images: Array<DiningImgData>,
   menuImages: Array<MenuImageData>,
-  optionType: "restaurant" | "cafe" | "lounge",
+  optionType: "restaurant" | "cafe" | "lounge" | "",
   createdAt: string,
   editedAt: string
 };

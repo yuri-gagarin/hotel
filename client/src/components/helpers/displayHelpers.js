@@ -57,7 +57,7 @@ export const objectValuesEmpty = (obj: any): boolean => {
         return true;
       } else {
         for (const val of values) {
-          if (val) return false;
+          if (val && Array.isArray(val) && val.length > 0) return false;
         }
         return true;
       }

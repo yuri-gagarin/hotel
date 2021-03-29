@@ -2,32 +2,34 @@ import { isLoggedIn } from "./helpers/routeHelpers";
 import diningEntertainmentController from "../controllers/diningEntertainmentController";
 
 export default function (router) {
-  // @route POST "/api/createDiningModel"
-  // @description Creates a new DiningModel to display
-  // @access PRIVATE
-  router
-    .route("/api/createDiningModel")
-    .post(diningEntertainmentController.createDiningModel);
-    
-  // @route GET "/api/diningModels" //
+
+  // @route GET "/api/dining_models" //
   // @description Fetches the DiningModels //
   // @access PRIVATE //
   router  
-    .route("/api/diningModels")
+    .route("/api/dining_models")
     .get(diningEntertainmentController.getDiningModels);
 
+
+  // @route POST "/api/dining_models/create"
+  // @description Creates a new DiningModel to display
+  // @access PRIVATE
+  router
+    .route("/api/dining_models/create")
+    .post(diningEntertainmentController.createDiningModel);
+    
     
   // @route PATCH "/api/diningModels/:diningModelId" //
   // @description Updates a DiningModel and all of its corresponding images //
   // @access PRIVATE //
   router
-    .route("/api/diningModels/:diningModelId")
+    .route("/api/dining_models/:diningModelId")
     .patch(diningEntertainmentController.updateDiningModel);
 
   // @route DELETE "/api/diningModels/:roomId" //
   // @description Deletes a DiningModel and all of its corresponding images //
   // @access PRIVATE //
   router  
-    .route("/api/diningModels/:diningModelId")
+    .route("/api/dining_models/:diningModelId")
     .delete(diningEntertainmentController.deleteDiningModel);
 };  

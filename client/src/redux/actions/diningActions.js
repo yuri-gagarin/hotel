@@ -300,7 +300,7 @@ export const handleDeleteMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
 export const handleCreateDiningModel = (dispatch: Dispatch<DiningEntModelAction>, clientFormData: ClientDiningEntFormData): Promise<boolean> => {
   const requestOptions = {
     method: "post",
-    url: "/api/createDiningModel",
+    url: "/api/dining_models/create",
     data: {
       diningModelData: clientFormData,
     }
@@ -326,7 +326,7 @@ export const handleCreateDiningModel = (dispatch: Dispatch<DiningEntModelAction>
 export const handleFetchDiningModels = (dispatch: Dispatch<DiningEntModelAction>): Promise<boolean> => {
   const requestOptions = {
     method: "get",
-    url: "/api/diningModels"
+    url: "/api/dining_models"
   };
 
   dispatch(diningModelAPIRequest());
@@ -348,17 +348,15 @@ export const handleFetchDiningModels = (dispatch: Dispatch<DiningEntModelAction>
 
 export const handleUpdateDiningModel = (dispatch: Dispatch<DiningEntModelAction>, clientFormData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState): Promise<boolean> => {
   const { _id: diningModelId } = clientFormData;
-  const { diningEntModelData, diningEntImages, createdDiningEntModels } = currentDiningEntState;
-  if (diningEntImages) {
-    console.log(diningEntImages);
-    return Promise.resolve(true);
-  }
+  const { diningEntModelData, diningEntImages, menuImages, createdDiningEntModels } = currentDiningEntState;
+  
   const requestOptions = {
     method: "patch",
-    url: "/api/diningModels/" + (diningModelId ? diningModelId : ""),
+    url: "/api/dining_models/" + (diningModelId ? diningModelId : ""),
     data: {
       diningModelData: clientFormData,
-      diningModelImages: diningEntImages
+      diningModelImages: diningEntImages,
+      menuImages: menuImages
     }
   };
 
@@ -392,7 +390,7 @@ export const handleDeleteDiningModel = (dispatch: Dispatch<DiningEntModelAction>
   const { createdDiningEntModels } = currentDiningEntState;
   const requestOptions = {
     method: "delete",
-    url: "/api/diningModels/" + modelIdToDelete,
+    url: "/api/dining_models/" + modelIdToDelete,
   };
 
   dispatch(diningModelAPIRequest());

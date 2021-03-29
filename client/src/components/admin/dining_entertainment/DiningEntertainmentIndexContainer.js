@@ -124,11 +124,6 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
       </Route>
       <Route path={"/admin/dining_entertainment/new"}>
         <Grid.Row>
-          <Grid.Column className={ styles.newFormControlsColumn } width={15}>
-            <Button onClick={goBackToDiningModels}>Back</Button>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
           <Grid.Column className={ styles.newFormColumn } width={15}>
             <DiningEntertainmentForm diningEntState={ diningEntertainmentState } history={history} />
           </Grid.Column>

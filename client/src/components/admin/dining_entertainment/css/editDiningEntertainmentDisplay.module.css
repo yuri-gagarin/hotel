@@ -11,6 +11,7 @@
   left: auto;
   bottom: auto;
   right: auto;
+  padding: 1em !important;
 }
 
 .modalControlsDiv {

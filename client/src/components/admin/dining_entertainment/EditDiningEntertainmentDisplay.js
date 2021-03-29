@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 // semantic ui react //
-import { Button, Grid, Modal, Popup } from "semantic-ui-react";
+import { Grid, Modal } from "semantic-ui-react";
 // additonal components //
 import DiningEntertainmentForm from "./DiningEntertainmentForm";
 import DiningEntertainmentDisplay from "./DiningEntertainmentDisplay";
@@ -34,9 +34,10 @@ export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBack
   };
   const handleModelDelete = (modelId: string) => {
   };
-  const handleModelSave = () => {
+  
+  const handleUpdateModel = () => { 
 
-  };
+  }
 
   const toggleEditModal = () => {
     setLocalState({ ...localState, formModalOpen: !localState.formModalOpen });
@@ -45,19 +46,11 @@ export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBack
   return (
     <Grid.Row>
       <Modal open={ localState.formModalOpen } className={ styles.editModal } size="fullscreen">
-        <div className={ styles.modalControlsDiv }>
-          <Popup 
-            content="Changes will not be saved"
-            trigger={
-              <Button inverted color="orange" icon="cancel" content="Cancel and Close" onClick={ toggleEditModal } />
-            }
-          />
-          <Button content="Save and Update" icon="save" onClick={ handleModelSave } />
-          <ModelDeleteBtn modelId={ diningEntModelData._id } modelName="dining" handleModelDelete={ handleModelDelete } />
-        </div>
-        <div className={ styles.modalFormDiv}>
-          <DiningEntertainmentForm diningEntState={ diningEntState } history={ history } />
-        </div>
+        <DiningEntertainmentForm 
+          toggleEditModal= { toggleEditModal }
+          diningEntState={ diningEntState } 
+          history={ history } 
+        />
       </Modal>
       <Grid.Column className={ styles.editColumn } style={{ marginBottom: "1em" }} width={15} >
         <EditViewControls 

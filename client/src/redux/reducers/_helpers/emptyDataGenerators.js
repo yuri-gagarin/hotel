@@ -44,7 +44,7 @@ export const generateEmptyDiningEntModel = (): DiningEntModelData => {
     description: "",
     images: [],
     menuImages: [],
-    optionType: "restaurant",
+    optionType: "",
     createdAt: "",
     editedAt: ""
   };
