@@ -79,7 +79,7 @@ const ServiceDisplay = ({ formOpen, service, history, toggleForm } : Props): Rea
         <hr />
         <div className={ styles.serviceImagesDiv}>
           <h4>Uploaded Service Images</h4>
-          <PreviewImagesCarousel images={ service.images } toggleImageModal={ toggleImageModal } />
+          <PreviewImagesCarousel showDeleteIcons={ false } images={ service.images } toggleImageModal={ toggleImageModal } />
         </div>
       </div>
       <div className={ styles.editServiceFormToggleDiv }>

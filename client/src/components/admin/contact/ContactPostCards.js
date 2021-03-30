@@ -62,37 +62,41 @@ export const ContactPostCards = ({ contactPostState, openContactPost, handleCont
                       </div>
                     :
                     <div className={ styles.cardButtonsDiv }>
-                      <Button.Group>
-                        <Button color="green" icon labelPosition="right"  onClick={() => openContactPost(post._id) }>
-                          <Icon name="right arrow" />
-                          Open
-                        </Button>
-                      </Button.Group>
-                      <Button.Group>
-                        {
-                          post.archived 
-                          ?
+                      <div className={ styles.controlButtonsDiv }> 
+                        <Button.Group fluid>
+                          {
+                            post.archived 
+                            ?
+                            <Popup 
+                            content="Restore to active"
+                            trigger={
+                              <Button color="blue" icon="plus" content="Restore" onClick={() => handleContactPostArchiveStatus(post._id)} />
+                            }
+                            />
+                            :
+                            <Popup 
+                            content="Mark as read and archive"
+                            trigger={
+                              <Button color="orange" icon="archive" content="Archive" onClick={() => handleContactPostArchiveStatus(post._id)} />
+                            }
+                            />
+                          }
                           <Popup 
-                          content="Restore to active"
-                          trigger={
-                            <Button color="blue" icon="plus" content="Restore" onClick={() => handleContactPostArchiveStatus(post._id)} />
-                          }
+                            content="Delete the client contact request"
+                            trigger={
+                              <Button color='red' icon="trash" content="Delete" onClick={() => triggerContactPostDelete(post._id)} />
+                            }
                           />
-                          :
-                          <Popup 
-                          content="Mark as read and archive"
-                          trigger={
-                            <Button color="orange" icon="archive" content="Archive" onClick={() => handleContactPostArchiveStatus(post._id)} />
-                          }
-                          />
-                        }
-                        <Popup 
-                          content="Delete the client contact request"
-                          trigger={
-                            <Button color='red' icon="trash" content="Delete" onClick={() => triggerContactPostDelete(post._id)} />
-                          }
-                        />
-                      </Button.Group>
+                        </Button.Group>
+                      </div>
+                      <div className={ styles.openBtnDiv }>
+                        <Button.Group fluid>
+                          <Button color="green" icon labelPosition="right"  onClick={() => openContactPost(post._id) }>
+                            <Icon name="right arrow" />
+                            Open
+                          </Button>
+                        </Button.Group>
+                      </div>
                      
                     </div>
                   }

@@ -12,14 +12,16 @@ import { setImagePath } from "../../helpers/displayHelpers";
 
 type Props = {
   images: Array<ServiceImgData> | Array<DiningImgData> | Array<MenuImageData>,
-  toggleImageModal: (imgPath: string) => void
+  showDeleteIcons: boolean,
+  toggleImageModal: (imgPath: string) => void,
+  triggerImgModelDelete?: (imgIdToDelete: string) => void
 }
 type LocalState = {
   elementPositions: Array<number>,
   positionIndex: number,
   totalElements: number
 }
-export const PreviewImagesCarousel = ({ images, toggleImageModal } : Props): React.Node => {
+export const PreviewImagesCarousel = ({ images, showDeleteIcons, toggleImageModal, triggerImgModelDelete } : Props): React.Node => {
 
   const imagesWrapperRef = React.useRef<HTMLElement | null>(null);
   // const [ localState, setLocalState ] = React.useState<LocalState>({ elementPositions: [], positionIndex: 0, totalElements: 0 });
@@ -78,7 +80,29 @@ export const PreviewImagesCarousel = ({ images, toggleImageModal } : Props): Rea
         {
           images.length > 0 
           ? 
-            images.map((img) => <Image key={img._id} className={ styles.carouselPreviewImage } size='medium' src={ setImagePath(img.path) } onClick={ () => toggleImageModal(img.path) } />)
+            <div className={ styles.innerWrapper }>
+              {
+                images.map((img) => {
+                  return (
+                    <div className={ styles.imgDiv } key={img._id} >
+                      {
+                        (showDeleteIcons && triggerImgModelDelete) 
+                        ?
+                        <span className={ styles.imgDeleteSpan }>
+                          <i className="fas fa-trash-alt" onClick={ () => triggerImgModelDelete(img._id)}></i>
+                        </span>
+                        :
+                        null
+                      }
+                      <Image rounded fluid src={ setImagePath(img.path) } onClick={ () => toggleImageModal(img.path) } />
+                    </div>
+                  );
+                })
+
+              }
+    
+            </div>
+           
           : 
             <Segment placeholder className={ styles.defaultNoImagesSegment }>
               <Header icon>

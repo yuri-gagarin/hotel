@@ -17,20 +17,55 @@
 }
 .imagesControlLeft { 
   width: 60px;
+  background-color: rgb(233, 233, 233);
+  border-radius: 5px 0 0 5px;
 }
 .imagesControlRight {
+  background-color: rgb(233, 233, 233);
   width: 60px;
+  border-radius: 0 5px 5px 0;
 }
+
 .imagesWrapper {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
   overflow-x: hidden;
 }
-.carouselPreviewImage {
-  border: 5px solid  rgb(104, 159, 230);
+.innerWrapper {
+  display: flex;
+}
+
+.imgDiv {
+  border: 2px solid rgb(104, 171, 226);
   border-radius: 5px;
-  cursor: pointer;
+  margin-right: 1em;
+  display: inline-block;
   position: relative;
-  margin-right: 0.5em;
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+  z-index: 1;
+}
+.imgDiv > span {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 2em;
+  color: red;
+  z-index: 3;
+}
+.imgDiv > span > i {
+  cursor: pointer;
+}
+.imgDiv > span > i:hover {
+  color: rgb(250, 53, 53);
+}
+.imgDiv > img {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  cursor: pointer;
 }

@@ -57,9 +57,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
    _handleFetchDiningModels();
   }, []);
 
-  const toggleForm = () => {
-
-  };
+  
   const handleTakeAllOnline = () => {
     return Promise.resolve(true);
   };
@@ -151,8 +149,9 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
       <Route path={"/admin/dining_entertainment/edit"}>
         <EditDiningEntertainmentDisplay 
           diningEntState={ diningEntertainmentState } 
+          history={ history }
           goBackToDiningModels={ goBackToDiningModels }
-          history= {history }
+          triggerModelDelete={ triggerDiningModelDelete }
         />
       </Route>
     </React.Fragment>

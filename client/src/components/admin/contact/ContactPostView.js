@@ -32,6 +32,7 @@ const ContactPostView = ({ contactPost, handleClosePost, handleMarkReadUnread, s
   const toggleReplyModal = () => {
     setLocalState({ ...localState, replyModalOpen: !localState.replyModalOpen });
   };
+
   const triggerAutoResponse = () => {
     /** TODO  
      * this should trigger the response modal with email as default

@@ -28,7 +28,7 @@ const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
 
   }
   return (
-    <div>
+    <div className={ styles.container }>
       <GenericImgModal open={ imgModalState.imgModalOpen } imgURL={ imgModalState.imgURL } handleClose={ toggleImageModal } />
       <div className={ styles.detailsDivsWrapper }>
         <h5>Details</h5>
@@ -55,7 +55,11 @@ const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
         {
           diningEntModelData.menuImages.length > 0
           ? 
-          <PreviewImagesCarousel images={ diningEntModelData.menuImages } toggleImageModal= { toggleImageModal } />
+          <PreviewImagesCarousel 
+            showDeleteIcons={ false }
+            images={ diningEntModelData.menuImages } 
+            toggleImageModal= { toggleImageModal } 
+          />
           : 
           <Segment className={ styles.imgPreviewDefaultSegment }>
             <span>No menu images uploaded...</span>
@@ -68,7 +72,11 @@ const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
         {
           diningEntModelData.images.length > 0
           ?
-          <PreviewImagesCarousel images={ diningEntModelData.images } toggleImageModal={ toggleImageModal } />
+          <PreviewImagesCarousel 
+            showDeleteIcons={ false }
+            images={ diningEntModelData.images }
+            toggleImageModal={ toggleImageModal } 
+          />
           : 
           <Segment className={ styles.imgPreviewDefaultSegment }>
             <span>No general images upoaded...</span>

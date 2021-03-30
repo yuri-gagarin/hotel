@@ -5,12 +5,13 @@ import { Button, Form, Header, Icon, Input,  Label, Popup, Segment, TextArea } f
 import DiningEntertainmentImageThumb from "./DiningEntertainmentImgThumb";
 import { DiningEntertainmentTypeDropdown } from "./form_components/DiningEntertainmentTypeDropdown";
 import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
+import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import ModelDeleteBtn from "../shared/ModelDeleteBtn";
 import GenericImgModal from "../shared/GenericImgModal";
 import FileInput from "../rooms/FileInput";
 // redux imports  //
 import { connect } from "react-redux";
-import { handleUploadDiningModelImage, handleDeleteDiningModelImage, handleCreateDiningModel, handleUpdateDiningModel } from "../../../redux/actions/diningActions";
+import { handleUploadDiningModelImage, handleDeleteDiningModelImage, handleUploadMenuImage, handleDeleteMenuImage, handleCreateDiningModel, handleUpdateDiningModel } from "../../../redux/actions/diningActions";
 // types //
 import type { DiningEntertainmentState, DiningImgData, MenuImageData, ClientDiningEntFormData, DiningEntModelAction } from "../../../redux/reducers/dining_entertainment/flowTypes";
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
@@ -29,8 +30,12 @@ type OwnProps = {
 // from <connectDispatchToProps> //
 type Props = {
   ...OwnProps,
+  _handleUploadMenuImage: <DiningEntertainmentState>(file: FormData, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>,
+  _handleDeleteMenuImage: <DiningEntertainmentState>(imageId: string, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>,
+  //
   _handleUploadDiningModelImage: <DiningEntertainmentState>(file: FormData, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>,
   _handleDeleteDiningModelImage: (imageId: string, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>,
+  //
   _handleCreateDiningModel: (modelCreateData: ClientDiningEntFormData) => Promise<boolean>,
   _handleUpdateDiningModel: (modelUpdateData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>
 };
@@ -40,13 +45,25 @@ type ImageModalState = {
   openImageURL: string
 }
 
-const DiningEntertainmentForm = ({ diningEntState, history, toggleEditModal, _handleUploadDiningModelImage, _handleDeleteDiningModelImage, _handleCreateDiningModel, _handleUpdateDiningModel }: Props): React.Node => {
+type ConfirmDeleteModalState = {
+  confirmDelModalOpen: boolean,
+  modelIdToDelete: string, 
+  modelToDelete: "image" | "menuImage" | ""
+}
+
+const DiningEntertainmentForm = ({ 
+  diningEntState, history, toggleEditModal, 
+  _handleUploadDiningModelImage, _handleDeleteDiningModelImage, 
+  _handleUploadMenuImage, _handleDeleteMenuImage,
+  _handleCreateDiningModel, _handleUpdateDiningModel }: Props): React.Node => {
+
   const { useEffect, useState } = React;
   const { diningEntModelData } = diningEntState;
 
   // local form state //
   const [ diningModelDetails, setDiningModelDetails ] = useState({ ...diningEntModelData });
   const [ imageModalState, setImageModalState ] = useState({ imgModalOpen: false, openImageURL: "" });
+  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = useState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
   /*
   useEffect(() => {
     if (diningModelData && diningModelData.images && Array.isArray(diningModelData.images)) {
@@ -129,10 +146,48 @@ const DiningEntertainmentForm = ({ diningEntState, history, toggleEditModal, _ha
     });
   };
 
-  const handleModelDelete = () => {}
+  const triggerModelDelete = (modelId: string) => {
+
+  };
+  /* menu image delete functionality */
+  const triggerMenuImageDelete = (imageId: string) => {
+    setConfirmDeleteModalState({ confirmDelModalOpen: true, modelIdToDelete: imageId, modelToDelete: "menuImage" });
+  };
+  /* model image delete functionality */
+  const triggerImageDelete = (imageId: string) => {
+    setConfirmDeleteModalState({ confirmDelModalOpen: true, modelIdToDelete: imageId, modelToDelete: "image" });
+  };
+  /* image delete functions */
+  const handleImageDeleteCancel = () => {
+    setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "image" });
+  };
+  /* confirm image delete function */
+  const handleImageDeleteConfirm = () => {
+    const { modelIdToDelete, modelToDelete } = confirmDeleteModalState;
+    if (modelToDelete === "image") {
+      return _handleDeleteDiningModelImage(modelIdToDelete, diningEntState)
+        .then((success) => {
+          if (success) setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
+          return Promise.resolve();
+        })
+      } else if (modelToDelete === "menuImage") {
+        return _handleDeleteMenuImage(modelIdToDelete, diningEntState)
+          .then((success) => {
+            if (success) setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
+            return Promise.resolve();
+          })
+      }
+  };
 
   return (
     <div className={ styles.diningEntFormWrapper }>
+      <ConfirmDeleteModal 
+        open={ true } 
+        modelName="dining" 
+        customHeader="Confirm Delete Action" 
+        confirmAction={ handleImageDeleteConfirm }
+        cancelAction={ handleImageDeleteCancel }
+      />
       <GenericImgModal open={ imageModalState.imgModalOpen } imgURL={ imageModalState.openImageURL } handleClose={ toggleImageModal }/>
       <div className={ styles.formControlsDiv }>
         <Popup 
@@ -150,7 +205,7 @@ const DiningEntertainmentForm = ({ diningEntState, history, toggleEditModal, _ha
           :
           <div className={ styles.formControls }>
             <Button content="Update and Save" icon="save" onClick={ handleFormSubmit } />
-            <ModelDeleteBtn modelId={ diningEntModelData._id } modelName="dining" handleModelDelete={ handleModelDelete } />
+            <ModelDeleteBtn modelId={ diningEntModelData._id } modelName="dining" handleModelDelete={ triggerModelDelete } />
           </div>
         }
         
@@ -197,7 +252,12 @@ const DiningEntertainmentForm = ({ diningEntState, history, toggleEditModal, _ha
             {
               diningEntModelData.menuImages.length > 0 
               ?
-              <PreviewImagesCarousel images={ diningEntModelData.menuImages } toggleImageModal={ toggleImageModal } />
+              <PreviewImagesCarousel 
+                showDeleteIcons={ true }
+                images={ diningEntModelData.menuImages } 
+                toggleImageModal={ toggleImageModal } 
+                triggerImgModelDelete={ triggerMenuImageDelete }
+              />
               :
               <Segment textAlign="center">
                 <Header icon>
@@ -212,7 +272,12 @@ const DiningEntertainmentForm = ({ diningEntState, history, toggleEditModal, _ha
             { 
               diningEntModelData.images.length > 0 
               ?
-              <PreviewImagesCarousel images={ diningEntModelData.images } toggleImageModal={ toggleImageModal }/>
+              <PreviewImagesCarousel 
+                showDeleteIcons={ true }
+                images={ diningEntModelData.images } 
+                toggleImageModal={ toggleImageModal }
+                triggerImgModelDelete={ triggerImageDelete }
+              />
               :
               <Segment textAlign="center">
                 <Header icon>
@@ -238,6 +303,12 @@ const mapDispatchToProps = (dispatch: Dispatch<DiningEntModelAction>) => {
     },
     _handleDeleteDiningModelImage: (imageId: string, currentDiningEntState: DiningEntertainmentState) => {
       return handleDeleteDiningModelImage(dispatch, imageId, currentDiningEntState);
+    },
+    _handleUploadMenuImage: (imageData: FormData, currentDiningEntState: DiningEntertainmentState) => {
+      return handleUploadMenuImage(dispatch, imageData, currentDiningEntState);
+    },
+    _handleDeleteMenuImage: (imageId: string, currentDiningEntState: DiningEntertainmentState) => {
+      return handleDeleteMenuImage(dispatch, imageId, currentDiningEntState);
     },
     /*
     setPreviewImages: (previewImages) => {

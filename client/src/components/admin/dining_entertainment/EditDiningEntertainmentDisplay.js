@@ -16,13 +16,14 @@ import styles from "./css/editDiningEntertainmentDisplay.module.css";
 type Props = {
   diningEntState: DiningEntertainmentState,
   history: RouterHistory,
-  goBackToDiningModels: () => void
+  goBackToDiningModels: () => void,
+  triggerModelDelete: (modelIdToDelete: string) => void
 };
 
 type LocalState = {
   formModalOpen: boolean,
 }
-export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBackToDiningModels } : Props): React.Node => {
+export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBackToDiningModels, triggerModelDelete } : Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ formModalOpen: false });
   const { diningEntModelData } = diningEntState;
 
@@ -32,12 +33,6 @@ export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBack
   const handleTakeOffline = (arg: any) => {
     return Promise.resolve(true);
   };
-  const handleModelDelete = (modelId: string) => {
-  };
-  
-  const handleUpdateModel = () => { 
-
-  }
 
   const toggleEditModal = () => {
     setLocalState({ ...localState, formModalOpen: !localState.formModalOpen });
@@ -64,7 +59,7 @@ export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBack
         <ModelDeleteBtn 
           modelName={ "dining" }
           modelId={ diningEntModelData._id }
-          handleModelDelete={ handleModelDelete }
+          handleModelDelete={ triggerModelDelete }
         />
       </Grid.Column>
       <Grid.Column className={ styles.editColumn } width={15}>
