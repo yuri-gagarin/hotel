@@ -11,9 +11,9 @@ import GenericImgModal from "../shared/GenericImgModal";
 import FileInput from "../rooms/FileInput";
 // redux imports  //
 import { connect } from "react-redux";
-import { handleUploadDiningModelImage, handleDeleteDiningModelImage, handleUploadMenuImage, handleDeleteMenuImage, handleCreateDiningModel, handleUpdateDiningModel } from "../../../redux/actions/diningActions";
+import { handleUploadDiningModelImage, handleDeleteDiningModelImage, handleUploadMenuImage, handleDeleteMenuImage, handleCreateDiningModel, handleUpdateDiningModel, handleDeleteDiningModel } from "../../../redux/actions/diningActions";
 // types //
-import type { DiningEntertainmentState, DiningImgData, MenuImageData, ClientDiningEntFormData, DiningEntModelAction } from "../../../redux/reducers/dining_entertainment/flowTypes";
+import type { DiningEntertainmentState, DiningEntModelData, DiningImgData, MenuImageData, ClientDiningEntFormData, DiningEntModelAction } from "../../../redux/reducers/dining_entertainment/flowTypes";
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { RouterHistory } from "react-router-dom";
 // styles and css //
@@ -37,7 +37,8 @@ type Props = {
   _handleDeleteDiningModelImage: (imageId: string, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>,
   //
   _handleCreateDiningModel: (modelCreateData: ClientDiningEntFormData) => Promise<boolean>,
-  _handleUpdateDiningModel: (modelUpdateData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>
+  _handleUpdateDiningModel: (modelUpdateData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>,
+  _handleDeleteDiningModel: (diningModelId: string, currentDiningEntState: DiningEntertainmentState) => Promise<boolean>
 };
 
 type ImageModalState = {
@@ -55,7 +56,7 @@ const DiningEntertainmentForm = ({
   diningEntState, history, toggleEditModal, 
   _handleUploadDiningModelImage, _handleDeleteDiningModelImage, 
   _handleUploadMenuImage, _handleDeleteMenuImage,
-  _handleCreateDiningModel, _handleUpdateDiningModel }: Props): React.Node => {
+  _handleCreateDiningModel, _handleUpdateDiningModel, _handleDeleteDiningModel }: Props): React.Node => {
 
   const { useEffect, useState } = React;
   const { diningEntModelData } = diningEntState;
@@ -72,6 +73,11 @@ const DiningEntertainmentForm = ({
     }
   }, []);
   */
+ useEffect(() => {
+  console.log(76);
+  console.log(diningEntModelData);
+  console.log(objectValuesEmpty(diningEntModelData));
+ }, [ diningEntModelData ]);
   
   const handleFormCancel = () => {
     if (toggleEditModal && !objectValuesEmpty(diningEntModelData)) {
@@ -147,8 +153,11 @@ const DiningEntertainmentForm = ({
   };
 
   const triggerModelDelete = (modelId: string) => {
-
+    setConfirmDeleteModalState({ confirmDelModalOpen: true, modelIdToDelete: modelId, modelToDelete: "model" });
   };
+  const handleDeleteCancel = () => {
+    setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" })
+  }
   /* menu image delete functionality */
   const triggerMenuImageDelete = (imageId: string) => {
     setConfirmDeleteModalState({ confirmDelModalOpen: true, modelIdToDelete: imageId, modelToDelete: "menuImage" });
@@ -157,36 +166,39 @@ const DiningEntertainmentForm = ({
   const triggerImageDelete = (imageId: string) => {
     setConfirmDeleteModalState({ confirmDelModalOpen: true, modelIdToDelete: imageId, modelToDelete: "image" });
   };
-  /* image delete functions */
-  const handleImageDeleteCancel = () => {
-    setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "image" });
-  };
+  
   /* confirm image delete function */
-  const handleImageDeleteConfirm = () => {
+  const handleDeleteConfirm = () => {
     const { modelIdToDelete, modelToDelete } = confirmDeleteModalState;
     if (modelToDelete === "image") {
       return _handleDeleteDiningModelImage(modelIdToDelete, diningEntState)
         .then((success) => {
           if (success) setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
-          return Promise.resolve();
         })
       } else if (modelToDelete === "menuImage") {
         return _handleDeleteMenuImage(modelIdToDelete, diningEntState)
           .then((success) => {
             if (success) setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
-            return Promise.resolve();
+          });
+      } else if (modelToDelete === "model") {
+        return _handleDeleteDiningModel(modelIdToDelete, diningEntState)
+          .then((success) => {
+            if (success) setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
           })
+      } else {
+        return Promise.resolve()
       }
   };
+  
 
   return (
     <div className={ styles.diningEntFormWrapper }>
       <ConfirmDeleteModal 
-        open={ true } 
+        open={ confirmDeleteModalState.confirmDelModalOpen } 
         modelName="dining" 
         customHeader="Confirm Delete Action" 
-        confirmAction={ handleImageDeleteConfirm }
-        cancelAction={ handleImageDeleteCancel }
+        confirmAction={ handleDeleteConfirm }
+        cancelAction={ handleDeleteCancel }
       />
       <GenericImgModal open={ imageModalState.imgModalOpen } imgURL={ imageModalState.openImageURL } handleClose={ toggleImageModal }/>
       <div className={ styles.formControlsDiv }>
@@ -320,6 +332,9 @@ const mapDispatchToProps = (dispatch: Dispatch<DiningEntModelAction>) => {
     },
     _handleUpdateDiningModel: (diningModelData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState) => {
       return handleUpdateDiningModel(dispatch, diningModelData, currentDiningEntState);
+    },
+    _handleDeleteDiningModel: (diningModelId: string, currentDiningEntState: DiningEntertainmentState) => {
+      return handleDeleteDiningModel(dispatch, diningModelId, currentDiningEntState);
     }
   };
 };

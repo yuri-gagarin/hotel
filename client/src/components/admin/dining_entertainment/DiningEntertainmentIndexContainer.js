@@ -56,7 +56,6 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   useEffect(() => {
    _handleFetchDiningModels();
   }, []);
-
   
   const handleTakeAllOnline = () => {
     return Promise.resolve(true);
@@ -66,6 +65,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   };
 
   const openNewDiningModelForm = () => {
+    console.log(69)
     _handleClearDiningModelData();
     history.push("/admin/dining_entertainment/new");
     // setNewDiningModelFormOpen(true);
@@ -125,7 +125,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
               <DiningEntertainmentCards 
                 diningEntState={ diningEntertainmentState }
                 openDiningEntModel={ openDiningModel }
-                deleteDiningEntModel={ triggerDiningModelDelete }
+                triggerDeleteDiningEntModel={ triggerDiningModelDelete }
               />
               : 
               <Segment placeholder className={ styles.defaultNoItemsSegment }>

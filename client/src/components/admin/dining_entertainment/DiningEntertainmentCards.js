@@ -14,9 +14,9 @@ import { setImagePath, trimStringToSpecificLength } from "../../helpers/displayH
 type Props = {
   diningEntState: DiningEntertainmentState,
   openDiningEntModel: (modelId: string) => void,
-  deleteDiningEntModel: (modelIdToDelete: string) => void
+  triggerDeleteDiningEntModel: (modelIdToDelete: string) => void
 }
-export const DiningEntertainmentCards = ({ diningEntState, openDiningEntModel, deleteDiningEntModel } : Props): React.Node => {
+export const DiningEntertainmentCards = ({ diningEntState, openDiningEntModel, triggerDeleteDiningEntModel } : Props): React.Node => {
   const { createdDiningEntModels } = diningEntState;
 
   const extractImagePath = (modelData: DiningEntModelData): string => {
@@ -55,7 +55,7 @@ export const DiningEntertainmentCards = ({ diningEntState, openDiningEntModel, d
             <Card.Content extra>
               <div className='ui two buttons'>
                 <Button basic content="Open" icon="file" color='green' onClick={() => openDiningEntModel(diningModel._id)} />
-                <Button basic content="Delete" icon="trash" color='red' onClick={() => deleteDiningEntModel(diningModel._id)} />
+                <Button basic content="Delete" icon="trash" color='red' onClick={() => triggerDeleteDiningEntModel(diningModel._id)} />
               </div>
             </Card.Content>
           </Card>

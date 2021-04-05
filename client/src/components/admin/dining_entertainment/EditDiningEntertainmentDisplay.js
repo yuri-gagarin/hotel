@@ -62,7 +62,7 @@ export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBack
           handleModelDelete={ triggerModelDelete }
         />
       </Grid.Column>
-      <Grid.Column className={ styles.editColumn } width={15}>
+      <Grid.Column className={ styles.displayColumn } width={15}>
         <DiningEntertainmentDisplay diningEntState={ diningEntState } />
       </Grid.Column>
     </Grid.Row>
