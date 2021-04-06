@@ -5,6 +5,8 @@ let imagePath, fileName;
 const storage = multer.diskStorage({
   destination: (req, file, done) => {
     imagePath = path.join("public", "uploads", "dining_images");
+    console.log(8)
+    console.log(path.join(path.resolve(), imagePath));
     done(null, imagePath);
   },
   filename: (req, file, done) => {
@@ -40,6 +42,8 @@ const diningImageUploader = (req, res, next) => {
     fileFilter: fileFilter
   }).single("diningImage");
 
+  console.log(43);
+  console.log(req)
   //run the upload function
   upload(req, res, function(error) {
     console.log(error);

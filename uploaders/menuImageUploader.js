@@ -1,11 +1,30 @@
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 
 let imagePath, fileName;
 const storage = multer.diskStorage({
   destination: (req, file, done) => {
     imagePath = path.join("public", "uploads", "menu_images");
-    done(null, imagePath);
+    const absolutePath = path.join(path.resolve(), imagePath);
+    fs.access(absolutePath, fs.constants.W_OK | fs.constants.R_OK, (error) => {
+      if (error) {
+        if (error.code === "ENOENT") {
+          fs.mkdir(absolutePath, { recursive: true }, (error) => {
+            if (error) {
+              console.error(error);
+              done(error, imagePath);
+            }
+            done(null, imagePath);
+          });
+        } else {
+          console.error(error);
+          done(error, imagePath);
+        }
+      } else {
+        done(null, imagePath);
+      }
+    });
   },
   filename: (req, file, done) => {
     const extName = path.extname(file.originalname);

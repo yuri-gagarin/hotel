@@ -137,7 +137,7 @@ export const handleUploadDiningModelImage = (dispatch: Dispatch<DiningEntModelAc
 
   const requestOptions = {
     method: "post",
-    url: "/api/uploadDiningModelImage/" + (modelId ? modelId : ""),
+    url: "/api/upload_dining_model_image/" + (modelId ? modelId : ""),
     headers: {
       'content-type': 'multipart/form-data'
     },
@@ -185,7 +185,7 @@ export const handleDeleteDiningModelImage = (dispatch: Dispatch<DiningEntModelAc
   const { diningEntImages, createdDiningEntModels } = currentDiningEntState;
   const requestOptions = {
     method: "delete",
-    url: "/api/deleteDiningModelImage/" + imageId
+    url: "/api/delete_dining_model_image/" + imageId
   };
 
   dispatch(diningModelAPIRequest());
@@ -220,7 +220,7 @@ export const handleUploadMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
 
   const requestOptions = {
     method: "post",
-    url: "/api/upload_menu_image/" + (modelId ? modelId : ""),
+    url: "/api/dining/upload_menu_image/" + (modelId ? modelId : ""),
     headers: {
       'content-type': 'multipart/form-data'
     },
@@ -231,11 +231,11 @@ export const handleUploadMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newImage, updatedDiningEntModel } : { responseMsg: string, newImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
+      const { responseMsg, newImage, updatedDiningEntModel } : { responseMsg: string, newImage: MenuImageData, updatedDiningEntModel: DiningEntModelData } = data;
       
       // updated images for preview //
       let updatedDiningEntModelsArr;
-      const updatedMenuUmages = [ ...menuImages, newImage ];
+      const updatedMenuImages = [ ...menuImages, newImage ];
 
       // check if image uploaded on an existing model, update as needed //
       if (updatedDiningEntModel) {
@@ -253,8 +253,9 @@ export const handleUploadMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
         responseMsg, 
         updatedDiningEntModel: updatedDiningEntModel ? updatedDiningEntModel : generateEmptyDiningEntModel(), 
         updatedDiningEntModelsArr: updatedDiningEntModelsArr ? updatedDiningEntModelsArr : [ ...createdDiningEntModels ], 
-        updatedMenuImages: menuImages 
+        updatedMenuImages: updatedMenuImages
       };
+      console.log(stateData);
       dispatch(menuImgUploadSuccess(stateData));
       return Promise.resolve(true);
     })
@@ -297,12 +298,15 @@ export const handleDeleteMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
 };
 
 /* model CRUD actions */
-export const handleCreateDiningModel = (dispatch: Dispatch<DiningEntModelAction>, clientFormData: ClientDiningEntFormData): Promise<boolean> => {
+export const handleCreateDiningModel = (dispatch: Dispatch<DiningEntModelAction>, clientFormData: ClientDiningEntFormData, currentDiningEntState: DiningEntertainmentState): Promise<boolean> => {
+  const { menuImages, diningEntImages } = currentDiningEntState;
   const requestOptions = {
     method: "post",
     url: "/api/dining_models/create",
     data: {
       diningModelData: clientFormData,
+      images: diningEntImages,
+      menuImages: menuImages
     }
   };
 
@@ -355,7 +359,7 @@ export const handleUpdateDiningModel = (dispatch: Dispatch<DiningEntModelAction>
     url: "/api/dining_models/" + (diningModelId ? diningModelId : ""),
     data: {
       diningModelData: clientFormData,
-      diningModelImages: diningEntImages,
+      images: diningEntImages,
       menuImages: menuImages
     }
   };

@@ -47,6 +47,7 @@ export const PreviewImagesCarousel = ({ images, showDeleteIcons, toggleImageModa
     }
   }, [ images, imagesWrapperRef.current ]);
   */
+
   
   const scrollToNext = () => {
     if (imagesWrapperRef.current) {

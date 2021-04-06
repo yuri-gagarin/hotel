@@ -2,11 +2,11 @@ import menuImageUploader from "../uploaders/menuImageUploader";
 import diningEntertainmentController from "../controllers/diningEntertainmentController";
 
 export default function (router) {
-  // @route POST "/api/dining/uploadMenuImage //
+  // @route POST "/api/dining/upload_menu_image/:modelId //
   // @desc Uploads a MenuImage //
   // @access PRIVATE //
   router
-    .route("/api/dining/uploadMenuImage")
+    .route("/api/dining/upload_menu_image/:modelId?")
     .post([menuImageUploader], diningEntertainmentController.uploadMenuImage);
 
   // @route DELETE "/api/dining/deleteMenuImage/:imageId" //

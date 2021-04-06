@@ -65,7 +65,6 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   };
 
   const openNewDiningModelForm = () => {
-    console.log(69)
     _handleClearDiningModelData();
     history.push("/admin/dining_entertainment/new");
     // setNewDiningModelFormOpen(true);

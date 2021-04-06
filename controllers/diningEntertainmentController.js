@@ -23,8 +23,12 @@ export default {
       });
   },
   createDiningModel: (req, res) => {
-    const  { title, hours, address, description, optionType } = req.body.diningModelData;
-    
+    const { title, hours, address, description, optionType } = req.body.diningModelData;
+    const { images = [], menuImages = []} = req.body;
+
+    const imgIds = images.length > 0 ? images.map((img) => img._id) : [];
+    const menuImgIds = menuImages.length > 0 ? menuImages.map((img) => img._id) : [];
+
     return DiningEntertainmentModel.create({
       title, 
       hours,
@@ -32,6 +36,8 @@ export default {
       description,
       optionType,
       live: false,
+      images: [ ...images ],
+      menuImages: [ ...menuImgIds ],
       createdAt: new Date(Date.now()), 
       editedAt: new Date(Date.now()) 
     })
@@ -63,10 +69,10 @@ export default {
     let status, foundDiningModel;
     console.log(req.body)
     const { diningModelId } = req.params;
-    const { diningModelData, diningModelImages = [], menuImages = [] } = req.body;
+    const { diningModelData, images = [], menuImages = [] } = req.body;
     const { title, description, hours } = diningModelData;
 
-    const updatedDiningModelImages = diningModelImages.map((img) => img._id );
+    const updatedDiningModelImages = images.map((img) => img._id );
     const updatedMenuImages = menuImages.map((img) => img._id);
 
     return DiningEntertainmentModel.findOneAndUpdate(
@@ -192,7 +198,9 @@ export default {
               { $push: { images: uploadedImage._id } },
               { new: true }
             )
-            .populate("images").exec()
+            .populate("images")
+            .populate("menuImages")
+            .exec()
           );
         })
         .then((diningEntModel) => {
@@ -236,23 +244,60 @@ export default {
   },
 
   uploadMenuImage: (req, res) => {
+    const { modelId } = req.params;
     const imageUploadResult = req.locals.menuImageUpload;
+    let createdMenuImage, updatedDiningEntModel;
+    
     if (imageUploadResult.success) {
-      return MenuImage.create({
-        path: imageUploadResult.imagePath
-      })
-      .then((menuImage) => {
-        return res.status(200).json({
-          responseMsg: "Uploaded an image",
-          newImage: menuImage
+      // check if request is made on existing model //
+      if (modelId) {
+        return MenuImage.create({
+          path: imageUploadResult.imagePath, diningModel: modelId, uploadedAt: new Date(Date.now())
+        })
+        .then((menuImage) => {
+          createdMenuImage = menuImage;
+          return DiningEntertainmentModel.findOneAndUpdate(
+            { id: modelId },
+            { $push: { menuImages: menuImage._id } },
+            { new: true }
+          )
+          .populate("images")
+          .populate("menuImages")
+          .exec()
+        })
+        .then((diningEntModel) => {
+          updatedDiningEntModel = diningEntModel;
+          return res.status(200).json({
+            responseMsg: "Uploaded an image",
+            newImage: createdMenuImage,
+            updatedDiningEntModel: updatedDiningEntModel
+          });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            responseMsg: "A database error occured",
+            error: error
+          });
         });
-      })
-      .catch((error) => {
-        return res.status(500).json({
-          responseMsg: "A database error occured",
-          error: error
+      } else {
+        console.log(275)
+        return (
+          MenuImage.create({ path: imageUploadResult.imagePath, uploadedAt: new Date(Date.now()) })
+        )
+        .then((menuImage) => {
+          return res.status(200).json({
+            responseMsg: "Uploaded an image",
+            newImage: menuImage
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+          return res.status(500).json({
+            responseMsg: "A database error occured",
+            error: error
+          });
         });
-      });
+      }
     } else {
       return res.status(500).json({
         responseMsg: "Upload not successful"
@@ -262,9 +307,12 @@ export default {
 
   deleteImage: (req, res) => {
     const { imageId } = req.params;
+    let deletedImageData; let updatedDiningEntModel;
+
     return DiningModelImage.findOneAndDelete({ _id: imageId })
       .then((deletedImg) => {
         if (deletedImg) {
+          deletedImageData = deletedImg;
           // remove from the files //
           return deleteFile(deletedImg.path);
         } else {
@@ -272,8 +320,26 @@ export default {
         }
       })
       .then((response) => {
+        if (deletedImg.diningModel) {
+          const { _id: imageId, diningModel: modelIdToupdate } = deletedImg;
+          return DiningEntertainmentModel.findOneAndUpdate(
+            { _id: modelIdToupdate },
+            { $pull: { images: imageId } },
+            { new: true }
+          )
+          .populate("images")
+          .populate("menuImages")
+          .exec();
+        } else {
+          return Promise.resolve()
+        }
+      })
+      .then((updatedModel) => {
+        updatedDiningEntModel = updatedModel ? updatedModel : null;
         return res.status(200).json({
-          responseMsg: "Deleted the image"
+          responseMsg: "Deleted the image",
+          deletedImage: deletedImageData,
+          updatedDiningEntModel: updatedDiningEntModel
         });
       })
       .catch((error) => {
@@ -287,8 +353,11 @@ export default {
 
   deleteMenuImage: (req, res) => {
     const { imageId } = req.params;
+    let deletedImageData; let updatedDiningEntModel;
+
     return MenuImage.findOneAndDelete({ _id: imageId })
       .then((deletedImg) => {
+        deletedImageData = deletedImg;
         if (deletedImg) {
           // remove from the files //
           return deleteFile(deletedImg.path);
@@ -297,8 +366,26 @@ export default {
         }
       })
       .then((response) => {
+        const { _id: imageId, diningModel: modelIdToUpdate } = deletedImageData;
+        if (modelIdToUpdate) {
+          return DiningEntertainmentModel.findOneAndUpdate(
+            { _id: modelIdToUpdate },
+            { $pull: { menuImages: imageId } },
+            { new: true }
+          )
+          .populate("images")
+          .populate("menuImages")
+          .exec();
+        } else {
+          return Promise.resolve();
+        }
+      })
+      .then((updatedModel) => {
+        updatedDiningEntModel = updatedModel ? updatedModel : null;
         return res.status(200).json({
-          responseMsg: "Deleted the image"
+          responseMsg: "Deleted the image",
+          deletedImage: deletedImageData,
+          updatedDiningEntModel: updatedDiningEntModel
         });
       })
       .catch((error) => {

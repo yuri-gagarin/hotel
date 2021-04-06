@@ -59,25 +59,12 @@ const DiningEntertainmentForm = ({
   _handleCreateDiningModel, _handleUpdateDiningModel, _handleDeleteDiningModel }: Props): React.Node => {
 
   const { useEffect, useState } = React;
-  const { diningEntModelData } = diningEntState;
+  const { diningEntModelData, menuImages, diningEntImages } = diningEntState;
 
   // local form state //
   const [ diningModelDetails, setDiningModelDetails ] = useState({ ...diningEntModelData });
   const [ imageModalState, setImageModalState ] = useState({ imgModalOpen: false, openImageURL: "" });
-  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = useState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
-  /*
-  useEffect(() => {
-    if (diningModelData && diningModelData.images && Array.isArray(diningModelData.images)) {
-      // set the images array //
-      setPreviewImages(diningModelData.images);
-    }
-  }, []);
-  */
- useEffect(() => {
-  console.log(76);
-  console.log(diningEntModelData);
-  console.log(objectValuesEmpty(diningEntModelData));
- }, [ diningEntModelData ]);
+  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = useState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" }); 
   
   const handleFormCancel = () => {
     if (toggleEditModal && !objectValuesEmpty(diningEntModelData)) {
@@ -260,13 +247,13 @@ const DiningEntertainmentForm = ({
 
           />
           <div className={ styles.imageUploadInputDiv }>
-            <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "menuImage" } modelState={ diningEntState } textContent={ "Upload menu images" }/>
+            <FileInput uploadImage={ _handleUploadMenuImage } dataName={ "menuImage" } modelState={ diningEntState } textContent={ "Upload menu images" }/>
             {
-              diningEntModelData.menuImages.length > 0 
+              menuImages.length > 0 
               ?
               <PreviewImagesCarousel 
                 showDeleteIcons={ true }
-                images={ diningEntModelData.menuImages } 
+                images={ menuImages } 
                 toggleImageModal={ toggleImageModal } 
                 triggerImgModelDelete={ triggerMenuImageDelete }
               />
@@ -282,11 +269,11 @@ const DiningEntertainmentForm = ({
           <div className={ styles.imageUploadInputDiv}> 
             <FileInput uploadImage={ _handleUploadDiningModelImage } dataName={ "diningImage" } modelState={ diningEntState } textContent={ "Upload general images" } />
             { 
-              diningEntModelData.images.length > 0 
+              diningEntImages.length > 0 
               ?
               <PreviewImagesCarousel 
                 showDeleteIcons={ true }
-                images={ diningEntModelData.images } 
+                images={ diningEntImages } 
                 toggleImageModal={ toggleImageModal }
                 triggerImgModelDelete={ triggerImageDelete }
               />
