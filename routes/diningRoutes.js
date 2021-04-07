@@ -32,4 +32,11 @@ export default function (router) {
   router  
     .route("/api/dining_models/:diningModelId")
     .delete(diningEntertainmentController.deleteDiningModel);
+
+  // @route DELETE "/api/dining/remove_all_images" //
+  // @desc Deletes all queried MenuImage, DiningEntImage models and correspodning files //
+  // @access PRIVATE //
+  router
+    .route("/api/dining/remove_all_images")
+    .delete(diningEntertainmentController.deleteAllImages)
 };  

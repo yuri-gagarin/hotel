@@ -30,7 +30,7 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
         createdDiningEntModels: action.payload.createdDiningEntModels,
-        numberOfDiningModels: action.payload.numberOfDiningEntModels,
+        numberOfDiningEntModels: action.payload.numberOfDiningEntModels,
         error: null
       };
     };
@@ -103,7 +103,7 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
         menuImages: action.payload.updatedMenuImages,
-        dininingEntModelData: { ...action.payload.updatedDiningEntModel },
+        diningEntModelData: { ...action.payload.updatedDiningEntModel },
         createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
         error: null
       };
@@ -113,7 +113,7 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
         ...state,
         status: action.payload.status,
         loading: action.payload.loading,
-        reponseMsg: action.payload.responseMsg,
+        responseMsg: action.payload.responseMsg,
         menuImages: action.payload.updatedMenuImages,
         diningEntModelData: { ...action.payload.updatedDiningEntModel },
         createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
@@ -126,7 +126,7 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
         status: action.payload.status,
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
-        diningModelImages: action.payload.diningEntImages,
+        diningEntImages: action.payload.diningEntImages,
         diningEntModelData: { ...action.payload.updatedDiningEntModel },
         createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
         error: null
@@ -138,7 +138,7 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
         status: action.payload.status,
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
-        diningModelImages: action.payload.diningEntImages,
+        diningEntImages: action.payload.diningEntImages,
         diningEntModelData: { ...action.payload.updatedDiningEntModel },
         createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
         error: null
@@ -182,6 +182,17 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
         createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        error: null
+      };
+    };
+    case "AllImageDelSuccess": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        menuImages: action.payload.menuImages,
+        diningEntImages: action.payload.diningEntImages,
         error: null
       };
     };

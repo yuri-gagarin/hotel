@@ -3,7 +3,8 @@ import axios from "axios";
 import type { 
   DiningEntertainmentState, ClientDiningEntFormData,
   DiningEntModelAPIRequest, DiningEntModelError, SetDiningEntModels, DiningEntModelCreated, DiningEntModelUpdated, DiningEntModelDeleted, DiningEntModelData,
-  OpenDiningEntModel, ClearDiningEntModelData, DiningImgData, MenuImageData, SetDiningEntModelImages, DiningEntModelImgUplSuccess, DiningEntModelImgDelSuccess, MenuImgUplSuccess, MenuImgDelSuccess, DiningEntModelAction
+  OpenDiningEntModel, ClearDiningEntModelData, DiningImgData, MenuImageData, SetDiningEntModelImages, 
+  DiningEntModelImgUplSuccess, DiningEntModelImgDelSuccess, MenuImgUplSuccess, MenuImgDelSuccess, AllImageDelSuccess, DiningEntModelAction
 } from "../reducers/dining_entertainment/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 // helpers //
@@ -81,7 +82,13 @@ const menuImgDeleteSuccess = (stateData: { status: number, responseMsg: string, 
     type: "MenuImgDelSuccess",
     payload: { ...stateData, loading: false }
   }
-}
+};
+const allImgDeleteSuccess = ( stateData: { status: number, responseMsg: string, diningEntImages: Array<DiningImgData>, menuImages: Array<MenuImageData> }): AllImageDelSuccess => {
+  return {
+    type: "AllImageDelSuccess",
+    payload: { ...stateData, loading: false }
+  };
+};
 /* */
 
 
@@ -195,13 +202,20 @@ export const handleDeleteDiningModelImage = (dispatch: Dispatch<DiningEntModelAc
       const { responseMsg, deletedImage, updatedDiningEntModel } : { responseMsg: string, deletedImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
 
       const updatedDiningEntImages = diningEntImages.filter((imgData) => imgData._id !== deletedImage._id);
-      const updatedDiningEntModelsArr = createdDiningEntModels.map((model) => {
-        if (model._id === updatedDiningEntModel._id) {
-          return { ...updatedDiningEntModel, images: [ ...updatedDiningEntModel.images ], menuImages: [ ...updatedDiningEntModel.menuImages ]};
-        } else {
-          return model;
-        }
-      });
+      let updatedDiningEntModelsArr;
+
+      if (updatedDiningEntModel) {
+        updatedDiningEntModelsArr = createdDiningEntModels.map((model) => {
+          if (model._id === updatedDiningEntModel._id) {
+            return { ...updatedDiningEntModel, images: [ ...updatedDiningEntModel.images ], menuImages: [ ...updatedDiningEntModel.menuImages ]};
+          } else {
+            return model;
+          }
+        });
+      } else {
+        updatedDiningEntModelsArr = [ ...createdDiningEntModels ];
+      }
+      
       const stateData = { status, responseMsg, updatedDiningEntModel, updatedDiningEntModelsArr, diningEntImages: updatedDiningEntImages };
       dispatch(diningModelImgDeleteSuccess(stateData));
       return Promise.resolve(true);
@@ -269,7 +283,7 @@ export const handleDeleteMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
   const { menuImages, createdDiningEntModels } = currentDiningEntState;
   const requestOptions = {
     method: "delete",
-    url: "/api/delete_menu_image/" + imageId
+    url: "/api/dining/delete_menu_image/" + imageId
   };
 
   dispatch(diningModelAPIRequest());
@@ -277,15 +291,21 @@ export const handleDeleteMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
     .then((response) => {
       const { status, data } = response;
       const { responseMsg, deletedImage, updatedDiningEntModel } : { responseMsg: string, deletedImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
-
+      
+      let updatedDiningEntModelsArr;
       const updatedMenuImages = menuImages.filter((imgData) => imgData._id !== deletedImage._id);
-      const updatedDiningEntModelsArr = createdDiningEntModels.map((model) => {
-        if (model._id === updatedDiningEntModel._id) {
-          return { ...updatedDiningEntModel, images: [ ...updatedDiningEntModel.images ], menuImages: [ ...updatedDiningEntModel.menuImages ]};
-        } else {
-          return model;
-        }
-      });
+      if (updatedDiningEntModel) {
+        updatedDiningEntModelsArr = createdDiningEntModels.map((model) => {
+          if (model._id === updatedDiningEntModel._id) {
+            return { ...updatedDiningEntModel, images: [ ...updatedDiningEntModel.images ], menuImages: [ ...updatedDiningEntModel.menuImages ]};
+          } else {
+            return model;
+          }
+        });
+      } else {
+        updatedDiningEntModelsArr = [ ...createdDiningEntModels ];
+      }
+      
       const stateData = { status, responseMsg, updatedDiningEntModel, updatedMenuImages, updatedDiningEntModelsArr };
       dispatch(menuImgDeleteSuccess(stateData));
       return Promise.resolve(true);
@@ -415,3 +435,29 @@ export const handleDeleteDiningModel = (dispatch: Dispatch<DiningEntModelAction>
     });
 };
 
+/* runs in event of a cancel action on a non created model */
+export const handleDeleteAllImages = (dispatch: Dispatch<DiningEntModelAction>, images?: Array<DiningImgData>,  menuImages?: Array<MenuImageData> ): Promise<boolean> => {
+  const requestOtps = {
+    method: "delete",
+    url: "/api/dining/remove_all_images",
+    data: {
+      images: images,
+      menuImages: menuImages
+    }
+  };
+
+  dispatch(diningModelAPIRequest());
+  return axios(requestOtps)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg } : { responseMsg: string } = data;
+
+      const newStateData = { status, responseMsg, menuImages: [], diningEntImages: [] };
+      dispatch(allImgDeleteSuccess(newStateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(diningModelError(error));
+      return Promise.resolve(false);
+    })
+};

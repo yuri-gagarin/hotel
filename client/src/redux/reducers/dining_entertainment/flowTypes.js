@@ -52,7 +52,7 @@ export type DiningEntertainmentState = {
   error: null | Error
 };
 
-// service action types //
+// dining action types //
 export type DiningEntModelAPIRequest = {
   +type: "DiningEntModelAPIRequest",
   payload: {
@@ -208,9 +208,19 @@ export type ToggleAllDiningEntModelsOnlineOffline = {
     updatedDiningEntModelsArr: Array<DiningEntModelData>
   }
 };
+export type AllImageDelSuccess = {
+  +type: "AllImageDelSuccess",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    diningEntImages: Array<DiningImgData>,
+    menuImages: Array<MenuImageData>
+  }
+};
 // union service action type //
 export type DiningEntModelAction = (
   DiningEntModelAPIRequest | SetDiningEntModels | DiningEntModelError | DiningEntModelCreated | DiningEntModelUpdated | DiningEntModelDeleted |
   DiningEntModelImgUplSuccess | DiningEntModelImgDelSuccess | MenuImgUplSuccess | MenuImgDelSuccess | OpenDiningEntModel | ClearDiningEntModelData | SetDiningEntModelImages |
-  TakeDiningEntModelOnline | TakeDiningEntModelOffline | ToggleAllDiningEntModelsOnlineOffline
+  TakeDiningEntModelOnline | TakeDiningEntModelOffline | ToggleAllDiningEntModelsOnlineOffline | AllImageDelSuccess
 );

@@ -1,3 +1,5 @@
+import path from "path";
+//
 import DiningEntertainmentModel from "../models/DiningEntertainment";
 import DiningModelImage from "../models/DiningImage";
 import MenuImage from "../models/MenuImage";
@@ -320,8 +322,8 @@ export default {
         }
       })
       .then((response) => {
-        if (deletedImg.diningModel) {
-          const { _id: imageId, diningModel: modelIdToupdate } = deletedImg;
+        if (deletedImageData.diningModel) {
+          const { _id: imageId, diningModel: modelIdToupdate } = deletedImageData;
           return DiningEntertainmentModel.findOneAndUpdate(
             { _id: modelIdToupdate },
             { $pull: { images: imageId } },
@@ -395,5 +397,63 @@ export default {
           error: error
         });
       });
+  },
+  // 
+  deleteAllImages: (req, res) => {
+    const { images, menuImages } = req.body;
+    //
+    const imgPaths = []; const imgIds = [];
+    //
+    const menuImgPaths = []; const menuImgIds = [];
+    if (images && Array.isArray(images) && images.length > 0) {
+      for (const imgData of images) {
+        imgPaths.push(path.join(path.resolve(), imgData.path));
+        imgIds.push(imgData._id);
+      }
+    }
+    if (menuImages && Array.isArray(menuImages) && menuImages.length > 0) {
+      for (const menuImgData of menuImages) {
+        menuImgPaths.push(path.join(path.resolve(), menuImgData.path));
+        menuImgIds.push(menuImgData._id);
+      }
+    }
+
+    return Promise.resolve().then(() => {
+      const deletePromises = [];
+      if (imgPaths.length > 0) {
+        for (const path of imgPaths) {
+          deletePromises.push(deleteFile(path));
+        }
+      }
+      if (menuImgPaths.length > 0) {
+        for (const path of menuImgPaths) {
+          deletePromises.push(deleteFile(path));
+        }
+      }
+      return Promise.all(deletePromises);
+    })
+    .then((response) => {
+      if (response.length > 0) {
+        return Promise.all([
+          DiningModelImage.deleteMany({ _id: imgIds }).exec(),
+          MenuImage.deleteMany({ _id: menuImgIds }).exec()
+        ])
+      } else {
+        return Promise.resolve()
+      }
+    })
+    .then((_) => {
+      return res.status(200).json({
+        responseMsg: "Cleared uploaded images"
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(500).json({
+        responseMsg: "An error occured",
+        error: error
+      });
+    });
   }
+
 };
