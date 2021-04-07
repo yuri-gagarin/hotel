@@ -12,7 +12,7 @@ export const FormErrorMessages = ({ visible, errorMessages, handleErrorMessageDi
   
   return (
     <Message 
-      visible={visible}
+      visible={false}
       error
       onDismiss={ handleErrorMessageDismiss }
       header="Errors with your submission"

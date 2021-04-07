@@ -9,6 +9,7 @@ import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import ModelDeleteBtn from "../shared/ModelDeleteBtn";
 import GenericImgModal from "../shared/GenericImgModal";
 import FileInput from "../rooms/FileInput";
+import { FormErrorMessages } from "../shared/FormErrorMessages";
 // redux imports  //
 import { connect } from "react-redux";
 import { handleUploadDiningModelImage, handleDeleteDiningModelImage, handleUploadMenuImage, handleDeleteMenuImage, handleCreateDiningModel, handleUpdateDiningModel, handleDeleteDiningModel, handleDeleteAllImages } from "../../../redux/actions/diningActions";
@@ -20,7 +21,7 @@ import type { RouterHistory } from "react-router-dom";
 import styles from "./css/diningEntertainmentForm.module.css";
 // helpers //
 import { objectValuesEmpty, setImagePath } from "../../helpers/displayHelpers";
-
+import { checkFormErrors } from "./helpers/checkFormErrors";
 
 type OwnProps = {
   diningEntState: DiningEntertainmentState,
@@ -51,7 +52,22 @@ type ImageModalState = {
 type ConfirmDeleteModalState = {
   confirmDelModalOpen: boolean,
   modelIdToDelete: string, 
-  modelToDelete: "image" | "menuImage" | ""
+  modelToDelete: "image" | "menuImage" | "model" | ""
+}
+
+type FormState = {
+  title: string,
+  hours: string,
+  description: string,
+  optionType: "restaurant" | "cafe" | "lounge" | "",
+  titleError: string,
+  hoursError: string,
+  descriptionError: string
+}
+
+type ErrorMessagesState = {
+  visible: boolean,
+  errorMessages: Array<string>
 }
 
 const DiningEntertainmentForm = ({ 
@@ -64,9 +80,10 @@ const DiningEntertainmentForm = ({
   const { diningEntModelData, menuImages, diningEntImages } = diningEntState;
 
   // local form state //
-  const [ diningModelDetails, setDiningModelDetails ] = useState({ ...diningEntModelData });
-  const [ imageModalState, setImageModalState ] = useState({ imgModalOpen: false, openImageURL: "" });
-  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = useState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" }); 
+  const [ formState, setFormState ] = useState<FormState>({ ...diningEntModelData, titleError: "", hoursError: "", descriptionError: "" });
+  const [ imageModalState, setImageModalState ] = useState<ImageModalState>({ imgModalOpen: false, openImageURL: "" });
+  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = useState<ConfirmDeleteModalState>({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" }); 
+  const [ errorMessagesState, setErrorMessagesState ] = useState<ErrorMessagesState>({ visible: false, errorMessages: [] });
   
   const handleFormCancel = () => {
     if (toggleEditModal && !objectValuesEmpty(diningEntModelData)) {
@@ -82,40 +99,53 @@ const DiningEntertainmentForm = ({
     }
     // else its a new form 
   };
+  
   // text input handlers //
   const handleDiningModelTitle = (_e, data) => {
-    setDiningModelDetails({
-      ...diningModelDetails,
-      title: data.value
-    });
+    if (data.value.length === 0) {
+      setFormState({ ...formState, title: data.value, titleError: "A title is required..." });
+    } else {
+      setFormState({ ...formState, title: data.value, titleError: "" });
+    }
   };
   const handleDiningModelHours = (_e, data) => {
-    setDiningModelDetails({
-      ...diningModelDetails,
-      hours: data.value
-    });
+    if (data.value.length === 0) {
+      setFormState({ ...formState, hours: data.value, hoursError: "Please insert hours in following format: 'xx:xx - xx:xx'" });
+    } else {
+      setFormState({ ...formState, hours: data.value, hoursError: "" });
+    }
   };
   const handleDiningModelDescription = (e, data) => {
-    setDiningModelDetails({
-      ...diningModelDetails,
-      description: data.value
-    });
+    if (data.value.length === 0) {
+      setFormState({ ...formState, description: data.value, descriptionError: "Please write a short description...." });
+    } else {
+      setFormState({ ...formState, description: data.value, descriptionError: "" });
+    }
   };
   // select handlers //
   const handleSelect = (_e, data: any) => {
     if (data.value) {
-      setDiningModelDetails({ ...diningModelDetails, optionType: data.value });
+      setFormState({ ...formState, optionType: data.value });
     } else {
-      setDiningModelDetails({ ...diningModelDetails, optionType: "" });
+      setFormState({ ...formState, optionType: "" });
     }
   };
   
   const handleFormSubmit = () => {
     const {  _id: modelId } = diningEntModelData;
     const { createdDiningEntModels, menuImages, diningEntImages } = diningEntState;
+    // check for errors first //
+    const { title, hours, description  } = formState;
+    const  { valid, errors } = checkFormErrors({ title, hours, description });
+    if (!valid && errors.length > 0) {
+      setErrorMessagesState({ visible: true, errorMessages: errors });
+      return;
+    }
 
     const diningModelData: ClientDiningEntFormData = {
-      ...diningModelDetails,
+      ...formState,
+      _id: modelId ? modelId : "",
+      live: diningEntModelData.live,
       images: diningEntImages,
       menuImages: menuImages
     };
@@ -184,7 +214,16 @@ const DiningEntertainmentForm = ({
         return Promise.resolve()
       }
   };
+
+  useEffect(() => {
+    console.log(219);
+    console.log(errorMessagesState)
+  }, [ errorMessagesState ])
   
+  /* dismiss error messages */
+  const handleErrorMessagesDismiss = () => {
+    setErrorMessagesState({ visible: false, errorMessages: [] });
+  };
 
   return (
     <div className={ styles.diningEntFormWrapper }>
@@ -217,41 +256,47 @@ const DiningEntertainmentForm = ({
         }
         
       </div>
+      {
+        errorMessagesState.visible ? <FormErrorMessages visible={ true } errorMessages={ errorMessagesState.errorMessages } handleErrorMessageDismiss={ handleErrorMessagesDismiss } /> : null
+      }
       <div className={ styles.formDiv }>
         <Form>
           <Form.Group widths='equal'>
             <Form.Field
+              error={ formState.titleError ? { content: formState.titleError } : null }
               control={Input}
               label='Title'
               placeholder="Name or title of dining/entertainment option"
               onChange={ handleDiningModelTitle }
-              value={diningModelDetails.title }
+              value={ formState.title }
             />
             <Form.Field
+              error={ formState.hoursError ? { content: formState.hoursError } : null }
               control={Input}
               label='Hours'
               placeholder='Hours available ...'
               onChange={ handleDiningModelHours } 
-              value={ diningModelDetails.hours }
+              value={ formState.hours }
             />
           </Form.Group>
           <div className={styles.typeDropdown }>
             <div>Option type:</div>
             <div>
               <DiningEntertainmentTypeDropdown 
-                selectedOption={ diningModelDetails.optionType }
+                selectedOption={ formState.optionType }
                 handleSelect={ handleSelect }
               />
             </div>
           </div>
         
           <Form.Field
+            error={ formState.descriptionError ? { content: formState.descriptionError } : null } 
             className={ styles.descriptionTextField }
             control={TextArea}
             label="Description:"
             placeholder='Description of the dining or entertainment option provided ...'
             onChange={ handleDiningModelDescription }
-            value={ diningModelDetails.description }
+            value={ formState.description }
 
           />
           <div className={ styles.imageUploadInputDiv }>
