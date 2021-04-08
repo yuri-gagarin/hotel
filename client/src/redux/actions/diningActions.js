@@ -269,7 +269,6 @@ export const handleUploadMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
         updatedDiningEntModelsArr: updatedDiningEntModelsArr ? updatedDiningEntModelsArr : [ ...createdDiningEntModels ], 
         updatedMenuImages: updatedMenuImages
       };
-      console.log(stateData);
       dispatch(menuImgUploadSuccess(stateData));
       return Promise.resolve(true);
     })

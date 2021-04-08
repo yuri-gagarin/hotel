@@ -1,6 +1,5 @@
 .imagesCarouselWrapper {
   width: 100%;
-  border: 4px solid red;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -29,7 +28,6 @@
 .imagesWrapper {
   display: flex;
   flex: 12;
-  border: 3px solid blue;
   justify-content: flex-start;
   align-items: center;
   position: relative;

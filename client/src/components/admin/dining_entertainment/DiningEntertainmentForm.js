@@ -215,11 +215,6 @@ const DiningEntertainmentForm = ({
       }
   };
 
-  useEffect(() => {
-    console.log(219);
-    console.log(errorMessagesState)
-  }, [ errorMessagesState ])
-  
   /* dismiss error messages */
   const handleErrorMessagesDismiss = () => {
     setErrorMessagesState({ visible: false, errorMessages: [] });

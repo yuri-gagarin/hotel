@@ -259,7 +259,7 @@ export default {
         .then((menuImage) => {
           createdMenuImage = menuImage;
           return DiningEntertainmentModel.findOneAndUpdate(
-            { id: modelId },
+            { _id: modelId },
             { $push: { menuImages: menuImage._id } },
             { new: true }
           )
@@ -268,7 +268,7 @@ export default {
           .exec()
         })
         .then((diningEntModel) => {
-          updatedDiningEntModel = diningEntModel;
+          updatedDiningEntModel = diningEntModel;          
           return res.status(200).json({
             responseMsg: "Uploaded an image",
             newImage: createdMenuImage,

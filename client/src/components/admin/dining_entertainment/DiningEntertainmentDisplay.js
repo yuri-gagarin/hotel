@@ -51,15 +51,20 @@ const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
         <p className={ styles.diningModelDescription }>{diningEntModelData.description}</p>
       </div>
       <div className={ styles.imgsPreviewDiv }>
-        <span>Uploaded menu images:</span>
         {
           diningEntModelData.menuImages.length > 0
           ? 
-          <PreviewImagesCarousel 
-            showDeleteIcons={ false }
-            images={ diningEntModelData.menuImages } 
-            toggleImageModal= { toggleImageModal } 
-          />
+          <React.Fragment>
+             <div className={ styles.imgsPreviewDivHeader }>
+              <span>Uploaded menu images:</span>
+              <div>{ diningEntModelData.menuImages.length }</div>
+            </div>
+            <PreviewImagesCarousel 
+              showDeleteIcons={ false }
+              images={ diningEntModelData.menuImages } 
+              toggleImageModal= { toggleImageModal } 
+            />
+          </React.Fragment>  
           : 
           <Segment className={ styles.imgPreviewDefaultSegment }>
             <span>No menu images uploaded...</span>
@@ -68,15 +73,21 @@ const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
         }
       </div>
       <div className={ styles.imgsPreviewDiv }>
-        <span>Uploaded general images: </span>
         {
           diningEntModelData.images.length > 0
           ?
-          <PreviewImagesCarousel 
-            showDeleteIcons={ false }
-            images={ diningEntModelData.images }
-            toggleImageModal={ toggleImageModal } 
-          />
+          <React.Fragment>
+            <div className={ styles.imgsPreviewDivHeader }>
+              <span>Uploaded general images:</span> 
+              <div>{diningEntModelData.images.length }</div>
+            </div>
+            <PreviewImagesCarousel 
+              showDeleteIcons={ false }
+              images={ diningEntModelData.images }
+              toggleImageModal={ toggleImageModal } 
+            />
+          </React.Fragment>
+         
           : 
           <Segment className={ styles.imgPreviewDefaultSegment }>
             <span>No general images upoaded...</span>
