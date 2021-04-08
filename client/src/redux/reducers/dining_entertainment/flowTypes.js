@@ -218,9 +218,19 @@ export type AllImageDelSuccess = {
     menuImages: Array<MenuImageData>
   }
 };
+export type ToggleDiningEntOnlineOffline = {
+  +type: "ToggleDiningEntOnlineOffline",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    updatedDiningEntModel: DiningEntModelData,
+    updatedDiningEntModelsArr: Array<DiningEntModelData>
+  }
+};
 // union service action type //
 export type DiningEntModelAction = (
   DiningEntModelAPIRequest | SetDiningEntModels | DiningEntModelError | DiningEntModelCreated | DiningEntModelUpdated | DiningEntModelDeleted |
   DiningEntModelImgUplSuccess | DiningEntModelImgDelSuccess | MenuImgUplSuccess | MenuImgDelSuccess | OpenDiningEntModel | ClearDiningEntModelData | SetDiningEntModelImages |
-  TakeDiningEntModelOnline | TakeDiningEntModelOffline | ToggleAllDiningEntModelsOnlineOffline | AllImageDelSuccess
+  TakeDiningEntModelOnline | TakeDiningEntModelOffline | ToggleAllDiningEntModelsOnlineOffline | AllImageDelSuccess | ToggleDiningEntOnlineOffline
 );

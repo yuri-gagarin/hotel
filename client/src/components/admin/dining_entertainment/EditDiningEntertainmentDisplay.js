@@ -17,13 +17,14 @@ type Props = {
   diningEntState: DiningEntertainmentState,
   history: RouterHistory,
   goBackToDiningModels: () => void,
-  triggerModelDelete: (modelIdToDelete: string) => void
+  triggerModelDelete: (modelIdToDelete: string) => void,
+  toggleOnlineOfflineStatus: (modelData: DiningEntModelData) => Promise<boolean>
 };
 
 type LocalState = {
   formModalOpen: boolean,
 }
-export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBackToDiningModels, triggerModelDelete } : Props): React.Node => {
+export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBackToDiningModels, triggerModelDelete, toggleOnlineOfflineStatus } : Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ formModalOpen: false });
   const { diningEntModelData } = diningEntState;
 
@@ -49,12 +50,11 @@ export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBack
       </Modal>
       <Grid.Column className={ styles.editColumn } style={{ marginBottom: "1em" }} width={15} >
         <EditViewControls 
-          handleBack={goBackToDiningModels} 
+          handleBack={ goBackToDiningModels } 
           handleOpenEditModal={ toggleEditModal }
           model={ diningEntModelData } 
           modelType="dining"
-          takeOnline={ handleTakeOnline }
-          takeOffline={ handleTakeOffline }
+          toggleOnlineOfflineStatus={ toggleOnlineOfflineStatus }
         />
         <ModelDeleteBtn 
           modelName={ "dining" }

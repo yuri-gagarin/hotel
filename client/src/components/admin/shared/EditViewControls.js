@@ -15,19 +15,16 @@ type Props =  {
   handleOpenEditModal?: () => void,
   modelType: "room" | "service" | "dining",
   model: ServiceData | DiningEntModelData,
-  takeOnline: (modelData: any) => Promise<boolean | void>,
-  takeOffline: (modelData: any) => Promise<boolean | void> 
+  toggleOnlineOfflineStatus: (modelData: any) => Promise<boolean | void>
 }
 
-const EditViewControls = ({ handleBack, handleOpenEditModal, modelType, model, takeOnline, takeOffline } : Props): React.Node => {
+const EditViewControls = ({ handleBack, handleOpenEditModal, modelType, model, toggleOnlineOfflineStatus } : Props): React.Node => {
   const { live } = model;
 
-  const handleOnlineClick = () => {
-    takeOnline(model)
+  const handleOnlineOfflineClick = () => {
+    toggleOnlineOfflineStatus(model)
   }
-  const handleOfflineClick = () => {
-    takeOffline(model);
-  };
+  
 
   return (
     <React.Fragment>
@@ -37,13 +34,13 @@ const EditViewControls = ({ handleBack, handleOpenEditModal, modelType, model, t
         <Popup 
           content={`Current <${capitalizeString(modelType)}> will be displayed to clients`}
           trigger={
-            <Button color="blue" disabled={ live } onClick={ handleOnlineClick }>Take Online</Button>
+            <Button color="blue" disabled={ live } onClick={ handleOnlineOfflineClick }>Take Online</Button>
           }
         />
         <Popup 
           content={`Current <${capitalizeString(modelType)}> will NOT be displayed to clients`}
           trigger={
-            <Button color="orange" disabled={ !live } onClick={ handleOfflineClick }>Take Offline</Button>
+            <Button color="orange" disabled={ !live } onClick={ handleOnlineOfflineClick }>Take Offline</Button>
           }
         />  
         <Popup 

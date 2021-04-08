@@ -69,11 +69,34 @@ export default {
 
   updateDiningModel: (req, res) => {
     let status, foundDiningModel;
-    console.log(req.body)
     const { diningModelId } = req.params;
-    const { diningModelData, images = [], menuImages = [] } = req.body;
+    const { diningModelData = {}, images = [], menuImages = [], onlineStatus } = req.body;
     const { title, description, hours } = diningModelData;
-
+    // check if changing online status first //
+    if (onlineStatus && typeof onlineStatus === "object" && typeof onlineStatus.status === "boolean") {
+      const { status } = onlineStatus;
+      return DiningEntertainmentModel.findOneAndUpdate(
+        { _id: diningModelId },
+        { $set: { live: status } },
+        { new: true }
+      )
+      .populate("images")
+      .populate("menuImages")
+      .exec()
+      .then((updatedDiningEntModel) => {
+        const responseMsg = `Successfully set the current model ${ updatedDiningEntModel.live ? "online": "offline"}.`;
+        console.log(updatedDiningEntModel.live)
+        return res.status(200).json({
+          responseMsg, updatedDiningEntModel
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          response: "An error occured",
+          error: error
+        })
+      })
+    }
     const updatedDiningModelImages = images.map((img) => img._id );
     const updatedMenuImages = menuImages.map((img) => img._id);
 

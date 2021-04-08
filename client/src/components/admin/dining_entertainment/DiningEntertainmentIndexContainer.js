@@ -13,10 +13,10 @@ import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import OnlinePopupControls from "../shared/OnlinePopupControls";
 // redux imports //
 import { connect } from "react-redux"; 
-import { handleFetchDiningModels, handleOpenDiningModel, handleDeleteDiningModel, handleClearDiningModelData } from "../../../redux/actions/diningActions";
+import { handleFetchDiningModels, handleOpenDiningModel, handleDeleteDiningModel, handleClearDiningModelData, handleToggleModelOnlineOfflineStatus } from "../../../redux/actions/diningActions";
 // types //
 import type { Dispatch } from "../../../redux/reducers/_helpers/createReducer";
-import type { DiningEntertainmentState, DiningEntModelAction } from "../../../redux/reducers/dining_entertainment/flowTypes";
+import type { DiningEntertainmentState, DiningEntModelData, DiningEntModelAction } from "../../../redux/reducers/dining_entertainment/flowTypes";
 import type { RouterHistory } from "react-router-dom";
 // styles and css //
 import styles from "./css/diningEntertainmentIndexContainer.module.css";
@@ -35,7 +35,8 @@ export type Props = {
   _handleFetchDiningModels: () => Promise<void>,
   _handleOpenDiningModel: (idToOpen: string, diningEntModelState: DiningEntertainmentState) => void,
   _handleClearDiningModelData: () => void,
-  _handleDeleteDiningModel: (modelIdToDelete: string, diningEntModelState: DiningEntertainmentState) => Promise<boolean>
+  _handleDeleteDiningModel: (modelIdToDelete: string, diningEntModelState: DiningEntertainmentState) => Promise<boolean>,
+  _handleToggleModelOnlineOfflineStatus: (modelToUpdate: DiningEntModelData, diningEntState: DiningEntertainmentState) => Promise<boolean>
 };
 
 type ConfirmDeleteModalState = {
@@ -46,7 +47,7 @@ type ConfirmDeleteModalState = {
 const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   const { useEffect, useState } = React;
   const { adminState, diningEntertainmentState, history } = props;
-  const { _handleFetchDiningModels, _handleOpenDiningModel, _handleClearDiningModelData, _handleDeleteDiningModel } = props;
+  const { _handleFetchDiningModels, _handleOpenDiningModel, _handleClearDiningModelData, _handleDeleteDiningModel, _handleToggleModelOnlineOfflineStatus } = props;
   //const [ diningModelInfoOpen, setDiningModelInfoOpen ] = useState(false);
   //const [ newDiningModelFormOpen, setNewDiningModelFormOpen ] = useState(false);
   const { diningEntModelData, createdDiningEntModels } = diningEntertainmentState;
@@ -63,6 +64,10 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   const handleTakeAllOffline = () => {
     return Promise.resolve(true);
   };
+
+  const toggleOnlineOfflineStatus = (modelData: DiningEntModelData) => {
+    return _handleToggleModelOnlineOfflineStatus(modelData, diningEntertainmentState);
+  }
 
   const openNewDiningModelForm = () => {
     _handleClearDiningModelData();
@@ -151,6 +156,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
           history={ history }
           goBackToDiningModels={ goBackToDiningModels }
           triggerModelDelete={ triggerDiningModelDelete }
+          toggleOnlineOfflineStatus={ toggleOnlineOfflineStatus }
         />
       </Route>
     </React.Fragment>
@@ -171,6 +177,9 @@ const mapDispatchToProps = (dispatch: Dispatch<DiningEntModelAction>) => {
     },
     _handleDeleteDiningModel: (modelId: string, diningEntState: DiningEntertainmentState) => {
       return handleDeleteDiningModel(dispatch, modelId, diningEntState);
+    },
+    _handleToggleModelOnlineOfflineStatus: (modelToUpdate: DiningEntModelData, diningEntState: DiningEntertainmentState) => {
+      return handleToggleModelOnlineOfflineStatus(dispatch, modelToUpdate, diningEntState);
     }
   };
 };

@@ -4,7 +4,7 @@ import type {
   DiningEntertainmentState, ClientDiningEntFormData,
   DiningEntModelAPIRequest, DiningEntModelError, SetDiningEntModels, DiningEntModelCreated, DiningEntModelUpdated, DiningEntModelDeleted, DiningEntModelData,
   OpenDiningEntModel, ClearDiningEntModelData, DiningImgData, MenuImageData, SetDiningEntModelImages, 
-  DiningEntModelImgUplSuccess, DiningEntModelImgDelSuccess, MenuImgUplSuccess, MenuImgDelSuccess, AllImageDelSuccess, DiningEntModelAction
+  DiningEntModelImgUplSuccess, DiningEntModelImgDelSuccess, MenuImgUplSuccess, MenuImgDelSuccess, AllImageDelSuccess, DiningEntModelAction, ToggleDiningEntOnlineOffline
 } from "../reducers/dining_entertainment/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 // helpers //
@@ -89,7 +89,13 @@ const allImgDeleteSuccess = ( stateData: { status: number, responseMsg: string, 
     payload: { ...stateData, loading: false }
   };
 };
-/* */
+/* online offline actions */
+const toggleModelOnlineOfflineStatus = (stateData: { status: number, responseMsg: string, updatedDiningEntModel: DiningEntModelData, updatedDiningEntModelsArr: Array<DiningEntModelData> }): ToggleDiningEntOnlineOffline => {
+  return {
+    type: "ToggleDiningEntOnlineOffline",
+    payload: { ...stateData, loading: false }
+  };
+};
 
 
 /* non API actions */
@@ -460,3 +466,41 @@ export const handleDeleteAllImages = (dispatch: Dispatch<DiningEntModelAction>, 
       return Promise.resolve(false);
     })
 };
+
+/* */
+export const handleToggleModelOnlineOfflineStatus = (dispatch: Dispatch<DiningEntModelAction>, modelToUpdate: DiningEntModelData, currentDiningEntState: DiningEntertainmentState): Promise<boolean> => {
+  const { _id: modelId, live } = modelToUpdate;
+  const { createdDiningEntModels } = currentDiningEntState;
+  const axiosReqOptions = {
+    method: "patch",
+    url: "/api/dining_models/"+ modelId,
+    data: {
+      onlineStatus: { status: !live }
+    }
+  };
+
+  dispatch(diningModelAPIRequest());
+  return axios(axiosReqOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedDiningEntModel } : { responseMsg: string, updatedDiningEntModel: DiningEntModelData } = data;
+
+      const updatedDiningEntModelsArr = createdDiningEntModels.map((modelData) => {
+        if (modelData._id === modelId) {
+          return {
+            ...updatedDiningEntModel
+          };
+        } else {
+          return modelData;
+        }
+      });
+
+      const updatedStateData = { status, responseMsg, updatedDiningEntModel, updatedDiningEntModelsArr };
+      dispatch(toggleModelOnlineOfflineStatus(updatedStateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(diningModelError(error));
+      return Promise.resolve(false);
+    })
+}

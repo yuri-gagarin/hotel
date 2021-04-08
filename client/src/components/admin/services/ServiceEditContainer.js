@@ -36,7 +36,7 @@ export const ServiceEditContainer = ({ history, serviceState, triggerDeleteServi
     <Grid.Row>
       <Grid.Column width={15}>
         <div className={ styles.editViewControlsDiv }>
-          <EditViewControls handleBack={ handleGoBack } modelType="service" model={ serviceData } takeOnline={ handleTakeServiceOnline } takeOffline={ handleTakeServiceOffline } />
+          <EditViewControls handleBack={ handleGoBack } modelType="service" model={ serviceData } toggleOnlineOfflineStatus={ handleTakeServiceOffline } />
           <ModelDeleteBtn modelName={"service"} modelId={ serviceData._id} handleModelDelete={ triggerDeleteService } />
         </div>
         <ServiceDisplay formOpen={ localState.serviceFormOpen } service={serviceData} history={history} toggleForm={ toggleForm } />
