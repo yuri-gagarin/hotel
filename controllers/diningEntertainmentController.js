@@ -70,8 +70,9 @@ export default {
   updateDiningModel: (req, res) => {
     let status, foundDiningModel;
     const { diningModelId } = req.params;
-    const { diningModelData = {}, images = [], menuImages = [], onlineStatus } = req.body;
+    const { diningModelData = {}, images = [], menuImages = [], onlineStatus, changeAllOnlineStatus } = req.body;
     const { title, description, hours } = diningModelData;
+
     // check if changing online status first //
     if (onlineStatus && typeof onlineStatus === "object" && typeof onlineStatus.status === "boolean") {
       const { status } = onlineStatus;
@@ -97,6 +98,22 @@ export default {
         })
       })
     }
+    // check if switching all online or offline //
+    if (changeAllOnlineStatus && typeof changeAllOnlineStatus === "object" && typeof changeAllOnlineStatus.status === "boolean") {
+      const { status } = changeAllOnlineStatus;
+      return (
+        DiningEntertainmentModel.updateMany({}, { $set: { live: status } })
+      )
+      .then((_) => {
+        return DiningEntertainmentModel.find({}).populate("images").exec();
+      })
+      .then((updatedDiningEntModels) => {
+        const responseMsg = `All items are now ${status ? "online" : "offline"}.`
+        return res.status(200).json({ responseMsg, updatedDiningEntModels });
+      })
+
+    }
+
     const updatedDiningModelImages = images.map((img) => img._id );
     const updatedMenuImages = menuImages.map((img) => img._id);
 

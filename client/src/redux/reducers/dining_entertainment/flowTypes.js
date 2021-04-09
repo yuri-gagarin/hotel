@@ -228,9 +228,18 @@ export type ToggleDiningEntOnlineOffline = {
     updatedDiningEntModelsArr: Array<DiningEntModelData>
   }
 };
+export type ToggleAllOnlineOffline = {
+  +type: "ToggleAllOnlineOffline",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    updatedDiningEntModelsArr: Array<DiningEntModelData>
+  }
+};
 // union service action type //
 export type DiningEntModelAction = (
   DiningEntModelAPIRequest | SetDiningEntModels | DiningEntModelError | DiningEntModelCreated | DiningEntModelUpdated | DiningEntModelDeleted |
   DiningEntModelImgUplSuccess | DiningEntModelImgDelSuccess | MenuImgUplSuccess | MenuImgDelSuccess | OpenDiningEntModel | ClearDiningEntModelData | SetDiningEntModelImages |
-  TakeDiningEntModelOnline | TakeDiningEntModelOffline | ToggleAllDiningEntModelsOnlineOffline | AllImageDelSuccess | ToggleDiningEntOnlineOffline
+  TakeDiningEntModelOnline | TakeDiningEntModelOffline | ToggleAllDiningEntModelsOnlineOffline | AllImageDelSuccess | ToggleDiningEntOnlineOffline | ToggleAllOnlineOffline
 );

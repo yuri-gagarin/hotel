@@ -74,8 +74,6 @@ export default {
     // case for a change in Service model online - offline status //
     if (onlineStatus &&  typeof onlineStatus === "object" && typeof onlineStatus.status === "boolean") {
       const { status } = onlineStatus;
-      console.log(77);
-      console.log(onlineStatus)
       return HotelService.findOneAndUpdate(
         { _id: serviceId },
         { $set: { live: status, editedAt: new Date(Date.now()) } },
@@ -89,7 +87,8 @@ export default {
         });
       });
     };
-
+    
+    // check for take all online or offline action //
     if (changeAllOnlineStatus) {
       const { status = false } = changeAllOnlineStatus;
       return HotelService.update({}, { live: status }, { multi: true })
@@ -111,6 +110,7 @@ export default {
           });
         });
     }
+    
 
     return HotelService.findOneAndUpdate(
       { _id: serviceId },

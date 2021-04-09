@@ -4,7 +4,7 @@ import type {
   DiningEntertainmentState, ClientDiningEntFormData,
   DiningEntModelAPIRequest, DiningEntModelError, SetDiningEntModels, DiningEntModelCreated, DiningEntModelUpdated, DiningEntModelDeleted, DiningEntModelData,
   OpenDiningEntModel, ClearDiningEntModelData, DiningImgData, MenuImageData, SetDiningEntModelImages, 
-  DiningEntModelImgUplSuccess, DiningEntModelImgDelSuccess, MenuImgUplSuccess, MenuImgDelSuccess, AllImageDelSuccess, DiningEntModelAction, ToggleDiningEntOnlineOffline
+  DiningEntModelImgUplSuccess, DiningEntModelImgDelSuccess, MenuImgUplSuccess, MenuImgDelSuccess, AllImageDelSuccess, DiningEntModelAction, ToggleDiningEntOnlineOffline, ToggleAllOnlineOffline
 } from "../reducers/dining_entertainment/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 // helpers //
@@ -93,6 +93,12 @@ const allImgDeleteSuccess = ( stateData: { status: number, responseMsg: string, 
 const toggleModelOnlineOfflineStatus = (stateData: { status: number, responseMsg: string, updatedDiningEntModel: DiningEntModelData, updatedDiningEntModelsArr: Array<DiningEntModelData> }): ToggleDiningEntOnlineOffline => {
   return {
     type: "ToggleDiningEntOnlineOffline",
+    payload: { ...stateData, loading: false }
+  };
+};
+const toggleAllOnlineOffline = (stateData: { status: number, responseMsg: string, updatedDiningEntModelsArr: Array<DiningEntModelData> }): ToggleAllOnlineOffline => {
+  return {
+    type: "ToggleAllOnlineOffline",
     payload: { ...stateData, loading: false }
   };
 };
@@ -502,5 +508,29 @@ export const handleToggleModelOnlineOfflineStatus = (dispatch: Dispatch<DiningEn
     .catch((error) => {
       dispatch(diningModelError(error));
       return Promise.resolve(false);
+    });
+};
+
+// toggle all online or offline //
+export const handleToggleAllOnlineOffline = (dispatch: Dispatch<DiningEntModelAction>, onlineStatus: boolean): Promise<boolean> => {
+  const axiosReqOptions = {
+    method: "patch",
+    url: "/api/dining_models/",
+    data: { changeAllOnlineStatus: onlineStatus }
+  };
+
+  dispatch(diningModelAPIRequest());
+  return axios(axiosReqOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedDiningEntModels } : { responseMsg: string, updatedDiningEntModels: Array<DiningEntModelData> } = data;
+
+      const updatedState = { status, responseMsg, updatedDiningEntModelsArr: updatedDiningEntModels };
+      dispatch(toggleAllOnlineOffline(updatedState));
+      return Promise.resolve(true);
     })
-}
+    .catch((error) => {
+      dispatch(diningModelError(error));
+      return Promise.resolve(false);
+    });
+};
