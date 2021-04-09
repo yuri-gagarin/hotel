@@ -66,26 +66,26 @@ export default {
       
   },
   updateService: (req, res) => {
-    let status, editedService;
+    let editedService;
     const { serviceId } = req.params;
-    console.log(req.body)
-    const { serviceData = {}, serviceImages = [], changeOnlineStatus, changeAllOnlineStatus } = req.body;
+    const { serviceData = {}, serviceImages = [], onlineStatus, changeAllOnlineStatus } = req.body;
     const updatedImages = serviceImages.length > 0 ? serviceImages.map((img) => `${img._id}`) : [];
 
-    if (changeOnlineStatus) {
-      const { status = false } = changeOnlineStatus;
+    // case for a change in Service model online - offline status //
+    if (onlineStatus &&  typeof onlineStatus === "object" && typeof onlineStatus.status === "boolean") {
+      const { status } = onlineStatus;
+      console.log(77);
+      console.log(onlineStatus)
       return HotelService.findOneAndUpdate(
         { _id: serviceId },
         { $set: { live: status, editedAt: new Date(Date.now()) } },
         { new: true }
       )
       .populate("images").exec()
-      .then((editedHService) => {
-        editedService = editedHService;
-        const onlineStatus = editedService.live ? "ONLINE" : "OFFLINE";
+      .then((updatedService) => {
+        const responseMsg = `Successfully set the current Service ${updatedService.live ? "online" : "offline"}.`
         return res.status(200).json({
-          responseMsg: `Current service online status is now: ${onlineStatus}`,
-          updatedService: editedService
+          responseMsg, updatedService
         });
       });
     };

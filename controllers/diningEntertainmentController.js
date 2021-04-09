@@ -77,14 +77,14 @@ export default {
       const { status } = onlineStatus;
       return DiningEntertainmentModel.findOneAndUpdate(
         { _id: diningModelId },
-        { $set: { live: status } },
+        { $set: { live: status, editedAt: new Date(Date.now()) } },
         { new: true }
       )
       .populate("images")
       .populate("menuImages")
       .exec()
       .then((updatedDiningEntModel) => {
-        const responseMsg = `Successfully set the current model ${ updatedDiningEntModel.live ? "online": "offline"}.`;
+        const responseMsg = `Successfully set the current model ${ updatedDiningEntModel.live ? "online" : "offline"}.`;
         console.log(updatedDiningEntModel.live)
         return res.status(200).json({
           responseMsg, updatedDiningEntModel

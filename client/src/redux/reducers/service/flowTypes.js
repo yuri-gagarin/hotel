@@ -139,24 +139,14 @@ export type SetServiceImages = {
     serviceImages: Array<ServiceImgData>
   }
 };
-export type TakeServiceOnline = {
-  +type: "TakeServiceOnline",
+export type ToggleServiceOnlineOffline = {
+  +type: "ToggleServiceOnlineOffline",
   payload: {
     status: number,
     loading: boolean,
     responseMsg: string,
     updatedService: ServiceData,
-    createdServices: Array<ServiceData>
-  }
-};
-export type TakeServiceOffline = {
-  +type: "TakeServiceOffline",
-  payload: {
-    status: number,
-    loading: boolean,
-    responseMsg: string,
-    updatedService: ServiceData,
-    createdServices: Array<ServiceData>
+    updatedServicesArr: Array<ServiceData>
   }
 };
 export type ToggleAllServicesOnlineOffline = {
@@ -172,5 +162,5 @@ export type ToggleAllServicesOnlineOffline = {
 export type ServiceAction = (
   ServiceAPIRequest | SetServices | ServiceError | ServiceCreated | ServiceUpdated | ServiceDeleted |
   ServiceImgUplSuccess | ServiceImgDelSuccess | OpenService | ClearServiceData | SetServiceImages |
-  TakeServiceOnline | TakeServiceOffline | ToggleAllServicesOnlineOffline
+  ToggleServiceOnlineOffline | ToggleAllServicesOnlineOffline
 );

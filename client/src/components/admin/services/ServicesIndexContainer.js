@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import { withRouter, Route } from "react-router-dom";
 import { 
   clearServiceData, openService, fetchServices,
-  handleNewService, updateHotelService, deleteService, takeServiceOnline, takeServiceOffline, toggleAllServicesOnlineStatus
+  handleNewService, updateHotelService, deleteService, handleToggleServiceOnlineOffline, toggleAllServicesOnlineStatus
 } from "./../../../redux/actions/serviceActions";
 // types //
 import type { ServiceState, ServiceData, ServiceImgData, ClientServiceFormData, ServiceAction } from "../../../redux/reducers/service/flowTypes";
@@ -40,8 +40,7 @@ type Props = {
   clearServiceData: () => void,
   handleOpenService: (createdServices: Array<ServiceData>, serviceId: string) => void,
   handleServiceDelete: (serviceId: string, serviceState: ServiceState) => Promise<boolean>,
-  takeServiceOnline: (serviceToActivate: ServiceData, serviceState: ServiceState) => Promise<boolean>,
-  takeServiceOffline: (serviceToDeactivate: ServiceData, serviceState: ServiceState) => Promise<boolean>,
+  _handleToggleServiceOnlineOffline: (serviceToUpdate: ServiceData, serviceState: ServiceState) => Promise<boolean>,
   toggleAllServicesOnlineStatus: (newStats: boolean) => Promise<boolean>
 };
 
@@ -56,7 +55,7 @@ const ServicesIndexContainer = (props: Props): React.Node => {
   const { history, serviceState } = props;
   const {
     fetchServices, clearServiceData, handleOpenService, handleServiceDelete, 
-    takeServiceOnline, takeServiceOffline, toggleAllServicesOnlineStatus
+    _handleToggleServiceOnlineOffline, toggleAllServicesOnlineStatus
   } = props;
   const { createdServices, serviceData } : { createdServices: Array<ServiceData>, serviceData: ServiceData } = serviceState;
 
@@ -81,11 +80,8 @@ const ServicesIndexContainer = (props: Props): React.Node => {
     return toggleAllServicesOnlineStatus(false);
 
   };
-  const handleTakeServiceOnline = function(service: ServiceData) {
-    return takeServiceOnline(service, serviceState);
-  };
-  const handleTakeServiceOffline = function(serviceToDeactivate: ServiceData) {
-    return takeServiceOffline(serviceToDeactivate, serviceState);
+  const toggleServiceOnlineOffline = (serviceToUpdate: ServiceData) => {
+    return _handleToggleServiceOnlineOffline(serviceToUpdate, serviceState);
   };
   const toggleForm = () => {
     return setLocalState({ ...localState, serviceFormOpen: !localState.serviceFormOpen });
@@ -194,9 +190,8 @@ const ServicesIndexContainer = (props: Props): React.Node => {
         <ServiceEditContainer 
           history={ history }
           serviceState={ serviceState }
-          handleTakeServiceOnline={ handleTakeServiceOnline }
-          handleTakeServiceOffline={ handleTakeServiceOffline }
           triggerDeleteService={ triggerDeleteService }
+          toggleServiceOnlineOffline={ toggleServiceOnlineOffline }
         />
       </Route>
     </React.Fragment>
@@ -223,11 +218,8 @@ const mapDispatchToProps = (dispatch: Dispatch<ServiceAction>) => {
     handleServiceDelete: (serviceId: string, serviceState: ServiceState) => {
       return deleteService(dispatch, serviceId, serviceState);
     },
-    takeServiceOnline: (serviceToActivate: ServiceData, serviceState: ServiceState) => {
-      return takeServiceOnline(dispatch, serviceToActivate, serviceState);
-    },
-    takeServiceOffline: (serviceToDeactivate: ServiceData, serviceState: ServiceState) => {
-      return takeServiceOffline(dispatch, serviceToDeactivate, serviceState);
+    _handleToggleServiceOnlineOffline: (serviceToUpdate: ServiceData, serviceState: ServiceState) => {
+      return handleToggleServiceOnlineOffline(dispatch, serviceToUpdate, serviceState);
     },
     toggleAllServicesOnlineStatus: (newStatus: boolean) => {
       return toggleAllServicesOnlineStatus(dispatch, newStatus);

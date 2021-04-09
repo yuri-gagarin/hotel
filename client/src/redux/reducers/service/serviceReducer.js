@@ -129,26 +129,16 @@ const serviceReducer = (state: ServiceState = initialState, action: ServiceActio
         error: null
       };
     };
-    case "TakeServiceOnline": {
+    case "ToggleServiceOnlineOffline": {
+      console.log(133)
+      console.log(action.payload)
       return {
         ...state,
         status: action.payload.status,
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
         serviceData: action.payload.updatedService,
-        createdServices: action.payload.createdServices,
-        error: null
-      };
-    };
-    case "TakeServiceOffline": {
-      return {
-        ...state,
-        status: action.payload.status,
-        loading: action.payload.loading,
-        responseMsg: action.payload.responseMsg,
-        serviceData: action.payload.updatedService,
-        createdServices: action.payload.createdServices,
-        error: null
+        createdServices: action.payload.updatedServicesArr
       };
     };
     case "ToggleAllServicesOnlineOffline": {

@@ -15,13 +15,12 @@ type Props = {
   history: RouterHistory,
   serviceState: ServiceState,
   triggerDeleteService: (serviceId: string) => void,
-  handleTakeServiceOnline: (serviceData: ServiceData) => Promise<boolean>,
-  handleTakeServiceOffline: (serviceData: ServiceData) => Promise<boolean>
+  toggleServiceOnlineOffline: (serviceToUpdate: ServiceData) => Promise<boolean>
 }
 type LocalState = {
   serviceFormOpen: boolean
 }
-export const ServiceEditContainer = ({ history, serviceState, triggerDeleteService, handleTakeServiceOnline, handleTakeServiceOffline }: Props): React.Node => {
+export const ServiceEditContainer = ({ history, serviceState, triggerDeleteService, toggleServiceOnlineOffline }: Props): React.Node => {
   const { serviceData } = serviceState;
 
   const [ localState, setLocalState ] = React.useState({ serviceFormOpen: false });
@@ -36,7 +35,7 @@ export const ServiceEditContainer = ({ history, serviceState, triggerDeleteServi
     <Grid.Row>
       <Grid.Column width={15}>
         <div className={ styles.editViewControlsDiv }>
-          <EditViewControls handleBack={ handleGoBack } modelType="service" model={ serviceData } toggleOnlineOfflineStatus={ handleTakeServiceOffline } />
+          <EditViewControls handleBack={ handleGoBack } modelType="service" model={ serviceData } toggleOnlineOfflineStatus={ toggleServiceOnlineOffline } />
           <ModelDeleteBtn modelName={"service"} modelId={ serviceData._id} handleModelDelete={ triggerDeleteService } />
         </div>
         <ServiceDisplay formOpen={ localState.serviceFormOpen } service={serviceData} history={history} toggleForm={ toggleForm } />
