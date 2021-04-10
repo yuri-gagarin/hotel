@@ -23,8 +23,8 @@ type OwnProps = {|
 type Props = {|
   ...OwnProps,
   serviceState: ServiceState,
-  handleNewService: (serviceData: ClientServiceFormData, history: RouterHistory) => Promise<boolean>,
-  updateHotelService: (serviceData: ClientServiceFormData, serviceState: ServiceState) => Promise<boolean>,
+  _handleCreateNewService: (serviceData: ClientServiceFormData, history: RouterHistory) => Promise<boolean>,
+  _handleUpdateService: (serviceData: ClientServiceFormData, serviceState: ServiceState) => Promise<boolean>,
   uploadServiceImage: <ServiceState>(file: FormData, currentServiceState: ServiceState) => Promise<boolean>,
   deleteServiceImage: (imageId: string, currentServiceState: ServiceState) => Promise<boolean>,
   setServicesImages: (serviceImages: Array<ServiceImgData>) => void 
@@ -122,100 +122,102 @@ const ServiceForm = (props: Props): React.Node => {
   };
 
   return (
-    <Form className={ styles.serviceForm }>
-      <ConfirmDeleteModal 
-        open={ deleteImgModalState.modalOpen } 
-        modelName="image" 
-        confirmAction={ confirmImageDelete } 
-        cancelAction={ cancelDeleteAction } 
-        customContent={ "This will delete the selected Image" }
-      />
-      <div className={ styles.formHeader }>
-        <h4>Edit Section</h4>
-        <span>Edit all of the data here</span>
-      </div>
-      <Form.Group widths='equal'>
-        <Form.Field
-          control={Input}
-          label='Service Type'
-          placeholder="Type of service ..."
-          onChange={handleServiceType}
-          value={serviceDetails.serviceType}
+    <div className={ styles.serviceFormWrapper }>
+      <Form className={ styles.serviceForm }>
+        <ConfirmDeleteModal 
+          open={ deleteImgModalState.modalOpen } 
+          modelName="image" 
+          confirmAction={ confirmImageDelete } 
+          cancelAction={ cancelDeleteAction } 
+          customContent={ "This will delete the selected Image" }
         />
-        <Form.Field
-          control={Input}
-          label='Hours'
-          placeholder='Hours available ...'
-          onChange={handleServiceHours}
-          value={serviceDetails.hours}
-        />
-        <Form.Field
-          control={Input}
-          label="Price"
-          placeholder='How much does it cost ...'
-          onChange={handleServicePrice}
-          value={serviceDetails.price}
-        />
-      </Form.Group>
-      <Form.Field
-        id='form-textarea-control-opinion'
-        control={TextArea}
-        label='Description'
-        placeholder='Description of the service provided ...'
-        onChange={handleServiceDescription}
-        value={serviceDetails.description}
-
-      />
-      <FileInput uploadImage={uploadServiceImage} dataName={"serviceImage"} modelState={ serviceState } />
-      <div className={ styles.formPreviewImgsDiv }>
-        { 
-          serviceImages.map((serviceImg) => {
-            return (
-              <ServiceImageThumb 
-                key={serviceImg._id} 
-                serviceImage={serviceImg} 
-                handleImageDelete={handleImageDelete} 
-              />
-            );
-          })
-        }
-      </div>
-      
-      <Form.Field style={{marginTop: "0.5em"}}>
-        <div className={ styles.formButtons }>
-          <Button className={ styles.saveAndCloseBtn } positive content="Save and Close" onClick={handleFormSubmit} />
+        <div className={ styles.formHeader }>
+          <h4>Edit Section</h4>
+          <span>Edit all of the data here</span>
         </div>
-      </Form.Field>
-     
-    </Form>
+        <Form.Group widths='equal'>
+          <Form.Field
+            control={Input}
+            label='Service Type'
+            placeholder="Type of service ..."
+            onChange={handleServiceType}
+            value={serviceDetails.serviceType}
+          />
+          <Form.Field
+            control={Input}
+            label='Hours'
+            placeholder='Hours available ...'
+            onChange={handleServiceHours}
+            value={serviceDetails.hours}
+          />
+          <Form.Field
+            control={Input}
+            label="Price"
+            placeholder='How much does it cost ...'
+            onChange={handleServicePrice}
+            value={serviceDetails.price}
+          />
+        </Form.Group>
+        <Form.Field
+          id='form-textarea-control-opinion'
+          control={TextArea}
+          label='Description'
+          placeholder='Description of the service provided ...'
+          onChange={handleServiceDescription}
+          value={serviceDetails.description}
+
+        />
+        <FileInput uploadImage={uploadServiceImage} dataName={"serviceImage"} modelState={ serviceState } />
+        <div className={ styles.formPreviewImgsDiv }>
+          { 
+            serviceImages.map((serviceImg) => {
+              return (
+                <ServiceImageThumb 
+                  key={serviceImg._id} 
+                  serviceImage={serviceImg} 
+                  handleImageDelete={handleImageDelete} 
+                />
+              );
+            })
+          }
+        </div>
+        
+        <Form.Field style={{marginTop: "0.5em"}}>
+          <div className={ styles.formButtons }>
+            <Button className={ styles.saveAndCloseBtn } positive content="Save and Close" onClick={handleFormSubmit} />
+          </div>
+        </Form.Field>
+      
+      </Form>
+    </div>
   )
 };
 
 // redux functionality //
-const mapStateToProps = (state: RootState) => {
-  return {
-    serviceState: state.serviceState
-  };
-};
 const mapDispatchToProps = (dispatch: Dispatch<ServiceAction>) => {
   return {
-    uploadServiceImage: (imageData: FormData, currentServiceState: ServiceState) => {
-      return uploadServiceImage(dispatch, imageData, currentServiceState);
+    _handleUploadServiceImage: (imageData: FormData, currentServiceState: ServiceState) => {
+      return handleUploadServiceImage(dispatch, imageData, currentServiceState);
     },
-    deleteServiceImage: (imageId: string, currentServiceState: ServiceState) => {
-      return deleteServiceImage(dispatch, imageId, currentServiceState);
+    _handledeleteServiceImage: (imageId: string, currentServiceState: ServiceState) => {
+      return handleDeleteServiceImage(dispatch, imageId, currentServiceState);
     },
+    /*
     setServicesImages: (previewImages: Array<ServiceImgData>) => {
       return setServicesImages(previewImages);
     },
-    handleNewService: (serviceData: ClientServiceFormData) => {
-      return handleNewService(dispatch, serviceData);
+    */
+    _handleCreateNewService: (serviceData: ClientServiceFormData) => {
+      return handleCreateNewService(dispatch, serviceData);
     },
-    updateHotelService: (serviceData: ClientServiceFormData, serviceState: ServiceState) => {
-      return updateHotelService(dispatch, serviceData, serviceState);
+    _handleUpdateService: (serviceData: ClientServiceFormData, serviceState: ServiceState) => {
+      return handleUpdateService(dispatch, serviceData, serviceState);
+    },
+    _handleDeleteService: (serviceId: string, serviceState: ServiceState) => {
+      return handleDeleteService(dispatch, serviceId, serviceState);
     }
   };
 };
 
-export default (connect(mapStateToProps, mapDispatchToProps)(ServiceForm): React.AbstractComponent<OwnProps>);
+export default (connect(null, mapDispatchToProps)(ServiceForm): React.AbstractComponent<OwnProps>);
 

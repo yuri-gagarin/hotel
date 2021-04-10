@@ -16,22 +16,8 @@ import type { Dispatch } from "../reducers/_helpers/createReducer";
 import { normalizeErrorMessages, setAxiosError } from "./helpers/errorHelpers";
 import { generateEmptyService } from "../reducers/_helpers/emptyDataGenerators";
 
-export const serviceImgUploadSuccess = (data : { status: number, loading: boolean, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgUplSuccess => {
-  return {
-    type: "ServiceImgUplSuccess",
-    payload: data
-  };
-};
-
-export const serviceImgDeleteSuccess = (data : { status: number, loading: boolean, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgDelSuccess => {
-  return {
-    type: "ServiceImgDelSuccess",
-    payload: data
-  };
-};
-
-
-export const serviceRequest = (): ServiceAPIRequest => {
+/* API request actions and error */
+const serviceAPIRequest = (): ServiceAPIRequest => {
   return {
     type: "ServiceAPIRequest",
     payload: {
@@ -41,47 +27,7 @@ export const serviceRequest = (): ServiceAPIRequest => {
     }
   };
 };
-
-export const serviceCreated = (data : { status: number, loading: boolean, responseMsg: string, newServiceData: ServiceData }): ServiceCreated => {
-  return {
-    type: "ServiceCreated",
-    payload: data
-  };
-};
-/*
-export const addNewService = (data: { status: number, loading: boolean, responseMsg: string, }) => {
-  console.log(newService);
-  return {
-    type: ADD_SERVICE_TO_STATE,
-    payload: {
-      newService: newService
-    }
-  };
-};   
-*/
-
-export const setServices = (data : { status: number, loading: boolean, responseMsg: string, createdServices: Array<ServiceData>, numberOfServices: number }): SetServices => {
-  return {
-    type: "SetServices",
-    payload: data
-  };
-};
-
-export const serviceUpdated = (data : { status: number, loading: boolean, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData> }): ServiceUpdated => {
-  return {
-    type: "ServiceUpdated",
-    payload: data
-  };
-};
-
-export const serviceDeleted = (data : { status: number, loading: boolean, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData>, numberOfServices: number }): ServiceDeleted => {
-  return {
-    type: "ServiceDeleted",
-    payload: data
-  };
-};
-
-export const serviceError = ({ status, responseMsg, error } : { status: number, responseMsg: string, error: Error }): ServiceError => {
+const serviceError = ({ status, responseMsg, error } : { status: number, responseMsg: string, error: Error }): ServiceError => {
   console.error(error);
   return {
     type: "ServiceError",
@@ -93,64 +39,244 @@ export const serviceError = ({ status, responseMsg, error } : { status: number, 
   };
 };
 
-export const openService = (services: Array<ServiceData>, serviceId: string): OpenService => {
-  const serviceData = services.filter((service) => service._id == serviceId)[0];
+/* CRUD API actions */
+const serviceCreated = (data : { status: number, responseMsg: string, newServiceData: ServiceData }): ServiceCreated => {
   return {
-    type: "OpenService",
-    payload: {
-      serviceData: serviceData,
-      serviceImages: serviceData.images,
-    }
+    type: "ServiceCreated",
+    payload: { ...data, loading: false }
+  };
+};
+const serviceUpdated = (data : { status: number, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData> }): ServiceUpdated => {
+  return {
+    type: "ServiceUpdated",
+    payload: { ...data, loading: false }
+  };
+};
+const serviceDeleted = (data : { status: number, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData>, numberOfServices: number }): ServiceDeleted => {
+  return {
+    type: "ServiceDeleted",
+    payload: { ...data, loading: false }
+  };
+};
+/* */
+
+/* image upload api actions */
+const serviceImgUploadSuccess = (data : { status: number, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgUplSuccess => {
+  return {
+    type: "ServiceImgUplSuccess",
+    payload: { ...data, loading: false }
   };
 };
 
-export const setServicesImages = (serviceImages: Array<ServiceImgData>): SetServiceImages => {
+const serviceImgDeleteSuccess = (data : { status: number, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgDelSuccess => {
   return {
-    type: "SetServiceImages",
-    payload: {
-      serviceImages: serviceImages,
-    }
+    type: "ServiceImgDelSuccess",
+    payload: { ...data, loading: false }
   };
 };
 
-export const clearServiceData = (): ClearServiceData => {
+/* online offline actions */
+const toggleServiceOnlineOffline = (data: { status: number, responseMsg: string, updatedService: ServiceData, updatedServicesArr: Array<ServiceData> }): ToggleServiceOnlineOffline => {
   return {
-    type: "ClearServiceData",
-    payload: {
-      loading: false,
-      serviceData: generateEmptyService(),
-      serviceImages: [],
-      error: null
-    }
+    type: "ToggleServiceOnlineOffline",
+    payload: { ...data, loading: false }
   };
 };
-
-export const toggleServiceOnlineOffline = (data: { status: number, responseMsg: string, updatedService: ServiceData, updatedServicesArr: Array<ServiceData> }): ToggleServiceOnlineOffline => {
- return {
-  type: "ToggleServiceOnlineOffline",
-  payload: { ...data, loading: false }
- };
-};
-
-export const toggleAllServicesOnlineOfflineAction = (data: { status: number, loading: boolean, responseMsg: string, updatedServices: Array<ServiceData> }): ToggleAllServicesOnlineOffline => {
+ const toggleAllServicesOnlineOfflineAction = (data: { status: number, responseMsg: string, updatedServices: Array<ServiceData> }): ToggleAllServicesOnlineOffline => {
   return {
     type: "ToggleAllServicesOnlineOffline",
-    payload: data
-  }
-} 
+    payload: { ...data, loading: false }
+  };
+};
 
+/* non API actions */
+const setServices = (data : { status: number, responseMsg: string, createdServices: Array<ServiceData>, numberOfServices: number }): SetServices => {
+  return {
+    type: "SetServices",
+    payload: { ...data, loading: false }
+  };
+};
+const openService = (data : { serviceImages: Array<ServiceImgData>, serviceData: ServiceData }): OpenService => {
+  return {
+    type: "OpenService",
+    payload: { ...data }
+  };
+};
+const setServicesImages = (serviceImages: Array<ServiceImgData>): SetServiceImages => {
+  return {
+    type: "SetServiceImages",
+    payload: { serviceImages }
+  };
+};
+const clearServiceData = (data: { serviceImages: Array<ServiceImgData>, serviceData: ServiceData }): ClearServiceData => {
+  return {
+    type: "ClearServiceData",
+    payload: { ...data }
+  };
+};
+/* */
+
+/* action exports */
+/* non API related requests */
+export const handleOpenService = (dispatch: Dispatch<ServiceAction>, serviceIdToOpen: string, currentServiceState: ServiceState): void => {
+  const serviceDataToOpen = currentServiceState.createdServices.filter((service) => service._id === serviceIdToOpen)[0];
+  const stateUpdateData = {
+    serviceData: { ...serviceDataToOpen, images: [ ...serviceDataToOpen.images ]},
+    serviceImages: [ ...serviceDataToOpen.images ]
+  };
+  dispatch(openService(stateUpdateData));
+};
+export const handleClearServiceData = (dispatch: Dispatch<ServiceAction>): void => {
+  dispatch(clearServiceData({ serviceData: generateEmptyService(), serviceImages: [] }));
+};
+
+/* API related requests */
+/* Service CRUD related method requests */
+export const handleCreateNewService= (dispatch: Dispatch<ServiceAction>, clientServiceFormData: ClientServiceFormData): Promise<boolean> => {
+  const requestOptions = {
+    method: "post",
+    url: "/api/services/create_new_service",
+    data: {
+      hotelServiceData: clientServiceFormData,
+      serviceImages: clientServiceFormData.images ? [ ...clientServiceFormData.images ] : null
+    }
+  };
+
+  dispatch(serviceAPIRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, newService } : { responseMsg: string, newService: ServiceData } = data;
+      const stateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        newServiceData: newService,
+      };
+      dispatch(serviceCreated(stateData));
+      return true;
+    })
+    .catch((err) => {
+      const { status, responseMsg, errorMessages, error } = setAxiosError(err);
+      dispatch(serviceError({ status, responseMsg, error }));
+      return false;
+  });
+};
+
+export const handleUpdateService = (dispatch: Dispatch<ServiceAction>, serviceData: ClientServiceFormData, serviceState: ServiceState): Promise<boolean> => {
+  const serviceId = serviceData._id; 
+  const { createdServices, serviceImages } = serviceState;
+  const requestOptions = {
+    method: "patch",
+    url: "/api/services/" + (serviceId || ""),
+    data: {
+      serviceData: serviceData,
+      serviceImages: serviceImages
+    }
+  }
+  dispatch(serviceAPIRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedService } : { responseMsg: string, updatedService: ServiceData } = data;
+      const updatedServices = createdServices.map((service) => {
+        if (service._id == updatedService._id) {
+          return { ...updatedService, images: [ ...updatedService.images ] };
+        } else {
+          return service;
+        }
+      });
+      const serviceStateData = { 
+        status, 
+        responseMsg, 
+        serviceData: updatedService, 
+        serviceImages: [ ...updatedService.images ], 
+        createdServices: [ ...updatedServices ],
+      };
+      dispatch(serviceUpdated(serviceStateData));
+      return true;
+    })
+    .catch((error) => {
+      dispatch(serviceError(error));
+      return false;
+    });
+};
+
+export const handleDeleteService = (dispatch: Dispatch<ServiceAction>, serviceId: string, serviceState: ServiceState): Promise<boolean> => {
+  const currentServices = serviceState.createdServices;
+  const requestOptions = {
+    method: "delete",
+    url: "/api/services/" + serviceId,
+  };
+
+  dispatch(serviceAPIRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, deletedService } : { responseMsg: string, deletedService: ServiceData } = data;
+
+      const updatedServices = currentServices.filter((service) => {
+        return deletedService._id !== service._id;
+      });
+
+      const serviceStateData = {
+        status,
+        responseMsg,
+        serviceData: generateEmptyService(),
+        serviceImages: [],
+        createdServices: updatedServices,
+        numberOfServices: updatedServices.length
+      };
+      dispatch(serviceDeleted(serviceStateData));
+      return true;
+    })
+    .catch((error) => {
+      dispatch(serviceError(error));
+      return false;
+    });
+};
+
+/* non CRUD fetch API actions */
+export const handleFetchServices = (dispatch: Dispatch<ServiceAction>): Promise<boolean> => {
+  const requestOptions = {
+    method: "get",
+    url: "/api/services"
+  };
+  dispatch(serviceAPIRequest());
+
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, services } : { responseMsg: string, services: Array<ServiceData>} = data;
+      const stateData = {
+        status: status,
+        loading: false,
+        responseMsg: responseMsg,
+        createdServices: services,
+        numberOfServices: services.length
+      };
+      dispatch(setServices(stateData))
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(serviceError(error));
+      return Promise.resolve(false);
+    });
+};
+
+/* Image upload, delete API actions */
 export const uploadServiceImage = (dispatch: Dispatch<ServiceAction>, file: FormData, currentServiceState: ServiceState): Promise<boolean> => {
   const { serviceData, serviceImages, createdServices } : { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
   const { _id : serviceId } = serviceData;
   const requestOptions = {
     method: "post",
-    url: "/api/services/uploadServiceImage/" + serviceId,
+    url: "/api/services/upload_service_image/" + serviceId,
     headers: {
       'content-type': 'multipart/form-data'
     },
     data: file
   }
-  dispatch(serviceRequest());
+  dispatch(serviceAPIRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
@@ -197,7 +323,7 @@ export const deleteServiceImage = (dispatch: Dispatch<ServiceAction>, imageId: s
     method: "delete",
     url: "/api/services/deleteServiceImage/" + imageId
   };
-  dispatch(serviceRequest());
+  dispatch(serviceAPIRequest());
 
   return axios(requestOptions)
     .then((response) => {
@@ -210,7 +336,6 @@ export const deleteServiceImage = (dispatch: Dispatch<ServiceAction>, imageId: s
 
       const stateData = {
         status: status,
-        loading: false,
         responseMsg: responseMsg,
         serviceImages: newImageState,
         updatedService: updatedService,
@@ -226,144 +351,7 @@ export const deleteServiceImage = (dispatch: Dispatch<ServiceAction>, imageId: s
     });
 };
 
-export const handleNewService= (dispatch: Dispatch<ServiceAction>, hotelServiceData : { serviceType: string, price: string, description: string, images: Array<ServiceImgData> }): Promise<boolean> => {
-  const requestOptions = {
-    method: "post",
-    url: "/api/services/createHotelService",
-    data: {
-      hotelServiceData: hotelServiceData,
-    }
-  };
-  dispatch(serviceRequest());
-  return axios(requestOptions)
-    .then((response) => {
-      const { status, data } = response;
-      const { responseMsg, newService } : { responseMsg: string, newService: ServiceData } = data;
-      const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        newServiceData: newService,
-      };
-      dispatch(serviceCreated(stateData));
-      return true;
-    })
-    .catch((err) => {
-      const { status, responseMsg, errorMessages, error } = setAxiosError(err);
-      dispatch(serviceError({ status, responseMsg, error }));
-      return false;
-  });
-   
-};
-
-export const fetchServices = (dispatch: Dispatch<ServiceAction>): Promise<boolean> => {
-  const requestOptions = {
-    method: "get",
-    url: "/api/services"
-  };
-  dispatch(serviceRequest());
-
-  return axios(requestOptions)
-    .then((response) => {
-      const { status, data } = response;
-      const { responseMsg, services } : { responseMsg: string, services: Array<ServiceData>} = data;
-      const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        createdServices: services,
-        numberOfServices: services.length
-      };
-      dispatch(setServices(stateData))
-      return Promise.resolve(true);
-    })
-    .catch((error) => {
-      dispatch(serviceError(error));
-      return Promise.resolve(false);
-    });
-};
-
-export const updateHotelService = (dispatch: Dispatch<ServiceAction>, serviceData: ClientServiceFormData, serviceState: ServiceState): Promise<boolean> => {
-  const serviceId = serviceData._id; 
-  const currentServices = serviceState.createdServices;
-  const serviceImages = serviceState.serviceImages;
-  const requestOptions = {
-    method: "patch",
-    url: "/api/services/" + (serviceId || ""),
-    data: {
-      serviceData: serviceData,
-      serviceImages: serviceImages
-    }
-  }
-  dispatch(serviceRequest());
-  return axios(requestOptions)
-    .then((response) => {
-      const { status, data } = response;
-      const { responseMsg, updatedService } : { responseMsg: string, updatedService: ServiceData } = data;
-      const updatedServices = currentServices.map((service) => {
-        if (service._id == updatedService._id) {
-          return {
-            ...updatedService
-          };
-        } else {
-          return service;
-        }
-      });
-      const serviceStateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        serviceData: updatedService,
-        serviceImages: [ ...updatedService.images ],
-        createdServices: [ ...updatedServices ],
-      };
-      dispatch(serviceUpdated(serviceStateData));
-      return true;
-    })
-    .catch((error) => {
-      dispatch(serviceError(error));
-      return false;
-    });
-};
-
-export const deleteService = (dispatch: Dispatch<ServiceAction>, serviceId: string, serviceState: ServiceState): Promise<boolean> => {
-  const currentServices = serviceState.createdServices;
-  const requestOptions = {
-    method: "delete",
-    url: "/api/services/" + serviceId,
-  };
-
-  dispatch(serviceRequest());
-  return axios(requestOptions)
-    .then((response) => {
-      const { status, data } = response;
-      const { responseMsg, deletedService } : { responseMsg: string, deletedService: ServiceData } = data;
-
-      const updatedServices = currentServices.filter((service) => {
-        return deletedService._id !== service._id;
-      });
-
-      const serviceStateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        serviceData: generateEmptyService(),
-        serviceImages: [],
-        createdServices: updatedServices,
-        numberOfServices: updatedServices.length
-      };
-      dispatch(serviceDeleted(serviceStateData));
-      return true;
-    })
-    .catch((error) => {
-      dispatch(serviceError(error));
-      return false;
-    });
-};
-
-// take online and offline //
-// can probably be refactored into a single action eh?? //
-// definitely will redo into one function //
+// take online and offline API actions //
 export const handleToggleServiceOnlineOffline = (dispatch: Dispatch<ServiceAction>, serviceToUpdate: ServiceData, serviceState: ServiceState): Promise<boolean> => {
   const { _id: serviceId, live } = serviceToUpdate;
   const { createdServices } = serviceState;
@@ -374,7 +362,7 @@ export const handleToggleServiceOnlineOffline = (dispatch: Dispatch<ServiceActio
       onlineStatus: { status: !live }
     }
   };
-  dispatch(serviceRequest());
+  dispatch(serviceAPIRequest());
 
   return axios(axiosRequest)
     .then((response) => {
@@ -400,7 +388,7 @@ export const handleToggleServiceOnlineOffline = (dispatch: Dispatch<ServiceActio
     });
 };
 
-export const toggleAllServicesOnlineStatus = (dispatch: Dispatch<ServiceAction> , newStatus: boolean): Promise<boolean> => {
+export const handleToggleAllServicesOnlineStatus = (dispatch: Dispatch<ServiceAction> , newStatus: boolean): Promise<boolean> => {
   const axiosRequest = {
     url: "/api/services/",
     method: "patch",
@@ -411,7 +399,7 @@ export const toggleAllServicesOnlineStatus = (dispatch: Dispatch<ServiceAction> 
     }
   };
 
-  dispatch(serviceRequest());
+  dispatch(serviceAPIRequest());
   return axios(axiosRequest)
     .then((response) => {
       const { status, data } = response;
