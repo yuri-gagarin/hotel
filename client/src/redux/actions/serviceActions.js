@@ -321,7 +321,7 @@ export const handleDeleteServiceImage = (dispatch: Dispatch<ServiceAction>, imag
 
   const requestOptions = {
     method: "delete",
-    url: "/api/services/deleteServiceImage/" + imageId
+    url: "/api/services/delete_service_image/" + imageId
   };
   dispatch(serviceAPIRequest());
 

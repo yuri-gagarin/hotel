@@ -35,7 +35,7 @@ const EditServiceDisplay = ({ serviceState, history, goBackToServices, triggerMo
 
   return (
     <Grid.Row>
-      <Modal open={ false } className={ styles.editModal } size="fullscreen" >
+      <Modal open={ localState.formModalOpen } className={ styles.editModal } size="fullscreen" >
         <ServiceForm 
           toggleEditModal={ toggleEditModal }
           serviceState={ serviceState }

@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Button, Checkbox, Form, Input, TextArea } from "semantic-ui-react";
+import { Button, Checkbox, Header, Icon, Form, Input, Popup, Segment, TextArea } from "semantic-ui-react";
 // additional component imports  //
 import ServiceImageThumb from "./ServiceImageThumb";
 import FileInput from "../rooms/FileInput";
@@ -40,6 +40,10 @@ type Props = {
 type LocalFormState = {
   ...ClientServiceFormData
 }
+type ImageModalState = {
+  imgModalOpen: boolean,
+  openImageURL: string
+}
 type ConfirmDelModalState = {
   modalOpen: boolean,
   modelToDelete: "service" | "serviceImage" | "",
@@ -53,8 +57,14 @@ const ServiceForm = (props: Props): React.Node => {
 
   // local form state //
   const [ serviceDetails, setServiceDetails ] = React.useState<LocalFormState>({ ...serviceData });
-  const [ confirmDelModalState, setConfirmDelModalState ] = React.useState<ConfirmDelModalState>({ modalOpen: false, modelToDelete: "", modelIdToDelete: "" });
+  const [ imageModalState, setImageModalState ] = React.useState<ImageModalState>({ imgModalOpen: false, openImageURL: "" });
+  const [ confirmDelModalState, setConfirmDelModalState ] = React.useState<ConfirmDelModalState>({ modalOpen: false, modelIdToDelete: "", modelToDelete: "" }); 
   
+
+  // img modal opop //
+  const toggleImageModal = (imagePath?: string) => {
+    setImageModalState({ imgModalOpen: !imageModalState.imgModalOpen, openImageURL: imagePath ? setImagePath(imagePath) : "" });
+  };
   // text input handlers //
   const handleServiceType = (e, data) => {
     setServiceDetails({
@@ -106,6 +116,24 @@ const ServiceForm = (props: Props): React.Node => {
     }
   };  
   
+  const handleFormCancel = () => {
+    if (toggleEditModal && !objectValuesEmpty(serviceData)) {
+      toggleEditModal();
+    } else {
+      // TODO //
+      // remove any uploaded images //
+      // needs to be implemented //
+      if (serviceImages.length > 0) {
+        /*
+        _handleDeleteAllImages(serviceImages)
+          .then((success) => { if (success) history.goBack() });
+        */
+      } else {
+        history.goBack();
+      }
+    }
+    // else its a new form 
+  };
   // image delete actions //
   const triggerServiceDelete = (serviceId: string) => {
     setConfirmDelModalState({ modalOpen: true, modelToDelete: "service", modelIdToDelete: serviceId });
@@ -141,74 +169,92 @@ const ServiceForm = (props: Props): React.Node => {
 
   return (
     <div className={ styles.serviceFormWrapper }>
-      <Form className={ styles.serviceForm }>
-        <ConfirmDeleteModal 
-          open={ confirmDelModalState.modalOpen } 
-          modelName="image" 
-          confirmAction={ handleDeleteConfirm } 
-          cancelAction={ cancelDeleteAction } 
-          customContent={ "This will delete the selected Image" }
-        />
-        <div className={ styles.formHeader }>
-          <h4>Edit Section</h4>
-          <span>Edit all of the data here</span>
-        </div>
-        <Form.Group widths='equal'>
-          <Form.Field
-            control={Input}
-            label='Service Type'
-            placeholder="Type of service ..."
-            onChange={handleServiceType}
-            value={serviceDetails.serviceType}
-          />
-          <Form.Field
-            control={Input}
-            label='Hours'
-            placeholder='Hours available ...'
-            onChange={handleServiceHours}
-            value={serviceDetails.hours}
-          />
-          <Form.Field
-            control={Input}
-            label="Price"
-            placeholder='How much does it cost ...'
-            onChange={handleServicePrice}
-            value={serviceDetails.price}
-          />
-        </Form.Group>
-        <Form.Field
-          id='form-textarea-control-opinion'
-          control={TextArea}
-          label='Description'
-          placeholder='Description of the service provided ...'
-          onChange={handleServiceDescription}
-          value={serviceDetails.description}
-
-        />
-        <FileInput uploadImage={ _handleUploadServiceImage } dataName={"serviceImage"} modelState={ serviceState } />
-        <div className={ styles.formPreviewImgsDiv }>
-          { 
-            serviceImages.map((serviceImg) => {
-              return (
-                <ServiceImageThumb 
-                  key={serviceImg._id} 
-                  serviceImage={serviceImg} 
-                  handleImageDelete={ triggerImageDelete } 
-                />
-              );
-            })
+      <ConfirmDeleteModal 
+        open={ confirmDelModalState.modalOpen } 
+        modelName="image" 
+        confirmAction={ handleDeleteConfirm } 
+        cancelAction={ cancelDeleteAction } 
+        customContent={ "This will delete the selected Image" }
+      />
+      <GenericImgModal open={ imageModalState.imgModalOpen } imgURL={ imageModalState.openImageURL } handleClose={ toggleImageModal }/>
+      <div className={ styles.formControlsDiv }>
+        <Popup 
+          content="Changes will not be saved"
+          trigger={
+            <Button inverted color="orange" icon="cancel" content="Cancel and Close" onClick={ handleFormCancel } />
           }
-        </div>
-        
-        <Form.Field style={{marginTop: "0.5em"}}>
-          <div className={ styles.formButtons }>
-            <Button className={ styles.saveAndCloseBtn } positive content="Save and Close" onClick={handleFormSubmit} />
+        />
+        {
+          objectValuesEmpty(serviceData)
+          ?
+          <div className={ styles.formControls }>
+            <Button style={{ height: "100%" }} inverted color="green" content="Create and Save" icon="save" onClick={ handleFormSubmit } />
           </div>
-        </Form.Field>
-      
-      </Form>
+          :
+          <div className={ styles.formControls }>
+            <Button content="Update and Save" icon="save" onClick={ handleFormSubmit } />
+            <ModelDeleteBtn modelId={ serviceData._id } modelName="service" handleModelDelete={ triggerServiceDelete } />
+          </div>
+        }
+      </div>
+      <div className={ styles.formDiv }>
+        <Form> 
+          <Form.Group widths='equal'>
+            <Form.Field
+              control={Input}
+              label='Service Type'
+              placeholder="Type of service ..."
+              onChange={handleServiceType}
+              value={serviceDetails.serviceType}
+            />
+            <Form.Field
+              control={Input}
+              label='Hours'
+              placeholder='Hours available ...'
+              onChange={handleServiceHours}
+              value={serviceDetails.hours}
+            />
+            <Form.Field
+              control={Input}
+              label="Price"
+              placeholder='How much does it cost ...'
+              onChange={handleServicePrice}
+              value={serviceDetails.price}
+            />
+          </Form.Group>
+          <Form.Field
+            className={ styles.descriptionField }
+            control={TextArea}
+            label='Description'
+            placeholder='Description of the service provided ...'
+            onChange={handleServiceDescription}
+            value={serviceDetails.description}
+
+          />
+          <div className={ styles.imageUploadInputDiv }>
+            <FileInput uploadImage={ _handleUploadServiceImage } dataName={ "serviceImage" } modelState={ serviceState } textContent={ "Upload service images" }/>
+            {
+              serviceImages.length > 0 
+              ?
+              <PreviewImagesCarousel 
+                showDeleteIcons={ true }
+                images={ serviceImages } 
+                toggleImageModal={ toggleImageModal } 
+                triggerImgModelDelete={ triggerImageDelete }
+              />
+              :
+              <Segment textAlign="center">
+                <Header icon>
+                  <Icon name='file' />
+                    No Images Uploaded. Upload some images....
+                </Header>
+              </Segment>
+            }
+          </div>
+        </Form>
+      </div>
     </div>
-  )
+  );
 };
 
 // redux functionality //
@@ -217,7 +263,7 @@ const mapDispatchToProps = (dispatch: Dispatch<ServiceAction>) => {
     _handleUploadServiceImage: (imageData: FormData, currentServiceState: ServiceState) => {
       return handleUploadServiceImage(dispatch, imageData, currentServiceState);
     },
-    _handledeleteServiceImage: (imageId: string, currentServiceState: ServiceState) => {
+    _handleDeleteServiceImage: (imageId: string, currentServiceState: ServiceState) => {
       return handleDeleteServiceImage(dispatch, imageId, currentServiceState);
     },
     /*
