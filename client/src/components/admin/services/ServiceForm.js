@@ -10,7 +10,7 @@ import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
 import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 // redux imports  //
 import { connect } from "react-redux";
-import { handleCreateNewService, handleUpdateService, handleDeleteService, handleUploadServiceImage, handleDeleteServiceImage } from "../../../redux/actions/serviceActions";
+import { handleCreateNewService, handleUpdateService, handleDeleteService, handleUploadServiceImage, handleDeleteServiceImage, handleDeleteAllServiceImages } from "../../../redux/actions/serviceActions";
 // flow types //
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { ServiceState, ServiceData, ServiceImgData, ClientServiceFormData, ServiceAction } from "../../../redux/reducers/service/flowTypes";
@@ -33,7 +33,8 @@ type Props = {
   _handleUpdateService: (serviceData: ClientServiceFormData, serviceState: ServiceState) => Promise<boolean>,
   _handleDeleteService: (serviceIdToDelete: string, currentServiceState: ServiceState) => Promise<boolean>,
   _handleUploadServiceImage: <ServiceState>(file: FormData, currentServiceState: ServiceState) => Promise<boolean>,
-  _handleDeleteServiceImage: (imageId: string, currentServiceState: ServiceState) => Promise<boolean>
+  _handleDeleteServiceImage: (imageId: string, currentServiceState: ServiceState) => Promise<boolean>,
+  _handleDeleteAllServiceImages: (currentServiceState: ServiceState) => Promise<boolean>
 };
 
 // local state types //
@@ -52,7 +53,7 @@ type ConfirmDelModalState = {
 
 const ServiceForm = (props: Props): React.Node => {
   const { serviceState, history, toggleEditModal } = props;
-  const { _handleCreateNewService, _handleUpdateService, _handleDeleteService, _handleUploadServiceImage,  _handleDeleteServiceImage } = props;
+  const { _handleCreateNewService, _handleUpdateService, _handleDeleteService, _handleUploadServiceImage,  _handleDeleteServiceImage, _handleDeleteAllServiceImages } = props;
   const { serviceData, serviceImages } = serviceState;
 
   // local form state //
@@ -120,14 +121,11 @@ const ServiceForm = (props: Props): React.Node => {
     if (toggleEditModal && !objectValuesEmpty(serviceData)) {
       toggleEditModal();
     } else {
-      // TODO //
-      // remove any uploaded images //
       // needs to be implemented //
       if (serviceImages.length > 0) {
-        /*
-        _handleDeleteAllImages(serviceImages)
-          .then((success) => { if (success) history.goBack() });
-        */
+        _handleDeleteAllServiceImages(serviceState).then((success) => { 
+          if (success) history.goBack();
+        });
       } else {
         history.goBack();
       }
@@ -265,6 +263,9 @@ const mapDispatchToProps = (dispatch: Dispatch<ServiceAction>) => {
     },
     _handleDeleteServiceImage: (imageId: string, currentServiceState: ServiceState) => {
       return handleDeleteServiceImage(dispatch, imageId, currentServiceState);
+    },
+    _handleDeleteAllServiceImages: (currentServiceState: ServiceState) => {
+      return handleDeleteAllServiceImages(dispatch, currentServiceState);
     },
     /*
     setServicesImages: (previewImages: Array<ServiceImgData>) => {

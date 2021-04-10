@@ -95,6 +95,16 @@ const serviceReducer = (state: ServiceState = initialState, action: ServiceActio
         error: null
       };
     };
+    case "DeleteAllServiceImages": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        serviceImages: action.payload.updatedServiceImages,
+        error: null
+      };
+    };
     case "OpenService": {
       return {
         ...state,
@@ -130,8 +140,6 @@ const serviceReducer = (state: ServiceState = initialState, action: ServiceActio
       };
     };
     case "ToggleServiceOnlineOffline": {
-      console.log(133)
-      console.log(action.payload)
       return {
         ...state,
         status: action.payload.status,

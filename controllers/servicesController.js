@@ -293,7 +293,7 @@ export default {
         serviceImgPaths.push(path.join(path.resolve(), imgData.path));
       }
     }
-
+    
     return Promise.resolve().then(() => {
       const deletePromises = [];
       if (serviceImgPaths.length > 0) {
@@ -307,6 +307,8 @@ export default {
     })
     .then((response) => {
       if (response.length > 0 && serviceImgIds.length > 0) {
+        console.log(310);
+        console.log(serviceImgIds);
         return ServiceImage.deleteMany({ _id: { $in: serviceImgIds } }).exec();
       } else {
         return Promise.resolve({ n: 0 });

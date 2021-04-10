@@ -5,7 +5,7 @@ import { operationSuccessful, setAppError } from "./appGeneralActions";
 // flow types //
 import type { 
   ServiceImgData, ServiceData, ServiceState,
-  ServiceImgUplSuccess, ServiceImgDelSuccess,
+  ServiceImgUplSuccess, ServiceImgDelSuccess, DeleteAllServiceImages,
   ServiceAPIRequest, ServiceCreated, ServiceUpdated, ServiceDeleted,
   OpenService, SetServices, ClearServiceData, SetServiceImages, ServiceError,
   ClientServiceFormData, ToggleServiceOnlineOffline, ToggleAllServicesOnlineOffline,
@@ -71,6 +71,13 @@ const serviceImgUploadSuccess = (data : { status: number, responseMsg: string, s
 const serviceImgDeleteSuccess = (data : { status: number, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgDelSuccess => {
   return {
     type: "ServiceImgDelSuccess",
+    payload: { ...data, loading: false }
+  };
+};
+
+const deleteAllServiceImages = (data: { status: number, responseMsg: string, updatedServiceImages: Array<ServiceImgData> }): DeleteAllServiceImages => {
+  return {
+    type: "DeleteAllServiceImages",
     payload: { ...data, loading: false }
   };
 };
@@ -350,6 +357,33 @@ export const handleDeleteServiceImage = (dispatch: Dispatch<ServiceAction>, imag
       return false;
     });
 };
+
+export const handleDeleteAllServiceImages = (dispatch: Dispatch<ServiceAction>, currentServiceState: ServiceState): Promise<boolean> => {
+  const { serviceImages } = currentServiceState;
+  const axiosRequest = {
+    method: "delete",
+    url: "/api/services/remove_all_images",
+    data: {
+      serviceImages: serviceImages
+    }
+  };
+  
+  console.log(serviceImages);
+  return axios(axiosRequest)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg } : { responseMsg: string } = data;
+
+      const updatedState = { status, responseMsg, updatedServiceImages: [] };
+      dispatch(deleteAllServiceImages(updatedState));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(serviceError(error));
+      return Promise.resolve(true);
+    })
+}
 
 // take online and offline API actions //
 export const handleToggleServiceOnlineOffline = (dispatch: Dispatch<ServiceAction>, serviceToUpdate: ServiceData, serviceState: ServiceState): Promise<boolean> => {

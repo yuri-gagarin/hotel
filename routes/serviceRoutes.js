@@ -25,7 +25,13 @@ export default function (router) {
   .route("/api/services/createHotelService")
   .post(servicesController.createHotelService);
   
-
+  // @route DELETE "/api/services/remove_all_images" //
+  // @desc Deletes all queried ServiceImage models and its corresponding models //
+  // @access PRIVATE //
+  router  
+    .route("/api/services/remove_all_images")
+    .delete(servicesController.deleteAllImages);
+    
   // @route DELETE "/api/services/:roomId" //
   // @description Deletes a Service and all of its corresponding images //
   // @access PRIVATE //
@@ -33,10 +39,5 @@ export default function (router) {
     .route("/api/services/:serviceId")
     .delete(servicesController.deleteHotelService);
 
-  // @route DELETE "/api/services/remove_all_images" //
-  // @desc Deletes all queried ServiceImage models and its corresponding models //
-  // @access PRIVATE //
-  router  
-    .route("/api/services/remove_all_images")
-    .delete(servicesController.deleteAllImages)
+  
 };  

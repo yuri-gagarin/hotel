@@ -118,6 +118,15 @@ export type ServiceImgDelSuccess = {
     createdServices: ServiceData[]
   }
 };
+export type DeleteAllServiceImages = {
+  +type: "DeleteAllServiceImages",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    updatedServiceImages: Array<ServiceImgData>
+  }
+};
 
 export type OpenService = {
   +type: "OpenService",
@@ -161,6 +170,6 @@ export type ToggleAllServicesOnlineOffline = {
 // union service action type //
 export type ServiceAction = (
   ServiceAPIRequest | SetServices | ServiceError | ServiceCreated | ServiceUpdated | ServiceDeleted |
-  ServiceImgUplSuccess | ServiceImgDelSuccess | OpenService | ClearServiceData | SetServiceImages |
+  ServiceImgUplSuccess | ServiceImgDelSuccess | DeleteAllServiceImages | OpenService | ClearServiceData | SetServiceImages |
   ToggleServiceOnlineOffline | ToggleAllServicesOnlineOffline
 );
