@@ -35,7 +35,7 @@ const EditServiceDisplay = ({ serviceState, history, goBackToServices, triggerMo
 
   return (
     <Grid.Row>
-      <Modal open={ true } className={ styles.editModal } size="fullscreen" >
+      <Modal open={ false } className={ styles.editModal } size="fullscreen" >
         <ServiceForm 
           toggleEditModal={ toggleEditModal }
           serviceState={ serviceState }
@@ -51,7 +51,7 @@ const EditServiceDisplay = ({ serviceState, history, goBackToServices, triggerMo
           toggleOnlineOfflineStatus={ toggleOnlineOfflineStatus }
         />
         <ModelDeleteBtn 
-          modelName={ "dining" }
+          modelName={ "service" }
           modelId={ serviceData._id }
           handleModelDelete={ triggerModelDelete }
         />

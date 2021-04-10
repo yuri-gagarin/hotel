@@ -58,7 +58,7 @@ const ServiceDisplay = ({ serviceState } : Props): React.Node => {
           </React.Fragment>  
           : 
           <Segment className={ styles.imgPreviewDefaultSegment }>
-            <span>No menu service uploaded...</span>
+            <span>No service images uploaded...</span>
             <i className="far fa-image"></i>
           </Segment>
         }

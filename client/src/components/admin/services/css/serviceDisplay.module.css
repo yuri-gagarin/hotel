@@ -1,9 +1,8 @@
-.serviceDisplayCol {
-  border: 1px solid rgb(104, 159, 230);
-  padding: 1em;
-  border-radius: 2px;
-  margin-bottom: 1em;
+.container {
+  display: flex;
+  flex-direction: column;
 }
+
 /* service details divs and info */
 .serviceDetailsDiv {
   display: flex;
@@ -11,7 +10,7 @@
   flex-wrap: wrap;
   margin-bottom: 1em;
 }
-.serviceDetailsDiv > h4 {
+.serviceDetailsDiv > h5 {
   width: 100%;
 }
 .serviceDetail {
@@ -35,43 +34,52 @@
 .serviceDescriptionDiv {
   display: flex;
   flex-direction: column;
-  
+  margin-bottom: 1em;
 }
 .serviceDescriptionDiv > p {
   border: 1px solid rgb(104, 159, 230);
   border-radius: 2px;
+  font-size: 1.25em;
   padding: 0.5em 1em;
 }
 
 /* service images divs and data */
-.serviceImagesDiv {
+.imgsPreviewDiv {
+  border: 1px solid grey;
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+  width: 100%;
+  overflow-x: hidden;
+}
+.imgsPreviewDivHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+.imgsPreviewDivHeader > span {
+  margin-right: 0.25em;
+  font-size: 1em;
+}
+.imgsPreviewDivHeader > div {
+  border: 2px solid green;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imgPreviewDefaultSegment {
+  text-align: center;
   display: flex;
   flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: center;
-  border-radius: 3px;
 }
-.serviceImagesDiv > h4 {
-  width: 100%;
+.imgPreviewDefaultSegment > span {
+  color: gray;
+  font-size: 0.75em;
 }
-
-
-.defaultNoImagesSegment {
-  width: 100%;
-}
-
-/* buttons */
-.editServiceFormToggleDiv {
-  border: 1px solid rgb(104, 159, 230);
-  border-radius: 2px;
-  padding: 0.5em 1em;
-}
-
-/* form modal */
-.editServiceFormModal {
-  height: auto;
-  top: auto;
-  left: auto;
-  bottom: auto;
-  right: auto;
+.imgPreviewDefaultSegment > i {
+  font-size: 3em;
+  color: rgb(27, 56, 134)
 }

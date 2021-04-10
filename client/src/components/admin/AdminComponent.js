@@ -65,7 +65,7 @@ const AdminComponent = (props) => {
     }
     // event listener for closed window //
     window.addEventListener("beforeunload", saveAdminState);
-    history.push("/admin/dining_entertainment");
+    history.push("/admin/services");
     return function () {
       window.removeEventListener("beforeunload", saveAdminState);
     }
