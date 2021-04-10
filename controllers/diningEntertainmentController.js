@@ -72,7 +72,7 @@ export default {
     const { diningModelId } = req.params;
     const { diningModelData = {}, images = [], menuImages = [], onlineStatus, changeAllOnlineStatus } = req.body;
     const { title, description, hours } = diningModelData;
-
+    console.log(req.body)
     // check if changing online status first //
     if (onlineStatus && typeof onlineStatus === "object" && typeof onlineStatus.status === "boolean") {
       const { status } = onlineStatus;
@@ -111,7 +111,12 @@ export default {
         const responseMsg = `All items are now ${status ? "online" : "offline"}.`
         return res.status(200).json({ responseMsg, updatedDiningEntModels });
       })
-
+      .catch((error) => {
+        return res.status(500).json({
+          responseMsg: "An error occured",
+          error: error
+        });
+      });
     }
 
     const updatedDiningModelImages = images.map((img) => img._id );

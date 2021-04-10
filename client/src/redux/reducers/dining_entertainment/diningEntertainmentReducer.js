@@ -207,6 +207,16 @@ const diningModelReducer = (state: DiningEntertainmentState = initialState, acti
         error: null
       };
     };
+    case "ToggleAllOnlineOffline": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        createdDiningEntModels: action.payload.updatedDiningEntModelsArr,
+        error: null
+      };
+    };
     default: {
       return state;
     };

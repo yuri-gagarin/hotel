@@ -512,11 +512,11 @@ export const handleToggleModelOnlineOfflineStatus = (dispatch: Dispatch<DiningEn
 };
 
 // toggle all online or offline //
-export const handleToggleAllOnlineOffline = (dispatch: Dispatch<DiningEntModelAction>, onlineStatus: boolean): Promise<boolean> => {
+export const handleToggleAllOnlineOffline = (dispatch: Dispatch<DiningEntModelAction>, { onlineStatus } : { onlineStatus: boolean }): Promise<boolean> => {
   const axiosReqOptions = {
     method: "patch",
     url: "/api/dining_models/",
-    data: { changeAllOnlineStatus: onlineStatus }
+    data: { changeAllOnlineStatus: { status: onlineStatus } }
   };
 
   dispatch(diningModelAPIRequest());

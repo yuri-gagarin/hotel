@@ -50,7 +50,7 @@ export const DiningEntertainmentCards = ({ diningEntState, openDiningEntModel, t
               <span>{ diningModel.hours }</span>
             </Card.Content>
             <Card.Content>
-              <CardOnlineStatusBlinkers live={ true } />
+              <CardOnlineStatusBlinkers live={ diningModel.live } />
             </Card.Content>
             <Card.Content extra>
               <div className='ui two buttons'>

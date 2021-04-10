@@ -23,7 +23,7 @@ export default function (router) {
   // @description Updates a DiningModel and all of its corresponding images //
   // @access PRIVATE //
   router
-    .route("/api/dining_models/:diningModelId")
+    .route("/api/dining_models/:diningModelId?")
     .patch(diningEntertainmentController.updateDiningModel);
 
   // @route DELETE "/api/diningModels/:roomId" //
