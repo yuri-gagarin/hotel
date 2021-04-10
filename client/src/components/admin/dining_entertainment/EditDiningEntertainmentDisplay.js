@@ -23,20 +23,14 @@ type Props = {
 
 type LocalState = {
   formModalOpen: boolean,
-}
+};
+
 export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBackToDiningModels, triggerModelDelete, toggleOnlineOfflineStatus } : Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ formModalOpen: false });
   const { diningEntModelData } = diningEntState;
 
-  const handleTakeOnline = (arg: any) => {
-    return Promise.resolve(true);
-  };
-  const handleTakeOffline = (arg: any) => {
-    return Promise.resolve(true);
-  };
-
   const toggleEditModal = () => {
-    setLocalState({ ...localState, formModalOpen: !localState.formModalOpen });
+    setLocalState({ formModalOpen: !localState.formModalOpen });
   };
 
   return (

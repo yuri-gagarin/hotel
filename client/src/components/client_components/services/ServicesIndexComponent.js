@@ -10,7 +10,7 @@ import {
 import styles from "./css/servicesIndexContainer.module.css";
 // redux //
 import { connect } from "react-redux";
-import { fetchServices } from "../../../redux/actions/serviceActions";
+import { handleFetchServices } from "../../../redux/actions/serviceActions";
 // helpers //
 import { navbarCollapseListener } from "../../helpers/componentHelpers";
 

@@ -265,7 +265,7 @@ export const handleFetchServices = (dispatch: Dispatch<ServiceAction>): Promise<
 };
 
 /* Image upload, delete API actions */
-export const uploadServiceImage = (dispatch: Dispatch<ServiceAction>, file: FormData, currentServiceState: ServiceState): Promise<boolean> => {
+export const handleUploadServiceImage = (dispatch: Dispatch<ServiceAction>, file: FormData, currentServiceState: ServiceState): Promise<boolean> => {
   const { serviceData, serviceImages, createdServices } : { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
   const { _id : serviceId } = serviceData;
   const requestOptions = {
@@ -316,7 +316,7 @@ export const uploadServiceImage = (dispatch: Dispatch<ServiceAction>, file: Form
     });
 };
 
-export const deleteServiceImage = (dispatch: Dispatch<ServiceAction>, imageId: string, currentServiceState: ServiceState): Promise<boolean> => {
+export const handleDeleteServiceImage = (dispatch: Dispatch<ServiceAction>, imageId: string, currentServiceState: ServiceState): Promise<boolean> => {
   const { serviceData, serviceImages, createdServices } : { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
 
   const requestOptions = {

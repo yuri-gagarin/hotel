@@ -1,112 +1,69 @@
 // @flow
 import * as React from "react";
 // semantic ui react //
-import {
-  Button, Header, Icon, Image, Modal, Segment, Popup
-} from "semantic-ui-react";
+import { Button, Header, Icon, Image, Modal, Segment, Popup } from "semantic-ui-react";
 // additional component imports //
-import EditServiceDisplay from "./EditServiceDisplay";
-import ServiceForm from "./ServiceForm";
 import GenericImgModal from "../shared/GenericImgModal";
 import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
 // types //
-import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
+import type { ServiceState, ServiceData } from "../../../redux/reducers/service/flowTypes";
 import type { RouterHistory } from "react-router-dom";
 // styles //
 import styles from "./css/serviceDisplay.module.css";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
 
-const PopupWithButton = ({ contentString, buttonContent, buttonOnClick, color }) => {
-  return (
-    <Popup 
-      content={ contentString }
-      trigger={
-        <Button content={ buttonContent } onClick={ buttonOnClick } color={ color ? color : "grey" }/>
-      }
-    />
-  )
-}
-
 type Props = {
-  formOpen: boolean,
-  service: ServiceData,
-  history: RouterHistory,
-  toggleForm: () => void
+  serviceState: ServiceState
 }
-type LocalState = {
+type ImgModalState = {
   imgModalOpen: boolean,
   imgURL: string
 }
-const ServiceDisplay = ({ formOpen, service, history, toggleForm } : Props): React.Node => {
-  const { images } = service;
+const ServiceDisplay = ({ serviceState } : Props): React.Node => {
+  const [ imgModalState, setImgModalState ] = React.useState<ImgModalState>({ imgModalOpen: false, imgURL: "" });
+  const { serviceData } = serviceState;
 
-  // local form state //
-  const [ localState, setLocalState ] = React.useState<LocalState>({ imgModalOpen: false, imgURL: "" });
-  const imagesRef = React.useRef(images);
+  const toggleImageModal = (imagePath?: string): void => {
 
-  React.useEffect(() => {
-    // will scroll down the document when edit service form is open //
-    if (formOpen && document.body) {
-      window.scrollTo(0, document.body.scrollHeight);
-    } else {
-      window.scrollTo(0, 0);
-    }
-  }, [ formOpen ]);
-
-  const toggleImageModal = (imgModelPath?: string) => {
-    setLocalState({ 
-      ...localState,  
-      imgURL: imgModelPath ? setImagePath(imgModelPath) : "", 
-      imgModalOpen: !localState.imgModalOpen 
-    })
   }
 
   return (
-    <React.Fragment>
-      <GenericImgModal open={ localState.imgModalOpen } imgURL={ localState.imgURL } handleClose={ toggleImageModal } />
-      <div className={ styles.serviceDisplayCol }>
-        <div className={ styles.serviceDetailsDiv }>
-          <h4>Details</h4>
-          <div className={ styles.serviceDetail }><small>Type:</small><strong>{service.serviceType}</strong></div>
-          <div className={ styles.serviceDetail }><small>Hours:</small><strong>{service.hours}</strong></div>
-          <div className={ styles.serviceDetail }><small>Price:</small><strong>{service.price}</strong></div>
-        </div>
-        <div className={ styles.serviceDescriptionDiv }>
-          <h4>Description</h4>
-          <p>{service.description}</p>
-        </div>
-        <hr />
-        <div className={ styles.serviceImagesDiv}>
-          <h4>Uploaded Service Images</h4>
-          <PreviewImagesCarousel showDeleteIcons={ false } images={ service.images } toggleImageModal={ toggleImageModal } />
-        </div>
+    <div className={ styles.container }>
+      <GenericImgModal open={ imgModalState.imgModalOpen } imgURL={ imgModalState.imgURL } handleClose={ toggleImageModal } />
+      <div className={ styles.serviceDetailsDiv }>
+        <h5>Details</h5>
+        <div className={ styles.serviceDetail }><small>Type:</small><strong>{ serviceData.serviceType }</strong></div>
+        <div className={ styles.serviceDetail }><small>Hours:</small><strong>{ serviceData.hours }</strong></div>
+        <div className={ styles.serviceDetail }><small>Price:</small><strong>{ serviceData.price }</strong></div>
       </div>
-      <div className={ styles.editServiceFormToggleDiv }>
-      {
-        formOpen 
-        ? 
-          <PopupWithButton contentString="Changes will not be saved" buttonContent="Close" buttonOnClick={ toggleForm } color="orange" />
-        : 
-          <PopupWithButton contentString="Edit current Service" buttonContent="Edit" buttonOnClick={ toggleForm } color="green" />
-      }
+      <div className={ styles.serviceDescriptionDiv }>
+        <h5>Description</h5>
+        <p>{ serviceData.description }</p>
       </div>
-      { 
-        <Modal 
-          className={ styles.editServiceFormModal }
-          open={ formOpen }
-          
-        >
-          <ServiceForm history={ history }/>
-          <Modal.Actions>
-            <Popup
-              content="Cancel and close. Changes will NOT be saved"
-              trigger={ <Button color="red" icon="cancel" content="Cancel" onClick={ toggleForm } /> }
+      <div className={ styles.serviceImagesPreviewDiv }>
+        {
+          serviceData.images.length > 0 
+          ?
+          <React.Fragment>
+             <div className={ styles.imgsPreviewDivHeader }>
+              <span>Uploaded service images:</span>
+              <div>{ serviceData.images.length }</div>
+            </div>
+            <PreviewImagesCarousel 
+              showDeleteIcons={ false }
+              images={ serviceData.images } 
+              toggleImageModal= { toggleImageModal } 
             />
-          </Modal.Actions>
-        </Modal>
-      }
-    </React.Fragment>
+          </React.Fragment>  
+          : 
+          <Segment className={ styles.imgPreviewDefaultSegment }>
+            <span>No menu service uploaded...</span>
+            <i className="far fa-image"></i>
+          </Segment>
+        }
+      </div>
+    </div>
   );
 };
 

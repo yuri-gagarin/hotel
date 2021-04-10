@@ -3,14 +3,15 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { Button, Card, Grid, Popup } from "semantic-ui-react";
 // additional imports //
+import APIMessage from "../shared/ApiMessage";
+import ConfirmDeleteModal from "../shared/ConfirmDeleteModal";
+import ModelDeleteBtn from "../shared/ModelDeleteBtn";
+import EditServiceDisplay from "./EditServiceDisplay";
+import EditViewControls from "../shared/EditViewControls";
+import OnlinePopupControls from "../shared/OnlinePopupControls";
+import ServiceDisplay from "./ServiceDisplay";
 import ServiceForm from "./ServiceForm";
 import ServiceHolder from "./ServiceCard";
-import ServiceDisplay from "./ServiceDisplay";
-import OnlinePopupControls from "../shared/OnlinePopupControls";
-import EditViewControls from "../shared/EditViewControls";
-import APIMessage from "../shared/ApiMessage";
-import ModelDeleteBtn from "../shared/ModelDeleteBtn";
-import ConfirmDeleteModal from "../shared/ConfirmDeleteModal";
 // redux imports //
 import { connect } from "react-redux"; 
 // router imports //
@@ -25,7 +26,6 @@ import type { Dispatch, RootState, GenericModelData } from "../../../redux/reduc
 import type { RouterHistory } from "react-router-dom";
 // style and css //
 import styles from "./css/servicesIndexContainer.module.css";
-import { ServiceEditContainer } from "./ServiceEditContainer";
 
 type WrapperProps ={|
   serviceState: ServiceState
@@ -159,16 +159,17 @@ const ServicesIndexContainer = (props: Props): React.Node => {
       <Route path={"/admin/services/new"}>
         <Grid.Row>
           <Grid.Column width={15} className={ styles.serviceFormColumn }>
-            <ServiceForm history={history} />
+            <ServiceForm history={history} serviceState={ serviceState }/>
           </Grid.Column>
         </Grid.Row>
       </Route>
       <Route path={"/admin/services/edit"}>
-        <ServiceEditContainer 
+        <EditServiceDisplay
           history={ history }
           serviceState={ serviceState }
-          triggerDeleteService={ triggerDeleteService }
-          toggleServiceOnlineOffline={ toggleServiceOnlineOffline }
+          triggerModelDelete= { triggerDeleteService }
+          toggleOnlineOfflineStatus={ toggleServiceOnlineOffline }
+          goBackToServices={ goBackToServices }
         />
       </Route>
     </React.Fragment>
