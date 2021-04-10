@@ -480,8 +480,8 @@ export default {
     .then((response) => {
       if (response.length > 0) {
         return Promise.all([
-          DiningModelImage.deleteMany({ _id: imgIds }).exec(),
-          MenuImage.deleteMany({ _id: menuImgIds }).exec()
+          DiningModelImage.deleteMany({ _id: { $in: imgIds } }).exec(),
+          MenuImage.deleteMany({ _id: { $in: menuImgIds } }).exec()
         ])
       } else {
         return Promise.resolve()

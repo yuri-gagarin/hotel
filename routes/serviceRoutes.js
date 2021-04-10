@@ -32,4 +32,11 @@ export default function (router) {
   router  
     .route("/api/services/:serviceId")
     .delete(servicesController.deleteHotelService);
+
+  // @route DELETE "/api/services/remove_all_images" //
+  // @desc Deletes all queried ServiceImage models and its corresponding models //
+  // @access PRIVATE //
+  router  
+    .route("/api/services/remove_all_images")
+    .delete(servicesController.deleteAllImages)
 };  

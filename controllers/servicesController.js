@@ -1,3 +1,4 @@
+import path from "path";
 import ServiceImage from "./../models/ServiceImage";
 import HotelService from "../models/HotelService";
 // helpers //
@@ -279,5 +280,49 @@ export default {
           error: error
         });
       });
+  },
+
+  deleteAllImages: (req, res) => {
+    const { serviceImages = [] } = req.body;
+    const serviceImgIds = [];
+    const serviceImgPaths = [];
+
+    if (serviceImages.length > 0) {
+      for (const imgData of serviceImages) {
+        serviceImgIds.push(imgData._id);
+        serviceImgPaths.push(path.join(path.resolve(), imgData.path));
+      }
+    }
+
+    return Promise.resolve().then(() => {
+      const deletePromises = [];
+      if (serviceImgPaths.length > 0) {
+        for (const imgPath of serviceImgPaths) {
+          deletePromises.push(deleteFile(imgPath));
+        }
+        return Promise.all(deletePromises);
+      } else {
+        return Promise.all([]);
+      }
+    })
+    .then((response) => {
+      if (response.length > 0 && serviceImgIds.length > 0) {
+        return ServiceImage.deleteMany({ _id: { $in: serviceImgIds } }).exec();
+      } else {
+        return Promise.resolve({ n: 0 });
+      }
+    })
+    .then((_) => {
+      return res.status(200).json({
+        responseMsg: "Removed all images",
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(500).json({
+        responseMsg: "An error occured",
+        error: error
+      });
+    });
   }
 };
