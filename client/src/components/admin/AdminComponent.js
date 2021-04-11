@@ -127,13 +127,11 @@ const AdminComponent = (props) => {
   };
 
   return (
-    <Grid stackable padded divided centered style={{ paddingLeft: "1em", paddingRight: "1em", height: "100%" }}>
+    <Grid stackable style={{ border: "4px solid green", height: "100vh" }}>
       <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={_clearSuccessState} />
       <ErrorComponent appGeneralState={appGeneralState} clearAppError={_clearAppError} />
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <AdminNavComponent logoutUser={logoutUser} />
-        </Grid.Column>
+      <Grid.Row style={{ border: "2px solid blue", height: "10%" }}>
+        <AdminNavComponent logoutUser={logoutUser} />
       </Grid.Row>
       <Route path="/admin/services">
         <ServicesIndexContainer serviceState={serviceState} />

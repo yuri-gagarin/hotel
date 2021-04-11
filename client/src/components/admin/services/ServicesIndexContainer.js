@@ -5,9 +5,10 @@ import { Button, Card, Grid, Popup } from "semantic-ui-react";
 // additional imports //
 import APIMessage from "../shared/ApiMessage";
 import ConfirmDeleteModal from "../shared/ConfirmDeleteModal";
-import ModelDeleteBtn from "../shared/ModelDeleteBtn";
 import EditServiceDisplay from "./EditServiceDisplay";
 import EditViewControls from "../shared/EditViewControls";
+import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
+import ModelDeleteBtn from "../shared/ModelDeleteBtn";
 import OnlinePopupControls from "../shared/OnlinePopupControls";
 import ServiceDisplay from "./ServiceDisplay";
 import ServiceForm from "./ServiceForm";
@@ -118,15 +119,9 @@ const ServicesIndexContainer = (props: Props): React.Node => {
         confirmAction={ confirmDeleteAction } 
         cancelAction={ cancelDeleteAction } 
       />
-    
-      <Grid.Row>
-        <Grid.Column width={15} className={ styles.headerCol }>
-          <span>Current additional services offered by your hotel</span>
-        </Grid.Column>
-      </Grid.Row>
       <Route path={"/admin/services"} exact={true}>
-        <Grid.Row>
-          <Grid.Column width={15} className={ styles.buttonsCol }>
+        <Grid.Row centered style={{ height: "10%" }}>
+          <Grid.Column style={{ paddingLeft: 0 }} width={15}>
             <OnlinePopupControls 
               modelType="service"
               createdModels={ createdServices }
@@ -136,23 +131,31 @@ const ServicesIndexContainer = (props: Props): React.Node => {
             />
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
+        <Grid.Row centered style={{ height: "80%" }}>
           <Grid.Column width={15} className={ styles.mainViewCol }>
-            <Card.Group>
             {
-              createdServices.map((service) => {
-                return ( 
-                  <ServiceHolder
-                    key={service._id} 
-                    service={service}
-                    openService={openService}
-                    triggerDeleteService={ triggerDeleteService }
-                    history={history}
-                  />
-                );
-              })
+              createdServices.length > 0 ?
+              <Card.Group>
+              {
+                createdServices.map((service) => {
+                  return ( 
+                    <ServiceHolder
+                      key={service._id} 
+                      service={service}
+                      openService={openService}
+                      triggerDeleteService={ triggerDeleteService }
+                      history={history}
+                    />
+                  );
+                })
+              }
+              </Card.Group>
+              :
+              <GeneralNoModelsSegment 
+                customHeaderMessage={ "No Services created" }
+                customContentMessage={ "Create a new service by clicking 'Create New' above..." }
+              />
             }
-            </Card.Group>
           </Grid.Column>
         </Grid.Row>
       </Route>

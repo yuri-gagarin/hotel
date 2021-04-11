@@ -103,14 +103,9 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   return (
     <React.Fragment>
       <ConfirmDeleteModal open={ confirmDeleteModalState.confirmDelModalOpen } modelName="dining" confirmAction={ confirmModelDelete } cancelAction={ cancelDeleteAction } />
-      <Grid.Row>
-        <Grid.Column className={ styles.headerColumn } width={15}>
-          <span>Dining and entertainment options editor</span>
-        </Grid.Column>
-      </Grid.Row>
       <Route path={"/admin/dining_entertainment"} exact={true}>
-        <Grid.Row>
-          <Grid.Column className={ styles.buttonsColumn } width={15}>
+        <Grid.Row centered style={{ height: "10%" }}>
+          <Grid.Column  style={{ paddingLeft: 0 }} width={15}>
             <OnlinePopupControls 
               handleFormOpen={ openNewDiningModelForm } 
               takeAllOnline={ handleTakeAllOnline }
@@ -118,9 +113,11 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
               createdModels={ createdDiningEntModels } 
               modelType={"dining_entertainment_model"} 
             />
+
           </Grid.Column>
+         
         </Grid.Row>
-        <Grid.Row>
+        <Grid.Row centered style={{ overflowY: "scroll", height: "80%"}}>
           <Grid.Column className={ styles.mainViewColumn } width={15}>
             {
               diningEntertainmentState.createdDiningEntModels.length > 0 

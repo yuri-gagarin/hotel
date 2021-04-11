@@ -20,6 +20,7 @@
   border: 1px solid rgb(81, 148, 79);
   border-radius: 3px;
   padding: 1em;
+  overflow-y: hidden;
 }
 
 /* new form view */
