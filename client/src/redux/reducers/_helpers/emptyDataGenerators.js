@@ -2,6 +2,7 @@
 import type { ServiceData } from "../service/flowTypes";
 import type { ContactPostData } from "../contact_posts/flowTypes";
 import type { DiningEntModelData } from "../dining_entertainment/flowTypes";
+import type { RoomData } from "../rooms/flowTypes";
 
 export const generateEmptyService = (): ServiceData => {
   return {
@@ -48,4 +49,36 @@ export const generateEmptyDiningEntModel = (): DiningEntModelData => {
     createdAt: "",
     editedAt: ""
   };
+};
+
+export const generateEmptyRoomModel = (): RoomData => {
+  const emptyRoom: RoomData = {
+    _id: "",
+    roomType: "",
+    area: "",
+    sleeps: "",
+    price: "",
+    beds: "",
+    couches: "",
+    images: [],
+    options: {
+      privateBathroom: false,
+      suiteBathroom: false,
+      jacuzzi: false,
+      balcony: false,
+      terrace: false,
+      mountainView: false,
+      streetView: false,
+      riverView: false,
+      tv: false,
+      wifi: false,
+      phone: false,
+      airConditioning: false,
+      refrigerator: false,
+      coffeeMaker: false
+    },
+    createdAt: "",
+    editedAt: ""
+  };
+  return emptyRoom;
 };

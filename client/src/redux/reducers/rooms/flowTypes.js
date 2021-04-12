@@ -70,14 +70,14 @@ export type RoomState = {
   status: number,
   loading: boolean,
   responseMsg: string,
-  serviceData: RoomData,
-  serviceImages: Array<RoomImgData>,
+  roomData: RoomData,
+  roomImages: Array<RoomImgData>,
   createdRooms: Array<RoomData>,
   numberOfRooms: number,
   error: null | Error
 };
 
-// service action types //
+// room action types //
 export type RoomAPIRequest = {
   +type: "RoomAPIRequest",
   payload: {
@@ -119,7 +119,7 @@ export type RoomUpdated = {
     status: number,
     loading: boolean,
     responseMsg: string,
-    serviceData: RoomData,
+    roomData: RoomData,
     createdRooms: Array<RoomData>
   }
 }
@@ -129,7 +129,7 @@ export type RoomDeleted = {
     status: number,
     loading: boolean,
     responseMsg: string,
-    serviceData: RoomData,
+    roomData: RoomData,
     createdRooms: Array<RoomData>,
     numberOfRooms: number
   }
@@ -140,7 +140,7 @@ export type RoomImgUplSuccess = {
     status: number,
     loading: boolean,
     responseMsg: string,
-    serviceImages: Array<RoomImgData>,
+    roomImages: Array<RoomImgData>,
     updatedRoom: RoomData,
     createdRooms: Array<RoomData>
   }
@@ -151,7 +151,7 @@ export type RoomImgDelSuccess = {
     status: number,
     loading: boolean,
     responseMsg: string,
-    serviceImages: Array<RoomImgData>,
+    roomImages: Array<RoomImgData>,
     updatedRoom: RoomData,
     createdRooms: RoomData[]
   }
@@ -169,21 +169,21 @@ export type DeleteAllRoomImages = {
 export type OpenRoom = {
   +type: "OpenRoom",
   payload: {
-    serviceData: RoomData,
-    serviceImages: Array<RoomImgData>
+    roomData: RoomData,
+    roomImages: Array<RoomImgData>
   }
 };
 export type ClearRoomData = {
   +type: "ClearRoomData",
   payload: {
-    serviceImages: Array<RoomImgData>,
-    serviceData: RoomData,
+    roomImages: Array<RoomImgData>,
+    roomData: RoomData,
   }
 };
 export type SetRoomImages = {
   +type: "SetRoomImages",
   payload: {
-    serviceImages: Array<RoomImgData>
+    roomImages: Array<RoomImgData>
   }
 };
 export type ToggleRoomOnlineOffline = {
@@ -205,7 +205,7 @@ export type ToggleAllRoomsOnlineOffline = {
     updatedRooms: Array<RoomData>
   }
 };
-// union service action type //
+// union room action type //
 export type RoomAction = (
   RoomAPIRequest | SetRooms | RoomError | RoomCreated | RoomUpdated | RoomDeleted |
   RoomImgUplSuccess | RoomImgDelSuccess | DeleteAllRoomImages | OpenRoom | ClearRoomData | SetRoomImages |

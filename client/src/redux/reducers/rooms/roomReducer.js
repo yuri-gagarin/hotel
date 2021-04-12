@@ -1,161 +1,143 @@
 // @flow
-import { roomConstants } from "../../constants";
-const {
-  ROOM_REQUEST,
-  ROOM_CREATED,
-  ROOM_UPDATED,
-  ROOM_DELETED,
-  ROOM_ERROR,
-  CHANGE_ROOM_ONLINE_STATUS,
-  ROOM_IMG_REQUEST,
-  ROOM_IMG_UPLOADED,
-  ROOM_IMG_DELETED,
-  ROOM_IMG_ERROR,
-  SET_ROOMS,
-  SET_ROOM_PREVIEW_IMAGES,
-  CLEAR_ROOM_DATA,
-  ADD_ROOM_TO_STATE,
-  OPEN_ROOM
-} = roomConstants;
-const initialState = {
-  status: status,
+import { generateEmptyRoomModel } from "../_helpers/emptyDataGenerators";
+import type { RoomState, RoomImgData, RoomAction } from "./flowTypes";
+
+const initialState: RoomState = {
+  status: 0,
   loading: false,
   responseMsg: "",
-  roomData: {},
+  roomData: generateEmptyRoomModel(),
   roomImages: [],
   createdRooms: [],
   numberOfRooms: 0,
   error: null
 }
 
-const roomReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case ADD_ROOM_TO_STATE: {
+const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomState => {
+  switch (action.type) {
+    case "RoomAPIRequest": {
       return {
         ...state,
-        createdRooms: [ ...state.createdRooms, payload.newRoom ]
-      };
-    };
-    case SET_ROOMS: {
-      return {
-        ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        createdRooms: [ ...payload.createdRooms ],
-        numberOfRooms: payload.createdRooms.length,
-        error: payload.error
-      };
-    };
-    case CLEAR_ROOM_DATA: {
-      return {
-        ...state,
-        loading: payload.loading,
-        roomData: { ...payload.roomData },
-        roomImages: [ ...payload.roomImages ],
-        error: payload.error
-      };
-    };
-    case SET_ROOM_PREVIEW_IMAGES: {
-      return {
-        ...state,
-        loading: payload.loading,
-        roomImages: [ ...payload.roomImages ],
+        loading: action.payload.loading,
+        status: action.payload.status,
         error: null
       };
     };
-    case OPEN_ROOM: {
+    case "SetRooms": {
       return {
         ...state,
-        roomData: { ...payload.roomData },
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        createdRooms: action.payload.createdRooms,
+        numberOfRooms: action.payload.numberOfRooms,
+        error: null
       };
     };
-    case ROOM_REQUEST: {
+    case "RoomError": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        error: payload.error
+        status: action.payload.status,
+        loading: false,
+        responseMsg: action.payload.responseMsg,
+        error: action.payload.error
       };
     };
-    case CHANGE_ROOM_ONLINE_STATUS: {
+    case "ClearRoomData": {
       return {
         ...state,
-        ...payload
+        roomData: action.payload.roomData,
+        roomImages: action.payload.roomImages,
+        error: null
       };
     };
-    case ROOM_CREATED: {
+    case "OpenRoom": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        //roomData: { ...payload.roomData },
-        //roomImages: [ ...payload.roomImages],
-        error: payload.error
+        roomData: action.payload.roomData,
+        roomImages: action.payload.roomImages,
+        error: null
       };
     };
-    case ROOM_UPDATED: {
+    case "RoomCreated": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        roomData: { ...payload.roomData },
-        createdRooms: [ ...payload.createdRooms ],
-        roomImages: [ ...payload.roomImages ],
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        roomData: action.payload.newRoomData,
+        createdRooms: [ ...state.createdRooms, action.payload.newRoomData ],
+        error: null
       };
     };
-    case ROOM_DELETED: {
+    case "RoomUpdated": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        roomData: { ...payload.roomData },
-        roomImages: [ ...payload.roomImages ],
-        createdRooms: [ ...payload.createdRooms ],
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        roomData: action.payload.roomData,
+        createdRooms: action.payload.createdRooms,
+        error: null
       };
     };
-    case ROOM_ERROR: {
+    case "RoomDeleted": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        responseMsg: payload.responseMsg,
-        error: payload.error
-      }
-    }
-    case ROOM_IMG_REQUEST: {
-      return {
-        ...state,
-        loading: payload.loading,
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        roomData: action.payload.roomData,
+        createdRooms: action.payload.createdRooms,
+        numberOfRooms: action.payload.numberOfRooms,
+        error: null
       };
     };
-    case ROOM_IMG_UPLOADED: {
+    case "RoomImgUplSuccess": {
       return {
         ...state,
-        ...payload
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        roomImages: action.payload.roomImages,
+        roomData: action.payload.updatedRoom,
+        createdRooms: action.payload.createdRooms,
+        error: null
       };
     };  
-    case ROOM_IMG_DELETED: {
+    case "RoomImgDelSuccess": {
       return {
         ...state,
-        ...payload
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        roomImages: action.payload.roomImages,
+        roomData: action.payload.updatedRoom,
+        createdRooms: action.payload.createdRooms,
+        error: null
       };
     };
-    case ROOM_IMG_ERROR: {
+    case "ToggleRoomOnlineOffline": {
       return {
         ...state,
-        status: payload.status,
-        loading: payload.loading,
-        error: payload.error
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        updatedRoom: action.payload.updatedRoom,
+        updatedRoomsArr: action.payload.updatedRoomsArr,
+        error: null
       };
     };
+    case "DeleteAllRoomImages": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        roomImages: action.payload.updatedRoomImages,
+        error: null
+      }
+    }
     default: {
       return state;
     };
