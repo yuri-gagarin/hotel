@@ -1,4 +1,5 @@
-import { roomConstants } from "../constants";
+// @flow
+import { roomConstants } from "../../constants";
 const {
   ROOM_REQUEST,
   ROOM_CREATED,

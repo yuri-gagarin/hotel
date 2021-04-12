@@ -34,7 +34,7 @@ export const EditDiningEntertainmentDisplay = ({ diningEntState, history, goBack
   };
 
   return (
-    <Grid.Row>
+    <Grid.Row style={{ height: "90%", overflowY: "scroll" }}>
       <Modal open={ localState.formModalOpen } className={ styles.editModal } size="fullscreen">
         <DiningEntertainmentForm 
           toggleEditModal= { toggleEditModal }

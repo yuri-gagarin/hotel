@@ -140,7 +140,7 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
         </Grid.Row>
       </Route>
       <Route path={"/admin/dining_entertainment/new"}>
-        <Grid.Row>
+        <Grid.Row centered style={{ height: "90%", border: "6px solid green", overflowY: "scroll" }}>
           <Grid.Column className={ styles.newFormColumn } width={15}>
             <DiningEntertainmentForm diningEntState={ diningEntertainmentState } history={history} />
           </Grid.Column>
