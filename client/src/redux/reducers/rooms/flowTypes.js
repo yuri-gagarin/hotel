@@ -39,6 +39,7 @@ export type ClientRoomFormData = {
 export type RoomData = {
   _id: string,
   roomType: string,
+  live: boolean,
   area: string,
   sleeps: string,
   price: string,

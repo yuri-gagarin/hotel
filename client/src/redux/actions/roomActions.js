@@ -1,243 +1,318 @@
+// @flow
 import axios from "axios";
-import { roomConstants } from "../constants";
-const {
-  UPDATE_STATE,
-  CLEAR_ROOM_DATA,
-  ROOM_REQUEST,
-  ROOM_CREATED,
-  ROOM_UPDATED,
-  ROOM_DELETED,
-  ROOM_ERROR,
-  CHANGE_ROOM_ONLINE_STATUS,
-  ROOM_IMG_REQUEST,
-  ROOM_IMG_UPLOADED,
-  ROOM_IMG_DELETED,
-  ROOM_IMG_ERROR,
-  ADD_ROOM_TO_STATE,
-  SET_ROOMS,
-  SET_ROOM_PREVIEW_IMAGES,
-  OPEN_ROOM,
-  CLOSE_ROOM
-} = roomConstants;
-//import history from "../history";
+// FLOW types //
+import type {
+  RoomImgData, RoomData, RoomState,
+  RoomImgUplSuccess, RoomImgDelSuccess, DeleteAllRoomImages,
+  RoomAPIRequest, RoomCreated, RoomUpdated, RoomDeleted,
+  OpenRoom, SetRooms, ClearRoomData, SetRoomImages, RoomError,
+  ClientRoomFormData, ToggleRoomOnlineOffline, ToggleAllRoomsOnlineOffline,
+  RoomAction
+} from "../reducers/rooms/flowTypes";
+import type { Dispatch } from "../reducers/_helpers/createReducer";
+// helpers //
+import { generateEmptyRoomModel } from "../reducers/_helpers/emptyDataGenerators";
 
-export const uploadRequest = () => {
+/* API request actions and error */
+const roomAPIRequest = (): RoomAPIRequest => {
   return {
-    type: ROOM_IMG_REQUEST,
+    type: "RoomAPIRequest",
     payload: {
+      status: 202,
       loading: true,
       error: null
     }
   };
 };
-
-export const roomImgUploadSucess = (stateData) => {
+const roomError = (data: { status: number, responseMsg: string, error: any }): RoomError => {
   return {
-    type: ROOM_IMG_UPLOADED,
-    payload: stateData
+    type: "RoomError",
+    payload: { ...data, loading: false }
   };
 };
 
-export const roomImgDeleteSuccess = (stateData) => {
+/* CRUD Room model API actions */
+const roomCreated = (stateData: { status: number, responseMsg: string, newRoomData: RoomData }): RoomCreated => {
   return {
-    type: ROOM_IMG_DELETED,
-    payload: stateData
+    type: "RoomCreated",
+    payload: { ...stateData, loading: false }
   };
 };
-
-export const roomImgUploadError = (error) => {
+const roomUpdated = (stateData: { status: number, responseMsg: string, roomData: RoomData, createdRooms: Array<RoomData> }): RoomUpdated  => {
   return {
-    type: ROOM_IMG_ERROR,
-    payload: {
-      status: 500,
-      responseMsg: "An error occured",
-      error: error
-    }
+    type: "RoomUpdated",
+    payload: { ...stateData, loading: false }
   };
 };
-
-export const roomRequest = () => {
+const roomDeleted = (stateData: { status: number, responseMsg: string, roomData: RoomData, createdRooms: Array<RoomData>, numberOfRooms: number }): RoomDeleted => {
   return {
-    type: ROOM_REQUEST,
-    payload: {
-      status: null,
-      loading: true,
-      error: null
-    }
+    type: "RoomDeleted",
+    payload: { ...stateData, loading: false }
   };
 };
+/* */
 
-export const changeRoomOnlineStatus = (stateData) => {
+/* image upload api actions */
+const roomImgUploadSuccess = (stateData: { status: number, responseMsg: string, updatedRoom: RoomData, createdRooms: Array<RoomData>, roomImages: Array<RoomImgData> }): RoomImgUplSuccess => {
   return {
-    type: CHANGE_ROOM_ONLINE_STATUS,
-    payload: stateData
+    type: "RoomImgUplSuccess",
+    payload: { ...stateData, loading: false }
   };
 };
-
-export const roomCreated = (stateData) => {
+const roomImgDeleteSuccess = (stateData: { status: number, responseMsg: string, updatedRoom: RoomData, createdRooms: Array<RoomData>, roomImages: Array<RoomImgData> }): RoomImgDelSuccess => {
   return {
-    type: ROOM_CREATED,
-    payload: stateData
+    type: "RoomImgDelSuccess",
+    payload: { ...stateData, loading: false }
   };
 };
-
-export const addNewRoom = (roomState) => {
+const deleteAllRoomImages = (data: { status: number, responseMsg: string, updatedRoomImages: Array<RoomImgData> }): DeleteAllRoomImages => {
   return {
-    type: ADD_ROOM_TO_STATE,
-    payload: {
-      newRoom: roomState
-    }
-  };
-};   
-
-export const setRooms = (stateData) => {
-  return {
-    type: SET_ROOMS,
-    payload: stateData
+    type: "DeleteAllRoomImages",
+    payload: { ...data, loading: false }
   };
 };
+/* */
 
-export const roomUpdated = (stateData) => {
+/* online offline actions */
+const toggleRoomOnlineOffline = (data: { status: number, responseMsg: string, updatedRoom: RoomData, updatedRoomsArr: Array<RoomData> }): ToggleRoomOnlineOffline => {
   return {
-    type: ROOM_UPDATED,
-    payload: stateData
+    type: "ToggleRoomOnlineOffline",
+    payload: { ...data, loading: false }
   };
 };
-
-export const roomDeleted = (stateData) => {
+ const toggleAllRoomsOnlineOfflineAction = (data: { status: number, responseMsg: string, updatedRooms: Array<RoomData> }): ToggleAllRoomsOnlineOffline => {
   return {
-    type: ROOM_DELETED,
-    payload: stateData
+    type: "ToggleAllRoomsOnlineOffline",
+    payload: { ...data, loading: false }
   };
 };
+/* */
 
-export const roomError = (axiosError) => {
-  // remove and set into own function later //
-  console.log(axiosError)
-  const errResponse = axiosError.response;
-  if (errResponse) {
-    const { data, status } = errResponse;
-    const { responseMsg, error } = data;
-    return {
-      type: ROOM_ERROR,
-      payload: {
-        responseMsg: responseMsg,
-        status: status,
-        error: error ? error : axiosError
-      }
-    };
+/* Non API actions */
+const setRooms = (data : { status: number, responseMsg: string, createdRooms: Array<RoomData>, numberOfRooms: number }): SetRooms => {
+  return {
+    type: "SetRooms",
+    payload: { ...data, loading: false }
+  };
+};
+const openRoom = (data : { roomImages: Array<RoomImgData>, roomData: RoomData }): OpenRoom => {
+  return {
+    type: "OpenRoom",
+    payload: { ...data }
+  };
+};
+const setRoomsImages = (roomImages: Array<RoomImgData>): SetRoomImages => {
+  return {
+    type: "SetRoomImages",
+    payload: { roomImages }
+  };
+};
+const clearRoomData = (data: { roomImages: Array<RoomImgData>, roomData: RoomData }): ClearRoomData => {
+  return {
+    type: "ClearRoomData",
+    payload: { ...data }
+  };
+};
+/* */
+
+
+/* action exports */
+/* non API related requests */
+export const handleOpenRoom = (dispatch: Dispatch<RoomAction>, roomIdToOpen: string, currentRoomState: RoomState): void => {
+  const roomDataToOpen = currentRoomState.createdRooms.filter((room) => room._id === roomIdToOpen)[0];
+  const stateUpdateData = {
+    roomData: { ...roomDataToOpen, images: [ ...roomDataToOpen.images ]},
+    roomImages: [ ...roomDataToOpen.images ]
+  };
+  dispatch(openRoom(stateUpdateData));
+};
+export const handleClearRoomData = (dispatch: Dispatch<RoomAction>): void => {
+  dispatch(clearRoomData({ roomData: generateEmptyRoomModel(), roomImages: [] }));
+};
+
+/* API related requests */
+/* Room API error processing */
+export const handleRoomError = (err: any): RoomError => {
+  // process error, extract relavant error data //
+  console.error(err);
+  if (typeof err === "object" && err.response) {
+    const { status, data } : { status: number, data: any } = err.response;
+    const { responseMsg, error } : { responseMsg: string, error: Error } = data;
+    return roomError({ status: status, responseMsg: responseMsg, error: error }); 
   } else {
-    return {
-      type: ROOM_ERROR,
-      payload: {
-        responseMsg: "An error occured",
-        status: status,
-        error: axiosError
-      }
-    };
+    return roomError({ status: 500, responseMsg: "An error occured", error: err });
   }
-  
-};
-
-export const openRoom = (rooms, roomId) => {
-  const roomData = rooms.filter((room) => room._id == roomId)[0];
-  return {
-    type: OPEN_ROOM,
-    payload: {
-      loading: false,
-      roomData: roomData,
-      error: null
-    }
-  };
-};
-
-export const setPreviewImages = (roomImages = []) => {
-  return {
-    type: SET_ROOM_PREVIEW_IMAGES,
-    payload: {
-      loading: false,
-      roomImages: roomImages,
-      error: null
-    }
-  };
-};
-
-export const clearRoomData = () => {
-  return {
-    type: CLEAR_ROOM_DATA,
-    payload: {
-      loading: false,
-      roomData: {},
-      roomImages: [],
-      error: null
-    }
-  };
-};
-
-/**
- * 
- * @param {function} dispatch redux dispatch function
- * @param {File} file form file of image 
- * @param {object} roomsState State of the Rooms
- */
-export const uploadRoomImage = (dispatch, file, roomsState) => {
-  const { roomData, roomImages, createdRooms } = roomsState;
-  const { _id: roomId } = roomData ? roomData : "";
-  
+}
+/* Room CRUD related method requests */
+export const handleCreateNewRoom = (dispatch: Dispatch<RoomAction>, clientRoomFormData: ClientRoomFormData): Promise<boolean> => {
   const requestOptions = {
     method: "post",
-    url: "/api/uploadRoomImage/" + (roomId ? roomId : ""),
+    url: "/api/create_room",
+    data: {
+      roomData: clientRoomFormData,
+      roomImages: clientRoomFormData.images ? clientRoomFormData.images : []
+    }
+  };
+
+  dispatch(roomAPIRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, newRoom } : { responseMsg: string, newRoom: RoomData } = data;
+
+      const stateData = { status, responseMsg, newRoomData: newRoom };
+      dispatch(roomCreated(stateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(handleRoomError(error));
+      return Promise.resolve(false);
+    });
+};
+
+export const handleUpdateRoom = (dispatch: Dispatch<RoomAction>, roomFormData: ClientRoomFormData, currentRoomState: RoomState): Promise<boolean> => {
+  const { _id: roomId } = roomFormData;
+  const { roomImages, createdRooms } = currentRoomState;
+  const requestOptions = {
+    method: "patch",
+    url: "/api/rooms/" + (roomId ? roomId : ""),
+    data: {
+      roomData: roomFormData,
+      roomImages: roomImages
+    }
+  };
+
+  dispatch(roomAPIRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedRoom } : { responseMsg: string, updatedRoom: RoomData } = data;
+
+      const updatedRooms = createdRooms.map((room) => {
+        if (room._id == updatedRoom._id) {
+          return {
+            ...updatedRoom, images: [ ...updatedRoom.images ]
+          };
+        } else {
+          return room;
+        }
+      })
+      const roomStateData = {
+        status,
+        responseMsg,
+        roomData: updatedRoom,
+        createdRooms: updatedRooms,
+        roomImages: [ ...updatedRoom.images ],
+      };
+      dispatch(roomUpdated(roomStateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(handleRoomError(error));
+      return Promise.resolve(false);
+    });
+};
+
+export const handleDeleteRoom = (dispatch: Dispatch<RoomAction>, roomIdToDelete: string, currentRoomState: RoomState): Promise<boolean> => {
+  const { createdRooms } = currentRoomState; 
+  const requestOptions = {
+    method: "delete",
+    url: "/api/rooms/" + roomIdToDelete
+  };
+
+  dispatch(roomAPIRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, deletedRoom } : { responseMsg: string, deletedRoom: RoomData } = data;
+
+      const updatedRooms = createdRooms.filter((room) => deletedRoom._id !== room._id);
+      const roomStateData = {
+        status,
+        responseMsg,
+        roomData: generateEmptyRoomModel(),
+        createdRooms: updatedRooms,
+        numberOfRooms: updatedRooms.length
+      };
+      dispatch(roomDeleted(roomStateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(handleRoomError(error));
+      return Promise.resolve(false);
+    });
+};
+/* */
+
+/* non CRUD fetch API actions */
+export const hadleFetchRooms = (dispatch: Dispatch<RoomAction>): Promise<boolean> => {
+  const requestOptions = {
+    method: "get",
+    url: "/api/rooms"
+  };
+
+  dispatch(roomAPIRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, rooms } : { responseMsg: string, rooms: Array<RoomData> } = data;
+
+      const stateData = { status, responseMsg, createdRooms: rooms, numberOfRooms: rooms.length };
+      dispatch(setRooms(stateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(handleRoomError(error));
+      return Promise.resolve(false);
+    });
+};
+/* */
+
+/* Image upload, delete API actions */
+const uploadRoomImage = (dispatch: Dispatch<RoomAction>, file: FormData, currentRoomsState: RoomState): Promise<boolean> => {
+  const { roomData, roomImages, createdRooms } = currentRoomsState;
+  const { _id: roomId } = roomData
+
+  const requestOptions = {
+    method: "post",
+    url: "/api/upload_room_image/" + (roomId ? roomId : ""),
     headers: {
       'content-type': 'multipart/form-data'
     },
     data: file
-  }
+  };
 
-  dispatch(uploadRequest());
+  dispatch(roomAPIRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newImage, updatedRoom } = data;
-
+      const { responseMsg, newImage, updatedRoom } : { responseMsg: string, newImage: RoomImgData, updatedRoom: RoomData } = data;
+      let updatedRoomData: any; let updatedRooms: any; 
+      let updatedRoomImages: Array<RoomImgData> = [ ...roomImages, newImage ];
       if (updatedRoom) {
-        // request is done on existing room //
-        const updatedRooms = createdRooms.map((room) => {
+        // image being uploaded on a created room //
+        // update roomData and createdServices array //
+        updatedRooms = createdRooms.map((room) => {
           if (room._id === updatedRoom._id) {
-            return {
-              ...updatedRoom,
-              images: [ ...updatedRoom.images ]
-            }
+            return { ...updatedRoom, images: [ ...updatedRoom.images ] };
           } else {
             return room;
           }
         });
-        const stateData = {
-          status: status,
-          loading: false,
-          responseMsg: responseMsg,
-          roomImages: [ ...roomImages, newImage ],
-          roomData: { ...updatedRoom, images: [ ...updatedRoom.images ]},
-          createdRooms: updatedRooms,
-          error: null
-        };
-        dispatch(roomImgUploadSucess(stateData));
-        return Promise.resolve(true);
-      } else {
-        const stateData = {
-          status: status,
-          loading: false,
-          responseMsg: responseMsg,
-          roomImages: [ ...roomImages, newImage ],
-          roomData: {},
-          error: null
-        };
-        dispatch(roomImgUploadSucess(stateData));
-        return Promise.resolve(true);
+        updatedRoomData = { ...updatedRoom };
       }
+      const stateData = {
+        status,
+        responseMsg,
+        roomImages: updatedRoomImages,
+        updatedRoom: updatedRoomData ? updatedRoomData : roomData,
+        createdRooms: updatedRooms ? updatedRooms : createdRooms
+      };
+      dispatch(roomImgUploadSuccess(stateData));
+      return Promise.resolve(true);
     })
     .catch((error) => {
-      console.error(error);
-      dispatch(roomImgUploadError(error));
+      dispatch(handleRoomError(error));
       return Promise.resolve(false);
     });
 };
@@ -247,229 +322,80 @@ export const uploadRoomImage = (dispatch, file, roomsState) => {
  * @param {string} imageId Room model ObjectId
  * @param {object} roomsState current room model state
  */
-export const deleteRoomImage = (dispatch, imageId, roomsState) => {
+ const handleeleteRoomImage = (dispatch: Dispatch<RoomAction>, imageToDeleteId: string, roomsState: RoomState): Promise<boolean> => {
   const { roomData, roomImages, createdRooms } = roomsState;
   const requestOptions = {
     method: "delete",
-    url: "/api/deleteRoomImage/" + imageId
+    url: "/api/delete_room_image/" + imageToDeleteId
   };
-  dispatch(uploadRequest());
+
+  dispatch(roomAPIRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedImage, updatedRoom } = data;
-      const newImageState = roomImages.filter((image) => deletedImage._id !== image._id);
+      const { responseMsg, deletedImage, updatedRoom } : { responseMsg: string, deletedImage: RoomImgData, updatedRoom: RoomData } = data;
+      const { _id: deletedImgId } = deletedImage;
 
+      const newImageState = roomImages.filter((image) => deletedImage._id !== image._id);
+      let updatedRoomsArr; 
       if (updatedRoom) {
-        const updatedRooms = createdRooms.map((room) => {
+        updatedRoomsArr = createdRooms.map((room) => {
           if (room._id === updatedRoom._id) {
-            return { ...updatedRoom };
+            return { ...updatedRoom, images: [ ...updatedRoom.images ] };
           } else {
             return room;
           }
         });
-        const stateData = {
-          status: status,
-          loading: false,
-          responseMsg: responseMsg,
-          roomImages: newImageState,
-          roomData: updatedRoom,
-          createdRooms: updatedRooms,
-          error: null
-        };
-        dispatch(roomImgDeleteSuccess(stateData));
-        return Promise.resolve(true);
-      } else {
-        const stateData = {
-          status: status,
-          loading: false,
-          responseMsg: responseMsg,
-          roomImages: newImageState,
-          roomData: {},
-          error: null
-        };
-        dispatch(roomImgDeleteSuccess(stateData));
-        return Promise.resolve(true);
       }
-    })
-    .catch((error) => {
-      console.error(error);
-      dispatch(roomImgUploadError(error));
-    });
-}
-
-export const handleNewRoom = (dispatch, roomData, history) => {
-  const requestOptions = {
-    method: "post",
-    url: "/api/createRoom",
-    data: {
-      roomData: roomData,
-    }
-  };
-  dispatch(roomRequest());
-  return axios(requestOptions)
-    .then((response) => {
-      const { status, data } = response;
-      const { responseMsg, newRoom } = data;
       const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        roomData: newRoom,
-        roomImages: newRoom.images,
-        error: null
+        status,
+        responseMsg,
+        roomImages: newImageState,
+        updatedRoom: updatedRoom ? updatedRoom : roomData,
+        createdRooms: updatedRoomsArr ? updatedRoomsArr : createdRooms,
       };
-      dispatch(roomCreated(stateData));
-      dispatch(addNewRoom(newRoom));
-      history.push("/admin/rooms");
+      dispatch(roomImgDeleteSuccess(stateData));
+      return Promise.resolve(true);
     })
     .catch((error) => {
-      console.error(error);
-      dispatch(roomError(error));
+      dispatch(handleRoomError(error));
+      return Promise.resolve(false);
     });
 };
 
-export const fetchRooms = (dispatch) => {
-  const requestOptions = {
-    method: "get",
-    url: "/api/rooms"
-  };
-  dispatch(roomRequest());
-  return axios(requestOptions)
-    .then((response) => {
-      const { status, data } = response;
-      const { responseMsg, rooms } = data;
-      const stateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        createdRooms: rooms,
-        error: null
-      };
-      dispatch(setRooms(stateData))
-    })
-    .catch((error) => {
-      console.error(error);
-      dispatch(roomError(error));
-    });
-};
-
-export const updateRoom = (dispatch, roomData, roomImages = {}, currentRooms = []) => {
-  const roomId = roomData._id
+// take online and offline API actions //
+export const handleToggleRoomOnlineOffline = (dispatch: Dispatch<RoomAction>, roomToUpdate: RoomData, currentRoomState: RoomState): Promise<boolean> => {
+  const { _id: roomId, live } = roomToUpdate;
+  const { createdRooms } = currentRoomState;
   const requestOptions = {
     method: "patch",
     url: "/api/rooms/" + roomId,
     data: {
-      roomData: roomData,
-      roomImages: roomImages
-    }
-  }
-  dispatch(roomRequest());
-  return axios(requestOptions)
-    .then((response) => {
-      const { status, data } = response;
-      const { responseMsg, updatedRoom } = data;
-      const updatedRooms = currentRooms.map((room) => {
-        if (room._id == updatedRoom._id) {
-          return {
-            ...updatedRoom
-          };
-        } else {
-          return room;
-        }
-      })
-      const roomStateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        roomData: updatedRoom,
-        roomImages: updatedRoom.images,
-        createdRooms: updatedRooms,
-        error: null
-      };
-      dispatch(roomUpdated(roomStateData));
-    })
-    .catch((error) => {
-      console.error(error);
-      dispatch(roomError(error));
-    })
-};
-
-export const onlineRoomStatusAPIRequest = (dispatch, roomData, currentRooms=[]) => {
-  console.log("fired change online status")
-  const { _id: roomId, live } = roomData;
-  const requestOptions = {
-    method: "patch",
-    url: "/api/rooms/" + roomId,
-    data: {
-      changeOnlineStatus: { status: !live },
+      onlineStatus: { status: !live },
     }
   };
 
-  dispatch(roomRequest());
-
+  dispatch(roomAPIRequest());
   return axios.request(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedRoom } = data;
-      console.log(data);
+      const { responseMsg, updatedRoom } : { responseMsg: string, updatedRoom: RoomData } = data;
 
-      const updatedRooms = currentRooms.map((room) => {
+      const updatedRoomsArr = createdRooms.map((room) => {
         if (room._id == updatedRoom._id) {
-          return {
-            ...updatedRoom
-          };
+          return { ...updatedRoom };
         } else {
           return room;
         }
       });
-      const roomStateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        roomData: updatedRoom,
-        roomImages: updatedRoom.images,
-        createdRooms: updatedRooms,
-        error: null
-      };
-      dispatch(changeRoomOnlineStatus(roomStateData));
+      const stateData = { status, responseMsg, updatedRoom, updatedRoomsArr };
+      dispatch(toggleRoomOnlineOffline(stateData));
+      return Promise.resolve(true);
     })
     .catch((error) => {
-      console.error(error);
-      dispatch(roomError(error));
+      dispatch(handleRoomError(error));
+      return Promise.resolve(false);
     });
 };
 
-export const deleteRoom = (dispatch, roomId, currentRooms = []) => {
-  const roomImages = currentRooms.filter((room) => roomId == room._id)[0].images;
-  const requestOptions = {
-    method: "delete",
-    url: "/api/rooms/" + roomId,
-    data: {
-      roomImages: roomImages
-    }
-  };
-  dispatch(roomRequest());
-  return axios(requestOptions)
-    .then((response) => {
-      const { status, data } = response;
-      const { responseMsg, deletedRoom } = data;
-      const updatedRooms = currentRooms.filter((room) => {
-        return deletedRoom._id != room._id;
-      });
-      const roomStateData = {
-        status: status,
-        loading: false,
-        responseMsg: responseMsg,
-        roomData: {},
-        roomImages: [],
-        createdRooms: updatedRooms,
-        error: null
-      };
-      dispatch(roomDeleted(roomStateData));
-    })
-    .catch((error) => {
-      dispatch(roomError(error));
-    });
-};
 

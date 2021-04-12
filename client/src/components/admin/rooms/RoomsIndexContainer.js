@@ -1,18 +1,13 @@
+// @flow
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { 
-  Button,
-  Card,
-  Grid,
-  Icon,
-  Label,
-  Popup
-} from "semantic-ui-react";
+import { Button, Card, Grid, Icon, Label, Popup } from "semantic-ui-react";
 // additional imports //
-import RoomHolder from "./RoomHolder";
+import APIMessage from "../shared/ApiMessage";
+import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 import RoomDisplay from "./RoomDisplay";
 import RoomForm from "./RoomForm";
-import APIMessage from "../shared/ApiMessage";
+import RoomHolder from "./RoomHolder";
 // redux imports //
 import { connect } from "react-redux"; 
 import { fetchRooms, openRoom, deleteRoom, clearRoomData, onlineRoomStatusAPIRequest } from "../../../redux/actions/roomActions";
@@ -20,7 +15,6 @@ import { fetchRooms, openRoom, deleteRoom, clearRoomData, onlineRoomStatusAPIReq
 import { withRouter, Route } from "react-router-dom";
 // styles and css //
 import styles from "./css/roomIndexCont.module.css";
-import DefaultDisplay from "./DefaultDisplay";
 
 const RoomsIndexContainer = (props) => {
   const { 

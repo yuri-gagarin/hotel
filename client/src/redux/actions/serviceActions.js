@@ -1,7 +1,5 @@
 // @flow
 import axios from "axios";
-import { serviceConstants } from "./../constants";
-import { operationSuccessful, setAppError } from "./appGeneralActions";
 // flow types //
 import type { 
   ServiceImgData, ServiceData, ServiceState,
@@ -198,7 +196,7 @@ export const handleUpdateService = (dispatch: Dispatch<ServiceAction>, serviceDa
         responseMsg, 
         serviceData: updatedService, 
         serviceImages: [ ...updatedService.images ], 
-        createdServices: [ ...updatedServices ],
+        createdServices: updatedServices,
       };
       dispatch(serviceUpdated(serviceStateData));
       return true;
@@ -277,7 +275,7 @@ export const handleUploadServiceImage = (dispatch: Dispatch<ServiceAction>, file
   const { _id : serviceId } = serviceData;
   const requestOptions = {
     method: "post",
-    url: "/api/services/upload_service_image/" + serviceId,
+    url: "/api/services/upload_service_image/" + (serviceId ? serviceId : "",
     headers: {
       'content-type': 'multipart/form-data'
     },
@@ -406,7 +404,7 @@ export const handleToggleServiceOnlineOffline = (dispatch: Dispatch<ServiceActio
       const updatedServiceData = { ...updatedService };
       const updatedServicesArr = createdServices.map((service) => {
         if (service._id === updatedServiceData._id) {
-          return updatedServiceData;
+          return { ...updatedServiceData };
         } else {
           return service;
         }
