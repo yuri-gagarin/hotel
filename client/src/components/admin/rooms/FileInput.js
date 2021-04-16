@@ -6,10 +6,11 @@ import ImgUploadControls from "../shared/ImgUploadControls";
 //
 import type { ServiceState } from "../../../redux/reducers/service/flowTypes";
 import type { DiningEntertainmentState } from "../../../redux/reducers/dining_entertainment/flowTypes";
+import type { RoomState } from "../../../redux/reducers/rooms/flowTypes";
 // css an styles //
 import styles from "./css/fileInput.module.css";
 
-type UnionState = (DiningEntertainmentState | ServiceState);
+type UnionState = (DiningEntertainmentState | ServiceState | RoomState);
 
 type Props = {
   uploadImage: <S>(data: FormData, currentState: S) => Promise<boolean>,

@@ -15,6 +15,7 @@ export type ClientRoomFormData = {
   price: string,
   beds: string,
   couches: string,
+  description: string,
   images?: Array<RoomImgData>,
   options: {
     privateBathroom: boolean,
@@ -45,6 +46,7 @@ export type RoomData = {
   price: string,
   beds: string,
   couches: string,
+  description: string,
   images: Array<RoomImgData>,
   options: {
     privateBathroom: boolean,

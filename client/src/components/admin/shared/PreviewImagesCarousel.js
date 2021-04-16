@@ -3,15 +3,17 @@ import * as React from "react";
 // semantic ui react //
 import { Header, Icon, Image, Segment } from "semantic-ui-react";
 // flow types //
-import type { ServiceImgData } from "../../../redux/reducers/service/flowTypes";
 import type { DiningImgData, MenuImageData } from "../../../redux/reducers/dining_entertainment/flowTypes";
+import type { RoomImgData } from "../../../redux/reducers/rooms/flowTypes";
+import type { ServiceImgData } from "../../../redux/reducers/service/flowTypes";
+
 // styles and css //
 import styles from "./css/previewImagesCarousel.module.css";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
 
 type Props = {
-  images: Array<ServiceImgData> | Array<DiningImgData> | Array<MenuImageData>,
+  images: Array<ServiceImgData> | Array<DiningImgData> | Array<MenuImageData> | Array<RoomImgData>,
   showDeleteIcons: boolean,
   toggleImageModal: (imgPath: string) => void,
   triggerImgModelDelete?: (imgIdToDelete: string) => void

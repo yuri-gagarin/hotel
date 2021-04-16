@@ -3,9 +3,12 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { Button, Checkbox, Form, Input, TextArea } from "semantic-ui-react";
 // additional component imports  //
-import RoomImageThumb from "./RoomImages";
+import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import FileInput from "./FileInput";
+import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
+import RoomImageThumb from "./RoomImages";
+
 // redux imports  //
 import { connect } from "react-redux";
 import { handleUploadRoomImage, handleDeleteRoomImage, handleCreateNewRoom, handleUpdateRoom, handleDeleteRoom } from "../../../redux/actions/roomActions";
@@ -15,14 +18,16 @@ import type { ClientRoomFormData, RoomState, RoomData, RoomAction } from "../../
 import type { RouterHistory } from "react-router-dom";
 // css 
 // helpers //
+import { setImagePath } from "../../helpers/displayHelpers";
 
 type OwnProps = {
   roomState: RoomState,
-  history: RouterHistory
+  history: RouterHistory,
+  toggleEditModal?: () => void
 };
 type Props = {
   ...OwnProps,
-  _handleUploadRoomImage: (imageFile: FormData, currentRoomState: RoomState) => Promise<boolean>,
+  _handleUploadRoomImage: <RoomState>(imageFile: FormData, currentRoomState: RoomState) => Promise<boolean>,
   _handleDeleteRoomImage: (imageIdToDelete: string, currentRoomState: RoomState) => Promise<boolean>,
   // model CRUD //
   _handleCreateNewRoom: (newRoomFormData: ClientRoomFormData) => Promise<boolean>,
@@ -30,85 +35,76 @@ type Props = {
   _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => Promise<boolean>
 };
 
-type LocalFormState = {
-  ...ClientRoomFormData,
-  titleError: string,
+type FormErrors = {
+  roomTypeError: string,
   descriptionError: string
 };
+type LocalFormState = ClientRoomFormData & FormErrors;
 type ImageModalState = { imgModalOpen: boolean, openImageURL: string };
+type ConfirmDeleteModalState = { 
+  confirmDelModalOpen: boolean,
+  modelIdToDelete: string, 
+  modelToDelete: "room" | "roomImage" | ""
+};  
 
 const RoomForm = (props: Props): React.Node => {
-  const { roomState, history } = props;
-  const { roomData } = roomState;
+  const { roomState, history, toggleEditModal } = props;
+  const { roomData, roomImages } = roomState;
   const { _handleUploadRoomImage, _handleDeleteRoomImage, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom } = props;
   // local form state //
-  const [ localFormState, setLocalFormState ] = React.useState<LocalFormState>({ ...roomData, titleError: "", descriptionError: "" });
+  const [ localFormState, setLocalFormState ] = React.useState<LocalFormState>({ ...roomData, roomTypeError: "", descriptionError: "" });
   const [ imageModalState, setImageModalState ] = React.useState<ImageModalState>({ imgModalOpen: false, openImageURL: "" });
-
-  React.useEffect(() => {
-    if (roomData && roomData.images) {
-      // set the images array //
-      setPreviewImages(roomData.images);
-    }
-    console.log("form rendered");
-  }, []);
+  const [ confirmModalState, setConfirmModalState ] = React.useState<ConfirmDeleteModalState>({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
   
   // text input handlers //
   const handleRoomType = (e, data) => {
-    setRoomDetails((state) => {
-      return {
-        ...state,
-        roomType: data.value
-      };
-    });
+    if (data.value.length === 0) {
+      setLocalFormState({ ...localFormState, roomType: data.value, roomTypeError: "Please enter a room type..." });
+    } else {
+      setLocalFormState({ ...localFormState, roomType: data.value, roomTypeError: "" });
+    }
   };
   const handleRoomArea = (e, data) => {
-    setRoomDetails((state) => {
-      return {
-        ...state,
-        area: data.value
-      };
-    });
+    if (data.value.length === 0) {
+      setLocalFormState({ ...localFormState, area: data.value, roomAreaError: "Please enter a room area..." });
+    } else {
+      setLocalFormState({ ...localFormState, roomType: data.value, roomAreaError: "" });
+    }
   };
   const handleSleeps = (e, data) => {
-    setRoomDetails((state) => {
-      return {
-        ...state,
-        sleeps: data.value
-      };
-    });
+    if (data.value.length === 0) {
+      setLocalFormState({ ...localFormState, sleeps: data.value, sleepsError: "Please enter how many people room sleeps..."});
+    } else {
+      setLocalFormState({ ...localFormState, sleeps: data.value, sleepsError: "" });
+    }
   };
   const handlePrice = (e, data) => {
-    setRoomDetails((state) => {
-      return {
-        ...state,
-        price: data.value
-      };
-    });
+    if (data.value.length === 0) {
+      setLocalFormState({ ...localFormState, price: data.value, priceError: "Please enter a from price..."})
+    } else {
+      setLocalFormState({ ...localFormState, price: data.value, priceError: "" });
+    }
   };
   const handleBeds = (e, data) => {
-    setRoomDetails((state) => {
-      return {
-        ...state,
-        beds: data.value
-      };
-    });
+    if (data.value.length === 0) {
+      setLocalFormState({ ...localFormState, beds: data.value, bedsError: "Please enter the number of beds..." });
+    } else {
+      setLocalFormState({ ...localFormState, beds: data.value, bedsError: "" });
+    }
   };
   const handleCouches = (e, data) => {
-    setRoomDetails((state) => {
-      return {
-        ...state,
-        couches: data.value
-      };
-    });
+    if (data.value.length === 0) {
+      setLocalFormState({ ...localFormState, couches: data.value, couchesError: "Please enter number of couches in room..." });
+    } else {
+      setLocalFormState({ ...localFormState, couches: data.value, couchesError: "" });
+    }
   };
   const handleDescriptionChange = (e, data) => {
-    setRoomDetails((state) => {
-      return {
-        ...state,
-        description: data.value
-      };
-    });
+    if (data.value.length === 0) {
+      setLocalFormState({ ...localFormState, description: data.value, descriptionError: "" });
+    } else {
+      setLocalFormState({ ...localFormState, description: data.value, descriptionError: "" });
+    }
   };
   // END text input handlers //
   // checkbox handler //
@@ -116,85 +112,85 @@ const RoomForm = (props: Props): React.Node => {
     const { label, checked } = data;
     switch(label) {
       case "Bathroom": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, privateBathroom: true } : { ...state, privateBathroom: false };
         });
         break;
       }
       case "Suite Bathroom": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, suiteBathroom: true } : { ...state, suiteBathroom: false };
         });
         break;
       } 
       case "Jacuzzi": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, jacuzzi: true } : { ...state, jacuzzi: false };
         });
         break;
       } 
       case "Balcony": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, balcony: true } : { ...state, balcony: false };
         })
         break;
       } 
       case "Terrace": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, terrace: true } : { ...state, terrace: false };
         })
         break;
       }
       case "Mountain View": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, mountainView: true } : { ...state, mountainView: false };
         })
         break;
       } 
       case "Street View": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, streetView: true } : { ...state, streetView: false };
         })
         break;
       } 
       case "River View": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, riverView: true } : { ...state, riverView: false };
         })
         break;
       }
       case "TV": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, tv: true } : { ...state, tv: false };
         })
         break;
       }
       case "WiFi": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, wifi: true } : { ...state, wifi: false };
         })
         break;
       }
       case "Phone": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, phone: true } : { ...state, phone: false };
         })
         break;
       }
       case "Air Conditioning": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, airConditioning: true } : { ...state, airConditioning: false };
         })
         break;
       }
       case "Refrigerator": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, refrigerator: true } : { ...state, refrigerator: false };
         })
         break;
       }
       case "Coffee Maker": {
-        setRoomOptions((state) => {
+        setLocalFormState((state) => {
           return checked ? { ...state, coffeeMaker: true } : { ...state, coffeeMaker: false };
         })
         break;
@@ -203,35 +199,57 @@ const RoomForm = (props: Props): React.Node => {
   };
   // END checkbox handler //
   const handleFormSubmit = () => {
-    const roomId = roomState.roomData._id;
-    const createdRooms = roomState.createdRooms;
+    const { _id: roomId } = roomData;
+    const { createdRooms, roomImages } = roomState;
 
-    const roomImages = roomState.roomImages.map((img) => img._id );
-    const roomData = {
-      ...roomDetails,
-      options: {
-        ...roomOptions
-      },
-      images: roomImages
+    // handle some error checking late //
+    const roomImgIds = roomState.roomImages.map((img) => img._id );
+    const clientRoomFormData: ClientRoomFormData = {
+      ...localFormState,
+      images: [ ...roomImages ]
     }
     if (!roomId) {
       // new room being created //
-      handleNewRoom(roomData, history)
+      _handleCreateNewRoom(clientRoomFormData)
+        .then((success) => { if (success) history.push("/admin/rooms") });
     } else {
       // existing room being edited with existing data //
-      const roomImages = { currentImages: roomState.roomImages };
-      updateRoom({ ...roomData, _id: roomId }, roomImages, createdRooms);
+      _handleUpdateRoom(clientRoomFormData, roomState)  
+        .then((success) => { if (success && toggleEditModal) toggleEditModal() })
     }
   };  
 
-  const handleImageDelete = (imageId) => {
-    const confirm = window.confirm("Are you Sure?");
-    if (confirm) {
-      deleteRoomImage(imageId, roomState);
-    } else {
-      return;
-    }
+  const toggleImageModal = (imgPath: string) => {
+    setImageModalState({ imgModalOpen: !imageModalState.imgModalOpen, openImageURL: imgPath ? setImagePath(imgPath) : "" });
+  }
+
+  // delete functionality and triggers //
+  // Room model delete functionality //
+  const triggerRoomDelete = (roomIdToDelete: string) => {
+    setConfirmModalState({ confirmDelModalOpen: true, modelIdToDelete: roomIdToDelete, modelToDelete: "room" });
   };
+  // RoomImage model delete functionality //
+  const triggerRoomImageDelete = (imageIdToDelete: string) => {
+    setConfirmModalState({ confirmDelModalOpen: true, modelIdToDelete: imageIdToDelete, modelToDelete: "roomImage" });
+  };
+  // confirm delete function //
+  const handleDeleteConfirm = () => {
+    const { confirmDelModalOpen, modelIdToDelete, modelToDelete } = confirmModalState;
+    if (modelToDelete === "room") {
+      return _handleDeleteRoom(modelIdToDelete, roomState)
+        .then((success) => { 
+          if (success) setConfirmModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
+        });
+    } else if (modelToDelete === "roomImage") {
+      return _handleDeleteRoomImage(modelIdToDelete, roomState)
+        .then((success) => { 
+          if (success) setConfirmModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
+        })
+    } else {
+      return Promise.resolve();
+    }
+  }
+
 
   return (
     <Form>
@@ -241,21 +259,21 @@ const RoomForm = (props: Props): React.Node => {
           label='Room Type'
           placeholder='...type of room'
           onChange={handleRoomType}
-          value={roomDetails.roomType || ""}
+          value={ localFormState.roomType }
         />
         <Form.Field
           control={Input}
           label='Area'
           placeholder='...only numbers please'
           onChange={handleRoomArea}
-          value={roomDetails.area || ""}
+          value={ localFormState.area }
         />
         <Form.Field
           control={Input}
           label="Sleeps"
           placeholder='...how many people it sleeps'
           onChange={handleSleeps}
-          value={roomDetails.sleeps || ""}
+          value={ localFormState.sleeps }
         />
       </Form.Group>
       <Form.Group widths='equal'>
@@ -264,7 +282,7 @@ const RoomForm = (props: Props): React.Node => {
           label='Price from'
           placeholder='...price from (optional)'
           onChange={handlePrice}
-          value={roomDetails.price || ""}
+          value={ localFormState.price }
 
         />
         <Form.Field
@@ -272,7 +290,7 @@ const RoomForm = (props: Props): React.Node => {
           label='Beds'
           placeholder='...number of beds'
           onChange={handleBeds}
-          value={roomDetails.beds || ""}
+          value={ localFormState.beds }
 
         />
         <Form.Field
@@ -280,7 +298,7 @@ const RoomForm = (props: Props): React.Node => {
           label="Couches"
           placeholder='...number of couches'
           onChange={handleCouches}
-          value={roomDetails.couches || ""}
+          value={ localFormState.couches }
         />
       </Form.Group>
       <Form.Field
@@ -289,38 +307,42 @@ const RoomForm = (props: Props): React.Node => {
         label='Description of the Room'
         placeholder='...description of the room here'
         onChange={handleDescriptionChange}
-        value={roomDetails.description || ""}
+        value={ localFormState.description }
 
       />
        <Form.Field>
-        <Checkbox label='Private Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.privateBathroom}/>
-        <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.suiteBathroom} />
-        <Checkbox label='Jacuzzi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.jacuzzi} />
-        <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.balcony} />
-        <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.terrace} />
-        <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.mountainView}/>
-        <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.streetView}/>
-        <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.riverView}/>
-        <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.tv}/>
-        <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.wifi}/>
-        <Checkbox label='Phone' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.phone}/>
-        <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.airConditioning}/>
-        <Checkbox label='Refrigerator' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.refrigerator}/>
-        <Checkbox label='Coffee Maker' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={roomOptions.cofeeMaker}/>
+        <Checkbox label='Private Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.privateBathroom }/>
+        <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.suiteBathroom } />
+        <Checkbox label='Jacuzzi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.jacuzzi } />
+        <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.balcony } />
+        <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.terrace } />
+        <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.mountainView } />
+        <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.streetView } />
+        <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.riverView } />
+        <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.tv } />
+        <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.wifi } />
+        <Checkbox label='Phone' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.phone } />
+        <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.airConditioning } />
+        <Checkbox label='Refrigerator' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.refrigerator } />
+        <Checkbox label='Coffee Maker' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.coffeeMaker } />
 
 
       </Form.Field>
-      <FileInput uploadImage={uploadRoomImage} dataName={"roomImage"} state={ roomState } />
+      <FileInput uploadImage={ _handleUploadRoomImage } dataName={"roomImage"} modelState={ roomState } textContent={ "Upload room images..." } />
       { 
-        roomImages.map((roomImage) => {
-          return (
-            <RoomImageThumb 
-              key={roomImage._id} 
-              roomImage={roomImage} 
-              handleImageDelete={handleImageDelete} 
-            />
-          );
-        })
+        roomImages.length > 0 
+        ? 
+        <PreviewImagesCarousel
+          images={ roomImages }
+          showDeleteIcons={ true }
+          toggleImageModal={ toggleImageModal }
+          triggerImgModelDelete={ triggerRoomImageDelete } 
+        />
+        : 
+        <GeneralNoModelsSegment 
+          customHeaderMessage={ "No Images uploaded" }
+          customContentMessage={ "Upload any new room images here..." }
+        />
       }
       <Form.Field>
         <Button 
