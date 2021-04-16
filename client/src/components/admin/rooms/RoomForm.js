@@ -1,24 +1,28 @@
 // @flow 
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Button, Checkbox, Form, Input, TextArea } from "semantic-ui-react";
+import { Button, Checkbox, Form, Input, Popup, TextArea } from "semantic-ui-react";
 // additional component imports  //
 import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import FileInput from "./FileInput";
+import GenericImgModal from "../shared/GenericImgModal";
 import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
+import ModelDeleteBtn from "../shared/ModelDeleteBtn";
 import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
 import RoomImageThumb from "./RoomImages";
 
 // redux imports  //
 import { connect } from "react-redux";
-import { handleUploadRoomImage, handleDeleteRoomImage, handleCreateNewRoom, handleUpdateRoom, handleDeleteRoom } from "../../../redux/actions/roomActions";
+import { handleUploadRoomImage, handleDeleteRoomImage, handleCreateNewRoom, handleUpdateRoom, handleDeleteRoom, handleDeleteAllRoomImages } from "../../../redux/actions/roomActions";
 // type imports //
 import type { Dispatch } from "../../../redux/reducers/_helpers/createReducer";
-import type { ClientRoomFormData, RoomState, RoomData, RoomAction } from "../../../redux/reducers/rooms/flowTypes";
+import type { ClientRoomFormData, RoomState, RoomData, RoomImgData, RoomAction } from "../../../redux/reducers/rooms/flowTypes";
 import type { RouterHistory } from "react-router-dom";
 // css 
+import styles from "./css/roomForm.module.css";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
+import {  objectValuesEmpty } from "../../helpers/componentHelpers";
 
 type OwnProps = {
   roomState: RoomState,
@@ -32,7 +36,9 @@ type Props = {
   // model CRUD //
   _handleCreateNewRoom: (newRoomFormData: ClientRoomFormData) => Promise<boolean>,
   _handleUpdateRoom: (roomUpdateFormData: ClientRoomFormData, currentRoomState: RoomState) => Promise<boolean>,
-  _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => Promise<boolean>
+  _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => Promise<boolean>,
+  //
+  _handleDeleteAllRoomImages: (currentRoomState: RoomState) => Promise<boolean>
 };
 
 type FormErrors = {
@@ -50,7 +56,7 @@ type ConfirmDeleteModalState = {
 const RoomForm = (props: Props): React.Node => {
   const { roomState, history, toggleEditModal } = props;
   const { roomData, roomImages } = roomState;
-  const { _handleUploadRoomImage, _handleDeleteRoomImage, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom } = props;
+  const { _handleUploadRoomImage, _handleDeleteRoomImage, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom, _handleDeleteAllRoomImages } = props;
   // local form state //
   const [ localFormState, setLocalFormState ] = React.useState<LocalFormState>({ ...roomData, roomTypeError: "", descriptionError: "" });
   const [ imageModalState, setImageModalState ] = React.useState<ImageModalState>({ imgModalOpen: false, openImageURL: "" });
@@ -219,7 +225,22 @@ const RoomForm = (props: Props): React.Node => {
     }
   };  
 
-  const toggleImageModal = (imgPath: string) => {
+  const handleFormCancel = () => {
+    if (toggleEditModal && !objectValuesEmpty(roomData)) {
+      toggleEditModal();
+    } else {
+      if (roomImages.length > 0) {
+        _handleDeleteAllRoomImages(roomState)
+          .then((success) => {
+            if (success) history.goBack();
+          });
+      } else {
+        history.goBack();
+      }
+    }
+  }
+
+  const toggleImageModal = (imgPath?: string) => {
     setImageModalState({ imgModalOpen: !imageModalState.imgModalOpen, openImageURL: imgPath ? setImagePath(imgPath) : "" });
   }
 
@@ -248,115 +269,153 @@ const RoomForm = (props: Props): React.Node => {
     } else {
       return Promise.resolve();
     }
-  }
+  };
+
+  const handleDeleteCancel = () => {
+    setConfirmModalState({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
+  };
 
 
   return (
-    <Form>
-      <Form.Group widths='equal'>
-        <Form.Field
-          control={Input}
-          label='Room Type'
-          placeholder='...type of room'
-          onChange={handleRoomType}
-          value={ localFormState.roomType }
-        />
-        <Form.Field
-          control={Input}
-          label='Area'
-          placeholder='...only numbers please'
-          onChange={handleRoomArea}
-          value={ localFormState.area }
-        />
-        <Form.Field
-          control={Input}
-          label="Sleeps"
-          placeholder='...how many people it sleeps'
-          onChange={handleSleeps}
-          value={ localFormState.sleeps }
-        />
-      </Form.Group>
-      <Form.Group widths='equal'>
-        <Form.Field
-          control={Input}
-          label='Price from'
-          placeholder='...price from (optional)'
-          onChange={handlePrice}
-          value={ localFormState.price }
-
-        />
-        <Form.Field
-          control={Input}
-          label='Beds'
-          placeholder='...number of beds'
-          onChange={handleBeds}
-          value={ localFormState.beds }
-
-        />
-        <Form.Field
-          control={Input}
-          label="Couches"
-          placeholder='...number of couches'
-          onChange={handleCouches}
-          value={ localFormState.couches }
-        />
-      </Form.Group>
-      <Form.Field
-        id='form-textarea-control-opinion'
-        control={TextArea}
-        label='Description of the Room'
-        placeholder='...description of the room here'
-        onChange={handleDescriptionChange}
-        value={ localFormState.description }
-
+    <div className={ styles.roomFormWrapper }>
+      <ConfirmDeleteModal 
+        open={ confirmModalState.confirmDelModalOpen }
+        modelName={ "room" }
+        customHeader={ "Confirm Delete Action" }
+        confirmAction={ handleDeleteConfirm }
+        cancelAction= { handleDeleteCancel }
       />
-       <Form.Field>
-        <Checkbox label='Private Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.privateBathroom }/>
-        <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.suiteBathroom } />
-        <Checkbox label='Jacuzzi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.jacuzzi } />
-        <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.balcony } />
-        <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.terrace } />
-        <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.mountainView } />
-        <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.streetView } />
-        <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.riverView } />
-        <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.tv } />
-        <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.wifi } />
-        <Checkbox label='Phone' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.phone } />
-        <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.airConditioning } />
-        <Checkbox label='Refrigerator' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.refrigerator } />
-        <Checkbox label='Coffee Maker' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.coffeeMaker } />
+      <GenericImgModal 
+        open={ imageModalState.imgModalOpen }
+        imgURL= { imageModalState.openImageURL }
+        handleClose= { toggleImageModal }
+      />
+      <div className={ styles.formControlsDiv }>
+        <Popup 
+          content="Changes will not be saved"
+          trigger={
+            <Button inverted color="orange" icon="cancel" content="Cancel and Close" onClick={ handleFormCancel } />
+          }
+        />
+        {
+          objectValuesEmpty(roomData)
+          ?
+          <div className={ styles.formControls }>
+            <Button style={{ height: "100%" }} inverted color="green" content="Create and Save" icon="save" onClick={ handleFormSubmit } />
+          </div>
+          :
+          <div className={ styles.formControls }>
+            <Button content="Update and Save" icon="save" onClick={ handleFormSubmit } />
+            <ModelDeleteBtn modelId={ roomData._id } modelName="room" handleModelDelete={ triggerRoomDelete } />
+          </div>
+        }
+      </div>
+      <div className={ styles.formDiv }>
+        <Form>
+          <Form.Group widths='equal'>
+            <Form.Field
+              control={Input}
+              label='Room Type'
+              placeholder='...type of room'
+              onChange={handleRoomType}
+              value={ localFormState.roomType }
+            />
+            <Form.Field
+              control={Input}
+              label='Area'
+              placeholder='...only numbers please'
+              onChange={handleRoomArea}
+              value={ localFormState.area }
+            />
+            <Form.Field
+              control={Input}
+              label="Sleeps"
+              placeholder='...how many people it sleeps'
+              onChange={handleSleeps}
+              value={ localFormState.sleeps }
+            />
+          </Form.Group>
+          <Form.Group widths='equal'>
+            <Form.Field
+              control={Input}
+              label='Price from'
+              placeholder='...price from (optional)'
+              onChange={handlePrice}
+              value={ localFormState.price }
+
+            />
+            <Form.Field
+              control={Input}
+              label='Beds'
+              placeholder='...number of beds'
+              onChange={handleBeds}
+              value={ localFormState.beds }
+
+            />
+            <Form.Field
+              control={Input}
+              label="Couches"
+              placeholder='...number of couches'
+              onChange={handleCouches}
+              value={ localFormState.couches }
+            />
+          </Form.Group>
+          <Form.Field
+            id='form-textarea-control-opinion'
+            control={TextArea}
+            label='Description of the Room'
+            placeholder='...description of the room here'
+            onChange={handleDescriptionChange}
+            value={ localFormState.description }
+
+          />
+          <Form.Field>
+            <Checkbox label='Private Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.privateBathroom }/>
+            <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.suiteBathroom } />
+            <Checkbox label='Jacuzzi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.jacuzzi } />
+            <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.balcony } />
+            <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.terrace } />
+            <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.mountainView } />
+            <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.streetView } />
+            <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.riverView } />
+            <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.tv } />
+            <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.wifi } />
+            <Checkbox label='Phone' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.phone } />
+            <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.airConditioning } />
+            <Checkbox label='Refrigerator' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.refrigerator } />
+            <Checkbox label='Coffee Maker' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.coffeeMaker } />
 
 
-      </Form.Field>
-      <FileInput uploadImage={ _handleUploadRoomImage } dataName={"roomImage"} modelState={ roomState } textContent={ "Upload room images..." } />
-      { 
-        roomImages.length > 0 
-        ? 
-        <PreviewImagesCarousel
-          images={ roomImages }
-          showDeleteIcons={ true }
-          toggleImageModal={ toggleImageModal }
-          triggerImgModelDelete={ triggerRoomImageDelete } 
-        />
-        : 
-        <GeneralNoModelsSegment 
-          customHeaderMessage={ "No Images uploaded" }
-          customContentMessage={ "Upload any new room images here..." }
-        />
-      }
-      <Form.Field>
-        <Button 
-          inverted
-          color="blue"
-          style={{marginTop: "0.5em"}}
-          content='Save All'
-          onClick={handleFormSubmit}
-        />
-      </Form.Field>
-     
-     
-    </Form>
-  )
+          </Form.Field>
+          <FileInput uploadImage={ _handleUploadRoomImage } dataName={"roomImage"} modelState={ roomState } textContent={ "Upload room images..." } />
+          { 
+            roomImages.length > 0 
+            ? 
+            <PreviewImagesCarousel
+              images={ roomImages }
+              showDeleteIcons={ true }
+              toggleImageModal={ toggleImageModal }
+              triggerImgModelDelete={ triggerRoomImageDelete } 
+            />
+            : 
+            <GeneralNoModelsSegment 
+              customHeaderMessage={ "No Images uploaded" }
+              customContentMessage={ "Upload any new room images here..." }
+            />
+          }
+          <Form.Field>
+            <Button 
+              inverted
+              color="blue"
+              style={{marginTop: "0.5em"}}
+              content='Save All'
+              onClick={handleFormSubmit}
+            />
+          </Form.Field>
+        </Form>
+      </div>
+    </div>
+  );
 };
 
 
@@ -368,7 +427,9 @@ const mapDispatchToProps = (dispatch: Dispatch<RoomAction>) => {
     // Room model CRUD actions //
     _handleCreateNewRoom: (newRoomFormData: ClientRoomFormData) => handleCreateNewRoom(dispatch, newRoomFormData),
     _handleUpdateRoom: (roomUpdateFormData: ClientRoomFormData, currentRoomState: RoomState) => handleUpdateRoom(dispatch, roomUpdateFormData, currentRoomState),
-    _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => handleDeleteRoom(dispatch, roomIdToDelete, currentRoomState)
+    _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => handleDeleteRoom(dispatch, roomIdToDelete, currentRoomState),
+    //
+    _handleDeleteAllRoomImages: (currentRoomState: RoomState) => handleDeleteAllRoomImages(dispatch, currentRoomState)
   };
 };
 

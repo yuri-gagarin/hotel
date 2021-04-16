@@ -6,6 +6,7 @@ import {
 } from "semantic-ui-react";
 // flow types//
 import type { GenericModelData } from "../../../redux/reducers/_helpers/createReducer";
+import type { RoomData } from "../../../redux/reducers/rooms/flowTypes";
 import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
 import type { DiningEntModelData } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // styles //
@@ -15,7 +16,7 @@ import { capitalizeString } from "../../helpers/displayHelpers";
 
 type Props = {|
   modelType: "room" | "service" | "dining_entertainment_model",
-  createdModels: Array<ServiceData> | Array<DiningEntModelData>,
+  createdModels: Array<ServiceData> | Array<DiningEntModelData> | Array<RoomData>,
   handleFormOpen: () => void;
   takeAllOnline: () => Promise<boolean | void>,
   takeAllOffline: () => Promise<boolean | void>

@@ -363,6 +363,31 @@ export const handleUploadRoomImage = (dispatch: Dispatch<RoomAction>, file: Form
     });
 };
 
+export const handleDeleteAllRoomImages = (dispatch: Dispatch<RoomAction>, currentRoomState: RoomState): Promise<boolean> => {
+  const { roomImages } = currentRoomState;
+  const axiosRequest = {
+    method: "delete",
+    url: "/api/rooms/remove_all_images",
+    data: {
+      roomImages: roomImages
+    }
+  };
+  
+  return axios(axiosRequest)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg } : { responseMsg: string } = data;
+
+      const updatedState = { status, responseMsg, updatedRoomImages: [] };
+      dispatch(deleteAllRoomImages(updatedState));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(handleRoomError(error));
+      return Promise.resolve(true);
+    })
+};
+
 // take online and offline API actions //
 export const handleToggleRoomOnlineOffline = (dispatch: Dispatch<RoomAction>, roomToUpdate: RoomData, currentRoomState: RoomState): Promise<boolean> => {
   const { _id: roomId, live } = roomToUpdate;

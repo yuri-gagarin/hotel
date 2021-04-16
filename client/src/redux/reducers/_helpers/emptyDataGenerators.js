@@ -61,6 +61,7 @@ export const generateEmptyRoomModel = (): RoomData => {
     price: "",
     beds: "",
     couches: "",
+    description: "",
     images: [],
     options: {
       privateBathroom: false,
