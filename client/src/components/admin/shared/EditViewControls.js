@@ -3,6 +3,7 @@ import * as React from "react";
 // semantic ui react imports //
 import { Button, Icon, Label, Popup } from "semantic-ui-react";
 // types //
+import type { RoomData } from "../../../redux/reducers/rooms/flowTypes";
 import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
 import type { DiningEntModelData } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // css //
@@ -14,7 +15,7 @@ type Props =  {
   handleBack: () => void,
   handleOpenEditModal?: () => void,
   modelType: "room" | "service" | "dining",
-  model: ServiceData | DiningEntModelData,
+  model: ServiceData | DiningEntModelData | RoomData,
   toggleOnlineOfflineStatus: (modelData: any) => Promise<boolean | void>
 }
 

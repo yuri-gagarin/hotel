@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Button, Card, Grid, Icon, Label, Popup } from "semantic-ui-react";
 // additional imports //
 import APIMessage from "../shared/ApiMessage";
+import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import EditRoomDisplay from "./EditRoomDisplay";
 import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 import OnlinePopupControls from "../shared/OnlinePopupControls";
@@ -41,10 +42,18 @@ type Props = {
   _handleToggleRoomOnlineOffline: (roomToUpdate: RoomData, currentRoomState: RoomState) => Promise<boolean>
 };
 
+type ConfirmDeleteModalState = {
+  confirmDelModalOpen: boolean,
+  modelIdToDelete: string
+};
+
 const RoomsIndexContainer = (props: Props): React.Node => {
   const { history, roomState } = props;
   const { _handleRoomOpen, _handleClearRoomData, _handleFetchRooms, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom, _handleToggleRoomOnlineOffline } = props;
   const { createdRooms, roomData } = roomState;
+
+  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<ConfirmDeleteModalState>({ confirmDelModalOpen: false, modelIdToDelete: "" });
+
 
   React.useEffect(() => {
     let mounted = true;
@@ -59,6 +68,9 @@ const RoomsIndexContainer = (props: Props): React.Node => {
   const handleTakeAllOffline = () => {
     return Promise.resolve(true);
   };
+  const toggleRoomOnlineOfflineStatus = (roomToUpdate: RoomData) => {
+    return _handleToggleRoomOnlineOffline(roomToUpdate, roomState);
+  }
 
 
   const openNewRoomForm = () => {
@@ -80,9 +92,30 @@ const RoomsIndexContainer = (props: Props): React.Node => {
     _handleDeleteRoom(roomId, roomState);
   };
 
+  const triggerRoomDelete = (modelIdToDelete: string) => {
+    setConfirmDeleteModalState({ confirmDelModalOpen: true, modelIdToDelete: modelIdToDelete });
+  };
+  const confirmRoomDelete = () => {
+    const { confirmDelModalOpen, modelIdToDelete } = confirmDeleteModalState;
+    if (confirmDelModalOpen && modelIdToDelete) {
+      return _handleDeleteRoom(modelIdToDelete, roomState)
+        .then((success) => { 
+          if (success) {
+            setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "" })
+          };
+      });
+    } else {
+      return Promise.resolve();
+    }
+  };
+  const cancelDeleteAction =() => {
+
+  };
+
   return (
     <React.Fragment>
       <APIMessage currentLocalState={ roomState } />
+      <ConfirmDeleteModal open={ confirmDeleteModalState.confirmDelModalOpen } modelName="room" confirmAction={confirmRoomDelete } cancelAction={ cancelDeleteAction } />
       <Route path={"/admin/rooms"} exact={true}>
         <Grid.Row centered style={{ height: "10%" }}>
           <Grid.Column style={{ paddingLeft: 0 }} width={15} className={ styles.buttonsCol }>
@@ -133,7 +166,13 @@ const RoomsIndexContainer = (props: Props): React.Node => {
         </Grid.Row>
       </Route>
       <Route path={"/admin/rooms/edit"}>
-        <EditRoomDisplay />
+        <EditRoomDisplay
+          history={ history }
+          roomState={ roomState }
+          goBackToRoomsIndex={ goBackToRooms }
+          triggerModelDelete= { triggerRoomDelete }
+          toggleOnlineOfflineStatus= {toggleRoomOnlineOfflineStatus }
+        />
       </Route>
     </React.Fragment>
   );
