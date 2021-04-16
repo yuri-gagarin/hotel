@@ -269,7 +269,7 @@ export const handleFetchRooms = (dispatch: Dispatch<RoomAction>): Promise<boolea
 /* */
 
 /* Image upload, delete API actions */
-const uploadRoomImage = (dispatch: Dispatch<RoomAction>, file: FormData, currentRoomsState: RoomState): Promise<boolean> => {
+export const handleUploadRoomImage = (dispatch: Dispatch<RoomAction>, file: FormData, currentRoomsState: RoomState): Promise<boolean> => {
   const { roomData, roomImages, createdRooms } = currentRoomsState;
   const { _id: roomId } = roomData
 
@@ -322,7 +322,7 @@ const uploadRoomImage = (dispatch: Dispatch<RoomAction>, file: FormData, current
  * @param {string} imageId Room model ObjectId
  * @param {object} roomsState current room model state
  */
- const handleeleteRoomImage = (dispatch: Dispatch<RoomAction>, imageToDeleteId: string, roomsState: RoomState): Promise<boolean> => {
+ export const handleDeleteRoomImage = (dispatch: Dispatch<RoomAction>, imageToDeleteId: string, roomsState: RoomState): Promise<boolean> => {
   const { roomData, roomImages, createdRooms } = roomsState;
   const requestOptions = {
     method: "delete",

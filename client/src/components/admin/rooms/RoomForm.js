@@ -1,44 +1,51 @@
-import React, { useState, useEffect } from "react";
+// @flow 
+import * as React from "react";
 import PropTypes from "prop-types";
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  TextArea
-} from "semantic-ui-react";
+import { Button, Checkbox, Form, Input, TextArea } from "semantic-ui-react";
 // additional component imports  //
 import RoomImageThumb from "./RoomImages";
 import FileInput from "./FileInput";
+import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
 // redux imports  //
 import { connect } from "react-redux";
-import { 
-  uploadRoomImage,
-  deleteRoomImage,
-  handleNewRoom,
-  updateRoom, 
-  setPreviewImages 
-} from "../../../redux/actions/roomActions";
+import { handleUploadRoomImage, handleDeleteRoomImage, handleCreateNewRoom, handleUpdateRoom, handleDeleteRoom } from "../../../redux/actions/roomActions";
+// type imports //
+import type { Dispatch } from "../../../redux/reducers/_helpers/createReducer";
+import type { ClientRoomFormData, RoomState, RoomData, RoomAction } from "../../../redux/reducers/rooms/flowTypes";
+import type { RouterHistory } from "react-router-dom";
 // css 
 // helpers //
 
+type OwnProps = {
+  roomState: RoomState,
+  history: RouterHistory
+};
+type Props = {
+  ...OwnProps,
+  _handleUploadRoomImage: (imageFile: FormData, currentRoomState: RoomState) => Promise<boolean>,
+  _handleDeleteRoomImage: (imageIdToDelete: string, currentRoomState: RoomState) => Promise<boolean>,
+  // model CRUD //
+  _handleCreateNewRoom: (newRoomFormData: ClientRoomFormData) => Promise<boolean>,
+  _handleUpdateRoom: (roomUpdateFormData: ClientRoomFormData, currentRoomState: RoomState) => Promise<boolean>,
+  _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => Promise<boolean>
+};
 
-const RoomForm = (props) => {
-  const { 
-    roomState, 
-    history,
-    uploadRoomImage, 
-    deleteRoomImage,
-    handleNewRoom, 
-    updateRoom, 
-    setPreviewImages
-  } = props;
-  const { roomData, roomImages } = roomState;
+type LocalFormState = {
+  ...ClientRoomFormData,
+  titleError: string,
+  descriptionError: string
+};
+type ImageModalState = { imgModalOpen: boolean, openImageURL: string };
 
-  const [roomDetails, setRoomDetails] = useState(roomData);
-  const [roomOptions = {}, setRoomOptions] = useState(roomData.options);
+const RoomForm = (props: Props): React.Node => {
+  const { roomState, history } = props;
+  const { roomData } = roomState;
+  const { _handleUploadRoomImage, _handleDeleteRoomImage, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom } = props;
+  // local form state //
+  const [ localFormState, setLocalFormState ] = React.useState<LocalFormState>({ ...roomData, titleError: "", descriptionError: "" });
+  const [ imageModalState, setImageModalState ] = React.useState<ImageModalState>({ imgModalOpen: false, openImageURL: "" });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (roomData && roomData.images) {
       // set the images array //
       setPreviewImages(roomData.images);
@@ -330,33 +337,18 @@ const RoomForm = (props) => {
   )
 };
 
-RoomForm.propTypes = {
-  history: PropTypes.object.isRequired,
-  roomState: PropTypes.object.isRequired,
-  uploadRoomImage: PropTypes.func.isRequired,
-  deleteRoomImage: PropTypes.func.isRequired,
-  setPreviewImages: PropTypes.func.isRequired,
-  handleNewRoom: PropTypes.func.isRequired,
-  updateRoom: PropTypes.func.isRequired
-}
 
-// redux functionality //
-const mapStateToProps = (state) => {
+const mapDispatchToProps = (dispatch: Dispatch<RoomAction>) => {
   return {
-    roomState: state.roomState
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    uploadRoomImage: (imageData, roomState) => uploadRoomImage(dispatch, imageData, roomState),
-    setPreviewImages: (previewImages) => dispatch(setPreviewImages(previewImages)),
-    handleNewRoom: (roomData, history) => handleNewRoom(dispatch, roomData, history),
-    updateRoom: (roomData, roomImages, currentRooms) => {
-      return updateRoom(dispatch, roomData, roomImages, currentRooms);
-    },
-    deleteRoomImage: (imageId, roomState) => deleteRoomImage(dispatch, imageId, roomState)
+    // image upload //
+    _handleUploadRoomImage: (imageFile: FormData, currentRoomState: RoomState) => handleUploadRoomImage(dispatch, imageFile, currentRoomState),
+    _handleDeleteRoomImage: (imageIdToDelete: string, currentRoomState: RoomState) => handleDeleteRoomImage(dispatch, imageIdToDelete, currentRoomState),
+    // Room model CRUD actions //
+    _handleCreateNewRoom: (newRoomFormData: ClientRoomFormData) => handleCreateNewRoom(dispatch, newRoomFormData),
+    _handleUpdateRoom: (roomUpdateFormData: ClientRoomFormData, currentRoomState: RoomState) => handleUpdateRoom(dispatch, roomUpdateFormData, currentRoomState),
+    _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => handleDeleteRoom(dispatch, roomIdToDelete, currentRoomState)
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RoomForm);
+export default (connect(null, mapDispatchToProps)(RoomForm): React.AbstractComponent<OwnProps>);
 
