@@ -275,7 +275,7 @@ export const handleUploadServiceImage = (dispatch: Dispatch<ServiceAction>, file
   const { _id : serviceId } = serviceData;
   const requestOptions = {
     method: "post",
-    url: "/api/services/upload_service_image/" + (serviceId ? serviceId : "",
+    url: "/api/services/upload_service_image/" + (serviceId ? serviceId : ""),
     headers: {
       'content-type': 'multipart/form-data'
     },

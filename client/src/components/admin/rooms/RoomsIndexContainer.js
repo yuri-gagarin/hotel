@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import PropTypes from "prop-types";
 import { Button, Card, Grid, Icon, Label, Popup } from "semantic-ui-react";
 // additional imports //
@@ -10,56 +10,63 @@ import RoomForm from "./RoomForm";
 import RoomHolder from "./RoomHolder";
 // redux imports //
 import { connect } from "react-redux"; 
-import { fetchRooms, openRoom, deleteRoom, clearRoomData, onlineRoomStatusAPIRequest } from "../../../redux/actions/roomActions";
+import { handleFetchRooms, handleOpenRoom, handleCreateNewRoom, handleUpdateRoom, handleDeleteRoom, handleClearRoomData, handleToggleRoomOnlineOffline } from "../../../redux/actions/roomActions";
 // router imports //
 import { withRouter, Route } from "react-router-dom";
+// FLOW types //
+import type { RoomState, RoomData, ClientRoomFormData } from "../../../redux/reducers/rooms/flowTypes";
+import type { RouterHistory } from "react-router-dom";
 // styles and css //
 import styles from "./css/roomIndexCont.module.css";
 
-const RoomsIndexContainer = (props) => {
-  const { 
-    history,
-    fetchRooms, 
-    onlineRoomStatusAPIRequest,
-    handleRoomOpen, 
-    handleRoomDelete, 
-    clearRoomData, 
-    roomState
-  } = props;
-  const { createdRooms, roomData } = roomState;
-  const [ roomInfoOpen, setRoomInfoOpen ] = useState(false);
-  const [ newRoomFormOpen, setNewRoomFormOpen ] = useState(false);
+type WrapperProps = {
+  history: RouterHistory,
+  roomState: RoomState
+};
+type RouterProps = {
+  ...WrapperProps,
+  history: RouterHistory
+};
+type Props = {
+  ...RouterProps,
+  _handleRoomOpen: (roomIdToOpen: string, currentRoomState: RoomState) => void,
+  _handleClearRoomData: () => void,
+  // api actions //
+  _handleFetchRooms: () => Promise<boolean>,
+  _handleCreateNewRoom: (clientRoomFormData: ClientRoomFormData) => Promise<boolean>,
+  _handleUpdateRoom: (clientRoomFormData: ClientRoomFormData, currentRoomState: RoomState) => Promise<boolean>,
+  _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => Promise<boolean>,
+  _handleToggleRoomOnlineOffline: (roomToUpdate: RoomData, currentRoomState: RoomState) => Promise<boolean>
+};
 
-  useEffect(() => {
+const RoomsIndexContainer = (props: Props): React.Node => {
+  const { history, roomState } = props;
+  const { _handleRoomOpen, _handleClearRoomData, _handleFetchRooms, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom, _handleToggleRoomOnlineOffline } = props;
+  const { createdRooms, roomData } = roomState;
+
+  React.useEffect(() => {
     let mounted = true;
-    if (mounted) {
-      fetchRooms();
-    }
-    return () => mounted = false;
+    if (mounted) _handleFetchRooms();
+    return () => { mounted = false };
   }, []);
   
   const openNewRoomForm = () => {
-    clearRoomData();
+    _handleClearRoomData();
     history.push("/admin/rooms/new");
-    setNewRoomFormOpen(true);
-    setRoomInfoOpen(false);
   };
   const goBackToRooms = () => {
-    clearRoomData();
+    _handleClearRoomData();
     history.push("/admin/rooms");
-    setNewRoomFormOpen(false);
   };
-  const handleRoomOnlineStatus = () => {
-    onlineRoomStatusAPIRequest(roomData, createdRooms);
+  const handleRoomOnlineStatus = (roomDataToUpdate: RoomData) => {
+    _handleToggleRoomOnlineOffline(roomDataToUpdate, roomState);
   };
-  const openRoom = (roomId) => {
-    handleRoomOpen(createdRooms, roomId);
+  const openRoom = (roomId: string) => {
+    _handleRoomOpen(roomId, roomState);
     history.push("/admin/rooms/edit");
-    setRoomInfoOpen(true);
   };
-  const deleteRoom = (roomId) => {
-    handleRoomDelete(roomId, createdRooms);
-    setRoomInfoOpen(false);
+  const deleteRoom = (roomId: string) => {
+    _handleDeleteRoom(roomId, roomState);
   };
 
   return (
@@ -111,7 +118,10 @@ const RoomsIndexContainer = (props) => {
                   }
                 </Card.Group>
               :
-               <DefaultDisplay />
+               <GeneralNoModelsSegment 
+                customHeaderMessage="No rooms found"
+                customContentMessage="Create new rooms by clicking create button above..."
+              />
             }
             
           </Grid.Column>
@@ -173,12 +183,17 @@ const RoomsIndexContainer = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchRooms: () => fetchRooms(dispatch),
-    clearRoomData: () => dispatch(clearRoomData()),
-    onlineRoomStatusAPIRequest: (roomData, currentRooms) => onlineRoomStatusAPIRequest(dispatch, roomData, currentRooms),
-    handleRoomOpen: (rooms, roomId) => dispatch(openRoom(rooms, roomId)),
-    handleRoomDelete: (roomId, currentRooms) => deleteRoom(dispatch, roomId, currentRooms)
+    _handleRoomOpen: (roomIdToOpen: string, currentRoomState: RoomState) => handleOpenRoom(dispatch, roomIdToOpen, currentRoomState),
+    _handleClearRoomData: () => handleClearRoomData(dispatch),
+    // non crud api actions //
+    _handleFetchRooms: () => handleFetchRooms(dispatch),
+    // crud api actions //
+    _handleCreateNewRoom: (clientRoomFormData: ClientRoomFormData) => handleCreateNewRoom(dispatch, clientRoomFormData),
+    _handleUpdateRoom: (clientRoomFormData: ClientRoomFormData, currentRoomState: RoomState) => handleUpdateRoom(dispatch, clientRoomFormData, currentRoomState),
+    _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => handleDeleteRoom(dispatch, roomIdToDelete, currentRoomState),
+    // online offline toggles //
+    _handleToggleRoomOnlineOffline: (roomToUpdate: RoomData, currentRoomState: RoomState) => handleToggleRoomOnlineOffline(dispatch, roomToUpdate, currentRoomState)
   };
 };
 
-export default withRouter(connect(null, mapDispatchToProps)(RoomsIndexContainer));
+export default (withRouter((connect(null, mapDispatchToProps)(RoomsIndexContainer): React.AbstractComponent<RouterProps>)): React.AbstractComponent<WrapperProps>);

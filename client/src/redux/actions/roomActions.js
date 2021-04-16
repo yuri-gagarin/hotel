@@ -245,7 +245,7 @@ export const handleDeleteRoom = (dispatch: Dispatch<RoomAction>, roomIdToDelete:
 /* */
 
 /* non CRUD fetch API actions */
-export const hadleFetchRooms = (dispatch: Dispatch<RoomAction>): Promise<boolean> => {
+export const handleFetchRooms = (dispatch: Dispatch<RoomAction>): Promise<boolean> => {
   const requestOptions = {
     method: "get",
     url: "/api/rooms"

@@ -71,23 +71,18 @@ const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
   const openNewDiningModelForm = () => {
     _handleClearDiningModelData();
     history.push("/admin/dining_entertainment/new");
-    // setNewDiningModelFormOpen(true);
-    // setDiningModelInfoOpen(false);
   };
   const goBackToDiningModels = () => {
     _handleClearDiningModelData();
     history.push("/admin/dining_entertainment");
-    // setNewDiningModelFormOpen(false);
   };
   const openDiningModel = (diningModelId: string) => {
     _handleOpenDiningModel(diningModelId, diningEntertainmentState);
     history.push("/admin/dining_entertainment/edit");
-    //setDiningModelInfoOpen(true);
   };
 
   /* handle model delete actions */
   const triggerDiningModelDelete = (diningModelId) => {
-    // setDiningModelInfoOpen(false);
     setConfirmDeleteModalState({ ...confirmDeleteModalState, confirmDelModalOpen: true, modelIdToDelete: diningModelId });
   };
   const confirmModelDelete = () => {

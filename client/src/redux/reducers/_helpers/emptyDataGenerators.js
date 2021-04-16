@@ -55,6 +55,7 @@ export const generateEmptyRoomModel = (): RoomData => {
   const emptyRoom: RoomData = {
     _id: "",
     roomType: "",
+    live: false,
     area: "",
     sleeps: "",
     price: "",
