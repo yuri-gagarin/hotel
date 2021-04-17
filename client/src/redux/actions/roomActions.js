@@ -423,4 +423,29 @@ export const handleToggleRoomOnlineOffline = (dispatch: Dispatch<RoomAction>, ro
     });
 };
 
+export const handleToggleAllOnlineOffline = (dispatch: Dispatch<RoomAction>, { live } : { live: boolean }): Promise<boolean> => {
+  const requestOptions = {
+    method: "patch",
+    url: "/api/rooms/",
+    data: {
+      allRoomsOnlineStatus: { live: live },
+    }
+  };
+
+  dispatch(roomAPIRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedRooms } : { responseMsg: string, updatedRooms: Array<RoomData> } = data;
+
+      const stateUpdateData = { status, responseMsg, updatedRooms };
+      dispatch(toggleAllRoomsOnlineOfflineAction(stateUpdateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(handleRoomError(error));
+      return Promise.resolve(false);
+    });
+};
+
 

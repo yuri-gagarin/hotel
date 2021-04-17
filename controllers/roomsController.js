@@ -71,8 +71,8 @@ export default {
   updateRoom: (req, res) => {
     let status, editedRoom;
     const roomId = req.params.roomId;
-    const { roomData = {}, roomImages = {}, onlineStatus } = req.body;
-    const updatedImages = roomImages.currentImages ? roomImages.currentImages.map((img) => `${img._id}` ) : [];
+    const { roomData = {}, roomImages = [], onlineStatus, allRoomsOnlineStatus } = req.body;
+    const updatedImages = roomImages ? roomImages.map((img) => `${img._id}` ) : [];
     
     if (onlineStatus && typeof onlineStatus === "object" && typeof onlineStatus.status === "boolean") {
       const { status } = onlineStatus;
@@ -95,49 +95,70 @@ export default {
         });
       });
     }
-    else {
-      return Room.findOneAndUpdate(
-        { _id: roomId },
-        {
-          $set: { 
-            roomType: roomData.roomType,
-            area: roomData.area,
-            sleeps: roomData.sleeps,
-            price: roomData.price,
-            beds: roomData.beds,
-            couches: roomData.couches,
-            description: roomData.description,
-            images: [ ...updatedImages ],
-            options: { ...roomData.options },
-            editedAt: new Date(Date.now())
-          },
-        },
-        { new: true }
-      ).then((updatedRoom) => {
-        editedRoom = updatedRoom;
-        return Room.populate(updatedRoom, { path: "images", model: "RoomImage" });
-      })
-      .then((populatedRoom) => {
-        if (populatedRoom.populated("images")) {
-          return RoomImage.updateMany({ _id: updatedImages },  { room: populatedRoom._id }).exec();
-        } else {
-          return Promise.resolve({ nModified: 0 });
-        }
-      })
-      .then((_) => {
-        return res.status(200).json({
-          responseMsg: "Room Updated",
-          updatedRoom: editedRoom
+
+    console.log(allRoomsOnlineStatus)
+    if (allRoomsOnlineStatus && typeof allRoomsOnlineStatus === "object" && typeof allRoomsOnlineStatus.live === "boolean") {
+      console.log(allRoomsOnlineStatus)
+      const { live } = allRoomsOnlineStatus;
+      return Room.update({}, { live: live }, { multi: true })
+        .then((response) => {
+          return Room.find({}).populate("images").exec();
+        })
+        .then((updatedRooms) => {
+          const responseMsg = `All Rooms are now: ${live ? "online" : "offline"}.`;
+          return res.status(200).json({
+            responseMsg, updatedRooms
+          });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            responseMsg: "An error occured",
+            error: error
+          });
         });
-      })
-      .catch((error) => {
-        console.error(error);
-        return res.status(status || 500).json({
-          responseMsg: "An error occured",
-          error: error
-        });
-      });
     }
+
+    return Room.findOneAndUpdate(
+      { _id: roomId },
+      {
+        $set: { 
+          roomType: roomData.roomType,
+          area: roomData.area,
+          sleeps: roomData.sleeps,
+          price: roomData.price,
+          beds: roomData.beds,
+          couches: roomData.couches,
+          description: roomData.description,
+          images: [ ...updatedImages ],
+          options: { ...roomData.options },
+          editedAt: new Date(Date.now())
+        },
+      },
+      { new: true }
+    ).then((updatedRoom) => {
+      editedRoom = updatedRoom;
+      return Room.populate(updatedRoom, { path: "images", model: "RoomImage" });
+    })
+    .then((populatedRoom) => {
+      if (populatedRoom.populated("images")) {
+        return RoomImage.updateMany({ _id: updatedImages },  { room: populatedRoom._id }).exec();
+      } else {
+        return Promise.resolve({ nModified: 0 });
+      }
+    })
+    .then((_) => {
+      return res.status(200).json({
+        responseMsg: "Room Updated",
+        updatedRoom: editedRoom
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(status || 500).json({
+        responseMsg: "An error occured",
+        error: error
+      });
+    });
   },
   deleteRoom: (req, res) => {
     const roomId = req.params.roomId;

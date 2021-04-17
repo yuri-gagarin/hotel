@@ -13,7 +13,7 @@ import RoomForm from "./RoomForm";
 import RoomHolder from "./RoomHolder";
 // redux imports //
 import { connect } from "react-redux"; 
-import { handleFetchRooms, handleOpenRoom, handleCreateNewRoom, handleUpdateRoom, handleDeleteRoom, handleClearRoomData, handleToggleRoomOnlineOffline } from "../../../redux/actions/roomActions";
+import { handleFetchRooms, handleOpenRoom, handleCreateNewRoom, handleUpdateRoom, handleDeleteRoom, handleClearRoomData, handleToggleRoomOnlineOffline, handleToggleAllOnlineOffline } from "../../../redux/actions/roomActions";
 // router imports //
 import { withRouter, Route } from "react-router-dom";
 // FLOW types //
@@ -39,7 +39,9 @@ type Props = {
   _handleCreateNewRoom: (clientRoomFormData: ClientRoomFormData) => Promise<boolean>,
   _handleUpdateRoom: (clientRoomFormData: ClientRoomFormData, currentRoomState: RoomState) => Promise<boolean>,
   _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => Promise<boolean>,
-  _handleToggleRoomOnlineOffline: (roomToUpdate: RoomData, currentRoomState: RoomState) => Promise<boolean>
+  // online offline actions //
+  _handleToggleRoomOnlineOffline: (roomToUpdate: RoomData, currentRoomState: RoomState) => Promise<boolean>,
+  _handleToggleAllOnlineOffline: (data : { live : boolean }) => Promise<boolean> 
 };
 
 type ConfirmDeleteModalState = {
@@ -49,7 +51,7 @@ type ConfirmDeleteModalState = {
 
 const RoomsIndexContainer = (props: Props): React.Node => {
   const { history, roomState } = props;
-  const { _handleRoomOpen, _handleClearRoomData, _handleFetchRooms, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom, _handleToggleRoomOnlineOffline } = props;
+  const { _handleRoomOpen, _handleClearRoomData, _handleFetchRooms, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom, _handleToggleRoomOnlineOffline, _handleToggleAllOnlineOffline } = props;
   const { createdRooms, roomData } = roomState;
 
   const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<ConfirmDeleteModalState>({ confirmDelModalOpen: false, modelIdToDelete: "" });
@@ -63,14 +65,14 @@ const RoomsIndexContainer = (props: Props): React.Node => {
   
   // online offline handlers //
   const handleTakeAllOnline = () => {
-    return Promise.resolve(true);
+    return _handleToggleAllOnlineOffline({ live: true });
   };
   const handleTakeAllOffline = () => {
-    return Promise.resolve(true);
+    return _handleToggleAllOnlineOffline({ live: false });
   };
   const toggleRoomOnlineOfflineStatus = (roomToUpdate: RoomData) => {
     return _handleToggleRoomOnlineOffline(roomToUpdate, roomState);
-  }
+  };
 
 
   const openNewRoomForm = () => {
@@ -88,9 +90,6 @@ const RoomsIndexContainer = (props: Props): React.Node => {
     _handleRoomOpen(roomId, roomState);
     history.push("/admin/rooms/edit");
   };
-  const deleteRoom = (roomId: string) => {
-    _handleDeleteRoom(roomId, roomState);
-  };
 
   const triggerRoomDelete = (modelIdToDelete: string) => {
     setConfirmDeleteModalState({ confirmDelModalOpen: true, modelIdToDelete: modelIdToDelete });
@@ -101,21 +100,21 @@ const RoomsIndexContainer = (props: Props): React.Node => {
       return _handleDeleteRoom(modelIdToDelete, roomState)
         .then((success) => { 
           if (success) {
-            setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "" })
+            setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "" });
           };
       });
     } else {
       return Promise.resolve();
     }
   };
-  const cancelDeleteAction =() => {
-
+  const cancelDeleteAction = () => {
+    setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "" });
   };
 
   return (
     <React.Fragment>
       <APIMessage currentLocalState={ roomState } />
-      <ConfirmDeleteModal open={ confirmDeleteModalState.confirmDelModalOpen } modelName="room" confirmAction={confirmRoomDelete } cancelAction={ cancelDeleteAction } />
+      <ConfirmDeleteModal open={ confirmDeleteModalState.confirmDelModalOpen } modelName="room" confirmAction={ confirmRoomDelete } cancelAction={ cancelDeleteAction } />
       <Route path={"/admin/rooms"} exact={true}>
         <Grid.Row centered style={{ height: "10%" }}>
           <Grid.Column style={{ paddingLeft: 0 }} width={15} className={ styles.buttonsCol }>
@@ -140,8 +139,8 @@ const RoomsIndexContainer = (props: Props): React.Node => {
                         <RoomHolder 
                           key={room._id} 
                           room={room}
-                          openRoom={openRoom}
-                          deleteRoom={deleteRoom}
+                          openRoom={ openRoom }
+                          deleteRoom={ triggerRoomDelete }
                           history={history}
                         />
                       );
@@ -171,7 +170,7 @@ const RoomsIndexContainer = (props: Props): React.Node => {
           roomState={ roomState }
           goBackToRoomsIndex={ goBackToRooms }
           triggerModelDelete= { triggerRoomDelete }
-          toggleOnlineOfflineStatus= {toggleRoomOnlineOfflineStatus }
+          toggleOnlineOfflineStatus= { toggleRoomOnlineOfflineStatus }
         />
       </Route>
     </React.Fragment>
@@ -189,8 +188,9 @@ const mapDispatchToProps = (dispatch) => {
     _handleUpdateRoom: (clientRoomFormData: ClientRoomFormData, currentRoomState: RoomState) => handleUpdateRoom(dispatch, clientRoomFormData, currentRoomState),
     _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => handleDeleteRoom(dispatch, roomIdToDelete, currentRoomState),
     // online offline toggles //
-    _handleToggleRoomOnlineOffline: (roomToUpdate: RoomData, currentRoomState: RoomState) => handleToggleRoomOnlineOffline(dispatch, roomToUpdate, currentRoomState)
-  };
+    _handleToggleRoomOnlineOffline: (roomToUpdate: RoomData, currentRoomState: RoomState) => handleToggleRoomOnlineOffline(dispatch, roomToUpdate, currentRoomState),
+    _handleToggleAllOnlineOffline: (data : { live: boolean }) => handleToggleAllOnlineOffline(dispatch, data)
+  }; 
 };
 
 export default (withRouter((connect(null, mapDispatchToProps)(RoomsIndexContainer): React.AbstractComponent<RouterProps>)): React.AbstractComponent<WrapperProps>);

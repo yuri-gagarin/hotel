@@ -33,6 +33,7 @@
 .descriptionTextInput {
   min-height: 300px;
   position: relative;
+  resize: none;
 }
 .descriptionTextInput > textarea {
   resize: none;

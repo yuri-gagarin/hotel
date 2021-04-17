@@ -128,6 +128,16 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         error: null
       };
     };
+    case "ToggleAllRoomsOnlineOffline": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        createdRooms: [ ...action.payload.updatedRooms ],
+        error: null
+      };
+    };
     case "DeleteAllRoomImages": {
       return {
         ...state,
