@@ -123,8 +123,8 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         status: action.payload.status,
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
-        updatedRoom: action.payload.updatedRoom,
-        updatedRoomsArr: action.payload.updatedRoomsArr,
+        roomData: action.payload.updatedRoom,
+        createdRooms: action.payload.updatedRoomsArr,
         error: null
       };
     };

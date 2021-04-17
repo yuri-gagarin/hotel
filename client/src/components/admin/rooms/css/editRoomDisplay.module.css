@@ -10,3 +10,13 @@
   padding: 1em;
   margin-bottom: 1em;
 }
+
+.editModal {
+  height: 90vh;
+  top: auto;
+  left: auto;
+  bottom: auto;
+  right: auto;
+  padding: 1em !important;
+  position: relative;
+}

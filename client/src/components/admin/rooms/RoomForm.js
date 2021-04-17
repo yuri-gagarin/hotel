@@ -393,6 +393,7 @@ const RoomForm = (props: Props): React.Node => {
             />
           </Form.Group>
           <Form.Field
+            className={ styles.descriptionTextInput }
             error={ localFormState.couchesError ? { content: localFormState.couchesError } : null }
             control={TextArea}
             label='Description of the Room'
@@ -401,40 +402,42 @@ const RoomForm = (props: Props): React.Node => {
             value={ localFormState.description }
 
           />
-          <Form.Field>
-            <Checkbox label='Private Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.privateBathroom }/>
-            <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.suiteBathroom } />
-            <Checkbox label='Jacuzzi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.jacuzzi } />
-            <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.balcony } />
-            <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.terrace } />
-            <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.mountainView } />
-            <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.streetView } />
-            <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.riverView } />
-            <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.tv } />
-            <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.wifi } />
-            <Checkbox label='Phone' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.phone } />
-            <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.airConditioning } />
-            <Checkbox label='Refrigerator' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.refrigerator } />
-            <Checkbox label='Coffee Maker' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.coffeeMaker } />
-
-
-          </Form.Field>
-          <FileInput uploadImage={ _handleUploadRoomImage } dataName={"roomImage"} modelState={ roomState } textContent={ "Upload room images..." } />
-          { 
-            roomImages.length > 0 
-            ? 
-            <PreviewImagesCarousel
-              images={ roomImages }
-              showDeleteIcons={ true }
-              toggleImageModal={ toggleImageModal }
-              triggerImgModelDelete={ triggerRoomImageDelete } 
-            />
-            : 
-            <GeneralNoModelsSegment 
-              customHeaderMessage={ "No Images uploaded" }
-              customContentMessage={ "Upload any new room images here..." }
-            />
-          }
+          <div className={ styles.optionsDiv }>
+            <Form.Field>
+              <Checkbox label='Private Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.privateBathroom } className={ localFormState.options.privateBathroom ? styles.optionChecked : styles.optionNotChecked }/>
+              <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.suiteBathroom } className={ localFormState.options.suiteBathroom ? styles.optionChecked: styles.optionNotChecked } />
+              <Checkbox label='Jacuzzi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.jacuzzi } className={ localFormState.options.jacuzzi ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.balcony } className={ localFormState.options.balcony ? styles.optionChecked : styles.optionNotChecked }/>
+              <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.terrace } className={ localFormState.options.terrace ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Mountain View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.mountainView } className={ localFormState.options.mountainView ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Street View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.streetView } className={ localFormState.options.streetView ? styles.optionChecked : styles.optionNotChecked }/>
+              <Checkbox label='River View' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.riverView } className={ localFormState.options.riverView ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='TV' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.tv } className={ localFormState.options.tv ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='WiFi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.wifi } className={ localFormState.options.wifi ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Phone' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.phone } className={ localFormState.options.phone ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.airConditioning } className={ localFormState.options.airConditioning ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Refrigerator' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.refrigerator } className={ localFormState.options.refrigerator ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Coffee Maker' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.coffeeMaker } className={ localFormState.options.coffeeMaker ? styles.optionChecked : styles.optionNotChecked } />
+            </Form.Field>
+          </div>
+          <div className={ styles.imageUploadInputDiv }>
+            <FileInput uploadImage={ _handleUploadRoomImage } dataName={"roomImage"} modelState={ roomState } textContent={ "Upload room images..." } />
+            { 
+              roomImages.length > 0 
+              ? 
+              <PreviewImagesCarousel
+                images={ roomImages }
+                showDeleteIcons={ true }
+                toggleImageModal={ toggleImageModal }
+                triggerImgModelDelete={ triggerRoomImageDelete } 
+              />
+              : 
+              <GeneralNoModelsSegment 
+                customHeaderMessage={ "No Images uploaded" }
+                customContentMessage={ "Upload any new room images here..." }
+              />
+            }
+          </div>
         </Form>
       </div>
     </div>

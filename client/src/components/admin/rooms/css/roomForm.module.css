@@ -1,8 +1,10 @@
 .roomFormWrapper {
   display: flex;
+  height: 100%;
   flex-direction: column;
 }
 
+/* controls */
 .formControlsDiv {
   display: flex;
   flex-direction: row;
@@ -14,6 +16,47 @@
   flex-wrap: wrap;
 }
 .formDiv {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.optionsDiv {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid grey;
+  border-radius: 2px solid grey;
+  padding: 1em;
+}
+
+.descriptionTextInput {
+  min-height: 300px;
+  position: relative;
+}
+.descriptionTextInput > textarea {
+  resize: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: scroll;
+}
+
+/* options checkboxes */
+.optionChecked > label {
+  color: green !important;
+  font-size: 1.25em;
+}
+.optionNotChecked > label {
+  color: red !important;
+}
+
+/* image upload */
+.imageUploadInputDiv {
   border: 1px solid grey;
   padding: 1em;
+  border-radius: 4px;
+  margin-top: 1em;
 }

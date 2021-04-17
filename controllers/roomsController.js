@@ -71,11 +71,11 @@ export default {
   updateRoom: (req, res) => {
     let status, editedRoom;
     const roomId = req.params.roomId;
-    const { roomData = {}, roomImages = {}, changeOnlineStatus } = req.body;
+    const { roomData = {}, roomImages = {}, onlineStatus } = req.body;
     const updatedImages = roomImages.currentImages ? roomImages.currentImages.map((img) => `${img._id}` ) : [];
-
-    if (changeOnlineStatus) {
-      const { status } = changeOnlineStatus;
+    
+    if (onlineStatus && typeof onlineStatus === "object" && typeof onlineStatus.status === "boolean") {
+      const { status } = onlineStatus;
       return Room.findOneAndUpdate(
         { _id: roomId },
         { $set: { live: status } },
