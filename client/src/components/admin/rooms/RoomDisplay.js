@@ -3,6 +3,7 @@ import * as React from "react";
 import { Button, Grid, Image, Item, Segment, Container } from "semantic-ui-react";
 // additional component imports //
 import GenericImgModal from "../shared/GenericImgModal";
+import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
 // types //
 import type { RoomData, RoomState } from "../../../redux/reducers/rooms/flowTypes";
@@ -24,19 +25,19 @@ const RoomDisplay = ({ roomState } : Props): React.Node => {
   const { roomData } = roomState;
   const [ imgModalState, setImgModalState ] = React.useState<ImgModalState>({ imgModalOpen: false, imgURL: "" });
 
-  const toggleImageModal = () => {
-    
-  }
+  const toggleImageModal = (imagePath?: string) => {
+    setImgModalState({ imgModalOpen: !imgModalState.imgModalOpen, imgURL: imagePath ? setImagePath(imagePath) : "" });
+  };
 
   return (
     <div className={ styles.container }>
       <GenericImgModal open={ imgModalState.imgModalOpen } imgURL={ imgModalState.imgURL } handleClose={ toggleImageModal } />
+      <h5 className={ styles.roomDetailsHeader }>Room Type:</h5>
       <div className={ styles.roomTypeDiv }>
-        <h5>Room Type:</h5>
-        <h1>{ roomData.roomType }</h1>
+        <h3>{ roomData.roomType }</h3>
       </div>
+      <h5 className={ styles.roomDetailsHeader }>Room Details:</h5>
       <div className={ styles.roomDetailsDiv }>
-        <h5 className={ styles.roomDetailsHeader }>Room Details:</h5>
         <div className={ styles.roomDetail }>
           Area: { roomData.area }
         </div>
@@ -53,12 +54,12 @@ const RoomDisplay = ({ roomState } : Props): React.Node => {
           Couches: { roomData.couches }
         </div>
       </div>
+      <h5 className={ styles.roomDetailsHeader }>Description:</h5>
       <div className={ styles.roomDescriptionWrapper }>
-        <h5>Description:</h5>
         <p>{ roomData.description }</p>
       </div>
-      <div className={ styles.roomOptionWrapper }>
-        <h5 className={ styles.roomOptionHeader }>Room Options:</h5>
+      <h5 className={ styles.roomDetailsHeader }>Room Options:</h5>
+      <div className={ styles.roomOptionsWrapper }>
         <div className={`${styles.roomOption} ${ roomData.options.privateBathroom ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
           <i className="fas fa-toilet"></i>
           <span>Private Bathroom: { roomData.options.privateBathroom ? "Yes" : "No"}</span>
@@ -115,6 +116,15 @@ const RoomDisplay = ({ roomState } : Props): React.Node => {
           <i className="fas fa-coffee"></i>
           <span>Coffee Maker: { roomData.options.coffeeMaker ? "Yes" : "No"}</span>
         </div>
+      </div>
+      <div className={ styles.imgsPreviewDiv }>
+        {
+          roomData.images.length > 0 
+          ?
+            <PreviewImagesCarousel images={ roomData.images } showDeleteIcons={ false } toggleImageModal={ toggleImageModal } />
+          :
+          <GeneralNoModelsSegment customHeaderMessage={ "No Room images uploaded" } customContentMessage={ "upload Room images by clicking 'Edit'" } />
+        }
       </div>
     </div>
   );

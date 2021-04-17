@@ -41,7 +41,7 @@ export default {
       editedAt: new Date(Date.now()) 
     })
     .then((room) => {
-      return Room.populate(room, { path: "images", model: "RoomImage"});
+      return Room.populate(room, { path: "images", model: "RoomImage" });
     })
     .then((populatedRoom) => {
       createdRoom = populatedRoom;

@@ -5,7 +5,7 @@
   display: flex !important;
 }
 .displayColumn {
- border: 1px solid rgb(81, 148, 79);
+  border: 1px solid rgb(81, 148, 79);
   padding: 1em;
   margin-bottom: 1em;
 }

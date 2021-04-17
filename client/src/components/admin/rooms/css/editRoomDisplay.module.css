@@ -1,0 +1,12 @@
+.editColumn {
+  display: flex !important;
+  flex-wrap: wrap;
+  padding: 1em;
+  border: 1px solid rgb(81, 148, 79);
+}
+
+.displayColumn {
+  border: 1px solid rgb(81, 148, 79);
+  padding: 1em;
+  margin-bottom: 1em;
+}

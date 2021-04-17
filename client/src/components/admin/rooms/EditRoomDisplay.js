@@ -34,7 +34,7 @@ const EditRoomDisplay = ({ roomState, history, goBackToRoomsIndex, triggerModelD
   };
 
   return (
-    <Grid.Row style={{ height: "90%", overflowY: "scroll" }}>
+    <Grid.Row centered style={{ height: "90%", overflowY: "scroll" }}>
       <Modal open={ localState.formModalOpen } className={ styles.editModal } size="fullscreen">
         <RoomForm 
           toggleEditModal= { toggleEditModal }
