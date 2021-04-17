@@ -142,7 +142,7 @@ export const handleCreateNewService= (dispatch: Dispatch<ServiceAction>, clientS
     method: "post",
     url: "/api/services/create_new_service",
     data: {
-      hotelServiceData: clientServiceFormData,
+      clientServiceData: clientServiceFormData,
       serviceImages: clientServiceFormData.images ? [ ...clientServiceFormData.images ] : null
     }
   };

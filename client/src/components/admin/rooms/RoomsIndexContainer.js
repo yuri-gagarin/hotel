@@ -119,15 +119,15 @@ const RoomsIndexContainer = (props: Props): React.Node => {
         <Grid.Row centered style={{ height: "10%" }}>
           <Grid.Column style={{ paddingLeft: 0 }} width={15} className={ styles.buttonsCol }>
             <OnlinePopupControls 
-             handleFormOpen={ openNewRoomForm } 
-             takeAllOnline={ handleTakeAllOnline }
-             takeAllOffline= { handleTakeAllOffline }
-             createdModels={ createdRooms } 
-             modelType={ "room" } 
+              handleFormOpen={ openNewRoomForm } 
+              takeAllOnline={ handleTakeAllOnline }
+              takeAllOffline= { handleTakeAllOffline }
+              createdModels={ createdRooms } 
+              modelType={ "room" } 
             />
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row centered style={{ overflowY: "scroll", height: "80%"}}>
+        <Grid.Row centered style={{ overflowY: "scroll", height: "80%" }}>
           <Grid.Column width={15} className={ styles.contentCol }>
             {
               createdRooms.length > 0 

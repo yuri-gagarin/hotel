@@ -4,6 +4,7 @@ import * as React from "react";
 import { Button, Header, Icon, Image, Modal, Segment, Popup } from "semantic-ui-react";
 // additional component imports //
 import GenericImgModal from "../shared/GenericImgModal";
+import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
 // types //
 import type { ServiceState, ServiceData } from "../../../redux/reducers/service/flowTypes";
@@ -57,10 +58,7 @@ const ServiceDisplay = ({ serviceState } : Props): React.Node => {
             />
           </React.Fragment>  
           : 
-          <Segment className={ styles.imgPreviewDefaultSegment }>
-            <span>No service images uploaded...</span>
-            <i className="far fa-image"></i>
-          </Segment>
+          <GeneralNoModelsSegment customHeaderMessage={"No images uploaded"} customContentMessage={"Upload images by clicking 'Edit' and opening Service form"} />
         }
       </div>
     </div>

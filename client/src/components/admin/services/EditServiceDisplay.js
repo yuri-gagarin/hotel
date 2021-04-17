@@ -34,7 +34,7 @@ const EditServiceDisplay = ({ serviceState, history, goBackToServices, triggerMo
   };
 
   return (
-    <Grid.Row>
+    <Grid.Row centered style={{ height: "90%", overflowY: "scroll" }}>
       <Modal open={ localState.formModalOpen } className={ styles.editModal } size="fullscreen" >
         <ServiceForm 
           toggleEditModal={ toggleEditModal }
@@ -42,7 +42,7 @@ const EditServiceDisplay = ({ serviceState, history, goBackToServices, triggerMo
           history={ history }
         />
       </Modal>
-      <Grid.Column className={ styles.editColumn } style={{ marginBottom: "1em" }} width={15} >
+      <Grid.Column verticalAlign="center" className={ styles.editColumn } style={{ height: "10%", paddingTop: 0, paddingBottom: 0 }} width={15} >
         <EditViewControls 
           handleBack={ goBackToServices } 
           handleOpenEditModal={ toggleEditModal }
@@ -56,7 +56,7 @@ const EditServiceDisplay = ({ serviceState, history, goBackToServices, triggerMo
           handleModelDelete={ triggerModelDelete }
         />
       </Grid.Column>
-      <Grid.Column className={ styles.displayColumn } width={15}>
+      <Grid.Column className={ styles.displayColumn } style={{ height: "90%" }} width={15}>
         <ServiceDisplay serviceState={ serviceState } />
       </Grid.Column>
       

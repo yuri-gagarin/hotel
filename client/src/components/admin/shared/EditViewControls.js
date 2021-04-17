@@ -28,7 +28,7 @@ const EditViewControls = ({ handleBack, handleOpenEditModal, modelType, model, t
   
 
   return (
-    <React.Fragment>
+    <div className={ styles.editControlsWrapper }>
       <Button inverted color="blue" onClick={ handleBack } icon="arrow left" content="Back" />
       <Button inverted color="green" onClick={ handleOpenEditModal } icon="edit" content="Edit" />
       <Button.Group>
@@ -55,7 +55,7 @@ const EditViewControls = ({ handleBack, handleOpenEditModal, modelType, model, t
         }
       />
       </Button.Group>
-    </React.Fragment>
+    </div>
   );
 };
 

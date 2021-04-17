@@ -22,6 +22,8 @@ export default {
       });
   },
   createRoom: (req, res) => {
+    console.log(25);
+    console.live(req);
     const { roomData, roomImages = [] } = req.body;
     const { roomType, area, sleeps, price, beds, couches, description, options } = roomData;
     let createdRoom;

@@ -1,3 +1,8 @@
+.editControlsWrapper {
+  display: flex;
+  align-items: center;
+}
+
 .onlineLabel {
   border-radius: 50%;
 }

@@ -3,16 +3,17 @@
 }
 
 .buttonsCol {
-  border: 1px solid grey;
   border-radius: 3px;
-  padding: 1em;
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  flex-direction: row;
 }
 
 .contentCol {
   border: 1px solid grey;
   border-radius: 3px;
   padding: 1em;
-  height: 100%;
 }
 
 .editColButtons {

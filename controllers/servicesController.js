@@ -24,9 +24,10 @@ export default {
       });
   },
   createHotelService: (req, res) => {
-    const  { hotelServiceData } = req.body;
+    const { clientServiceData, serviceImgIds = [] } = req.body;
+    const { serviceType, hours, price, description } = clientServiceData
     let createdService;
-    const { errors, isValid } = validateHotelService(hotelServiceData);
+    const { errors, isValid } = validateHotelService(clientServiceData);
     if (!isValid) { 
       return Promise.resolve()
         .then(() => {
@@ -37,33 +38,42 @@ export default {
         });
     };
 
-    return HotelService.create({ ...hotelServiceData, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()), live: false })
-      .then((service) => {
-        return HotelService.populate(service, { path: "images", model: "ServiceImage" });
+    return HotelService.create({ 
+      serviceType, 
+      hours,
+      price,
+      description,
+      images: serviceImgIds ? [ ...serviceImgIds ] : [],
+      live: false,
+      createdAt: new Date(Date.now()), 
+      editedAt: new Date(Date.now())  
+    })
+    .then((service) => {
+      return HotelService.populate(service, { path: "images", model: "ServiceImage" });
+    })
+    .then((populatedNewService) => {
+      createdService = populatedNewService;
+      if (populatedNewService.populated("images")) {
+        // update corresponding image models //
+        const imageIdsToUpdate = populatedNewService.images.map((image) => image._id);
+        return ServiceImage.updateMany({ _id: imageIdsToUpdate }, { hotelService: createdService._id });
+      } else {
+        return Promise.resolve({ nModified: 0 });
+      }
+    })
+    .then((_) => {
+      return res.status(200).json({
+        responseMsg: "New Service created",
+        newService: createdService
+      });
+    })
+    .catch((error) => {
+      console.error(error)
+      return res.status(500).json({
+        responseMsg: "It seems an error occured",
+        error: error
       })
-      .then((populatedNewService) => {
-        createdService = populatedNewService;
-        if (populatedNewService.populated("images")) {
-          // update corresponding image models //
-          const imageIdsToUpdate = populatedNewService.images.map((image) => image._id);
-          return ServiceImage.updateMany({ _id: imageIdsToUpdate }, { hotelService: createdService._id });
-        } else {
-          return Promise.resolve({ nModified: 0 });
-        }
-      })
-      .then((_) => {
-        return res.status(200).json({
-          responseMsg: "New Service created",
-          newService: createdService
-        });
-      })
-      .catch((error) => {
-        console.error(error)
-        return res.status(500).json({
-          responseMsg: "It seems an error occured",
-          error: error
-        })
-      }); 
+    }); 
       
   },
   updateService: (req, res) => {

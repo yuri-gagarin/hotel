@@ -10,6 +10,12 @@ export default function (router) {
     .route("/api/services")
     .get(servicesController.getServices);
 
+  // @route POST "/api/services/create_new_service"
+  // @description Creates a new Service to display
+  // @access PRIVATE
+  router
+  .route("/api/services/create_new_service")
+  .post(servicesController.createHotelService);
     
   // @route PATCH "/api/services/:serviceId" //
   // @description Updates a Service and all of its corresponding images //
@@ -17,13 +23,6 @@ export default function (router) {
   router
     .route("/api/services/:serviceId?")
     .patch(servicesController.updateService);
-  
-    // @route POST "/api/services/createHotelService"
-  // @description Creates a new Service to display
-  // @access PRIVATE
-  router
-  .route("/api/services/createHotelService")
-  .post(servicesController.createHotelService);
   
   // @route DELETE "/api/services/remove_all_images" //
   // @desc Deletes all queried ServiceImage models and its corresponding models //

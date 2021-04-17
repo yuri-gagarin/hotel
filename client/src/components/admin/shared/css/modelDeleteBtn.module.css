@@ -1,6 +1,8 @@
 .modelDeleteBtnDiv {
   margin-left: 1em;
   text-align: center;
+  display: flex;
+  align-items: center;
 }
 .confirmModal {
   height: 33%;

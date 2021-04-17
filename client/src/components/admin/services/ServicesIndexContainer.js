@@ -160,7 +160,7 @@ const ServicesIndexContainer = (props: Props): React.Node => {
         </Grid.Row>
       </Route>
       <Route path={"/admin/services/new"}>
-        <Grid.Row>
+        <Grid.Row centered style={{ height: "90%",  overflowY: "scroll" }}>
           <Grid.Column width={15} className={ styles.serviceFormColumn }>
             <ServiceForm history={history} serviceState={ serviceState }/>
           </Grid.Column>

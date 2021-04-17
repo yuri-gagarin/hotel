@@ -2,12 +2,14 @@
 import * as React from "react";
 import { Button, Checkbox, Header, Icon, Form, Input, Popup, Segment, TextArea } from "semantic-ui-react";
 // additional component imports  //
-import ServiceImageThumb from "./ServiceImageThumb";
-import FileInput from "../rooms/FileInput";
-import ModelDeleteBtn from "../shared/ModelDeleteBtn";
-import GenericImgModal from "../shared/GenericImgModal";
-import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
 import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
+import GenericImgModal from "../shared/GenericImgModal";
+import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
+import FileInput from "../rooms/FileInput";
+import { FormErrorMessages } from "../shared/FormErrorMessages";
+import ModelDeleteBtn from "../shared/ModelDeleteBtn";
+import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
+import ServiceImageThumb from "./ServiceImageThumb";
 // redux imports  //
 import { connect } from "react-redux";
 import { handleCreateNewService, handleUpdateService, handleDeleteService, handleUploadServiceImage, handleDeleteServiceImage, handleDeleteAllServiceImages } from "../../../redux/actions/serviceActions";
@@ -20,6 +22,7 @@ import styles from "./css/serviceForm.module.css";
 // helpers //
 import { generateEmptyService } from "../../../redux/reducers/_helpers/emptyDataGenerators";
 import { objectValuesEmpty, setImagePath } from "../../helpers/displayHelpers";
+import { serviceFormValidator } from "./helpers/serviceFormValidator";
 
 type OwnProps = {
   serviceState: ServiceState,
@@ -39,16 +42,25 @@ type Props = {
 
 // local state types //
 type LocalFormState = {
-  ...ClientServiceFormData
-}
+  ...ClientServiceFormData,
+  serviceTypeError: string,
+  hoursError: string,
+  priceError: string,
+  descriptionError: string,
+};
 type ImageModalState = {
   imgModalOpen: boolean,
   openImageURL: string
-}
+};
 type ConfirmDelModalState = {
   modalOpen: boolean,
   modelToDelete: "service" | "serviceImage" | "",
   modelIdToDelete: string
+};
+
+type ErrorMessagesState = {
+  visible: boolean,
+  errorMessages: Array<string>
 };
 
 const ServiceForm = (props: Props): React.Node => {
@@ -57,9 +69,10 @@ const ServiceForm = (props: Props): React.Node => {
   const { serviceData, serviceImages } = serviceState;
 
   // local form state //
-  const [ serviceDetails, setServiceDetails ] = React.useState<LocalFormState>({ ...serviceData });
+  const [ localFormState, setLocalFormState ] = React.useState<LocalFormState>({ ...serviceData, serviceTypeError: "", hoursError: "", priceError: "", descriptionError: "" });
   const [ imageModalState, setImageModalState ] = React.useState<ImageModalState>({ imgModalOpen: false, openImageURL: "" });
   const [ confirmDelModalState, setConfirmDelModalState ] = React.useState<ConfirmDelModalState>({ modalOpen: false, modelIdToDelete: "", modelToDelete: "" }); 
+  const [ errorMessagesState, setErrorMessagesState ] = React.useState<ErrorMessagesState>({ visible: false, errorMessages: [] });
   
 
   // img modal opop //
@@ -68,36 +81,45 @@ const ServiceForm = (props: Props): React.Node => {
   };
   // text input handlers //
   const handleServiceType = (e, data) => {
-    setServiceDetails({
-      ...serviceDetails,
-      serviceType: data.value
-    });
+    if (data && data.value.length === 0) {
+      setLocalFormState({ ...localFormState, serviceType: data.value, serviceTypeError: "Service type required..." });
+    } else {
+      setLocalFormState({ ...localFormState, serviceType: data.value, serviceTypeError: "" });
+    }
   };
   const handleServiceHours = (e, data) => {
-    setServiceDetails({
-      ...serviceDetails,
-      hours: data.value
-    });
+    if (data && data.value.length === 0) {
+      setLocalFormState({ ...localFormState, hours: data.value, hoursError: "Service hours required..." });
+    } else {
+      setLocalFormState({ ...localFormState, hours: data.value, hoursError: "" });
+    }
   };
   const handleServicePrice = (e, data) => {
-    setServiceDetails({
-      ...serviceDetails,
-      price: data.value
-    });
+    if (data && data.value.length === 0) {
+      setLocalFormState({ ...localFormState, price: data.value, priceError: "Service price required..." });
+    } else {
+      setLocalFormState({ ...localFormState, price: data.value, priceError: "" });
+    };
   };
   const handleServiceDescription = (e, data) => {
-    setServiceDetails({
-      ...serviceDetails,
-      description: data.value
-    });
+    if (data && data.value.length === 0) {
+      setLocalFormState({ ...localFormState, description: data.value, descriptionError: "Service description required..." });
+    } else {
+      setLocalFormState({ ...localFormState, description: data.value, descriptionError: "" });
+    }
   };
   
   const handleFormSubmit = () => {
     const { serviceData, createdServices, serviceImages } = serviceState;
     const { _id: serviceId } = serviceData;
-
+    // handle any possible user input errors first //
+    const { valid, errors } = serviceFormValidator(localFormState);
+    if (!valid && errors.length > 0) {
+      setErrorMessagesState({ visible: true, errorMessages: errors });
+      return;
+    }
     const serviceFormData: ClientServiceFormData = {
-      ...serviceDetails,
+      ...localFormState,
       _id: serviceId ? serviceId : "",
       images: serviceImages
     };
@@ -116,6 +138,10 @@ const ServiceForm = (props: Props): React.Node => {
         });
     }
   };  
+
+  const dismissErrorMessages = () => {
+    setErrorMessagesState({ visible: false, errorMessages: [] });
+  };
   
   const handleFormCancel = () => {
     if (toggleEditModal && !objectValuesEmpty(serviceData)) {
@@ -195,38 +221,45 @@ const ServiceForm = (props: Props): React.Node => {
           </div>
         }
       </div>
+      {
+        errorMessagesState.visible ? <FormErrorMessages visible={ errorMessagesState.visible } errorMessages={ errorMessagesState.errorMessages } handleErrorMessageDismiss={ dismissErrorMessages } /> : null
+      }
       <div className={ styles.formDiv }>
         <Form> 
           <Form.Group widths='equal'>
             <Form.Field
+              error={ localFormState.serviceTypeError ? { content: localFormState.serviceTypeError } : null }
               control={Input}
               label='Service Type'
               placeholder="Type of service ..."
               onChange={handleServiceType}
-              value={serviceDetails.serviceType}
+              value={localFormState.serviceType}
             />
             <Form.Field
+              error={ localFormState.hoursError ? { content: localFormState.hoursError } : null }
               control={Input}
               label='Hours'
               placeholder='Hours available ...'
               onChange={handleServiceHours}
-              value={serviceDetails.hours}
+              value={localFormState.hours}
             />
             <Form.Field
+              error={ localFormState.priceError ? { content: localFormState.priceError } : null }
               control={Input}
               label="Price"
               placeholder='How much does it cost ...'
               onChange={handleServicePrice}
-              value={serviceDetails.price}
+              value={localFormState.price}
             />
           </Form.Group>
           <Form.Field
+            error={ localFormState.descriptionError ? { content: localFormState.descriptionError } : null }
             className={ styles.descriptionField }
             control={TextArea}
             label='Description'
             placeholder='Description of the service provided ...'
             onChange={handleServiceDescription}
-            value={serviceDetails.description}
+            value={localFormState.description}
 
           />
           <div className={ styles.imageUploadInputDiv }>
@@ -241,12 +274,7 @@ const ServiceForm = (props: Props): React.Node => {
                 triggerImgModelDelete={ triggerImageDelete }
               />
               :
-              <Segment textAlign="center">
-                <Header icon>
-                  <Icon name='file' />
-                    No Images Uploaded. Upload some images....
-                </Header>
-              </Segment>
+              <GeneralNoModelsSegment  customHeaderMessage={"No Service images"} customContentMessage={"Upload Service model images by clicking upload"} />
             }
           </div>
         </Form>

@@ -153,7 +153,7 @@ export const handleCreateNewRoom = (dispatch: Dispatch<RoomAction>, clientRoomFo
       roomImages: clientRoomFormData.images ? clientRoomFormData.images : []
     }
   };
-
+  
   dispatch(roomAPIRequest());
   return axios(requestOptions)
     .then((response) => {
