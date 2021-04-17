@@ -48,6 +48,9 @@ export const isEmpty = (obj: any): boolean => {
   return obj && Object.keys(obj).length === 0;
 };
 
+type DataObject = {
+  [string]: any,
+}
 export const objectValuesEmpty = (obj: any): boolean => {
   if (obj && typeof obj === "object") {
     const keys = Object.keys(obj);
@@ -59,6 +62,15 @@ export const objectValuesEmpty = (obj: any): boolean => {
         for (const val of values) {
           if (val) {
             if (Array.isArray(val) && val.length === 0) {
+              continue;
+            } else if (typeof val === "object") {
+              const obj: any = val;
+              const keys = Object.keys(obj);
+              for (const key of keys) {
+                if (obj[key]) {
+                  return false;
+                }
+              }
               continue;
             } else {
               return false;

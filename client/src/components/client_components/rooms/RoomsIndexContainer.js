@@ -1,20 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 // semantic ui components //
-import {
-  Button,
-  Col,
-  Container,
-  Carousel,
-  Modal,
-  Row
-} from "react-bootstrap";
+import { Button, Col, Container, Carousel, Modal, Row } from "react-bootstrap";
 // additional components //
 import NavbarComponent from "../navbar/NavbarComponent";
 import RoomImgModal from "./RoomImgModal";
 // redux imports //
 import { connect } from "react-redux";
-import { fetchRooms } from "../../../redux/actions/roomActions";
+import { handleFetchRooms } from "../../../redux/actions/roomActions";
 import Room from "./Room";
 // images //
 //
@@ -30,7 +23,7 @@ const {
 } = style
 
 const RoomsIndexContainer = (props) => {
-  const { roomState , fetchRooms } = props;
+  const { roomState , handleFetchRooms } = props;
   const { createdRooms } = roomState;
 
   const [imageIndex, setImageIndex] = useState(0);
@@ -82,7 +75,7 @@ const RoomsIndexContainer = (props) => {
     }());
     // END Navbar collapse implementation //
     // fetch the rooms from the server //
-    fetchRooms();
+    handleFetchRooms();
   }, []);
   // picture modal togglers //
   const openPictureModal = (imgPath, roomImagePaths = [], index) => {
@@ -145,7 +138,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchRooms: () => fetchRooms(dispatch)
+    _handleFetchRooms: () => handleFetchRooms(dispatch)
   };
 };
 

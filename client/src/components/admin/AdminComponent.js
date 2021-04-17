@@ -65,7 +65,7 @@ const AdminComponent = (props) => {
     }
     // event listener for closed window //
     window.addEventListener("beforeunload", saveAdminState);
-    history.push("/admin/services");
+    history.push("/admin/rooms/new");
     return function () {
       window.removeEventListener("beforeunload", saveAdminState);
     }
@@ -130,7 +130,7 @@ const AdminComponent = (props) => {
     <Grid stackable style={{ border: "4px solid green", height: "100vh" }}>
       <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={_clearSuccessState} />
       <ErrorComponent appGeneralState={appGeneralState} clearAppError={_clearAppError} />
-      <Grid.Row style={{ border: "2px solid blue", height: "10%" }}>
+      <Grid.Row style={{ height: "10%" }}>
         <AdminNavComponent logoutUser={logoutUser} />
       </Grid.Row>
       <Route path="/admin/services">

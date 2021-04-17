@@ -2,11 +2,11 @@ import { isLoggedIn } from "./helpers/routeHelpers";
 import roomsController from "../controllers/roomsController";
 
 export default function (router) {
-  // @route POST "/api/createRoom"
+  // @route POST "/api/create_room"
   // @description Creates a new room to display
   // @access PRIVATE
   router
-    .route("/api/createRoom")
+    .route("/api/create_room")
     .post(roomsController.createRoom);
     
   // @route GET "/api/rooms" //
@@ -17,11 +17,11 @@ export default function (router) {
     .get(roomsController.getRooms);
 
     
-  // @route PATCH "/api/rooms/:roomId" //
+  // @route PATCH "/api/rooms/:roomId?" //
   // @description Updates a room and all of its corresponding images //
   // @access PRIVATE //
   router
-    .route("/api/rooms/:roomId")
+    .route("/api/rooms/:roomId?")
     .patch(roomsController.updateRoom);
 
   // @route DELETE "/api/rooms/:roomId" //

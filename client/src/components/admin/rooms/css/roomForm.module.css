@@ -1,0 +1,19 @@
+.roomFormWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.formControlsDiv {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid grey;
+  padding: 1em;
+}
+.formControls {
+  display: flex;
+  flex-wrap: wrap;
+}
+.formDiv {
+  border: 1px solid grey;
+  padding: 1em;
+}

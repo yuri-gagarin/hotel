@@ -22,36 +22,50 @@ export default {
       });
   },
   createRoom: (req, res) => {
-    const { roomData } = req.body;
+    const { roomData, roomImages = [] } = req.body;
+    const { roomType, area, sleeps, price, beds, couches, description, options } = roomData;
     let createdRoom;
     ///   channel managert data //
-    return Room.create({ ...roomData, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()), live: false })
-      .then((room) => {
-        return Room.populate(room, { path: "images", model: "RoomImage"});
+    return Room.create({ 
+      roomType,
+      area,
+      sleeps,
+      price,
+      beds,
+      couches,
+      description,
+      options,
+      live: false,
+      images: [ ...roomImages ],
+      createdAt: new Date(Date.now()), 
+      editedAt: new Date(Date.now()) 
+    })
+    .then((room) => {
+      return Room.populate(room, { path: "images", model: "RoomImage"});
+    })
+    .then((populatedRoom) => {
+      createdRoom = populatedRoom;
+      if (populatedRoom.populated("images")) {
+        // update image models //
+        const imageIdsToUpdate = populatedRoom.images.map((roomImg) => roomImg._id);
+        return RoomImage.updateMany({ _id: imageIdsToUpdate, }, { room: populatedRoom._id });
+      } else {
+        return Promise.resolve({ nModified: 0 });
+      }
+    })
+    .then((_) => {
+      return res.status(200).json({
+        responseMsg: "Room created",
+        newRoom: createdRoom
+      });
+    })
+    .catch((error) => {
+      console.error(error)
+      return res.status(500).json({
+        responseMsg: "It seems an error occured",
+        error: error
       })
-      .then((populatedRoom) => {
-        createdRoom = populatedRoom;
-        if (populatedRoom.populated("images")) {
-          // update image models //
-          const imageIdsToUpdate = populatedRoom.images.map((roomImg) => roomImg._id);
-          return RoomImage.updateMany({ _id: imageIdsToUpdate, }, { room: populatedRoom._id });
-        } else {
-          return Promise.resolve({ nModified: 0 });
-        }
-      })
-      .then((_) => {
-        return res.status(200).json({
-          responseMsg: "Room created",
-          newRoom: createdRoom
-        });
-      })
-      .catch((error) => {
-        console.error(error)
-        return res.status(500).json({
-          responseMsg: "It seems an error occured",
-          error: error
-        })
-      }); 
+    }); 
       
   },
   updateRoom: (req, res) => {

@@ -134,11 +134,11 @@ export const handleClearRoomData = (dispatch: Dispatch<RoomAction>): void => {
 /* Room API error processing */
 export const handleRoomError = (err: any): RoomError => {
   // process error, extract relavant error data //
-  console.error(err);
   if (typeof err === "object" && err.response) {
     const { status, data } : { status: number, data: any } = err.response;
     const { responseMsg, error } : { responseMsg: string, error: Error } = data;
-    return roomError({ status: status, responseMsg: responseMsg, error: error }); 
+    const errorResponse = error ? error : new Error("An error occured");
+    return roomError({ status: status, responseMsg: responseMsg, error: errorResponse }); 
   } else {
     return roomError({ status: 500, responseMsg: "An error occured", error: err });
   }

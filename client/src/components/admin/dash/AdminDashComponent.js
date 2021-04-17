@@ -9,7 +9,7 @@ import {
 // redux imports //
 import { connect } from "react-redux";
 import { handleFetchContactPosts } from "./../../../redux/actions/contactPostActions";
-import { fetchRooms } from "./../../../redux/actions/roomActions";
+import { handleFetchRooms } from "./../../../redux/actions/roomActions";
 import { fetchAllConversations } from "./../../../redux/actions/conversationActions";
 // aditional component imports //
 import VisitorGraph from "../graphs/VisitorGraph";
@@ -42,7 +42,7 @@ const AdminDashComponent = (props) => {
   } = props;
   // admin redux functions //
   const {
-    fetchContactPosts, fetchRooms, fetchAllConversations 
+    fetchContactPosts, _handleFetchRooms, fetchAllConversations 
   } = props;
 
   const { firstName } = adminState;
@@ -51,7 +51,7 @@ const AdminDashComponent = (props) => {
     // fetch all the related information to the dash component //
     Promise.all([
       fetchContactPosts(),
-      fetchRooms(),
+      _handleFetchRooms(),
       fetchAllConversations()
     ]);
   }, []);
@@ -172,7 +172,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchContactPosts: () => handleFetchContactPosts(dispatch),
     fetchAllConversations: () => fetchAllConversations(dispatch),
-    fetchRooms: () => fetchRooms(dispatch)
+    _handleFetchRooms: () => handleFetchRooms(dispatch)
   };
 };
 

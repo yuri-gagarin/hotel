@@ -159,7 +159,7 @@ const RoomsIndexContainer = (props: Props): React.Node => {
         </Grid.Row>
       </Route>
       <Route path={"/admin/rooms/new"}>
-        <Grid.Row centered style={{ height: "90%", border: "6px solid green", overflowY: "scroll" }}>
+        <Grid.Row centered style={{ height: "90%", overflowY: "scroll" }}>
           <Grid.Column className={ styles.newFormColumn } width={15}>
             <RoomForm history={ history } roomState={ roomState } />
           </Grid.Column>

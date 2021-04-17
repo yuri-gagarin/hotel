@@ -5,6 +5,7 @@ import { Button, Checkbox, Form, Input, Popup, TextArea } from "semantic-ui-reac
 // additional component imports  //
 import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import FileInput from "./FileInput";
+import { FormErrorMessages } from "../shared/FormErrorMessages";
 import GenericImgModal from "../shared/GenericImgModal";
 import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 import ModelDeleteBtn from "../shared/ModelDeleteBtn";
@@ -21,8 +22,8 @@ import type { RouterHistory } from "react-router-dom";
 // css 
 import styles from "./css/roomForm.module.css";
 // helpers //
-import { setImagePath } from "../../helpers/displayHelpers";
-import {  objectValuesEmpty } from "../../helpers/componentHelpers";
+import { checkFormErrors } from "./helpers/checkFormErrors";
+import { setImagePath, objectValuesEmpty } from "../../helpers/displayHelpers";
 
 type OwnProps = {
   roomState: RoomState,
@@ -43,25 +44,36 @@ type Props = {
 
 type FormErrors = {
   roomTypeError: string,
+  areaError: string,
+  sleepsError: string,
+  priceError: string,
+  bedsError: string,
+  couchesError: string,
   descriptionError: string
 };
-type LocalFormState = ClientRoomFormData & FormErrors;
+ export type LocalFormState = ClientRoomFormData & FormErrors;
 type ImageModalState = { imgModalOpen: boolean, openImageURL: string };
 type ConfirmDeleteModalState = { 
   confirmDelModalOpen: boolean,
   modelIdToDelete: string, 
   modelToDelete: "room" | "roomImage" | ""
 };  
+type FormErrorStrate = {
+  visible: boolean,
+  errorMessages: Array<string>
+};
 
 const RoomForm = (props: Props): React.Node => {
   const { roomState, history, toggleEditModal } = props;
   const { roomData, roomImages } = roomState;
   const { _handleUploadRoomImage, _handleDeleteRoomImage, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom, _handleDeleteAllRoomImages } = props;
   // local form state //
-  const [ localFormState, setLocalFormState ] = React.useState<LocalFormState>({ ...roomData, roomTypeError: "", descriptionError: "" });
+  const [ localFormState, setLocalFormState ] = React.useState<LocalFormState>({ 
+    ...roomData, roomTypeError: "", areaError: "", sleepsError: "", priceError: "", bedsError: "", couchesError: "", descriptionError: "" 
+  });
   const [ imageModalState, setImageModalState ] = React.useState<ImageModalState>({ imgModalOpen: false, openImageURL: "" });
   const [ confirmModalState, setConfirmModalState ] = React.useState<ConfirmDeleteModalState>({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
-  
+  const [ formErrorState, setFormErrorState ] = React.useState<FormErrorStrate>({ visible: false, errorMessages: [] });
   // text input handlers //
   const handleRoomType = (e, data) => {
     if (data.value.length === 0) {
@@ -72,9 +84,9 @@ const RoomForm = (props: Props): React.Node => {
   };
   const handleRoomArea = (e, data) => {
     if (data.value.length === 0) {
-      setLocalFormState({ ...localFormState, area: data.value, roomAreaError: "Please enter a room area..." });
+      setLocalFormState({ ...localFormState, area: data.value, areaError: "Please enter a room area..." });
     } else {
-      setLocalFormState({ ...localFormState, roomType: data.value, roomAreaError: "" });
+      setLocalFormState({ ...localFormState, area: data.value, areaError: "" });
     }
   };
   const handleSleeps = (e, data) => {
@@ -107,7 +119,7 @@ const RoomForm = (props: Props): React.Node => {
   };
   const handleDescriptionChange = (e, data) => {
     if (data.value.length === 0) {
-      setLocalFormState({ ...localFormState, description: data.value, descriptionError: "" });
+      setLocalFormState({ ...localFormState, description: data.value, descriptionError: "Please enter a short description..." });
     } else {
       setLocalFormState({ ...localFormState, description: data.value, descriptionError: "" });
     }
@@ -116,88 +128,89 @@ const RoomForm = (props: Props): React.Node => {
   // checkbox handler //
   const handleCheckbox = (e,  data) => {
     const { label, checked } = data;
+    console.log(label)
     switch(label) {
-      case "Bathroom": {
+      case "Private Bathroom": {
         setLocalFormState((state) => {
-          return checked ? { ...state, privateBathroom: true } : { ...state, privateBathroom: false };
+          return checked ? { ...state, options: { ...state.options, privateBathroom: true } } : { ...state, options: { ...state.options, privateBathroom: false } };
         });
         break;
       }
       case "Suite Bathroom": {
         setLocalFormState((state) => {
-          return checked ? { ...state, suiteBathroom: true } : { ...state, suiteBathroom: false };
+          return checked ? { ...state, options: { ...state.options, suiteBathroom: true } } : { ...state, options: { ...state.options, suiteBathroom: false } };
         });
         break;
       } 
       case "Jacuzzi": {
         setLocalFormState((state) => {
-          return checked ? { ...state, jacuzzi: true } : { ...state, jacuzzi: false };
+          return checked ? { ...state, options: { ...state.options, jacuzzi: true } } : { ...state, options: { ...state.options, jacuzzi: false } };
         });
         break;
       } 
       case "Balcony": {
         setLocalFormState((state) => {
-          return checked ? { ...state, balcony: true } : { ...state, balcony: false };
+          return checked ? { ...state, options: { ...state.options, balcony: true } } : { ...state, options: { ...state.options, balcony: false } };
         })
         break;
       } 
       case "Terrace": {
         setLocalFormState((state) => {
-          return checked ? { ...state, terrace: true } : { ...state, terrace: false };
+          return checked ? { ...state, options: { ...state.options, terrace: true } } : { ...state, options: { ...state.options, terrace: false } };
         })
         break;
       }
       case "Mountain View": {
         setLocalFormState((state) => {
-          return checked ? { ...state, mountainView: true } : { ...state, mountainView: false };
+          return checked ? { ...state, options: { ...state.options, mountainView: true } } : { ...state, options: { ...state.options, mountainView: false } };
         })
         break;
       } 
       case "Street View": {
         setLocalFormState((state) => {
-          return checked ? { ...state, streetView: true } : { ...state, streetView: false };
+          return checked ? { ...state, options: { ...state.options, streetView: true } } : { ...state, options: { ...state.options, streetView: false } };
         })
         break;
       } 
       case "River View": {
         setLocalFormState((state) => {
-          return checked ? { ...state, riverView: true } : { ...state, riverView: false };
+          return checked ? { ...state, options: { ...state.options, riverView: true } } : { ...state, options: { ...state.options, riverView: false } };
         })
         break;
       }
       case "TV": {
         setLocalFormState((state) => {
-          return checked ? { ...state, tv: true } : { ...state, tv: false };
+          return checked ? { ...state, options: { ...state.options, tv: true } } : { ...state, options: { ...state.options, tv: false } };
         })
         break;
       }
       case "WiFi": {
         setLocalFormState((state) => {
-          return checked ? { ...state, wifi: true } : { ...state, wifi: false };
+          return checked ? { ...state, options: { ...state.options, wifi: true } } : { ...state, options: { ...state.options, wifi: false } };
         })
         break;
       }
       case "Phone": {
         setLocalFormState((state) => {
-          return checked ? { ...state, phone: true } : { ...state, phone: false };
+          return checked ? { ...state, options: { ...state.options, phone: true } } : { ...state, options: { ...state.options, phone: false } };
         })
         break;
       }
       case "Air Conditioning": {
         setLocalFormState((state) => {
-          return checked ? { ...state, airConditioning: true } : { ...state, airConditioning: false };
+          return checked ? { ...state, options: { ...state.options, airConditioning: true } } : { ...state, options: { ...state.options, airConditioning: false } };
         })
         break;
       }
       case "Refrigerator": {
         setLocalFormState((state) => {
-          return checked ? { ...state, refrigerator: true } : { ...state, refrigerator: false };
+          return checked ? { ...state, options: { ...state.options, refrigerator: true } } : { ...state, options: { ...state.options, refrigerator: false } };
         })
         break;
       }
       case "Coffee Maker": {
         setLocalFormState((state) => {
-          return checked ? { ...state, coffeeMaker: true } : { ...state, coffeeMaker: false };
+          return checked ? { ...state, options: { ...state.options, coffeeMaker: true } } : { ...state, options: { ...state.options, coffeeMaker: false } };
         })
         break;
       }
@@ -208,7 +221,13 @@ const RoomForm = (props: Props): React.Node => {
     const { _id: roomId } = roomData;
     const { createdRooms, roomImages } = roomState;
 
-    // handle some error checking late //
+    // check for errors first //
+    const { valid, errors } = checkFormErrors(localFormState);
+    if (!valid && errors.length > 0) {
+      setFormErrorState({ visible: true, errorMessages: errors });
+      return;
+    } 
+
     const roomImgIds = roomState.roomImages.map((img) => img._id );
     const clientRoomFormData: ClientRoomFormData = {
       ...localFormState,
@@ -238,11 +257,15 @@ const RoomForm = (props: Props): React.Node => {
         history.goBack();
       }
     }
-  }
+  };
+
+  const dismissFormErrorMessages = () => {
+    setFormErrorState({ visible: false, errorMessages: [] });
+  };
 
   const toggleImageModal = (imgPath?: string) => {
     setImageModalState({ imgModalOpen: !imageModalState.imgModalOpen, openImageURL: imgPath ? setImagePath(imgPath) : "" });
-  }
+  };
 
   // delete functionality and triggers //
   // Room model delete functionality //
@@ -310,10 +333,14 @@ const RoomForm = (props: Props): React.Node => {
           </div>
         }
       </div>
+      {
+        formErrorState.visible ? <FormErrorMessages visible={ formErrorState.visible } errorMessages={ formErrorState.errorMessages } handleErrorMessageDismiss={ dismissFormErrorMessages } /> : null
+      }
       <div className={ styles.formDiv }>
         <Form>
           <Form.Group widths='equal'>
             <Form.Field
+              error={ localFormState.roomTypeError ? { content: localFormState.roomTypeError } : null }
               control={Input}
               label='Room Type'
               placeholder='...type of room'
@@ -321,6 +348,7 @@ const RoomForm = (props: Props): React.Node => {
               value={ localFormState.roomType }
             />
             <Form.Field
+              error={ localFormState.areaError ? { content: localFormState.areaError } : null }
               control={Input}
               label='Area'
               placeholder='...only numbers please'
@@ -328,6 +356,7 @@ const RoomForm = (props: Props): React.Node => {
               value={ localFormState.area }
             />
             <Form.Field
+              error={ localFormState.sleepsError ? { content: localFormState.sleepsError } : null }
               control={Input}
               label="Sleeps"
               placeholder='...how many people it sleeps'
@@ -337,6 +366,7 @@ const RoomForm = (props: Props): React.Node => {
           </Form.Group>
           <Form.Group widths='equal'>
             <Form.Field
+              error={ localFormState.priceError ? { content: localFormState.priceError } : null }
               control={Input}
               label='Price from'
               placeholder='...price from (optional)'
@@ -345,6 +375,7 @@ const RoomForm = (props: Props): React.Node => {
 
             />
             <Form.Field
+              error={ localFormState.bedsError ? { content: localFormState.bedsError } : null }
               control={Input}
               label='Beds'
               placeholder='...number of beds'
@@ -353,6 +384,7 @@ const RoomForm = (props: Props): React.Node => {
 
             />
             <Form.Field
+              error={ localFormState.couchesError ? { content: localFormState.couchesError } : null }
               control={Input}
               label="Couches"
               placeholder='...number of couches'
@@ -361,7 +393,7 @@ const RoomForm = (props: Props): React.Node => {
             />
           </Form.Group>
           <Form.Field
-            id='form-textarea-control-opinion'
+            error={ localFormState.couchesError ? { content: localFormState.couchesError } : null }
             control={TextArea}
             label='Description of the Room'
             placeholder='...description of the room here'
@@ -403,15 +435,6 @@ const RoomForm = (props: Props): React.Node => {
               customContentMessage={ "Upload any new room images here..." }
             />
           }
-          <Form.Field>
-            <Button 
-              inverted
-              color="blue"
-              style={{marginTop: "0.5em"}}
-              content='Save All'
-              onClick={handleFormSubmit}
-            />
-          </Form.Field>
         </Form>
       </div>
     </div>
