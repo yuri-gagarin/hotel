@@ -21,7 +21,9 @@
   font-size: 1.25em;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgb(44, 53, 49);
+  border: 1px solid rgb(44, 53, 49);
+  border-radius: 2px;
+  padding: 5px;
 }
 .serviceHours > span {
   margin-left: 5px;
@@ -33,8 +35,10 @@
   font-size: 1.25em;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgb(44, 53, 49);
+  border: 1px solid rgb(44, 53, 49);
+  border-radius: 2px;
   margin-left: 1em;
+  padding: 5px;
 }
 .servicePrice > i {
   font-size: 2em;

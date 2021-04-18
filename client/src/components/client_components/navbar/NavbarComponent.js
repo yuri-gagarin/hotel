@@ -13,12 +13,12 @@ const NavbarComponent = (props) => {
   // navbar handlers //
   const goToBooking = () => {
     let bookinView = document.getElementById("booking");
-    bookinView.scrollIntoView();
+    bookinView.scrollIntoView({ behavior: "smooth" });
   };
   const goToServices = (e) => {
     let servicesView = document.getElementById("portfolio");
     if (servicesView) {
-      servicesView.scrollIntoView();
+      servicesView.scrollIntoView({ behavior: "smooth" });
     } else {
       history.push("/services");
     }
@@ -26,7 +26,7 @@ const NavbarComponent = (props) => {
 
   const goToContactForm = (e) => {
    let contactForm = document.getElementById("contact");
-   contactForm.scrollIntoView();
+   contactForm.scrollIntoView({ behavior: "smooth" });
   };
 
   const goToHome = () => {

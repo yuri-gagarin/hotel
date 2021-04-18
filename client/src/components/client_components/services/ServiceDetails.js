@@ -13,14 +13,12 @@ const ServiceDetails = ({ service }) => {
   return (
     <div className={ styles.serviceDetailsContainer }>
       <div className={ styles.serviceHours }>
-        <span>Hours:</span>
         <div className={ styles.iconDiv }>
           <i className="far fa-clock"></i>
         </div>
         <span>{ service.hours} </span>
       </div>
       <div className={ styles.servicePrice }>
-        <span>Price:</span>
         <div className={ styles.iconDiv }>
           <i className="far fa-money-bill-alt"></i>        
         </div>
