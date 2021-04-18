@@ -1,119 +1,75 @@
-import React,  { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+// @flow
+import * as React from "react";
+// bootsrap react //
+import { Col, Image, Row, Container, Button } from "react-bootstrap";
+// additional components //
 import ImageGallery from "react-image-gallery";
-// 
-import { Col, Row, Container, Button } from "react-bootstrap";
-// 
 import ServiceDetails from "./ServiceDetails";
-//
+// FLOW types //
+import type { ServiceData } from "../../../redux/reducers/service/flowTypes";
 import styles from "./css/serviceClientView.module.css";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
 
-const defaultImages = [
-  {
-    original: "https://source.unsplash.com/2ShvY8Lf6l0/800x599",
-    thumbnail: "https://source.unsplash.com/2ShvY8Lf6l0/800x599"
+type Props = {
+  service: ServiceData,
+  triggerImgModal: (imgULRS: Array<string>, imageIndex: number) => void
+};
 
-  },
-  {
-    original: "https://source.unsplash.com/Dm-qxdynoEc/800x799",
-    thumbnail:  "https://source.unsplash.com/Dm-qxdynoEc/800x799"
-  },
-  {
-    original: "https://source.unsplash.com/qDkso9nvCg0/600x799",
-    thumbnail: "https://source.unsplash.com/qDkso9nvCg0/600x799"
-  },
-  {
-    original: "https://source.unsplash.com/iecJiKe_RNg/600x799",
-    thumbnail: "https://source.unsplash.com/iecJiKe_RNg/600x799"
-  },
-  {
-    original: "https://source.unsplash.com/epcsn8Ed8kY/600x799",
-    thumbnail: "https://source.unsplash.com/epcsn8Ed8kY/600x799"
-  },
-  {
-    original: "https://source.unsplash.com/NQSWvyVRIJk/800x599",
-    thumbnail: "https://source.unsplash.com/NQSWvyVRIJk/800x599"
-  },
-  {
-    original: "https://source.unsplash.com/zh7GEuORbUw/600x799",
-    thumbnail: "https://source.unsplash.com/zh7GEuORbUw/600x799"
-  },
-  {
-    original: "https://source.unsplash.com/PpOHJezOalU/800x599",
-    thumbnail: "https://source.unsplash.com/PpOHJezOalU/800x599"
-  },
-  {
-    original: "https://source.unsplash.com/I1ASdgphUH4/800x599",
-    thumbnail: "https://source.unsplash.com/I1ASdgphUH4/800x599"
-  }
-];
-
-const ServiceClientView = ({ service }) => {
-  const [ serviceImages, setServiceImages ] = useState([]);
-
-  useEffect(() => {
-    
-    if (service.images && service.images.length > 0) {
-      const images = service.images.map((image) => {
-        return {
-          original: setImagePath(image.path),
-          thumbnail: setImagePath(image.path),
-          originalClass: styles.galleryImage,
-          thumbnailClass: styles.thumbnailImage
-        }
-      })
-      setServiceImages(images);
-    } else {
-      // use default images //
-      const images = defaultImages.map((image) => {
-        return {
-          ...image,
-          originalClass: styles.galleryImage,
-          thumbnailClass: styles.thumbnailImage
-        }
-      })
-      setServiceImages(images);
+const ServiceClientView = ({ service, triggerImgModal } : Props): React.Node => {
+  const [ imgURLS, setImgURLS ] = React.useState<Array<string>>([]);
+  
+  React.useEffect(() => {
+    const urls: Array<string> = [];
+    for (let i = 0; i < 3; i++) {
+      if (service.images[i]) {
+        urls.push(setImagePath(service.images[i].path));
+      } else {
+        urls.push(setImagePath());
+      }
     }
-    
-  },  []);
+    setImgURLS(urls);
+  }, [ service ]);
 
   const handleServiceInfoClick = () => {
     console.log("clicked")
   }
 
   return (
-    <Row className={ styles.serviceRow } key={ service._id }>
-      <div className={ styles.serviceTitle }>  
-        { "Something" }
-      </div>
-      <Col xs={12} sm={12} lg={6} style={{ padding: "0" }}>
-        <Container fluid className={ `${styles.serviceContainer} ${styles.draw}` }>
-          <ImageGallery 
-            showNav={ false }
-            autoplay={ true }
-            additionalClass={ styles.serviceImgGallery }
-            showThumbnails={ false }
-            items={ serviceImages }
-          />
-          
-        </Container>
-      
-      </Col>
-      <div className={ styles.serviceDetailsBtnDiv }>
-        <Button  variant="light" onClick={ handleServiceInfoClick }>{ "Get Details"}</Button>
-      </div>
-      <Col xs={12} sm={12} lg={6} style={{ padding: "0" }}>
-      <ServiceDetails service={service} />
-      </Col>
-  
-    </Row>
+    <React.Fragment>
+      <Row className={ styles.serviceRow } key={ service._id }>
+        <div className={ styles.serviceTitle }>  
+          {service.serviceType}
+        </div>
+        <Col xs={12} md={4}>
+          <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 0)}>
+            <Image className={ styles.serviceImg } src={ imgURLS[0] }></Image>
+          </div>
+        </Col>
+        <Col xs={12} md={4}>
+          <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 1)}>
+            <Image className={ styles.serviceImg } src={ imgURLS[1] }></Image>
+          </div>
+        </Col>
+        <Col xs={12} md={4}>
+          <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 2)}>
+            <Image className={ styles.serviceImg } src={ imgURLS[2] }></Image>
+          </div>
+        </Col>
+      </Row>
+      <Row className={ `${styles.serviceInfoRow}` }>
+        <Col className={ `${styles.serviceInfoColumn}` } xs={12} sm={12} lg={8}>
+          <ServiceDetails service={service} />
+        </Col>
+      </Row>
+      <Row className={ `${styles.serviceInfoRow}` }>
+        <Col xs={12} md={6}>
+        </Col>
+        <Col xs={12} md={6}>
+        </Col>
+      </Row>
+    </React.Fragment>
   )
-};
-
-ServiceClientView.propTypes = {
-  service: PropTypes.object.isRequired
 };
 
 export default ServiceClientView;

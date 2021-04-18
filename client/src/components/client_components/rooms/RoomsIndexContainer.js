@@ -124,11 +124,10 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
         imgURLS={ localComponentState.imgURLS } 
         imageIndex={ localComponentState.imageIndex }
       />
-      <Container className={ styles.roomsIndexContainer }>
-       
-        {
-          createdRooms.map((room) => {
-            return (
+      {
+        createdRooms.map((room) => {
+          return (
+            <Container className={ styles.roomsIndexContainer }>       
               <Room 
                 key={room._id} 
                 room={room} 
@@ -136,10 +135,11 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
                 openPictureModal={openPictureModal}
                 picModalState={{ showModal: localComponentState.showModal, imageIndex: localComponentState.imageIndex, direction: 1 }}
               />
-            );
-          })
-        } 
-      </Container>
+            </Container>
+          );
+        })
+      } 
+      <div className={ styles.parallax }></div>
     </div>
   );
 };

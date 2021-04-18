@@ -17,7 +17,9 @@ const DiningIndexContainer = (props) => {
   const headerRowRef = useRef(null);
   const [ headerRowState, setHeaderRowState ] = useState({ headerFixed: false, top: "" });
 
+  
   useEffect(() => {
+    document.body.scrollTop = 0;
     navbarCollapseListener();
   }, []);
 

@@ -1,20 +1,26 @@
-import React from "react";
+// @flow
+import * as React from "react";
 import roomDefault from "./../../../static_images/services_images/room_default.jpg";
 import restaurantDefault from "./../../../static_images/services_images/restaurant_default.jpg";
+// FLOW types //
+import type { RouterHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+// css
+import styles from './css/servicesComponent.module.css';
 
-const ServicesComponent = (props) => {
-  const { history } = props;
+type Props = {
+  history: RouterHistory;
+}
+const ServicesComponent = ({ history } : Props):React.Node => {
   const [t] = useTranslation();
 
   const handleRoomsClick = (e) => {
     // console.log(e);
     history.push("/rooms");
-    return true;
   };
-  const handleRestaurantClick = (e) => {
+  const handleDiningEntertainmentClick = (e) => {
     console.log(e);
-    history.push("/restaurant");
+    history.push("/dining");
   };
   const handleServicesClick = (e) => {
     console.log(e);
@@ -22,10 +28,10 @@ const ServicesComponent = (props) => {
   };
   return (
     <section className="bg-light page-section" id="portfolio">
-      <div className="container fluid" style={{border: "2px solid red"}}>
+      <div className="container fluid" style={{border: "4px solid rgb(211, 211, 26)"}}>
         <div className="row" >
           <div className="col-lg-12 col-xs-12 text-center">
-            <h2 className="section-heading text-uppercase">{t("servicesTitle")}</h2>
+            <h2 className={` ${"section-heading text-uppercase"} ${styles.headerText}`}>{t("servicesTitle")}</h2>
             <h3 className="section-subheading text-muted">{t("servicesDesc")}</h3>
           </div>
         </div>
@@ -45,7 +51,7 @@ const ServicesComponent = (props) => {
             </div>
           </div>
           <div className="col-md-4 col-sm-6 portfolio-item">
-            <a className="portfolio-link" data-toggle="modal" href="#portfolioModal2" onClick={handleRestaurantClick}>
+            <a className="portfolio-link" data-toggle="modal" href="#portfolioModal2" onClick={handleDiningEntertainmentClick}>
               <div className="portfolio-hover">
                 <div className="portfolio-hover-content">
                   <i className="fas fa-plus fa-3x"></i>
@@ -54,7 +60,7 @@ const ServicesComponent = (props) => {
               <img className="img-fluid" src={restaurantDefault} alt="" />
             </a>
             <div className="portfolio-caption">
-              <h4>{t("restaurant")}</h4>
+              <h4>{t("dining_entertainment")}</h4>
               <p className="text-muted">{t("restDesc")}</p>
             </div>
           </div>

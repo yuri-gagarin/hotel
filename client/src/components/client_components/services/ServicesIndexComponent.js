@@ -1,32 +1,44 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+// @flow
+import * as React from "react";
 // additonal components //
 import NavbarComponent from "../navbar/NavbarComponent";
 import ClipText from "../../admin/shared/ClipText";
 import ServiceClientView from "./ServiceClientView";
+import GenericImgModalCarousel from "../shared/GenericImgModalCarousel";
 // react bootstrap component imports //
-import {
-  Container, Row, Col
-} from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import styles from "./css/servicesIndexContainer.module.css";
 // redux //
 import { connect } from "react-redux";
 import { handleFetchServices } from "../../../redux/actions/serviceActions";
+// types //
+import type { ServiceState, ServiceAction } from "../../../redux/reducers/service/flowTypes";
+import type { Dispatch, RootState } from "../../../redux/reducers/_helpers/createReducer";
 // helpers //
 import { navbarCollapseListener } from "../../helpers/componentHelpers";
 
+type Props = {
+  serviceState: ServiceState,
+  _handleFetchServices: () => Promise<boolean>
+};
+type PicureModalState = {
+  modalOpen: boolean,
+  imgURLS: Array<string>,
+  imageIndex: number
+};
 
-const ServicesIndexComponent = ({ fetchServices, serviceState }) => {
-  const [ headerFixed, setHeaderFixed ] = useState(false);
+const ServicesIndexComponent = ({ _handleFetchServices, serviceState }): React.Node => {
+  const [ headerFixed, setHeaderFixed ] = React.useState(false);
+  const [ picureModalState, setPictureModalState ] = React.useState<PicureModalState>({ modalOpen: false, imgURLS: [], imageIndex: 0 })
+  const indexRowRef = React.useRef<HTMLElement | null>(null);
 
-  const indexRowRef = useRef(null);
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (indexRowRef.current) {
       const mainNav = document.getElementById("mainNav");
       if (mainNav) {
         const navHeight = mainNav.getBoundingClientRect().height;
         window.onscroll = () => {
-          const indexRowRefY = indexRowRef.current.getBoundingClientRect().y;
+          const indexRowRefY = indexRowRef.current ? indexRowRef.current.getBoundingClientRect().top : 0;
           if (indexRowRefY <= navHeight) {
             if (!headerFixed) {
               console.log(91)
@@ -43,16 +55,27 @@ const ServicesIndexComponent = ({ fetchServices, serviceState }) => {
     }
   }, [ indexRowRef.current, headerFixed ]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     navbarCollapseListener();
-    fetchServices()
+    _handleFetchServices();
   }, []);
 
-
+  const triggerImgModal = (imgURLS: Array<string>, index: number) => {
+    setPictureModalState({ modalOpen: true, imgURLS: imgURLS, imageIndex: index });
+  };
+  const closeModal = () => {
+    setPictureModalState({ modalOpen: false, imgURLS: [], imageIndex: 0 });
+  };
 
   return (
     <div className={ styles.mainContainer }>
       <NavbarComponent />
+      <GenericImgModalCarousel  
+        show={ picureModalState.modalOpen } 
+        imgURLS={ picureModalState.imgURLS } 
+        imageIndex={ picureModalState.imageIndex } 
+        closePictureModal={ closeModal } 
+      />
       <Row>
         <div className={ styles.servicesHeader } >
           <div className={ `${styles.headerText} ${ headerFixed ? styles.fixed : ""}`} ref={ indexRowRef }>
@@ -63,7 +86,11 @@ const ServicesIndexComponent = ({ fetchServices, serviceState }) => {
 
       { serviceState.createdServices.map(( service ) => {
           return (
-            <ServiceClientView key={ service._id } service={ service }  />
+            <ServiceClientView 
+              key={ service._id } 
+              service={ service } 
+              triggerImgModal={ triggerImgModal } 
+            />
           )
         }) 
       }
@@ -75,15 +102,15 @@ const ServicesIndexComponent = ({ fetchServices, serviceState }) => {
 };  
 
 // redux mapping functions //
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
     serviceState: state.serviceState
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch<ServiceAction>) => {
   return {
-    fetchServices: () => fetchServices(dispatch)
+    _handleFetchServices: () => handleFetchServices(dispatch)
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ServicesIndexComponent);
+export default (connect(mapStateToProps, mapDispatchToProps)(ServicesIndexComponent): React.AbstractComponent<Props>);

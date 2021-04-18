@@ -1,0 +1,34 @@
+.pictureModal {
+  position: fixed;
+  border: 10px solid solid rgb(252, 219, 3) !important;
+  height: 100vh;
+  width: 100vw;
+}
+
+.pictureDialog {
+  position: fixed;
+  width: auto;
+  height: 90%;
+  left: 50%;
+  overflow: hidden;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  z-index: 1;
+}
+
+.closeModalToggle {
+  position: absolute;
+  color: white;
+  font-size: 2em;
+  top: 5px;
+  right: 5px;
+  z-index: 2;
+}
+.closeModalToggle > i {
+  cursor: pointer;
+}
+
+.roomPopupModalImg {
+  height: 90vh;
+}
