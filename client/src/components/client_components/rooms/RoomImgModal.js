@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from "react";
+// @flow
+import * as React from "react";
 import PropTypes from "prop-types";
 // ui bootstrap imports //
-import {
-  Button, Modal, Image, Carousel
-} from "react-bootstrap";
+import { Button, Modal, Image, Carousel } from "react-bootstrap";
+// styles and css //
+import styles from "./css/roomImgModal.module.css";
 // helper functions //
-import { setImagePath, simplifyPath } from "./../../helpers/displayHelpers";
+import { setImagePath } from "./../../helpers/displayHelpers";
 
-const pictureModal = {
-  width: "auto",
-  height: "auto",
-  left: "50%",
-  transform: "translateX(-50%)",
-};
 
-const RoomImgModal = (props) => {
-  const { show, closePictureModal, paths, imageIndex } = props;
-  const [index, setIndex] = useState(imageIndex);
-  const [direction, setDirection] = useState(null);
+type Props = {
+  show: boolean,
+  imgURLS: Array<string>,
+  imageIndex: number,
+  closePictureModal: () => any
+}
+const RoomImgModal = ({ show, imgURLS, imageIndex, closePictureModal } : Props): React.Node => {
+  //const [index, setIndex] = useState(imageIndex);
+  // const [direction, setDirection] = useState(null);
   
   // set the initial image to one clicked on //
+  /*
   useEffect(() => {
     if (paths.length )
     setIndex(imageIndex.index);
@@ -28,35 +29,58 @@ const RoomImgModal = (props) => {
     setIndex(selectedIndex);
     // setDirection(e.direction);
   };
+  */
+ const handleSelect = () => {
+
+ }
+
+ React.useEffect(() => {
+  console.log(imageIndex)
+ }, [ imageIndex ]);
+
 
 
   return (
-    <React.Fragment>
-      <Modal style={pictureModal} show={show} onHide={closePictureModal} centered >
-        <Modal.Body style={{padding: 0}}>
-          <Carousel activeIndex={index} direction={direction} onSelect={handleSelect} interval={0}>
-            {
-              paths.map((path, i) => {
-                return (
-                  <Carousel.Item key={i}>
-                    <img
-                      src={setImagePath(path)}
-                      alt="First slide"
-                    />
-                  </Carousel.Item>
-                )
-              })
-            }
-          </Carousel>
-        </Modal.Body>
-      </Modal>
-    </React.Fragment>
+    <Modal show={show} className={ styles.pictureModal } onHide={ closePictureModal }>
+      <div className={ styles.pictureDialog }>
+        <Carousel activeIndex={ 0 } onSelect={ handleSelect } className={ styles.imgCarousel } >
+          {
+            imgURLS.map((imgURL, i) => {
+              return (
+                <Carousel.Item key={i}>
+                  <Image
+                    className={ `${styles.roomPopupModalImg }` } 
+                    src={ imgURL }
+                    alt="First slide"
+                  />
+                </Carousel.Item>
+              )
+            })
+          }
+        </Carousel>
+      </div>
+    </Modal>
   );
-}
-// PropTypes validations //
-RoomImgModal.propTypes = {
-  show: PropTypes.bool.isRequired,
-  closePictureModal: PropTypes.func.isRequired
 };
 
 export default RoomImgModal;
+
+/*
+<Carousel activeIndex={ 0 } onSelect={ handleSelect } className={ styles.imgCarousel } >
+  {
+    imgURLS.map((imgURL, i) => {
+      console.log(imgURL);
+      return (
+        <Carousel.Item key={i}>
+          <Image
+            className={ `${styles.roomPopupModalImg }` } 
+            src={ imgURL }
+            alt="First slide"
+          />
+        </Carousel.Item>
+      )
+    })
+  }
+</Carousel>
+*/
+        

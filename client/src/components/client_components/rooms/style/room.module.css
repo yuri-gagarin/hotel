@@ -1,16 +1,39 @@
 .titleRow {
-  color:rgb(38, 42, 51);
+  color: rgb(38, 42, 51);
 }
 
 .carouselRow {
   height: 400px;
   overflow: hidden;
 }
+.roomCarouselImage {
+  border: 2px solid rgb(38, 42, 51);
+  border-radius: 3px;
+}
 
 .descriptionContainerRow {
   margin-top: 1em;
   border-bottom: 4px solid rgb(252, 219, 3) !important;
   border-right: 4px solid rgb(252, 219, 3);
+}
+.sideImgContainerTop {
+  width: 100%;
+  overflow: hidden;
+  border: 2px solid rgb(38, 42, 51);
+  border-radius: 3px;
+}
+.sideImgTop {
+  width: 100%;
+}
+.sideImgContainerBottom {
+  width: 50%;
+  overflow: hidden;
+  border: 2px solid rgb(38, 42, 51);
+  border-radius: 3px;
+}
+.sedImgBottom {
+  width: 100%;
+  
 }
 /* room details */
 .roomDetailsContainer {

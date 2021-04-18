@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types";
+// @flow //
+import * as React from "react";
 // semantic ui imports //
-import {
-  Col, Row, Carousel, Button
-} from "react-bootstrap"
+import { Button,  Carousel, Col, Image, Row, } from "react-bootstrap"
 // styles //
 import { roomStyle } from "./style/styles";
 import styles from "./style/room.module.css";
-// helper functions //
+// FLOW types //
+import type { RoomData } from "../../../redux/reducers/rooms/flowTypes";
 import { setImagePath} from "../../helpers/displayHelpers";
 // translations //
 import { useTranslation } from "react-i18next";
@@ -20,24 +19,30 @@ const {
   sideImgHolder, sideImg, descriptionHolder, strikeThrough
 } = roomStyle;
 
-const Room = (props) => {
-  const { room, openPictureModal } = props;
+type Props = {
+  room: RoomData,
+  openPictureModal: (imgPath: string, roomImagePaths: Array<string>, index: number) => void,
+  picModalState: {
+    showModal: boolean,
+    imageIndex: number,
+    direction: number
+  }
+};
+
+const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => {
   const { options } = room;
-  const [index, setIndex] = useState(0);
-  const [isVisible, setVisible] = useState(false)
-  const [direction, setDirection] = useState(null);
-  const [t, i18n]= useTranslation();
+  const { showModal, imageIndex, direction } = picModalState;
+  const [ t, i18n ]= useTranslation();
   // refs //
-  const roomTitleRef = useRef(null);
-  const roomPicturesRef = useRef(null);
-  const roomDescRef = useRef(null);
+  const roomTitleRef = React.useRef(null);
+  const roomPicturesRef = React.useRef(null);
+  const roomDescRef = React.useRef(null);
   // 
-  useEffect(() => {
+  React.useEffect(() => {
     const animatedRows = document.querySelectorAll(".animatedRoomRow");
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.intersectionRatio > 0) {
-          console.log("entered view");
           entry.target.classList.add("isVisible");
         }
       });
@@ -59,10 +64,11 @@ const Room = (props) => {
   };
   const roomImagePaths = room.images.map((image) => image.path);
 
-  const handleOpenModal = (e) => {
-    const index = e.target.dataset;
-    console.log(e.target.src)
-    openPictureModal(e.target.src, roomImagePaths, index);
+  const handleOpenModal = (imagePath: string) => {
+    const clickedImageURL = setImagePath(imagePath);
+    const imgURLSArr = room.images.map((imageData) => setImagePath(imageData.path) );
+    const index = room.images.indexOf(imagePath);
+    openPictureModal(clickedImageURL, imgURLSArr, index);
   };
 
   return (
@@ -77,16 +83,17 @@ const Room = (props) => {
       </Row>
       <Row ref={roomPicturesRef} className={ `animatedRoomRow ${styles.carouselRow}`}>
         <Col xs="12" lg="6" style={{padding: 0}}>
-          <Carousel activeIndex={index} direction={direction} onSelect={handleSelect} style={carouselStyle}>
+          <Carousel activeIndex={ imageIndex } direction={direction} onSelect={handleSelect} style={carouselStyle}>
             {
               roomImagePaths.map((imgPath, index) => {
                 return (
-                  <Carousel.Item key={index}>
-                    <img
-                      style={carouselImgStyle}
+                  <Carousel.Item key={ imgPath }>
+                    <Image
+                      fluid
+                      className={ styles.roomCarouselImage }
                       src={ setImagePath(imgPath)}
                       alt="First slide"
-                      onClick={handleOpenModal}
+                      onClick={ () => handleOpenModal(setImagePath(imgPath)) }
                       data-index={index}
                     />
                   </Carousel.Item>
@@ -96,24 +103,26 @@ const Room = (props) => {
           </Carousel>
         </Col>
         <Col xs="12" lg="6" style={{padding: 0, borderTop: "4px solid rgb(252, 219, 3)", }}>
-          <div style={sideImgHolder}>
-            <img 
+          <div className={ styles.sideImgContainerTop }>
+            <Image
+              className={ styles.sideImgTop }
+              fluid
               style={sideImg} 
               src={ setImagePath(roomImagePaths[1])} 
               onClick={handleOpenModal}
               data-index={1}
             />
           </div>
-          <div style={sideImgHolder}>
-            <img 
+          <div className={ styles.sideImgContainerBottom }>
+            <Image
               style={sideImg}
               src={ setImagePath(roomImagePaths[2])} 
               onClick={handleOpenModal}
               data-index={2}
             />
           </div>
-          <div style={sideImgHolder}>
-            <img 
+          <div className={ styles.sideImgContainerBottom }>
+            <Image
               style={sideImg} 
               src={ setImagePath(roomImagePaths[3])} 
               onClick={handleOpenModal}
@@ -222,9 +231,5 @@ const Room = (props) => {
   );
 };
 // PropTypes validation //
-Room.propTypes = {
-  room: PropTypes.object.isRequired,
-  openPictureModal: PropTypes.func.isRequired
-};
 
 export default Room;

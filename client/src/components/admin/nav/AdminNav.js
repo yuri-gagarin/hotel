@@ -85,7 +85,7 @@ const AdminNavMenu = (props) =>  {
   };
 
   return (
-    <Menu pointing secondary>
+    <Menu pointing secondary style={{ width: "100%" }}>
       <Menu.Item
         name='home'
         active={active === "home"}
