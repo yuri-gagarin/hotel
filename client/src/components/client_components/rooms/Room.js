@@ -119,17 +119,18 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
         </Col>
       </Row>  
       <Row ref={roomDescRef} className={`animatedRoomRow ${styles.descriptionContainerRow}`}>
-        <Col xs="12" lg="6" style={{padding: 0}}>
-          <div style={roomsDescription}>
+        <Col xs="12" lg="6" className={ styles.roomDescColumn }>
+          <div className={ styles.roomDescDiv }>
             <p>{room.description}</p>
           </div>
         </Col>
-        <Col xs="12" lg="6" style={{padding: 0}}>
+        <Col xs="12" lg="6" className={ styles.roomDetailsColumn }>
           <div className={ styles.roomDetailsContainer }>
-            <span className={ styles.roomDetails }><i className="fas fa-store-alt"></i> {t("rooms.area")}: {room.area}</span>
-            <span className={ styles.roomDetails }><i className="fas fa-users"></i> {t("rooms.sleeps")}: {room.sleeps}</span>
-            <span className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: {room.beds}</span>
-            <span className={ styles.roomDetails }><i className="fas fa-couch"></i> {t("rooms.couches")}: {room.couches}</span>
+            <div className={ styles.roomDetailsHeader }><span>Room details:</span></div>
+            <div className={ styles.roomDetails }><i className="fas fa-store-alt"></i> {t("rooms.area")}: {room.area}</div>
+            <div className={ styles.roomDetails }><i className="fas fa-users"></i> {t("rooms.sleeps")}: {room.sleeps}</div>
+            <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: {room.beds}</div>
+            <div className={ styles.roomDetails }><i className="fas fa-couch"></i> {t("rooms.couches")}: {room.couches}</div>
           </div>
           <div className={ styles.roomOptionsContainer }>
             { 
@@ -209,8 +210,9 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
         </Col>
       </Row>
       <Row style={{ marginTop: "10px" }}>
-        <Col style={{ padding: 0 }}>
+        <Col className={ styles.bookColumn }>
           <Button style={bookButton}>Book Now</Button>
+          <div className={ styles.bookPriceDiv }>From:<span>{room.price}</span></div>
         </Col>
       </Row>
       <hr />

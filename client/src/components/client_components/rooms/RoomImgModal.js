@@ -19,19 +19,10 @@ const RoomImgModal = ({ show, imgURLS, imageIndex, closePictureModal } : Props):
   const [ index, setIndex ] = React.useState(imageIndex);
   // const [direction, setDirection] = useState(null);
   
-  // set the initial image to one clicked on //
-  /*
-  useEffect(() => {
-    if (paths.length )
-    setIndex(imageIndex.index);
-  }, [show]);
-  const handleSelect = (selectedIndex, e) => {
-    setIndex(selectedIndex);
-    // setDirection(e.direction);
-  };
-  */
   React.useEffect(() => {
     if (show && imageIndex) setIndex(imageIndex);
+    console.log(imageIndex);
+    console.log(imgURLS);
   }, [ show ]);
   
   const handleSelect = (selectedIndex: number, e: any) => {
@@ -41,11 +32,11 @@ const RoomImgModal = ({ show, imgURLS, imageIndex, closePictureModal } : Props):
   return (
     <Modal show={show} className={ styles.pictureModal } onHide={ closePictureModal }>
       <div className={ styles.pictureDialog }>
-        <Carousel activeIndex={ index } onSelect={ handleSelect } className={ styles.imgCarousel } >
+        <Carousel fade activeIndex={ index } onSelect={ handleSelect } className={ styles.imgCarousel } >
           {
-            imgURLS.map((imgURL, i) => {
+            imgURLS.map((imgURL) => {
               return (
-                <Carousel.Item key={i}>
+                <Carousel.Item key={imgURL}>
                   <Image
                     className={ `${styles.roomPopupModalImg }` } 
                     src={ imgURL }
@@ -65,23 +56,4 @@ const RoomImgModal = ({ show, imgURLS, imageIndex, closePictureModal } : Props):
 };
 
 export default RoomImgModal;
-
-/*
-<Carousel activeIndex={ 0 } onSelect={ handleSelect } className={ styles.imgCarousel } >
-  {
-    imgURLS.map((imgURL, i) => {
-      console.log(imgURL);
-      return (
-        <Carousel.Item key={i}>
-          <Image
-            className={ `${styles.roomPopupModalImg }` } 
-            src={ imgURL }
-            alt="First slide"
-          />
-        </Carousel.Item>
-      )
-    })
-  }
-</Carousel>
-*/
         
