@@ -4,7 +4,7 @@ import * as React from "react";
 import { Button,  Carousel, Col, Image, Row, } from "react-bootstrap"
 // styles //
 import { roomStyle } from "./style/styles";
-import styles from "./style/room.module.css";
+import styles from "./css/room.module.css";
 // FLOW types //
 import type { RoomData } from "../../../redux/reducers/rooms/flowTypes";
 import { setImagePath} from "../../helpers/displayHelpers";
@@ -66,8 +66,9 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
 
   const handleOpenModal = (imagePath: string) => {
     const clickedImageURL = setImagePath(imagePath);
-    const imgURLSArr = room.images.map((imageData) => setImagePath(imageData.path) );
-    const index = room.images.indexOf(imagePath);
+    const imgURLSArr = roomImagePaths.map((imagePath) => setImagePath(imagePath) );
+    const index = roomImagePaths.indexOf(imagePath);
+    
     openPictureModal(clickedImageURL, imgURLSArr, index);
   };
 
@@ -82,50 +83,36 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
         </Col>
       </Row>
       <Row ref={roomPicturesRef} className={ `animatedRoomRow ${styles.carouselRow}`}>
-        <Col xs="12" lg="6" style={{padding: 0}}>
-          <Carousel activeIndex={ imageIndex } direction={direction} onSelect={handleSelect} style={carouselStyle}>
-            {
-              roomImagePaths.map((imgPath, index) => {
-                return (
-                  <Carousel.Item key={ imgPath }>
-                    <Image
-                      fluid
-                      className={ styles.roomCarouselImage }
-                      src={ setImagePath(imgPath)}
-                      alt="First slide"
-                      onClick={ () => handleOpenModal(setImagePath(imgPath)) }
-                      data-index={index}
-                    />
-                  </Carousel.Item>
-                )
-              })
-            }
-          </Carousel>
-        </Col>
-        <Col xs="12" lg="6" style={{padding: 0, borderTop: "4px solid rgb(252, 219, 3)", }}>
-          <div className={ styles.sideImgContainerTop }>
-            <Image
-              className={ styles.sideImgTop }
+        <Col xs="12" lg="6" className={ styles.leftImgsColumn }>
+          <div className={ `${styles.leftImgContainer}`} onClick={() => handleOpenModal(roomImagePaths[0]) }>
+            <Image 
               fluid
-              style={sideImg} 
+              className={ `${styles.roomImg} ${styles.sideImgLeft}` }
+              src={ setImagePath(roomImagePaths[0]) }
+              data-index={0}
+            />
+          </div>
+        </Col>
+        <Col xs="12" lg="6"  className={ styles.rightImgsColumn }>
+          <div className={ styles.sideImgContainerTop } onClick={() => handleOpenModal(roomImagePaths[1]) }>
+            <Image 
+              fluid
+              className={`${styles.roomImg} ${styles.sideImgRightTop}`}
               src={ setImagePath(roomImagePaths[1])} 
-              onClick={handleOpenModal}
               data-index={1}
             />
           </div>
-          <div className={ styles.sideImgContainerBottom }>
-            <Image
-              style={sideImg}
+          <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(roomImagePaths[2]) }>
+            <img
+              className={`${styles.roomImg} ${styles.sideImgRightBottom}`}
               src={ setImagePath(roomImagePaths[2])} 
-              onClick={handleOpenModal}
               data-index={2}
             />
           </div>
-          <div className={ styles.sideImgContainerBottom }>
-            <Image
-              style={sideImg} 
+          <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(roomImagePaths[3]) }>
+            <img
+              className={`${styles.roomImg} ${styles.sideImgRightBottom}`}
               src={ setImagePath(roomImagePaths[3])} 
-              onClick={handleOpenModal}
               data-index={3}
             />
           </div>

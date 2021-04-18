@@ -16,7 +16,7 @@ type Props = {
   closePictureModal: () => any
 }
 const RoomImgModal = ({ show, imgURLS, imageIndex, closePictureModal } : Props): React.Node => {
-  //const [index, setIndex] = useState(imageIndex);
+  const [ index, setIndex ] = React.useState(imageIndex);
   // const [direction, setDirection] = useState(null);
   
   // set the initial image to one clicked on //
@@ -30,20 +30,18 @@ const RoomImgModal = ({ show, imgURLS, imageIndex, closePictureModal } : Props):
     // setDirection(e.direction);
   };
   */
- const handleSelect = () => {
-
- }
-
- React.useEffect(() => {
-  console.log(imageIndex)
- }, [ imageIndex ]);
-
-
+  React.useEffect(() => {
+    if (show && imageIndex) setIndex(imageIndex);
+  }, [ show ]);
+  
+  const handleSelect = (selectedIndex: number, e: any) => {
+    setIndex(selectedIndex);
+  };
 
   return (
     <Modal show={show} className={ styles.pictureModal } onHide={ closePictureModal }>
       <div className={ styles.pictureDialog }>
-        <Carousel activeIndex={ 0 } onSelect={ handleSelect } className={ styles.imgCarousel } >
+        <Carousel activeIndex={ index } onSelect={ handleSelect } className={ styles.imgCarousel } >
           {
             imgURLS.map((imgURL, i) => {
               return (
@@ -58,6 +56,9 @@ const RoomImgModal = ({ show, imgURLS, imageIndex, closePictureModal } : Props):
             })
           }
         </Carousel>
+        <div className={ styles.closeModalToggle }>
+          <i className={ `fas fa-times` } onClick={ closePictureModal }></i>
+        </div>
       </div>
     </Modal>
   );

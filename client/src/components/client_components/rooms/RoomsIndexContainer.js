@@ -14,7 +14,7 @@ import type { RoomState, RoomAction } from "../../../redux/reducers/rooms/flowTy
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 // styles //
 import { roomStyle as style } from "./style/styles";
-import styles from "./style/roomIndexContainer.module.css";
+import styles from "./css/roomIndexContainer.module.css";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
 
@@ -99,9 +99,8 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
     _handleFetchRooms();
   }, []);
   // picture modal togglers //
-  const openPictureModal = (imgPath: string, roomImagePaths: Array<string>, index: number): void => {
-    console.log(roomImagePaths);
-    setLocalComponentState({ ...localComponentState, showModal: true, imgURLS: roomImagePaths, imageIndex: index });
+  const openPictureModal = (imgPath: string, roomImageURLS: Array<string>, index: number): void => {
+    setLocalComponentState({ ...localComponentState, showModal: true, imgURLS: roomImageURLS, imageIndex: index });
   };
   const closePictureModal = () => {
    setLocalComponentState({ ...localComponentState, showModal: false, imageIndex: 0, imgURLS: [] });
