@@ -1,4 +1,45 @@
+.portfolioSection {
+  border: 4px solid rgb(211, 211, 26);
+  padding: 25px;
+}
+.portfolioContainer {
+  border: 2px solid rgb(44, 53, 49);
+  border-radius: 3px;
+  -webkit-box-shadow: 0px 0px 4px 1px rgba(176,176,176,1);
+  -moz-box-shadow: 0px 0px 4px 1px rgba(176,176,176,1);
+  box-shadow: 0px 0px 4px 1px rgba(176,176,176,1);
+  width: 100%;
+}
+
 .headerText {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-style: italic;
+}
+
+.portfolioItem {
+  padding-top: 1em;
+}
+.portfolioItemInner {
+  padding: 0.5em;
+  border: 1px solid rgb(44, 53, 49);
+  border-radius: 3px;
+  -webkit-box-shadow: 0px 0px 4px 1px rgba(176,176,176,1);
+  -moz-box-shadow: 0px 0px 4px 1px rgba(176,176,176,1);
+  box-shadow: 0px 0px 4px 1px rgba(176,176,176,1);
+  height: 100%;
+}
+.portfolioItemPicLink {
+  border-radius: 3px;
+  height: 55%;
+  overflow: hidden;
+}
+.portfolioItemPicDesc {
+  height: 45%;
+  position: relative;
+}
+.portfolioBtn {
+  position: absolute;
+  bottom: 10%;  
+  left: 50%;
+  transform: translateX(-50%);
 }

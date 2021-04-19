@@ -6,6 +6,7 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      additional_services: "Additional Services",
       title: "Hotel",
       welcome: "Hotel Name",
       city: "City Name",
@@ -19,7 +20,7 @@ const resources = {
       checkIn: "Check In",
       checkOut: "Check Out",
       checkAvail: "Check Availability",
-      servicesTitle: "Services",
+      exploreTitle: "Explore",
       servicesDesc: "Rooms, dining, entertainment and additional services",
       about: "About Our Hotel",
       roomsTitle: "Rooms",
@@ -36,6 +37,11 @@ const resources = {
       contactMsg: "Your Message *",
       sendMsg: "Send Message",
       aboutTitle: "About Us",
+      buttons: {
+        goToRoomsBtn: "Explore rooms",
+        goToDiningBtn: "Explore dining and entertainment",
+        goToExtrasBtn: "Explore additional services"
+      },
       rooms: {
         type: "Room Type",
         area: "Area",
@@ -58,6 +64,7 @@ const resources = {
   },
   uk: {
     translation: {
+      additional_services: "Additional Services",
       title: "Готель",
       welcome: "Поділь Плаза",
       city: "Місто",
@@ -71,7 +78,7 @@ const resources = {
       checkIn: "Заїзд",
       checkOut: "Виїзд",
       checkAvail: "Бронювати",
-      servicesTitle: "Сервіс Готелю",
+      exploreTitle: "Дізнатись Більше",
       servicesDesc: "Про готель, послуги і додаткові зручності",
       about: "Про нас",
       roomsTitle: "Кімнати",
@@ -88,6 +95,11 @@ const resources = {
       contactMsg: "Ваше Повідомлення...",
       sendMsg: "Відіслати",
       aboutTitle: "Про Нас",
+      buttons: {
+        goToRoomsBtn: "Переглянути кімнати",
+        goToDiningBtn: "Переглянути ресторан і розваги",
+        goToExtrasBtn: "Переглянути додаткові послуги"
+      },
       rooms: {
         type: "Номер",
         area: "Площа",
@@ -110,6 +122,7 @@ const resources = {
   },
   ru: {
     translation: {
+      additional_services: "Additional Services",
       title: "Отель",
       welcome: "Плаза",
       city: "Город",
@@ -123,7 +136,7 @@ const resources = {
       checkIn: "Заезд",
       checkOut: "Выезд",
       checkAvail: "Искать Номера",
-      servicesTitle: "Сервис в Отеле",
+      exploreTitle: "Узнать Больше",
       servicesDesc: "Про отель, услуги и дополнительние удобства",
       about: "Про Нас",
       roomsTitle: "Комнаты",
@@ -140,6 +153,11 @@ const resources = {
       contactMsg: "Ваш Вопрос ...",
       sendMsg: "Отправить",
       aboutTitle: "Про Нас",
+      buttons: {
+        goToRoomsBtn: "Смотреть комнаты",
+        goToDiningBtn: "Смотреть ресторан и развлечения",
+        goToExtrasBtn: "Смотреть дополнительние услуги"
+      },
       rooms: {
         type: "Номер",
         area: "Площадь",
