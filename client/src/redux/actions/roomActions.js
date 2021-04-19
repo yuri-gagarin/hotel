@@ -367,7 +367,7 @@ export const handleDeleteAllRoomImages = (dispatch: Dispatch<RoomAction>, curren
   const { roomImages } = currentRoomState;
   const axiosRequest = {
     method: "delete",
-    url: "/api/rooms/remove_all_images",
+    url: "/api/rooms/delete_all_images",
     data: {
       roomImages: roomImages
     }

@@ -1,6 +1,7 @@
 // @flow //
 import * as React from "react";
 import { useTranslation } from "react-i18next";
+import type { i18n } from "react-i18next"
 // semantic ui imports //
 import { Button,  Carousel, Col, Image, Row, } from "react-bootstrap"
 // styles //
@@ -20,6 +21,24 @@ type Props = {
     direction: number
   }
 };
+/* extract later */
+/* TODO move to a helpers sections */
+
+const setRoomDescTranslation = (roomDescription: string, i18nLanguage: string) => {
+  let descriptionText: string;
+  const translations = roomDescription.split(/(<en>|<ru>|<uk>)/g).filter((text) => text.length !== 0);
+  console.log(translations)
+  if (i18nLanguage === "en" && translations.indexOf("<en>") !== -1) {
+    descriptionText = translations[translations.indexOf("<en>") + 1];
+  } else if (i18nLanguage === "ru" && translations.indexOf("<ru>") !== -1) {
+    descriptionText = translations[translations.indexOf("<ru>") + 1];
+  } else if (i18nLanguage === "uk" && translations.indexOf("<uk>") !== -1) {
+    descriptionText = translations[translations.indexOf("<uk>") + 1];
+  } else {
+    descriptionText = "Couldn't resolve translation";
+  }
+  return descriptionText;
+}
 
 const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => {
   const { options } = room;
@@ -29,7 +48,9 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
   const roomTitleRef = React.useRef(null);
   const roomPicturesRef = React.useRef(null);
   const roomDescRef = React.useRef(null);
-  // 
+  // local state //
+  const [ localState, setLocalState ] = React.useState<{ roomDescTranslated: string }>({ roomDescTranslated: "No description" });
+
   React.useEffect(() => {
     const animatedRows = document.querySelectorAll(".animatedRoomRow");
     const observer = new IntersectionObserver((entries) => {
@@ -48,6 +69,19 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
       });
     }
   }, []);
+
+  React.useEffect(() => {
+    const { description } = room;
+    const { language } = i18n;
+    const roomDescTranslated= setRoomDescTranslation(description, language);
+    setLocalState({ roomDescTranslated });
+  }, [ room, i18n.language ]);
+
+  
+  const setRoomDescriptionTranslation = (roomDescription: string) => {
+    setRoomDescTranslation(roomDescription, i18n);
+    return "No description";
+  }
 
   const roomImagePaths = room.images.map((image) => image.path);
   const handleOpenModal = (imagePath: string) => {
@@ -107,7 +141,7 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
       <Row ref={roomDescRef} className={`animatedRoomRow ${styles.descriptionContainerRow}`}>
         <Col xs="12" lg="6" className={ styles.roomDescColumn }>
           <div className={ styles.roomDescDiv }>
-            <p>{room.description}</p>
+            <p>{ localState.roomDescTranslated }</p>
           </div>
         </Col>
         <Col xs="12" lg="6" className={ styles.roomDetailsColumn }>

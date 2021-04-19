@@ -15,7 +15,6 @@ export default function (router) {
   router  
     .route("/api/rooms")
     .get(roomsController.getRooms);
-
     
   // @route PATCH "/api/rooms/:roomId?" //
   // @description Updates a room and all of its corresponding images //
@@ -23,6 +22,13 @@ export default function (router) {
   router
     .route("/api/rooms/:roomId?")
     .patch(roomsController.updateRoom);
+
+  // @route DELETE "/api/rooms/delete_all_image //
+  // @description removes all queried room image models //
+  // @access Private //
+  router 
+    .route("/api/rooms/delete_all_images")
+    .delete(roomsController.deleteAllRoomImages);
 
   // @route DELETE "/api/rooms/:roomId" //
   // @description Deletes a room and all of its corresponding images //

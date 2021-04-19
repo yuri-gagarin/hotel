@@ -43,13 +43,7 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
     headerFixed: false
   });
   const [ t ] = useTranslation();
-  /*
-  const [imageIndex, setImageIndex] = React.useState(0);
-  const [showModal, setShowModal] = React.useState(false);
-  const [clickedImg, setClickedImg] = React.useState("");
-  const [imagePaths, setImagePaths] = React.useState([]);
-  const [ headerFixed, setHeaderFixed ] = React.useState(false);
-  */
+  
   const indexRowRef = React.useRef<HTMLElement | null>(null);
 
   React.useEffect(() => {
@@ -124,9 +118,8 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
       {
         createdRooms.map((room) => {
           return (
-            <Container className={ styles.roomsIndexContainer }>       
-              <Room 
-                key={room._id} 
+            <Container className={ styles.roomsIndexContainer } key={room._id}>       
+              <Room  
                 room={room} 
                 images={room.images} 
                 openPictureModal={openPictureModal}
