@@ -1,11 +1,13 @@
 // @flow
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 // semantic ui components //
 import { Button, Col, Container, Carousel, Modal, Row } from "react-bootstrap";
 // additional components //
 import NavbarComponent from "../navbar/NavbarComponent";
 import Room from "./Room";
 import RoomImgModal from "./RoomImgModal";
+import ClipText from "../../admin/shared/ClipText";
 // redux imports //
 import { connect } from "react-redux";
 import { handleFetchRooms } from "../../../redux/actions/roomActions";
@@ -13,17 +15,9 @@ import { handleFetchRooms } from "../../../redux/actions/roomActions";
 import type { RoomState, RoomAction } from "../../../redux/reducers/rooms/flowTypes";
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 // styles //
-import { roomStyle as style } from "./style/styles";
 import styles from "./css/roomIndexContainer.module.css";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
-
-const {
-  background, carouselStyle,
-  containerStyle, headerStyle,
-  roomTitle, roomsDescription,
-  roomOptions
-} = style
 
 type Props = {
   roomState: RoomState,
@@ -48,6 +42,7 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
     imgURLS: [],
     headerFixed: false
   });
+  const [ t ] = useTranslation();
   /*
   const [imageIndex, setImageIndex] = React.useState(0);
   const [showModal, setShowModal] = React.useState(false);
@@ -112,11 +107,13 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
 
  
   return (
-    <div style={background}>
+    <div>
       <NavbarComponent/>
       <div className={ styles.parallax }></div>
       <Row className={ `${styles.roomsIndexHeaderRow} ${ localComponentState.headerFixed ? styles.headerFixed : ""}`} ref={ indexRowRef } >
-        <div>Our Rooms</div>
+        <div className={ `${styles.svgContainer}` }>
+          <ClipText className={ `${styles.svgText} ${ localComponentState.headerFixed ? styles.svgTextFixed : ""}` } text={t("rooms.roomHeader")} textId="rooms" fontSize={"2em"} />
+        </div>
       </Row>
       <RoomImgModal 
         show={ localComponentState.showModal } 
@@ -136,7 +133,7 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
                 picModalState={{ showModal: localComponentState.showModal, imageIndex: localComponentState.imageIndex, direction: 1 }}
               />
             </Container>
-          );
+            );
         })
       } 
       <div className={ styles.parallax }></div>

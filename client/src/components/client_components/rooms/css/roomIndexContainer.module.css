@@ -1,31 +1,60 @@
 .parallax {
-  height: 300px;
+  height: 100vh;
   /* Create the parallax scrolling effect */
+  position: relative;
   background-image: url("/assets/images/backgrounds/bg_nature_mist.jpeg");
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  border-bottom: 3px solid rgb(194, 194, 25);
+  margin-bottom: 1em;
 }
 
 .roomsIndexHeaderRow {
-  background-color: rgb(44, 53, 49);
-  margin-bottom: 0.5em;
-  height: 200px;
+  background-color: rgba(44, 53, 49, 0.438);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 3.5em;
+  flex-direction: column;
+  height: 400px;
+  width: 100%;
   font-family: "Pacifico";
   font-weight: "bold";
-  color: rgb(214, 199, 14);
 }
 .headerFixed {
   position: fixed;
+  background-color: rgb(44, 53, 49);
   width: 100%;
   left: 0;
   top: 50px;
-  height: 100px;
+  height: 200px;
   z-index: 999;
-  transition: height 1s linear;
+  transition: height 1s linear, background-color 1s linear;
+}
+
+/* svg title */
+.svgContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.svgText {
+  position: absolute;
+  height: 100px;
+  width: 400px;
+  left: 50%;
+  top: 50%;
+  font-size: 3em;
+  transform: translate(-50%, -50%);
+  background-color: rgb(194, 194, 25);
+  border-radius: 3px;
+}
+.svgTextFixed {
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 0%);
+  transition: all 500ms ease-in;
 }

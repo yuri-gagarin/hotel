@@ -1,23 +1,15 @@
 // @flow //
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 // semantic ui imports //
 import { Button,  Carousel, Col, Image, Row, } from "react-bootstrap"
 // styles //
-import { roomStyle } from "./style/styles";
 import styles from "./css/room.module.css";
 // FLOW types //
 import type { RoomData } from "../../../redux/reducers/rooms/flowTypes";
 import { setImagePath} from "../../helpers/displayHelpers";
 // translations //
-import { useTranslation } from "react-i18next";
 
-
-const {
-  roomTitle, carouselStyle, carouselImgStyle,
-  roomsDescription, roomOptions, bookButton,
-  roomDetails, roomOptionsHolder,
-  sideImgHolder, sideImg, descriptionHolder, strikeThrough
-} = roomStyle;
 
 type Props = {
   room: RoomData,
@@ -57,13 +49,7 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
     }
   }, []);
 
-
-  const handleSelect = (selectedIndex, e) => {
-   // setIndex(selectedIndex);
-   // setDirection(e.direction);
-  };
   const roomImagePaths = room.images.map((image) => image.path);
-
   const handleOpenModal = (imagePath: string) => {
     const clickedImageURL = setImagePath(imagePath);
     const imgURLSArr = roomImagePaths.map((imagePath) => setImagePath(imagePath) );
@@ -74,11 +60,11 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
 
   return (
     <React.Fragment>
-      <Row ref={roomTitleRef} className="animatedRoomRow">
+      <Row ref={roomTitleRef}>
         <Col style={{padding: 0}}>
           <div style={{ position: "relative", width: "100%", height: "50px", marginBottom: "1em" }} className={ styles.titleRow }>
-            <div style={roomTitle}>{room.roomType}</div>
-            <div style={strikeThrough}></div>
+            <div className={ styles.strikeThroughDiv }></div>
+            <div className={ styles.roomType }>{room.roomType}</div>
           </div>
         </Col>
       </Row>
@@ -126,7 +112,7 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
         </Col>
         <Col xs="12" lg="6" className={ styles.roomDetailsColumn }>
           <div className={ styles.roomDetailsContainer }>
-            <div className={ styles.roomDetailsHeader }><span>Room details:</span></div>
+            <div className={ styles.roomDetailsHeader }><span>{t("rooms.details")}:</span></div>
             <div className={ styles.roomDetails }><i className="fas fa-store-alt"></i> {t("rooms.area")}: {room.area}</div>
             <div className={ styles.roomDetails }><i className="fas fa-users"></i> {t("rooms.sleeps")}: {room.sleeps}</div>
             <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: {room.beds}</div>
@@ -211,8 +197,8 @@ const Room = ({ room, openPictureModal, picModalState } : Props): React.Node => 
       </Row>
       <Row style={{ marginTop: "10px" }}>
         <Col className={ styles.bookColumn }>
-          <Button style={bookButton}>Book Now</Button>
-          <div className={ styles.bookPriceDiv }>From:<span>{room.price}</span></div>
+          <Button variant="info">{t("buttons.bookNow")}</Button>
+          <div className={ styles.bookPriceDiv }>{t("misc.from")}:<span>{room.price}</span></div>
         </Col>
       </Row>
       <hr />

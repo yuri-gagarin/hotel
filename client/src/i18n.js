@@ -38,11 +38,14 @@ const resources = {
       sendMsg: "Send Message",
       aboutTitle: "About Us",
       buttons: {
+        bookNow: "Book now",
         goToRoomsBtn: "Explore rooms",
         goToDiningBtn: "Explore dining and entertainment",
         goToExtrasBtn: "Explore additional services"
       },
       rooms: {
+        details: "Room details",
+        roomHeader: "Rooms",
         type: "Room Type",
         area: "Area",
         sleeps: "Sleeps",
@@ -59,12 +62,15 @@ const resources = {
         streetView: "Street View",
         tv: "TV",
         ac: "Air Conditioning"
-      }    
+      },
+      misc: {
+        from: "From"
+      }       
     }
   },
   uk: {
     translation: {
-      additional_services: "Additional Services",
+      additional_services: "Додаткові Послуги",
       title: "Готель",
       welcome: "Поділь Плаза",
       city: "Місто",
@@ -96,11 +102,14 @@ const resources = {
       sendMsg: "Відіслати",
       aboutTitle: "Про Нас",
       buttons: {
+        bookNow: "Бронювати",
         goToRoomsBtn: "Переглянути кімнати",
         goToDiningBtn: "Переглянути ресторан і розваги",
         goToExtrasBtn: "Переглянути додаткові послуги"
       },
       rooms: {
+        details: "Делалі кімнати",
+        roomHeader: "Кімнати",
         type: "Номер",
         area: "Площа",
         sleeps: "Вміщає",
@@ -117,12 +126,15 @@ const resources = {
         streetView: "Вид на вулицю",
         tv: "ТВ",
         ac: "Кондиціонер"
-      }    
+      },
+      misc: {
+        from: "Від"
+      }   
     }
   },
   ru: {
     translation: {
-      additional_services: "Additional Services",
+      additional_services: "Дополнительные Услуги",
       title: "Отель",
       welcome: "Плаза",
       city: "Город",
@@ -154,11 +166,14 @@ const resources = {
       sendMsg: "Отправить",
       aboutTitle: "Про Нас",
       buttons: {
+        bookNow: "Броневать",
         goToRoomsBtn: "Смотреть комнаты",
         goToDiningBtn: "Смотреть ресторан и развлечения",
         goToExtrasBtn: "Смотреть дополнительние услуги"
       },
       rooms: {
+        details: "Детали комнаты",
+        roomHeader: "Комнаты",
         type: "Номер",
         area: "Площадь",
         sleeps: "Человек",
@@ -175,7 +190,10 @@ const resources = {
         streetView: "Вид на улицу",
         tv: "ТВ",
         ac: "Кондиционер"
-      }    
+      },
+      misc: {
+        from: "От"
+      }     
     }
   }
 };
