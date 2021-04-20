@@ -1,5 +1,7 @@
 .diningIndexContainer {
   position: relative;
+  background-color: rgb(44, 53, 49, 1);
+  border: 7px solid red;
 }
 .parallaxContainer {
   width: 100vw;

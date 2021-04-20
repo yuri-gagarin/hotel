@@ -4,28 +4,32 @@ import * as React from "react";
 import { Row, Col } from "react-bootstrap";
 // additional components //
 import NavbarComponent from "../navbar/NavbarComponent";
-import RestaurantComponent from "./restaurant/RestaurantComponent";
+import { RestaurantComponent } from "./restaurant/RestaurantComponent";
 import ClipText from "../../admin/shared/ClipText";
 // redux //
 import { connect } from "react-redux";
 import { handleFetchDiningModels } from "../../../redux/actions/diningActions";
 // styles and css //
 import styles from "./css/diningIndex.module.css";
+// types //
+import type { RootState } from "../../../redux/reducers/_helpers/createReducer";
+import type { DiningEntertainmentState } from "../../../redux/reducers/dining_entertainment/flowTypes";
 // helpers //
 import { navbarCollapseListener } from "../../helpers/componentHelpers";
 
 type WrapperProps = {|
-
+  
 |};
 type Props = {|
   ...WrapperProps,
+  diningEntertainmentState: DiningEntertainmentState,
   _handleFetchDiningEntModels: (options: any) => Promise<boolean>
 |};
 type LocalState = {
   headerFixed: boolean,
   headerTop: string
 }
-const DiningIndexContainer = ({ _handleFetchDiningEntModels }: Props) => {
+const DiningIndexContainer = ({ diningEntertainmentState, _handleFetchDiningEntModels }: Props) => {
   const headerRowRef = React.useRef<HTMLElement | null>(null);
   const [ headerRowState, setHeaderRowState ] = React.useState<LocalState>({ headerFixed: false, headerTop: "" });
 
@@ -75,22 +79,20 @@ const DiningIndexContainer = ({ _handleFetchDiningEntModels }: Props) => {
           </button>
         </div>
       </div>
-      <RestaurantComponent />
+      <RestaurantComponent
+        diningOption={ diningEntertainmentState.diningEntModelData }
+      />
       <div className={ styles.parallaxSpacer }></div>
-      <RestaurantComponent />
     </div>
   );
 };
 
-DiningIndexContainer.propTypes = {
-
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
-
+    diningEntertainmentState: state.diningEntertainmentState
   };
 };
+
 const mapDispatchToProps = (dispatch) => {
   return {
     _handleFetchDiningEntModels: (options: any) => handleFetchDiningModels(dispatch, options)

@@ -1,8 +1,8 @@
 // @flow
-import type { ServiceAction, ServiceState, ServiceData } from "../service/flowTypes";
+import type { ServiceAction, ServiceState, ServiceData,ServiceImgData } from "../service/flowTypes";
 import type { ContactPostAction, ContactPostState, ContactPostData } from "../contact_posts/flowTypes";
-import type { DiningEntModelAction, DiningEntertainmentState, DiningEntModelData } from "../dining_entertainment/flowTypes";
-import type { RoomAction, RoomState, RoomData } from "../rooms/flowTypes";
+import type { DiningEntModelAction, DiningEntertainmentState, DiningEntModelData, DiningImgData, MenuImageData } from "../dining_entertainment/flowTypes";
+import type { RoomAction, RoomState, RoomData, RoomImgData } from "../rooms/flowTypes";
 export type AppAction = ServiceAction | ContactPostAction | DiningEntModelAction | RoomAction;
 export type Reducer<S, A: AppAction> = (S, A) => S;
 export type Dispatch<A> = (action: A) => any;
@@ -15,6 +15,7 @@ export type RootState = {
 };
 
 export type GenericModelData = (ServiceData | DiningEntModelData | RoomData);
+export type GenericImgData = (DiningImgData | MenuImageData | RoomImgData | ServiceImgData);
 
 export default function createReducer<S, A: *>(initialState: S, handlers: { [key: string]: Reducer<S, A> }): Reducer<S, A> {
   return function reducer(state: S = initialState, action: A): S {

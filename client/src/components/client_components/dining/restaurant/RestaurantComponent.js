@@ -1,48 +1,73 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+// @flow //
+import * as React from "react";
 // bootstrap components //
-import { Row, Col, Image } from "react-bootstrap";
-//
+import { Container, Col, Image, Row } from "react-bootstrap";
+// additional components //
+import { flipImgComponent } from "../../shared/FlipImgComponent";
+// styles and css //
 import styles from "./css/restaurantComponent.module.css";
+// types //
+import type { DiningEntModelAction, DiningEntModelData } from "../../../../redux/reducers/dining_entertainment/flowTypes";
+import type { Dispatch } from "../../../../redux/reducers/_helpers/createReducer";
 // helpers //
 import { setComponentValues } from "../hepers/defaultValues";
+import { setImagePath } from "../../../helpers/displayHelpers";
 
-const DiningComponent = ({ diningOption }) => {
-  const [ diningCompLocalState, setDiningCompLocalState ] = useState({ title: "", description: "", hours: "", imagePaths: [] });
+type Props = {
+  diningOption: DiningEntModelData
+};
+
+type LocalState = {
+
+}
+
+export const RestaurantComponent = ({ diningOption } : Props): React.Node => {
+  const [ diningCompLocalState, setDiningCompLocalState ] = React.useState({ title: "", description: "", hours: "", imagePaths: [] });
   //
   const { title, description, hours, imagePaths } = diningCompLocalState;
-  useEffect(() => {
+  React.useEffect(() => {
     const { title, description, hours, imagePaths } = setComponentValues(diningOption);
     setDiningCompLocalState({ ...diningCompLocalState, title, description, hours, imagePaths });
   }, []);
 
   return (
-    <React.Fragment>
-      <Row className={ styles.diningCompTitleRow}>
-        <div className={ styles.diningTitleDiv}>
-          <p className={ styles.diningTitleContent}>{ title }</p>
+    <Container fluid>
+      <Row className={ styles.restaurantCompTitleRow}>
+        <div className={ styles.restaurantTitleDiv}>
+          <p className={ styles.restaurantTitleContent}>{ title }</p>
         </div>
         <div className={ styles.rowBorder }></div>
       </Row>
-      <Row className={ styles.diningComponentRow }>
-        <Col lg={7} md={12} className={ styles.diningComponentPictureCol } >
-          <Image src={imagePaths[0]} className={ `${styles.diningFirstImg} ${styles.diningImage}` } rounded></Image>
-          <Image src={imagePaths[2]} className={ `${styles.diningThirdImg} ${styles.diningImage} ${styles.lastImage}` } rounded></Image>
-          <Image src={imagePaths[1]} className={ `${styles.diningSecondImg} ${styles.diningImage}` } rounded></Image>
+      <Row className={ styles.restaurantComponentRow }>
+        <Col lg={8} md={12} className={ styles.restaurantComponentPictureCol }>
+          <Container fluid className={ styles.leftPicContainer }>
+            <Row className={ styles.leftPicUpperRow }>
+              
+            </Row>
+            <Row className={ styles.leftPicLowerRow }>
+
+            </Row>
+          </Container>
+          <Container fluid className={ styles.rightPicContainer }>
+            <Row className={ styles.rightPicRow }>
+
+            </Row>
+          </Container>
         </Col>
-        <Col lg={5} md={12} className={ styles.diningComponentDescCol }>
-          <div className={ styles.diningDescWrapper }>
-            <div className={ styles.diningDescWrapperLeft }>
-              <div className={ styles.diningDescriptionDiv }>
+        
+        <Col lg={4} md={12} className={ styles.restaurantComponentDescCol }>
+          <div className={ styles.restaurantDescWrapper }>
+            <div className={ styles.restaurantDescWrapperLeft }>
+              <div className={ styles.restaurantDescriptionDiv }>
                 <p>{ description }</p>
               </div>
-              <div className={ styles.diningHoursDiv}>
+              <div className={ styles.restaurantHoursDiv}>
                 <i className="far fa-clock"></i>
                 <span>Open hours:</span>
                 <span>{ hours }</span>
               </div>
             </div>
-            <div className={ styles.diningDescWrapperRight }>
+            <div className={ styles.restaurantDescWrapperRight }>
               <span>
                 <i className="fas fa-utensils"></i>
                 <span>Menu</span>
@@ -68,12 +93,6 @@ const DiningComponent = ({ diningOption }) => {
          
         </Col>
       </Row>
-    </React.Fragment>
-  )
+    </Container>
+  );
 };
-
-DiningComponent.propTypes = {
-  diningOption: PropTypes.object
-};
-
-export default DiningComponent;
