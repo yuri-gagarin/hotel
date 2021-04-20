@@ -21,7 +21,7 @@ import { setImagePath } from "../../helpers/displayHelpers";
 
 type Props = {
   roomState: RoomState,
-  _handleFetchRooms: () => Promise<boolean>
+  _handleFetchRooms: (data? : any) => Promise<boolean>
 };
 
 type LocalComponentState = {
@@ -67,25 +67,7 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
   }, [ indexRowRef.current, localComponentState.headerFixed ]);
 
   React.useEffect(() => {
-    // Navbar collapse implementation // 
-    $("#mainNav").css("backgroundColor", "#2c3531");
-    (function (){
-      // Collapse Navbar
-      var navbarCollapse = function() {
-        if ($("#mainNav").offset().top > 100) {
-          $("#mainNav").addClass("navbar-shrink");
-        } else {
-          $("#mainNav").removeClass("navbar-shrink");
-        }
-      };
-      // Collapse now if page is not at top
-      navbarCollapse();
-      // Collapse the navbar when page is scrolled
-      $(window).scroll(navbarCollapse);
-    }());
-    // END Navbar collapse implementation //
-    // fetch the rooms from the server //
-    _handleFetchRooms();
+    _handleFetchRooms({ live: true });
   }, []);
   // picture modal togglers //
   const openPictureModal = (imgPath: string, roomImageURLS: Array<string>, index: number): void => {
@@ -142,7 +124,7 @@ const mapStateToProps = (state: RootState) => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<RoomAction>) => {
   return {
-    _handleFetchRooms: () => handleFetchRooms(dispatch)
+    _handleFetchRooms: (options?: any) => handleFetchRooms(dispatch, options)
   };
 };
 

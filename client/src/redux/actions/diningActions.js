@@ -358,10 +358,13 @@ export const handleCreateDiningModel = (dispatch: Dispatch<DiningEntModelAction>
     });
 };
 
-export const handleFetchDiningModels = (dispatch: Dispatch<DiningEntModelAction>): Promise<boolean> => {
+export const handleFetchDiningModels = (dispatch: Dispatch<DiningEntModelAction>, options?: any): Promise<boolean> => {
   const requestOptions = {
     method: "get",
-    url: "/api/dining_models"
+    url: "/api/dining_models",
+    data: {
+      options: options ? options : null
+    }
   };
 
   dispatch(diningModelAPIRequest());

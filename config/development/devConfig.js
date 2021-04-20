@@ -1,12 +1,12 @@
 export default {
     dbSettings: {
-        mongoURI: process.env.devMongoURI
-        username: process.env.userName
-        password: process.env.password
+        mongoURI: process.env.DEV_MONGO_URI,
+        username: process.env.MONGO_USERNAME,
+        password: process.env.MONGO_PASSWORD,
         useFindAndModify: false
     },
     session: {
-        secret: rocess.env.secret
+        secret: process.env.SECRET,
         resave: true,
         saveUninitialized: true
     }

@@ -5,6 +5,32 @@ import { deleteFile } from "./helpers/apiHelpers";
 
 export default {
   getRooms: (req, res) => {
+    const options = req.query.options ? JSON.parse(req.query.options) : null;
+    if (options && typeof options === "object") {
+      console.log(11)
+      if (options.live) {
+        return Room.find({ live: true })
+          .populate("images", ["_id", "path"])
+          .then((rooms) => {
+            //console.log(rooms);
+            return res.status(200).json({
+              responseMsg: "Loaded all Rooms",
+              rooms: rooms
+            });
+          })
+          .catch((error) => {
+            return res.status(500).json({
+              responseMsg: "An error occured",
+              error: error
+            });
+          });
+      } else {
+        return res.status(200).json({
+          responseMsg: "Loaded all Rooms",
+          rooms: []
+        });
+      }
+    }
     return Room.find({})
       .populate("images", ["_id", "path"])
       .then((rooms) => {
@@ -165,23 +191,33 @@ export default {
     const { roomData, roomImages } = req.body;
     let deletedRoom;
     // console.log(req.body);
-    const imagePaths = roomImages.map((img) => `${img.path}`);
-    const imageIds = roomImages.map((img) => `${img._id}`);
+    let imagePaths = [];
+    let imageIds = [];
 
-    return Room.findOneAndDelete({ _id: roomId })
-      .then((room) => {
-        deletedRoom = room;
-        // delete the corresponding room images from the uploads folder //
-        const deletePromises = imagePaths.map((filePath) => deleteFile(filePath))
-        return Promise.all(deletePromises);
-      })
-      .then((deleteArray) => {
-        console.log(92);
-        console.log(deleteArray);
-        return RoomImage.deleteMany({ _id: imageIds });
+    return Room.findOne({ _id: roomId }).populate("images").exec()
+      .then((foundRoom) => {
+        if (foundRoom.images.length > 0) {
+          for (const imgData of foundRoom.images) {
+            imagePaths.push(imgData.path);
+            imageIds.push(imgData._id);
+          }
+          const deletePromises = imagePaths.map((filePath) => deleteFile(filePath))
+          return Promise.all(deletePromises);
+        } else {
+          return Promise.resolve([]);
+        }
       })
       .then((response) => {
-        console.log(response);
+        if (response.length > 0) {
+          return RoomImage.deleteMany({ _id: imageIds });
+        } else {
+          return Promise.resolve({ n: 0 });
+        }
+      })
+      .then((response) => {
+        return Room.findOneAndDelete({ _id: roomId }).exec();
+      })
+      .then((deletedRoom) => {
         return res.status(200).json({
           responseMsg: "Successfully Deleted",
           deletedRoom: deletedRoom

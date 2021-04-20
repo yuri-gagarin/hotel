@@ -1,3 +1,4 @@
+
 import express from "express";
 import http from "http";
 import mongoose from "mongoose";
@@ -10,9 +11,9 @@ import session from "express-session";
 import passportSrategy from "./controllers/helpers/authHelper";
 import appConfig from "./config/appConfig";
 import combineRoutes from "./routes/combineRoutes";
-import dotenv from "dotenv"
-
+import dotenv from "dotenv";
 dotenv.config();
+
 const app = express();
 const router = express.Router();
 const PORT = process.env.PORT || 8080;
@@ -26,7 +27,7 @@ const mongoOptions = {
   user: dbSettings.username,
   pass: dbSettings.password
 };
-mongoose.connect(dbSettings.mongoURI, mongoOptions, (err) => {
+mongoose.connect(process.env.DEV_MONGO_URI, mongoOptions, (err) => {
   if (err) console.error(err);
 });
 mongoose.connection.once("open", () => {
@@ -39,7 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // passport middleware //
 app.use(session({
-  ...appConfig.session
+  ...appConfig.session, secret: process.env.SECRET
 }));
 passportSrategy(passport);
 app.use(passport.initialize());

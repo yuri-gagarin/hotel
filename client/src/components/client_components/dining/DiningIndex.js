@@ -1,51 +1,46 @@
-import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
+// @flow 
+import * as React from "react";
 // bootstrap react //
 import { Row, Col } from "react-bootstrap";
 // additional components //
 import NavbarComponent from "../navbar/NavbarComponent";
-import DiningComponent from "./DiningComponent";
+import RestaurantComponent from "./restaurant/RestaurantComponent";
 import ClipText from "../../admin/shared/ClipText";
 // redux //
 import { connect } from "react-redux";
+import { handleFetchDiningModels } from "../../../redux/actions/diningActions";
 // styles and css //
 import styles from "./css/diningIndex.module.css";
 // helpers //
 import { navbarCollapseListener } from "../../helpers/componentHelpers";
 
-const DiningIndexContainer = (props) => {
-  const headerRowRef = useRef(null);
-  const [ headerRowState, setHeaderRowState ] = useState({ headerFixed: false, top: "" });
+type WrapperProps = {|
 
-  
-  useEffect(() => {
-    document.body.scrollTop = 0;
-    navbarCollapseListener();
+|};
+type Props = {|
+  ...WrapperProps,
+  _handleFetchDiningEntModels: (options: any) => Promise<boolean>
+|};
+type LocalState = {
+  headerFixed: boolean,
+  headerTop: string
+}
+const DiningIndexContainer = ({ _handleFetchDiningEntModels }: Props) => {
+  const headerRowRef = React.useRef<HTMLElement | null>(null);
+  const [ headerRowState, setHeaderRowState ] = React.useState<LocalState>({ headerFixed: false, headerTop: "" });
+
+  React.useEffect(() => {
+    window.scrollTo({ x: 0, y: 0 });
+    _handleFetchDiningEntModels({ live: true });
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (headerRowRef.current) {
-      /*
-      const mainNav = document.getElementById("mainNav");
-      if (mainNav) {
-        window.onscroll = () => {
-          const headerRowRefY = headerRowRef.current.getBoundingClientRect().y;
-          if (mainNav.classList.contains("navbar-shrink")) {
-            const navHeight = mainNav.getBoundingClientRect().height;
-            if (headerRowRefY <= navHeight) {
-              if (!headerRowState.headerFixed) {
-                setHeaderRowState({ headerFixed: true, top: navHeight });
-              }
-            }
-          }
-        }
-      }
-      */
       window.onscroll = () => {
-        const headerRowRefY = headerRowRef.current.getBoundingClientRect().y;
+        const headerRowRefY: number = headerRowRef.current ? headerRowRef.current.getBoundingClientRect().top : 0;
         if (headerRowRefY <= 50) {
           if (!headerRowState.headerFixed) {
-            setHeaderRowState({ headerFixed: true, top: 50 });
+            setHeaderRowState({ headerFixed: true, headerTop: "50px" });
           }
         }
       }
@@ -55,23 +50,34 @@ const DiningIndexContainer = (props) => {
     }
   }, [ headerRowRef.current ]);
 
+  const scrollToContent = () => {
+    const intViewportHeight = window.innerHeight;
+    console.log(intViewportHeight);
+    window.scrollTo({ top: intViewportHeight - 250, behavior: "smooth" });
+  }
+
   return (
     <div className={ styles.diningIndexContainer }>
       <NavbarComponent />
       <div className={ `${styles.parallaxGroup} ${styles.parallaxContainer}` }>
-        <div className={ `${styles.headerRow} ${headerRowState.headerFixed ? styles.headerFixed : ""}` } style={ headerRowState.headerFixed ? { top: headerRowState.top } : {}} ref={ headerRowRef }>
-          <div className={ styles.svgContainer }>
-            <ClipText className={ styles.firstSvg } text="Dining" textId="dining" fontSize={"3em"} />
-            <ClipText className={ styles.secondSvg } text="and" textId="and" fontSize={"1.5em"}/>
-            <ClipText className={ styles.thirdSvg } text="Entertainment" textId="entainmnt" fontSize={"2em"} letterSpacing={"5px"} />
+        <div className={ `${styles.headerRow} ${headerRowState.headerFixed ? styles.headerFixed : ""}` } style={ headerRowState.headerFixed ? { top: headerRowState.headerTop } : {}} ref={ headerRowRef }>
+          <div className={ `${styles.svgContainer} ${headerRowState.headerFixed ? styles.svgContainerFixed : "" }` }>
+            <ClipText className={ styles.firstSvg } text="Dining" textId="dining" fontSize={"1.75em"} />
+            <ClipText className={ styles.secondSvg } text="and" textId="and" fontSize={"1.25em"}/>
+            <ClipText className={ styles.thirdSvg } text="Entertainment" textId="entainmnt" fontSize={"1.75em"} letterSpacing={"5px"} />
           </div>
-          
         </div>
-        
+        <div className={ styles.exploreBtnWrapper }>
+          <button className={ styles.exploreBtn } onClick={ scrollToContent }>
+            Explore
+            <div className={ styles.buttonHorizontal }></div>
+            <div className={ styles.buttonVertical }></div>
+          </button>
+        </div>
       </div>
-      <DiningComponent />
+      <RestaurantComponent />
       <div className={ styles.parallaxSpacer }></div>
-      <DiningComponent />
+      <RestaurantComponent />
     </div>
   );
 };
@@ -87,9 +93,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    _handleFetchDiningEntModels: (options: any) => handleFetchDiningModels(dispatch, options)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DiningIndexContainer);
+export default (connect(mapStateToProps, mapDispatchToProps)(DiningIndexContainer): React.AbstractComponent<WrapperProps>);
 

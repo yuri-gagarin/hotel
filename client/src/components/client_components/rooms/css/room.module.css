@@ -67,6 +67,10 @@
   opacity: 0;
   transition: opacity 0.5s linear;
 }
+.sideImgLeft {
+  border: 3px solid green;
+  width: 100%;
+}
 
 
 .sideImgContainerTop {
@@ -75,6 +79,9 @@
   overflow: hidden;
   border: 1px solid rgb(38, 42, 51);
   border-radius: 5px;
+}
+.sideImgRightTop {
+  width: 100%;
 }
 .sideImgContainerTop::after {
   content: ""; 
@@ -120,6 +127,7 @@
 .sideImgRightBottom {
   display: block;
   height: 100%;
+  width: 100%;
   object-fit: cover;
 }
 /* room details */
@@ -158,7 +166,6 @@
   justify-content: flex-start;
   flex-direction: row;
   height: 50%;
-  border: 3px solid green;
 }
 .roomDetailsHeader {
   font-size: 1em;
@@ -188,7 +195,6 @@
   flex-direction: row;
   justify-content: flex-start;
   height: 50%;
-  border: 5px solid red;
 }
 .roomOption {
   height: 40px;

@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 // bootstrap components //
 import { Row, Col, Image } from "react-bootstrap";
 //
-import styles from "./css/diningComponent.module.css";
+import styles from "./css/restaurantComponent.module.css";
 // helpers //
-import { setComponentValues } from "./hepers/defaultValues";
+import { setComponentValues } from "../hepers/defaultValues";
 
 const DiningComponent = ({ diningOption }) => {
   const [ diningCompLocalState, setDiningCompLocalState ] = useState({ title: "", description: "", hours: "", imagePaths: [] });

@@ -44,36 +44,45 @@
   position: fixed;
   left: 0px;
   width: 100%;
-  height: 200px;
+  height: 150px;
   transform: translateY(0);
   background-color: rgb(44, 53, 49, 1);
   transition: background-color 1s ease-in, height 1s ease-out;
 }
+/* svg header */
 .svgContainer {
   display: flex;
-  position: relative;
-  flex-direction: column;
+  position: absolute;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  border: 3px solid yellow;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 150px;
+}
+.svgContainerFixed {
+  top: 100%;
+  transform: translateY(-100%);
+  transition: all 1s ease-in;
 }
 .firstSvg {
-  width: 400px;
-  height: 80px;
+  width: 100%;
+  height: 30%;
   fill:rgb(44, 53, 49);
   background-color: inherit;
   z-index: 2;
 }
 .secondSvg {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 120px;
-  height: 50px;
+  width: 10%;
+  height: 40%;
+  display: flex;
   background-color: rgb(194, 194, 25);
   z-index: 4;
 }
 .thirdSvg {
-  width: 400px;
-  height: 80px;
+  width: 100%;
+  height: 30%;
   background-color: inherit;
   z-index: 2;
 }
@@ -87,4 +96,80 @@
   height: 150px;
   border: 4px solid red;
   background-image: inherit;
+}
+
+/* explore button */
+.exploreBtnWrapper {
+  border: 3px solid rgb(44, 53, 49);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10%;
+}
+.exploreBtn {
+  --offset: 10px;
+  --border-size: 2px;
+  display: block;
+  position: relative;
+  padding: 1em 2em;
+  appearance: none;
+  border: 0;
+  background: rgb(44, 53, 49);
+  color: rgb(194, 194, 25);
+  text-transform: uppercase;
+  letter-spacing: .25em;
+  outline: none;
+  cursor: pointer;
+  font-weight: bolder;
+  font-size: 1em;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 var(--border-size) currentcolor;
+}
+.exploreBtn:hover {
+  background: rgba(44, 53, 49, 0.671);
+}
+
+.buttonHorizontal, .buttonVertical {
+  position: absolute;
+  top: var(--horizontal-offset, 0);
+  right: var(--vertical-offset, 0);
+  bottom: var(--horizontal-offset, 0);
+  left: var(--vertical-offset, 0);
+  transition: transform .8s ease;
+  will-change: transform;
+}
+.buttonHorizontal::before, .buttonVertical::before {
+  content: '';
+  position: absolute;
+  border: inherit;
+}
+
+.buttonHorizontal {
+  --vertical-offset: calc(var(--offset) * -1);
+  border-top: var(--border-size) solid currentcolor;
+  border-bottom: var(--border-size) solid currentcolor;
+}
+.buttonHorizontal::before {
+  top: calc(var(--vertical-offset) - var(--border-size));
+  bottom: calc(var(--vertical-offset) - var(--border-size));
+  left: calc(var(--vertical-offset) * -1);
+  right: calc(var(--vertical-offset) * -1);
+}
+.exploreBtn:hover .buttonHorizontal {
+  transform: scaleX(0);
+}
+
+.buttonVertical {
+  --horizontal-offset: calc(var(--offset) * -1);
+  border-left: var(--border-size) solid currentcolor;
+  border-right: var(--border-size) solid currentcolor;
+}
+.buttonVertical::before {
+  top: calc(var(--horizontal-offset) * -1);
+  bottom: calc(var(--horizontal-offset) * -1);
+  left: calc(var(--horizontal-offset) - var(--border-size));
+  right: calc(var(--horizontal-offset) - var(--border-size));
+}
+.exploreBtn:hover .buttonVertical {
+  transform: scaleY(0);
 }
