@@ -58,7 +58,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  border: 3px solid yellow;
+  width: 100%;
   top: 50%;
   transform: translateY(-50%);
   height: 150px;

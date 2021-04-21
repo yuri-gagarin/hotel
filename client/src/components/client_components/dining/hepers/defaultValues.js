@@ -3,7 +3,7 @@ import { setImagePath } from '../../../helpers/displayHelpers';
 export const setComponentValues = (diningOption) => {
   let title, description, hours, imagePaths = [];
   if (diningOption && typeof diningOption === "object") {
-    title = diningOption.title ? diningOption.title : "Dining/Entertainment option title here...";
+    title = diningOption.title ? diningOption.title : "Title here...";
     description = diningOption.description ? diningOption.description : "Write a short description here, be creative...";
     hours = diningOption.hours ? diningOption.hours : "Your hours will go here";
     if (diningOption.images && Array.isArray(diningOption.images)) {

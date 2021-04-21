@@ -4,21 +4,25 @@ import * as React from "react";
 import styles from "./css/flipImgComponent.module.css";
 // types //
 import type { GenericImgData } from "../../../redux/reducers/_helpers/createReducer";
+// helpers //
+import { setImagePath } from "../../helpers/displayHelpers";
+
 type Props = {
-  genericImgData: GenericImgData
+  genericImgData: GenericImgData,
+  triggerFlipAnimate: boolean
 };
 
-export const flipImgComponent = ({ genericImgData }: Props): React.Node => {
+export const FlipImgComponent = ({ genericImgData, triggerFlipAnimate }: Props): React.Node => {
 
   return (
     <div className={ `${styles.flipImgComponent}` }>
-      <div className={ `${styles.flipImgComponentInner}` }>
+      <div className={ `${styles.flipImgComponentInner} ${triggerFlipAnimate ? "styles.triggerRotateAnimation" : ""}` }>
         <div className={ `${styles.flipCardFront} `}>
-          <img src="https://www.w3schools.com/" alt="Avatar" />
+          <img src="/assets/images/dining/restaurant_stock9.jpeg" alt="Avatar" />
         </div>
         <div className={ `${styles.flipCardBack}` }>
-          <img src="https://www.w3schools.com/" alt="Avatar" />
-        </div>
+          <img src="/assets/images/dining/restaurant_stock10.jpeg" alt="Avatar" />
+        </div> 
       </div>
     </div>
   );

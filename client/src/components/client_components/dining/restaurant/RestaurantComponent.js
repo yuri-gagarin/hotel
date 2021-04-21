@@ -3,7 +3,7 @@ import * as React from "react";
 // bootstrap components //
 import { Container, Col, Image, Row } from "react-bootstrap";
 // additional components //
-import { flipImgComponent } from "../../shared/FlipImgComponent";
+import { FlipImgComponent } from "../../shared/FlipImgComponent";
 // styles and css //
 import styles from "./css/restaurantComponent.module.css";
 // types //
@@ -11,6 +11,7 @@ import type { DiningEntModelAction, DiningEntModelData } from "../../../../redux
 import type { Dispatch } from "../../../../redux/reducers/_helpers/createReducer";
 // helpers //
 import { setComponentValues } from "../hepers/defaultValues";
+import { setDefaultURLS } from "../hepers/setDefaultUrls";
 import { setImagePath } from "../../../helpers/displayHelpers";
 
 type Props = {
@@ -18,39 +19,57 @@ type Props = {
 };
 
 type LocalState = {
-
+  animationTriggered: boolean,
+  imageURLS: Array<string>
 }
 
 export const RestaurantComponent = ({ diningOption } : Props): React.Node => {
-  const [ diningCompLocalState, setDiningCompLocalState ] = React.useState({ title: "", description: "", hours: "", imagePaths: [] });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ animationTriggered: false, imageURLS: [] });
+  const componentRef = React.useRef<HTMLElement | null>(null);
   //
-  const { title, description, hours, imagePaths } = diningCompLocalState;
+
+  const handleComponentScroll = () => {
+    if (componentRef.current) {
+      const compPosY = componentRef.current.getBoundingClientRect().top;
+      const screenHeight = window.screen.height;
+      if (compPosY < (screenHeight / 3)) {
+        setLocalState({ ...localState, animationTriggered: true });
+        window.removeEventListener("scroll", handleComponentScroll);
+      }
+    }
+  }
+  // lifecycle hooks //
   React.useEffect(() => {
-    const { title, description, hours, imagePaths } = setComponentValues(diningOption);
-    setDiningCompLocalState({ ...diningCompLocalState, title, description, hours, imagePaths });
-  }, []);
+    const imgURLS: Array<string> = setDefaultURLS(diningOption.images);
+    setLocalState({ ...localState, imageURLS: imgURLS });
+  }, [ diningOption ]);
+
+  React.useEffect(() => {
+    window.addEventListener("scroll", handleComponentScroll);
+    return () => { window.removeEventListener("scroll", handleComponentScroll) };
+  }, [ componentRef.current ]);
 
   return (
-    <Container fluid>
+    <Container fluid ref={ componentRef }>
       <Row className={ styles.restaurantCompTitleRow}>
         <div className={ styles.restaurantTitleDiv}>
-          <p className={ styles.restaurantTitleContent}>{ title }</p>
+          <p className={ styles.restaurantTitleContent}>{ diningOption.title }</p>
         </div>
         <div className={ styles.rowBorder }></div>
       </Row>
       <Row className={ styles.restaurantComponentRow }>
         <Col lg={8} md={12} className={ styles.restaurantComponentPictureCol }>
           <Container fluid className={ styles.leftPicContainer }>
-            <Row className={ styles.leftPicUpperRow }>
-              
+            <Row className={ `${styles.leftPicUpperRow} ${localState.animationTriggered ? styles.flipAnimate : ""}` }>
+              <FlipImgComponent genericImgData={ diningOption.images[0]} triggerFlipAnimate={ true } />
             </Row>
-            <Row className={ styles.leftPicLowerRow }>
-
+            <Row className={ `${styles.leftPicLowerRow} ${localState.animationTriggered ? styles.flipAnimate : ""}` }>
+              <FlipImgComponent genericImgData={ diningOption.images[1]} triggerFlipAnimate={ true } />
             </Row>
           </Container>
           <Container fluid className={ styles.rightPicContainer }>
             <Row className={ styles.rightPicRow }>
-
+              <img className={ styles.rightImage } src={ setImagePath() } />
             </Row>
           </Container>
         </Col>
@@ -59,12 +78,12 @@ export const RestaurantComponent = ({ diningOption } : Props): React.Node => {
           <div className={ styles.restaurantDescWrapper }>
             <div className={ styles.restaurantDescWrapperLeft }>
               <div className={ styles.restaurantDescriptionDiv }>
-                <p>{ description }</p>
+                <p>{ diningOption.description }</p>
               </div>
               <div className={ styles.restaurantHoursDiv}>
                 <i className="far fa-clock"></i>
                 <span>Open hours:</span>
-                <span>{ hours }</span>
+                <span>{ diningOption.hours }</span>
               </div>
             </div>
             <div className={ styles.restaurantDescWrapperRight }>

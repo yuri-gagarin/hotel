@@ -50,8 +50,8 @@
   z-index: auto;
   background-image: linear-gradient(120deg, #c3cfe2, #f5f7fa);
   padding-bottom: 3em;
-  border: 8px solid blue;
   padding: 0;
+  border-bottom: 4px solid rgb(6, 68, 40);
 }
 
 /* pictures containers */
@@ -59,37 +59,40 @@
 .restaurantComponentPictureCol {
   position: relative;
   z-index: auto;
-  border: 3px solid pink;
   padding: 0;
   display: flex;
+  border-right: 2px solid rgb(44, 53, 49);
 }
 .leftPicContainer {
-  border: 5px solid orange;
   width: 50%;
   height: 100%;
   padding: 0;
 }
 .leftPicUpperRow {
   height: 50%;
-  background-color: red;;
   padding: 0;
+  border: 2x solid grey;
 }
 .leftPicLowerRow {
   height: 50%;
-  background-color: green;;
   padding: 0;
+  border: 2x solid grey;
 }
 
 .rightPicContainer {
-  border: 10px solid teal;
   width: 50%;
   height: 100%;
   padding: 0;
 }
 .rightPicRow {
   height: 100%;
-  background-color: teal;
+  width: 100%;
   padding: 0;
+  overflow: hidden;
+}
+.rightImage {
+  object-fit: cover;
+  width: 100%;
 }
 
 
@@ -100,10 +103,9 @@
   display: flex;
   background: transparent;
   flex-direction: column;
-  border: 3px solid green;
+  padding: 0;
 }
 .restaurantDescWrapper {
-  border-left: 3px solid rgb(44, 53, 49);
   display: flex;
   flex: 1;
 }
@@ -195,36 +197,30 @@
   }
   .restaurantComponentRow {
     flex-direction: column;
-    border: 10px solid blue;
     padding: 0;
   }
   .restaurantComponentPictureCol {
-    flex: 1;
-    border: 5px solid green;
     display: flex;
     flex-direction: column;
+    height: 300px;
   }
   /* description */
   .restaurantComponentDescCol {
     flex: 1;
-    border: 5px solid pink;
     display: flex;
     padding: 0;
   }
   /* wrapper */
   .restaurantDescWrapper {
-    border: 3px solid red;
     flex: 1;
     display: flex;
     flex-direction: column;
     width: 100%;
   }
   .restaurantDescWrapperLeft {
-    border: 3px solid yellow;
     flex: 1;
   }
   .restaurantDescWrapperRight {
-    border: 4px solid green;
     flex: 1;
     display: flex;
     flex-direction: row;
@@ -233,7 +229,6 @@
   .rightPicContainer {
     flex: 1;
     width: 100%;
-    border: 15px solid yellow;
   }
   
 }
