@@ -1,79 +1,84 @@
-import React, { useEffect, useState } from "react";
+// @flow 
+import * as React from "react";
 import PropTypes from "prop-types";
 // bootstrap components //
-import { Row, Container, Col, Image } from "react-bootstrap";
-//
+import { Row, Carousel, Container, Col, Image } from "react-bootstrap";
+// additional components //
+// styles and css //
 import styles from "./css/loungeComponent.module.css";
+// types //
+import type { DiningEntModelData } from "../../../../redux/reducers/dining_entertainment/flowTypes";
 // helpers //
 import { setComponentValues } from "../hepers/defaultValues";
 
-const DiningComponent = ({ diningOption }) => {
-  const [ diningCompLocalState, setDiningCompLocalState ] = useState({ title: "", description: "", hours: "", imagePaths: [] });
+type Props = {
+  diningOption: DiningEntModelData
+}
+export const LoungeComponent = ({ diningOption } : Props): React.Node => {
+  const { title, hours } = diningOption;
   //
-  const { title, description, hours, imagePaths } = diningCompLocalState;
-  useEffect(() => {
+  React.useEffect(() => {
     const { title, description, hours, imagePaths } = setComponentValues(diningOption);
-    setDiningCompLocalState({ ...diningCompLocalState, title, description, hours, imagePaths });
   }, []);
 
   return (
     <Container fluid>
-      <Row className={ styles.diningCompTitleRow}>
-        <div className={ styles.diningTitleDiv}>
-          <p className={ styles.diningTitleContent}>{ title }</p>
+      <div className={ styles.rowBorder }></div>
+      <Row className={ styles.loungeComponentHeaderRow }>
+        <Carousel fade className={ styles.loungeComponentImgCarousel }>
+          <Carousel.Item className={ styles.loungeComponentImgCarouselItem }>
+            <img className={ styles.loungeComponentCarouselImage } src="/assets/images/dining/restaurant_stock3.jpeg"></img>
+          </Carousel.Item>
+          <Carousel.Item className={ styles.loungeComponentImgCarouselItem }>
+            <img className={ styles.loungeComponentCarouselImage } src="/assets/images/dining/restaurant_stock4.jpeg"></img>
+          </Carousel.Item>
+          <Carousel.Item className={ styles.loungeComponentImgCarouselItem }>
+            <img className={ styles.loungeComponentCarouselImage } src="/assets/images/dining/restaurant_stock5.jpeg"></img>
+          </Carousel.Item>
+        </Carousel>
+        <div className={ styles.loungeTitle }>
+          <div className={ styles.loungeTitleInner }>{ title  ? title : "Title here ..." }</div>
         </div>
-        <div className={ styles.rowBorder }></div>
       </Row>
-      <Row className={ styles.diningComponentRow }>
-        <Col lg={7} md={12} className={ styles.diningComponentPictureCol } >
-          <Image src={imagePaths[0]} className={ `${styles.diningFirstImg} ${styles.diningImage}` } rounded></Image>
-          <Image src={imagePaths[2]} className={ `${styles.diningThirdImg} ${styles.diningImage} ${styles.lastImage}` } rounded></Image>
-          <Image src={imagePaths[1]} className={ `${styles.diningSecondImg} ${styles.diningImage}` } rounded></Image>
-        </Col>
-        <Col lg={5} md={12} className={ styles.diningComponentDescCol }>
-          <div className={ styles.diningDescWrapper }>
-            <div className={ styles.diningDescWrapperLeft }>
-              <div className={ styles.diningDescriptionDiv }>
-                <p>{ description }</p>
-              </div>
-              <div className={ styles.diningHoursDiv}>
-                <i className="far fa-clock"></i>
-                <span>Open hours:</span>
-                <span>{ hours }</span>
-              </div>
-            </div>
-            <div className={ styles.diningDescWrapperRight }>
-              <span>
-                <i className="fas fa-utensils"></i>
-                <span>Menu</span>
-              </span>
-              <span>
-                <i className="fas fa-phone"></i>
-                <span>Call</span>
-              </span>
-              <span>
-                <i className="far fa-envelope"></i>  
-                <span>Email</span>            
-              </span>
-              <span>
-                <i className="fab fa-instagram"></i>
-                <span>Insta</span>            
-              </span>
-              <span>
-                <i className="fab fa-facebook"></i>
-                <span>Social</span>
-              </span>
-            </div>
+      <Row className={ styles.loungeComponentDetailsRow }>
+        <Col lg={3} md={12}>
+          <div className={ styles.diningDescriptionDiv }>
+            <p>{ "A description here A description here A description here A description here A description here A description here A description here" }</p>
           </div>
-         
+        </Col>
+        <Col lg={6} md={12}>
+          <div className={ styles.loungeCompomentContactDiv }>
+            <span>
+              <i className="fas fa-utensils"></i>
+              <span>Menu</span>
+            </span>
+            <span>
+              <i className="fas fa-phone"></i>
+              <span>Call</span>
+            </span>
+            <span>
+              <i className="far fa-envelope"></i>  
+              <span>Email</span>            
+            </span>
+            <span>
+              <i className="fab fa-instagram"></i>
+              <span>Insta</span>            
+            </span>
+            <span>
+              <i className="fab fa-facebook"></i>
+              <span>Social</span>
+            </span>
+          </div>
+        </Col>
+        <Col lg={3} md={12}>
+          <div className={ styles.loungeHoursDiv }>
+            <i className="far fa-clock"></i>
+            <span>Open hours:</span>
+            <span>{ "08:00 - 22:00" }</span>
+          </div>
         </Col>
       </Row>
+      <div className={ styles.rowBorder }></div>
     </Container>
-  )
+  );
 };
-
-DiningComponent.propTypes = {
-  diningOption: PropTypes.object
-};
-
-export default DiningComponent;

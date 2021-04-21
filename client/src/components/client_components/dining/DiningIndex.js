@@ -4,6 +4,7 @@ import * as React from "react";
 import { Row, Col } from "react-bootstrap";
 // additional components //
 import NavbarComponent from "../navbar/NavbarComponent";
+import { LoungeComponent } from "./lounge/LoungeComponent";
 import { RestaurantComponent } from "./restaurant/RestaurantComponent";
 import ClipText from "../../admin/shared/ClipText";
 // redux //
@@ -79,9 +80,7 @@ const DiningIndexContainer = ({ diningEntertainmentState, _handleFetchDiningEntM
           </button>
         </div>
       </div>
-      <RestaurantComponent
-        diningOption={ diningEntertainmentState.diningEntModelData }
-      />
+      <LoungeComponent diningOption={ diningEntertainmentState.diningEntModelData } />
       <div className={ styles.parallaxSpacer }></div>
     </div>
   );

@@ -1,0 +1,112 @@
+.rowBorder {
+  height: 6px;
+  width: 100%;
+  background-color: rgb(194, 194, 25);
+  transform: scaleX(0);
+  animation: animateRowBorder 2s forwards;
+  animation-delay: 3s;
+}
+@keyframes animateRowBorder {
+  from { transform: scaleX(0.1); }
+  to { transform: scaleX(1); }
+}
+
+.loungeComponentHeaderRow {
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+.loungeComponentImgCarousel {
+  width: 100%;
+  position: relative;
+}
+.loungeComponentImgCarouselItem {
+  position: relative;
+}
+.loungeComponentCarouselImage {
+  width: 100%;
+}
+
+.loungeTitle {
+  border: 3px solid rgb(194, 194, 25);
+  position: absolute;
+  left: 0%;
+  width: 50%;
+  top: 30%;
+  z-index: 1;
+  padding: 5px;
+  background-color: black;
+  opacity: 1;
+}
+.loungeTitleInner {
+  font-size: 5em;
+  border: 3px solid rgb(194, 194, 25);
+  font-family: "Neucha", 'Times New Roman', Times, serif;
+  font-weight: bolder;
+  background-color:  rgb(194, 194, 25);
+  text-align: center;
+}
+
+/* detail row */
+.loungeComponentDetailsRow {
+  min-height: 200px;
+  background-image: linear-gradient(120deg, #c3cfe2, #f5f7fa);
+  display: flex;
+  align-items: center;
+}
+
+.diningDescriptionDiv {
+  height: 100%;
+}
+
+
+.loungeCompomentContactDiv {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: stretch;
+}
+.loungeCompomentContactDiv > span {
+  flex: 1;
+  border: 1px solid white;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: .25em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.loungeCompomentContactDiv > span > i {
+  font-size: 2em;
+}
+.loungeCompomentContactDiv > span > span {
+  color: rgb(44, 53, 49);
+}
+.loungeCompomentContactDiv > span:hover {
+  background-image: linear-gradient(#fdfbfb, #ebedee);
+  border-radius: 5px;
+}
+
+.loungeHoursDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.loungeHoursDiv > i {
+  color: rgb(46, 145, 46);
+  font-size: 1.5em;
+}
+.loungeHoursDiv > span:nth-child(3) {
+  font-size: 2em;
+}
+
+@media screen and (max-width: 970px) {
+  .loungeTitle { 
+    width: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
