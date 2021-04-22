@@ -3,10 +3,11 @@ import * as React from "react";
 // bootstrap react //
 import { Row, Col } from "react-bootstrap";
 // additional components //
-import NavbarComponent from "../navbar/NavbarComponent";
-import { LoungeComponent } from "./lounge/LoungeComponent";
-import { RestaurantComponent } from "./restaurant/RestaurantComponent";
 import ClipText from "../../admin/shared/ClipText";
+import { CafeComponent } from "./cafe/CafeComponent";
+import { LoungeComponent } from "./lounge/LoungeComponent";
+import NavbarComponent from "../navbar/NavbarComponent";
+import { RestaurantComponent } from "./restaurant/RestaurantComponent";
 // redux //
 import { connect } from "react-redux";
 import { handleFetchDiningModels } from "../../../redux/actions/diningActions";
@@ -80,7 +81,7 @@ const DiningIndexContainer = ({ diningEntertainmentState, _handleFetchDiningEntM
           </button>
         </div>
       </div>
-      <LoungeComponent diningOption={ diningEntertainmentState.diningEntModelData } />
+      <CafeComponent diningOption={ diningEntertainmentState.diningEntModelData } />
       <div className={ styles.parallaxSpacer }></div>
     </div>
   );

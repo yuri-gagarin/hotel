@@ -42,6 +42,24 @@ export const capitalizeString = (string: string): string => {
   }
 };
 
+export const setStringTranslation = (stringToTranslate: string, i18nLanguage: string): string => {
+  let descriptionText: string;
+  if (stringToTranslate.length === 0) {
+    return "Nothing to translate...";
+  }
+  const translations = stringToTranslate.split(/(<en>|<ru>|<uk>)/g).filter((text) => text.length !== 0);
+  if (i18nLanguage === "en" && translations.indexOf("<en>") !== -1) {
+    descriptionText = translations[translations.indexOf("<en>") + 1];
+  } else if (i18nLanguage === "ru" && translations.indexOf("<ru>") !== -1) {
+    descriptionText = translations[translations.indexOf("<ru>") + 1];
+  } else if (i18nLanguage === "uk" && translations.indexOf("<uk>") !== -1) {
+    descriptionText = translations[translations.indexOf("<uk>") + 1];
+  } else {
+    descriptionText = "Couldn't resolve translation";
+  }
+  return descriptionText;
+};
+
 
 export const isEmpty = (obj: any): boolean => {
   console.log(Object.keys(obj))

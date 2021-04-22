@@ -16,7 +16,7 @@ export const FlipImgComponent = ({ genericImgData, triggerFlipAnimate }: Props):
 
   return (
     <div className={ `${styles.flipImgComponent}` }>
-      <div className={ `${styles.flipImgComponentInner} ${triggerFlipAnimate ? "styles.triggerRotateAnimation" : ""}` }>
+      <div className={ `${styles.flipImgComponentInner} ${`triggerFlipAnimate ? styles.triggerRotateAnimation : ""`}` }>
         <div className={ `${styles.flipCardFront} `}>
           <img src="/assets/images/dining/restaurant_stock9.jpeg" alt="Avatar" />
         </div>

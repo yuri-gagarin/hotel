@@ -1,5 +1,6 @@
 // @flow //
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 // bootstrap components //
 import { Container, Col, Image, Row } from "react-bootstrap";
 // additional components //
@@ -12,7 +13,7 @@ import type { Dispatch } from "../../../../redux/reducers/_helpers/createReducer
 // helpers //
 import { setComponentValues } from "../hepers/defaultValues";
 import { setDefaultURLS } from "../hepers/setDefaultUrls";
-import { setImagePath } from "../../../helpers/displayHelpers";
+import { setImagePath, setStringTranslation } from "../../../helpers/displayHelpers";
 
 type Props = {
   diningOption: DiningEntModelData
@@ -24,7 +25,9 @@ type LocalState = {
 }
 
 export const RestaurantComponent = ({ diningOption } : Props): React.Node => {
+  const { title, hours, description } = diningOption;
   const [ localState, setLocalState ] = React.useState<LocalState>({ animationTriggered: false, imageURLS: [] });
+  const [ t, i18n ]= useTranslation();
   const componentRef = React.useRef<HTMLElement | null>(null);
   //
 
@@ -53,7 +56,7 @@ export const RestaurantComponent = ({ diningOption } : Props): React.Node => {
     <Container fluid ref={ componentRef }>
       <Row className={ styles.restaurantCompTitleRow}>
         <div className={ styles.restaurantTitleDiv}>
-          <p className={ styles.restaurantTitleContent}>{ diningOption.title }</p>
+          <p className={ styles.restaurantTitleContent}>{ title ? title : "No Title.." }</p>
         </div>
         <div className={ styles.rowBorder }></div>
       </Row>
@@ -78,12 +81,12 @@ export const RestaurantComponent = ({ diningOption } : Props): React.Node => {
           <div className={ styles.restaurantDescWrapper }>
             <div className={ styles.restaurantDescWrapperLeft }>
               <div className={ styles.restaurantDescriptionDiv }>
-                <p>{ diningOption.description }</p>
+                <p>{ description ? setStringTranslation(description, i18n) : "No description provided" }</p>
               </div>
               <div className={ styles.restaurantHoursDiv}>
                 <i className="far fa-clock"></i>
                 <span>Open hours:</span>
-                <span>{ diningOption.hours }</span>
+                <span>{ hours ? hours : "No hours provided" }</span>
               </div>
             </div>
             <div className={ styles.restaurantDescWrapperRight }>

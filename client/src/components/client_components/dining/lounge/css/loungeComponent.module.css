@@ -110,3 +110,9 @@
     transform: translateX(-50%);
   }
 }
+
+@media screen and (max-width: 500px) {
+  .loungeTitleInner {
+    font-size: 1.75em;
+  }
+}

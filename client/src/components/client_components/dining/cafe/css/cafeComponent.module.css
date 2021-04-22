@@ -1,0 +1,135 @@
+/* animated border row */
+.rowBorder {
+  height: 8px;
+  width: 100%;
+  background: #ffb347;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #ffcc33, #ffb347);  /* Chrome 10-25, Safari 5.1-6 */ 
+  background: linear-gradient(to bottom, #ffcc33, #ffb347); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */  transform: scaleX(0);
+  animation: animateRowBorder 2s forwards;
+  animation-delay: 3s;
+}
+@keyframes animateRowBorder {
+  from { transform: scaleX(0.1); }
+  to { transform: scaleX(1); }
+}
+
+/* header row */
+.cafeComponentHeaderRow {
+  min-height: 400px;
+  position: relative;
+}
+
+.leftCol {
+  border: 2px solid rgb(44, 53, 49);
+  background: #ffb347;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #ffcc33, #ffb347);  /* Chrome 10-25, Safari 5.1-6 */ 
+  background: linear-gradient(to bottom, #ffcc33, #ffb347); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  position: relative;
+}
+
+.rightCol {
+  position: relative;
+}
+
+.cafeTitle {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  padding-left: 1em;
+}
+.cafeTitleHeader {
+  display: flex;
+  flex: 1.25;
+  font-size: 1.25em;
+  font-family: "Lobster", cursive;
+  padding: 0;
+}
+.cafeTitleInner {
+  display: flex;
+  flex: 9;
+  font-size: 5em;
+  font-family: 'Raleway', sans-serif;
+  padding-top: 0;
+}
+
+.cafeCompomentContactDiv {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: stretch;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10%;
+}
+.cafeCompomentContactDiv > div {
+  width: 60px;
+  height: 60px;
+  border: 3px solid white;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: .25em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: rgb(44, 53, 49);
+  color: white;
+}
+.cafeCompomentContactDiv > div > i {
+  font-size: 2em;
+}
+
+.cafeCompomentContactDiv > div:hover {
+  background-image: linear-gradient(#fdfbfb, #ebedee);
+  color: rgb(44, 53, 49);
+  border-color: rgb(44, 53, 49);
+}
+
+
+/* description row */
+.cafeCompomentDetailsRow {
+  background-image: linear-gradient(120deg, #c3cfe2, #f5f7fa);
+  padding-top: 1em;
+}
+.cageComponentDetailsCol {
+  display: flex;
+  flex-direction: column;
+}
+
+/* hours */
+.cafeHoursDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.cafeHoursDiv > i {
+  font-size: 2.5em;
+  font-weight: bolder;
+  color: #ffb347;  
+}
+.cafeHoursDiv > span:nth-child(2) {
+  font-size: 1.0em;
+  font-style: italic;
+}
+.cafeHoursDiv > span:nth-child(3) {
+  font-size: 2.5em;
+}
+
+/* description */
+.cafeDescDiv {
+  padding: 1em 0em;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.1em;
+  font-weight: 400;
+}
