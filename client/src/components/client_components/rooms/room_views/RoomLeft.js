@@ -3,6 +3,8 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 // bootstrap import //
 import { Button, Col, Image, Row } from "react-bootstrap";
+// aditional components //
+import { MobileRoomPicsView } from "./MobileRoomPicsView";
 // styles and css //
 import styles from "./css/roomLeft.module.css";
 // types //
@@ -10,13 +12,14 @@ import type { RoomData } from "../../../../redux/reducers/rooms/flowTypes";
 import { setImagePath, setStringTranslation } from "../../../helpers/displayHelpers";
 
 type Props = {
+  showMobileRoomPicsView: boolean,
   roomPicturesRef: any,
   roomDescRef: any,
   roomData: RoomData,
   roomImagePaths: Array<string>,
   handleOpenModal: (imgPath: string) => void,
 }
-export const RoomLeft = ({ roomPicturesRef, roomDescRef, roomData, roomImagePaths, handleOpenModal } : Props): React.Node => {
+export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef, roomData, roomImagePaths, handleOpenModal } : Props): React.Node => {
   const { area, sleeps, beds, couches, price, description, options } = roomData;
   // react i18n //
   const [ t, i18n ] = useTranslation();
@@ -24,31 +27,39 @@ export const RoomLeft = ({ roomPicturesRef, roomDescRef, roomData, roomImagePath
   return (
     <React.Fragment>
       <Row ref={roomPicturesRef} className={ `animatedRoomRow ${ styles.carouselRow }`}>
-        <Col xs="12" lg="6" className={ styles.leftImgsColumn }>
-          <div className={ `${styles.leftImgContainer}`} onClick={() => handleOpenModal(roomImagePaths[0]) }>
-            <img
-              className={ `${styles.roomImg} ${styles.sideImgLeft}` }
-              src={ setImagePath(roomImagePaths[0]) }
-              data-index={0}
-            />
-          </div>
-        </Col>
-        <Col xs="12" lg="6"  className={ styles.rightImgsColumn }>
-          <div className={ styles.sideImgContainerTop } onClick={() => handleOpenModal(roomImagePaths[1]) }>
-            <img
-              className={`${styles.roomImg} ${styles.sideImgRightTop}`}
-              src={ setImagePath(roomImagePaths[1])} 
-              data-index={1}
-            />
-          </div>
-          <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(roomImagePaths[2]) }>
-            <img
-              className={`${styles.roomImg} ${styles.sideImgRightBottom}`}
-              src={ setImagePath(roomImagePaths[2])} 
-              data-index={2}
-            />
-          </div>
-        </Col>
+        {
+        showMobileRoomPicsView 
+        ?
+          <MobileRoomPicsView roomImgPaths={ roomImagePaths } />
+        :
+        <React.Fragment>
+          <Col xs="12" lg="6" className={ styles.leftImgsColumn }>
+            <div className={ `${styles.leftImgContainer}`} onClick={() => handleOpenModal(roomImagePaths[0]) }>
+              <img
+                className={ `${styles.roomImg} ${styles.sideImgLeft}` }
+                src={ setImagePath(roomImagePaths[0]) }
+                data-index={0}
+              />
+            </div>
+          </Col>
+          <Col xs="12" lg="6"  className={ styles.rightImgsColumn }>
+            <div className={ styles.sideImgContainerTop } onClick={() => handleOpenModal(roomImagePaths[1]) }>
+              <img
+                className={`${styles.roomImg} ${styles.sideImgRightTop}`}
+                src={ setImagePath(roomImagePaths[1])} 
+                data-index={1}
+              />
+            </div>
+            <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(roomImagePaths[2]) }>
+              <img
+                className={`${styles.roomImg} ${styles.sideImgRightBottom}`}
+                src={ setImagePath(roomImagePaths[2])} 
+                data-index={2}
+              />
+            </div>
+          </Col>
+        </React.Fragment>
+        }
       </Row>  
       <Row ref={roomDescRef} className={`animatedRoomRow ${styles.descriptionContainerRow}`}>
         <Col xs="12" lg="6" className={ styles.roomDescColumn }>

@@ -24,13 +24,16 @@ type Props = {
     direction: number
   }
 };
+type LocalState = {
+  roomDescTranslated: string,
+  showMobileRoomPicsView: boolean
+};
 /* extract later */
 /* TODO move to a helpers sections */
 
 const setRoomDescTranslation = (roomDescription: string, i18nLanguage: string) => {
   let descriptionText: string;
   const translations = roomDescription.split(/(<en>|<ru>|<uk>)/g).filter((text) => text.length !== 0);
-  console.log(translations)
   if (i18nLanguage === "en" && translations.indexOf("<en>") !== -1) {
     descriptionText = translations[translations.indexOf("<en>") + 1];
   } else if (i18nLanguage === "ru" && translations.indexOf("<ru>") !== -1) {
@@ -51,8 +54,16 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
   const roomPicturesRef = React.useRef(null);
   const roomDescRef = React.useRef(null);
   // local state //
-  const [ localState, setLocalState ] = React.useState<{ roomDescTranslated: string }>({ roomDescTranslated: "No description" });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ roomDescTranslated: "No description", showMobileRoomPicsView: false });
 
+  const listenToWindowResize = () => {
+    if (window.innerWidth < 992) {
+      setLocalState({ ...localState, showMobileRoomPicsView: true });
+    } else {
+      setLocalState({ ...localState, showMobileRoomPicsView: false });
+    }
+  }
+  // lifecycle hooks //
   React.useEffect(() => {
     const animatedRows = document.querySelectorAll(".animatedRoomRow");
     const observer = new IntersectionObserver((entries) => {
@@ -65,18 +76,27 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
     animatedRows.forEach((row) => {
       observer.observe(row);
     });
+    // event listener for screen size //
+    window.addEventListener("resize", listenToWindowResize);
+    // check initial screen size to decide on <MobileroomPicsView> render //
+    if (window.innerWidth < 992) {
+      setLocalState({ ...localState, showMobileRoomPicsView: true });
+    }
+
     return () => {
       animatedRows.forEach((row) => {
         observer.unobserve(row);
       });
+      window.removeEventListener("resize", listenToWindowResize);
     }
   }, []);
 
+  
   React.useEffect(() => {
     const { description } = room;
     const { language } = i18n;
-    const roomDescTranslated= setRoomDescTranslation(description, language);
-    setLocalState({ roomDescTranslated });
+    const roomDescTranslated = setRoomDescTranslation(description, language);
+    setLocalState({ ...localState, roomDescTranslated });
   }, [ room, i18n.language ]);
 
   
@@ -107,9 +127,9 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
       {
         (index % 2 === 0)
         ?
-        <RoomLeft roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
+        <RoomLeft showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
         : 
-        <RoomRight roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
+        <RoomRight showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
       }
       
     </React.Fragment> 

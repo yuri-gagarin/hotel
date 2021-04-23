@@ -21,8 +21,6 @@ const RoomImgModal = ({ show, imgURLS, imageIndex, closePictureModal } : Props):
   
   React.useEffect(() => {
     if (show && imageIndex) setIndex(imageIndex);
-    console.log(imageIndex);
-    console.log(imgURLS);
   }, [ show ]);
   
   const handleSelect = (selectedIndex: number, e: any) => {
