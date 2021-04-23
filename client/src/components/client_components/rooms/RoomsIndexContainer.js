@@ -102,6 +102,14 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
           return (
             <Container className={ styles.roomsIndexContainer } key={room._id}>       
               <Room  
+                index={ 0 }
+                room={room} 
+                images={room.images} 
+                openPictureModal={openPictureModal}
+                picModalState={{ showModal: localComponentState.showModal, imageIndex: localComponentState.imageIndex, direction: 1 }}
+              />
+              <Room  
+                index={ 1 }
                 room={room} 
                 images={room.images} 
                 openPictureModal={openPictureModal}

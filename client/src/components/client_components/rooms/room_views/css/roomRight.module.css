@@ -1,84 +1,30 @@
-.titleRow {
-  color: rgb(38, 42, 51);
-  display: flex;
-  justify-content: center;
-}
-.strikeThroughDiv {
-  height: 4px;
-  width: 100%;
-  background-color: rgb(38, 42, 51);
-  position: absolute;
-  top: 50%;
-  transform: translateY(50%);
-}
-.roomType {
-  border: 3px solid rgb(38, 42, 51);
-  position: relative;
-  width: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5em 1.25em;
-  background-color: white;
-  font-size: 2em;
-  font-family: "Vollkorn", 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-weight: bold;
-}
+/* carousel row */
 .carouselRow {
   height: 500px;
   overflow: hidden;
 }
+
+/* smaller side images */
 .leftImgsColumn {
-  padding: 0;
-  border-top: 4px solid rgb(252, 219, 3);
-  border-left: 4px solid rgb(252, 219, 3);
-  height: 100%;
-}
-.rightImgsColumn {
+  position: relative;
   padding: 0;
   height: 100%;
   border-top: 4px solid rgb(252, 219, 3);
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
   flex-wrap: wrap;
   background-color: white;
 }
 
-.leftImgContainer {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border: 1px solid rgb(38, 42, 51);
-  border-radius: 5px;
-}
-.leftImgContainer::after {
-  content: ""; 
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgb(38,41,0);
-  background: linear-gradient(90deg, rgba(38,41,0,1) 0%, rgba(50,49,5,1) 53%, rgba(72,78,3,1) 100%);  
-  opacity: .5;
-  cursor: pointer;
-}
-.leftImgContainer:hover::after {
-  opacity: 0;
-  transition: opacity 0.5s linear;
-}
-.sideImgLeft {
-  border: 3px solid green;
-  width: 100%;
-}
-
-
 .sideImgContainerTop {
+  display: flex;
+  position: relative;
+  flex-grow: 1;
   width: 100%;
   height: 50%;
+  border: 3px solid rgb(38, 42, 51);
   overflow: hidden;
-  border: 1px solid rgb(38, 42, 51);
-  border-radius: 5px;
 }
 .sideImgRightTop {
   width: 100%;
@@ -92,7 +38,7 @@
   height: 100%;
   background: rgb(38,41,0);
   background: linear-gradient(90deg, rgba(38,41,0,1) 0%, rgba(50,49,5,1) 53%, rgba(72,78,3,1) 100%);  
-  opacity: .7;
+  opacity: .3;
   cursor: pointer;
 }
 .sideImgContainerTop:hover::after {
@@ -105,8 +51,9 @@
   height: 50%;
   overflow: hidden;
   position: relative;
-  border: 1px solid rgb(38, 42, 51);
-  border-radius: 5px;
+  border-right: 3px solid rgb(38, 42, 51);
+  border-bottom: 3px solid rgb(38, 42, 51);
+  border-left: 3px solid rgb(38, 42, 51);
 }
 .sideImgContainerBottom::after {
   content: ""; 
@@ -117,23 +64,61 @@
   height: 100%;
   background: rgb(38,41,0);
   background: linear-gradient(90deg, rgba(38,41,0,1) 0%, rgba(50,49,5,1) 53%, rgba(72,78,3,1) 100%);
-  opacity: .7;
+  opacity: .3;
   cursor: pointer;
 }
 .sideImgContainerBottom:hover::after {
   opacity: 0;
   transition: opacity 0.5s linear;
 }
-.sideImgRightBottom {
+.sideImgLeftBottom {
   display: block;
   height: 100%;
   width: 100%;
   object-fit: cover;
 }
 
+/* large side image */
+.rightImgsColumn {
+  padding: 0;
+  border-top: 4px solid rgb(252, 219, 3);
+  border-right: 4px solid rgb(252, 219, 3);
+  height: 100%;
+}
+.rightImgContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-top: 3px solid rgb(38, 42, 51);
+  border-right: 3px solid rgb(38, 42, 51);
+  border-bottom: 3px solid rgb(38, 42, 51);
+}
+.rightImgContainer::after {
+  content: ""; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(38,41,0);
+  background: linear-gradient(90deg, rgba(38,41,0,1) 0%, rgba(50,49,5,1) 53%, rgba(72,78,3,1) 100%);  
+  opacity: .3;
+  cursor: pointer;
+}
+.rightImgContainer:hover::after {
+  opacity: 0;
+  transition: opacity 0.5s linear;
+}
+.sideImgRight {
+  height: 100%;
+}
+
+
+
 /* room description */
 .descriptionContainerRow {
-  border-right: 4px solid rgb(252, 219, 3);
+  border-left: 4px solid rgb(252, 219, 3);
   border-bottom: 4px solid rgb(252, 219, 3);  
   padding-top: 1.5em;
   padding-bottom: 1.5em;
@@ -197,7 +182,7 @@
   justify-content: flex-start;
   flex-grow: 1;
   border: 1px solid #ebedee;
-  padding-left: 1em;
+  padding: 0.5em 1em;
 }
 .roomOption {
   height: 40px;
@@ -205,28 +190,11 @@
   align-items: center;
   color: rgb(38, 42, 51);
   padding: 0.5em 1em;
+  border: 1px solid #ebedee;
+  margin-right: 2px;
+  margin-bottom: 2px;
 }
 .roomOption > i {
   margin-right: 0.5em;
   color: rgb(42, 142, 189);
-}
-
-/* book row and column */
-.bookColumn {
-  display: flex;
-  padding: 0;
-  align-items: center;
-}
-
-.bookPriceDiv {
-  margin-left: 0.5em;
-  font-size: 1em;
-  font-family: "Lobster", 'Times New Roman', Times, serif;
-}
-.bookPriceDiv > span {
-  margin-left: 5px;
-  color: rgb(38, 42, 51);
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 1.25em;
-  font-weight: bold;
 }
