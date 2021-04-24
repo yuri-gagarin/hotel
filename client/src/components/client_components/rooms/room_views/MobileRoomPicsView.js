@@ -10,10 +10,11 @@ import styles from "./css/mobileRoomPicsView.module.css";
 import { setImagePath } from "../../../helpers/displayHelpers";
 
 type Props = {
-  roomImgPaths: Array<string>
+  roomImgPaths: Array<string>,
+  handleOpenImgModal: (imgPath: string) => void
 };
 
-export const MobileRoomPicsView = ({ roomImgPaths } : Props): React.Node => {
+export const MobileRoomPicsView = ({ roomImgPaths, handleOpenImgModal } : Props): React.Node => {
   console.log(roomImgPaths);
 
   return (
@@ -22,7 +23,7 @@ export const MobileRoomPicsView = ({ roomImgPaths } : Props): React.Node => {
         roomImgPaths.map((imagePath) => {
           return (
             <Carousel.Item className={ styles.carouselItem } key={ imagePath }>
-              <img src={ setImagePath(imagePath) } />
+              <img className={ styles.carouselImg } src={ setImagePath(imagePath) } onClick={ () => { handleOpenImgModal(imagePath) } } />
             </Carousel.Item>
           );
         })

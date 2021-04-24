@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 // semantic ui components //
 import { Button, Col, Container, Carousel, Modal, Row } from "react-bootstrap";
 // additional components //
+import GenericImgModalCarousel from "../shared/GenericImgModalCarousel";
 import NavbarComponent from "../navbar/NavbarComponent";
 import Room from "./Room";
-import RoomImgModal from "./RoomImgModal";
 import ClipText from "../../admin/shared/ClipText";
 // redux imports //
 import { connect } from "react-redux";
@@ -32,7 +32,7 @@ type LocalComponentState = {
   headerFixed: boolean
 }
 
-const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
+const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props): React.Node => {
   const { createdRooms } = roomState;
 
   const [ localComponentState, setLocalComponentState ] = React.useState<LocalComponentState>({
@@ -91,7 +91,7 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
           <ClipText className={ `${styles.svgText} ${ localComponentState.headerFixed ? styles.svgTextFixed : ""}` } text={t("rooms.roomHeader")} textId="rooms" fontSize={"2em"} />
         </div>
       </Row>
-      <RoomImgModal 
+      <GenericImgModalCarousel
         show={ localComponentState.showModal } 
         closePictureModal={closePictureModal }
         imgURLS={ localComponentState.imgURLS } 

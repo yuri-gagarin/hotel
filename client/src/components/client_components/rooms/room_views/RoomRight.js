@@ -28,7 +28,7 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
       <Row ref={roomPicturesRef} className={ `animatedRoomRow ${ styles.carouselRow }`}>
         {
           showMobileRoomPicsView ?
-          <MobileRoomPicsView roomImgPaths={ roomImagePaths } />
+          <MobileRoomPicsView roomImgPaths={ roomImagePaths } handleOpenImgModal={ handleOpenModal } />
           :
           <React.Fragment>
             <Col xs="12" lg="6"  className={ styles.leftImgsColumn }>

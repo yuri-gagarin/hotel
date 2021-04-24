@@ -30,7 +30,7 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
         {
         showMobileRoomPicsView 
         ?
-          <MobileRoomPicsView roomImgPaths={ roomImagePaths } />
+          <MobileRoomPicsView roomImgPaths={ roomImagePaths } handleOpenImgModal={ handleOpenModal } />
         :
         <React.Fragment>
           <Col xs="12" lg="6" className={ styles.leftImgsColumn }>

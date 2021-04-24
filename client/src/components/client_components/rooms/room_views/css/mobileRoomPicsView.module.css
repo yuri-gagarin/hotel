@@ -9,4 +9,9 @@
   width: 100%;
   height: 300px;
   overflow: hidden;
+  cursor: pointer;
+}
+
+.carouselImg {
+  height: 100%;
 }

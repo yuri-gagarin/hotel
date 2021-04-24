@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 // ui bootstrap imports //
-import { Button, Modal, Image, Carousel } from "react-bootstrap";
+import { Button, Modal, Carousel } from "react-bootstrap";
 // styles and css //
 import styles from "./css/genericImgModal.module.css";
 // helper functions //
@@ -20,8 +20,6 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
   
   React.useEffect(() => {
     if (show && imageIndex) setIndex(imageIndex);
-    console.log(imageIndex);
-    console.log(imgURLS);
   }, [ show ]);
   
   const handleSelect = (selectedIndex: number, e: any) => {
@@ -35,8 +33,8 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
           {
             imgURLS.map((imgURL) => {
               return (
-                <Carousel.Item key={imgURL}>
-                  <Image
+                <Carousel.Item key={imgURL} className={ styles.carouselItem }>
+                  <img
                     className={ `${styles.roomPopupModalImg }` } 
                     src={ imgURL }
                     alt="First slide"
