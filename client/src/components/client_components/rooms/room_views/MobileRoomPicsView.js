@@ -1,7 +1,7 @@
 // @flow //
 import * as React from "react";
 // bootstrap imports //
-import { Carousel } from "react-bootstrap";
+import { Carousel, Container } from "react-bootstrap";
 // types //
 // import type { RoomData } from "../../../../redux/reducers/rooms/flowTypes";
 // styles and css //
@@ -14,14 +14,17 @@ type Props = {
 };
 
 export const MobileRoomPicsView = ({ roomImgPaths } : Props): React.Node => {
+  console.log(roomImgPaths);
 
   return (
-    <Carousel>
+    <Carousel className={ styles.roomsMobileCarousel }>
       {
         roomImgPaths.map((imagePath) => {
-          <Carousel.Item key={ imagePath }>
-            <img src={ setImagePath(imagePath) } />
-          </Carousel.Item>
+          return (
+            <Carousel.Item className={ styles.carouselItem } key={ imagePath }>
+              <img src={ setImagePath(imagePath) } />
+            </Carousel.Item>
+          );
         })
       }
     </Carousel>

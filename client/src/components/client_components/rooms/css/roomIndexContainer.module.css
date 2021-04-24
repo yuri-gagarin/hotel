@@ -34,6 +34,10 @@
   transition: height 1s linear, background-color 1s linear;
 }
 
+.roomsIndexContainer {
+  padding-bottom: 1em;
+}
+
 /* svg title */
 .svgContainer {
   width: 100%;
@@ -57,4 +61,19 @@
   bottom: 0;
   transform: translate(-50%, 0%);
   transition: all 500ms ease-in;
+}
+
+/* bottom spacer div */
+.bottomSpacerDiv {
+  position: relative;
+  border: 3px solid green;
+  height: 100px;
+  width: 100%;
+  background-image: url("/assets/images/backgrounds/bg_nature_mist.jpeg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-bottom: 3px solid rgb(194, 194, 25);
+  margin-bottom: 1em;
 }

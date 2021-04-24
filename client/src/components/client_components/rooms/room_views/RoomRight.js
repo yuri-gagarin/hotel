@@ -23,7 +23,6 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
   const { area, sleeps, beds, couches, price, description, options } = roomData;
   // react i18n //
   const [ t, i18n ] = useTranslation();
-  console.log(showMobileRoomPicsView)
   return (
     <React.Fragment>
       <Row ref={roomPicturesRef} className={ `animatedRoomRow ${ styles.carouselRow }`}>
@@ -40,6 +39,9 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
                   src={ setImagePath(roomImagePaths[1])} 
                   data-index={1}
                 />
+                <div className={ styles.imgOverlay}>
+                  <i className={ `fas fa-search-plus ${styles.magnifyImgIcon}`}></i>
+                </div>
               </div>
               <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(roomImagePaths[2]) }>
                 <img
@@ -47,7 +49,9 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
                   src={ setImagePath(roomImagePaths[2])} 
                   data-index={2}
                 />
-              </div>
+                <div className={ styles.imgOverlay}>
+                  <i className={ `fas fa-search-plus ${styles.magnifyImgIcon}`}></i>
+                </div>              </div>
             </Col>
             <Col xs="12" lg="6" className={ styles.rightImgsColumn }>
               <div className={ `${styles.rightImgContainer}`} onClick={() => handleOpenModal(roomImagePaths[0]) }>
@@ -57,6 +61,9 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
                   src={ setImagePath(roomImagePaths[0]) }
                   data-index={0}
                 />
+                <div className={ styles.imgOverlay}>
+                  <i className={ `fas fa-search-plus ${styles.magnifyImgIcon}`}></i>
+                </div>              
               </div>
             </Col>
           </React.Fragment>
@@ -151,12 +158,6 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
           <div className={ styles.roomDescDiv }>
             <p>{ description ?  setStringTranslation(description, i18n) : "No description to translate..." }</p>
           </div>
-        </Col>
-      </Row>
-      <Row style={{ marginTop: "10px" }}>
-        <Col className={ styles.bookColumn }>
-          <Button variant="info">{t("buttons.bookNow")}</Button>
-          <div className={ styles.bookPriceDiv }>{t("misc.from")}:<span>{ price }</span></div>
         </Col>
       </Row>
     </React.Fragment>

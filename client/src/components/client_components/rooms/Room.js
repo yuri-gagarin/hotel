@@ -25,26 +25,8 @@ type Props = {
   }
 };
 type LocalState = {
-  roomDescTranslated: string,
   showMobileRoomPicsView: boolean
 };
-/* extract later */
-/* TODO move to a helpers sections */
-
-const setRoomDescTranslation = (roomDescription: string, i18nLanguage: string) => {
-  let descriptionText: string;
-  const translations = roomDescription.split(/(<en>|<ru>|<uk>)/g).filter((text) => text.length !== 0);
-  if (i18nLanguage === "en" && translations.indexOf("<en>") !== -1) {
-    descriptionText = translations[translations.indexOf("<en>") + 1];
-  } else if (i18nLanguage === "ru" && translations.indexOf("<ru>") !== -1) {
-    descriptionText = translations[translations.indexOf("<ru>") + 1];
-  } else if (i18nLanguage === "uk" && translations.indexOf("<uk>") !== -1) {
-    descriptionText = translations[translations.indexOf("<uk>") + 1];
-  } else {
-    descriptionText = "Couldn't resolve translation";
-  }
-  return descriptionText;
-}
 
 const Room = ({ index, room, openPictureModal, picModalState } : Props): React.Node => {
   const { showModal, imageIndex, direction } = picModalState;
@@ -54,7 +36,7 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
   const roomPicturesRef = React.useRef(null);
   const roomDescRef = React.useRef(null);
   // local state //
-  const [ localState, setLocalState ] = React.useState<LocalState>({ roomDescTranslated: "No description", showMobileRoomPicsView: false });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ showMobileRoomPicsView: false });
 
   const listenToWindowResize = () => {
     if (window.innerWidth < 992) {
@@ -91,20 +73,6 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
     }
   }, []);
 
-  
-  React.useEffect(() => {
-    const { description } = room;
-    const { language } = i18n;
-    const roomDescTranslated = setRoomDescTranslation(description, language);
-    setLocalState({ ...localState, roomDescTranslated });
-  }, [ room, i18n.language ]);
-
-  
-  const setRoomDescriptionTranslation = (roomDescription: string) => {
-    setRoomDescTranslation(roomDescription, i18n);
-    return "No description";
-  }
-
   const roomImagePaths = room.images.map((image) => image.path);
   const handleOpenModal = (imagePath: string) => {
     const clickedImageURL = setImagePath(imagePath);
@@ -127,11 +95,26 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
       {
         (index % 2 === 0)
         ?
-        <RoomLeft showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
+        <React.Fragment>
+          <RoomLeft showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
+          <Row style={{ marginTop: "10px" }}>
+            <Col className={ styles.bookColumn }>
+              <Button variant="info">{t("buttons.bookNow")}</Button>
+              <div className={ styles.bookPriceDiv }>{t("misc.from")}:<span>{ room.price }</span></div>
+            </Col>
+          </Row>
+        </React.Fragment>
         : 
-        <RoomRight showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
+        <React.Fragment>
+          <RoomRight showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
+          <Row style={{ marginTop: "10px" }}>
+            <Col className={ styles.bookColumn }>
+              <Button variant="info">{t("buttons.bookNow")}</Button>
+              <div className={ styles.bookPriceDiv }>{t("misc.from")}:<span>{ room.price }</span></div>
+            </Col>
+          </Row>
+        </React.Fragment>
       }
-      
     </React.Fragment> 
   );
 };

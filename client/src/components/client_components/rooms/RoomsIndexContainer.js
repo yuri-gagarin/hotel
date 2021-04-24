@@ -100,26 +100,28 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props) => {
       {
         createdRooms.map((room) => {
           return (
-            <Container className={ styles.roomsIndexContainer } key={room._id}>       
-              <Room  
-                index={ 0 }
-                room={room} 
-                images={room.images} 
-                openPictureModal={openPictureModal}
-                picModalState={{ showModal: localComponentState.showModal, imageIndex: localComponentState.imageIndex, direction: 1 }}
-              />
-              <Room  
-                index={ 1 }
-                room={room} 
-                images={room.images} 
-                openPictureModal={openPictureModal}
-                picModalState={{ showModal: localComponentState.showModal, imageIndex: localComponentState.imageIndex, direction: 1 }}
-              />
-            </Container>
-            );
+            <React.Fragment key={room._id}>
+              <Container className={ styles.roomsIndexContainer } >       
+                <Room  
+                  index={ 0 }
+                  room={room} 
+                  images={room.images} 
+                  openPictureModal={openPictureModal}
+                  picModalState={{ showModal: localComponentState.showModal, imageIndex: localComponentState.imageIndex, direction: 1 }}
+                />
+                <Room  
+                  index={ 1 }
+                  room={room} 
+                  images={room.images} 
+                  openPictureModal={openPictureModal}
+                  picModalState={{ showModal: localComponentState.showModal, imageIndex: localComponentState.imageIndex, direction: 1 }}
+                />
+              </Container>
+              <div className={ styles.bottomSpacerDiv }></div>
+            </React.Fragment>
+          )
         })
       } 
-      <div className={ styles.parallax }></div>
     </div>
   );
 };

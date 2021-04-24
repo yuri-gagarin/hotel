@@ -40,6 +40,9 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
                 src={ setImagePath(roomImagePaths[0]) }
                 data-index={0}
               />
+              <div className={ styles.imgOverlay}>
+                <i className={ `fas fa-search-plus ${styles.magnifyImgIcon}`}></i>
+              </div> 
             </div>
           </Col>
           <Col xs="12" lg="6"  className={ styles.rightImgsColumn }>
@@ -49,6 +52,9 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
                 src={ setImagePath(roomImagePaths[1])} 
                 data-index={1}
               />
+              <div className={ styles.imgOverlay}>
+                <i className={ `fas fa-search-plus ${styles.magnifyImgIcon}`}></i>
+              </div> 
             </div>
             <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(roomImagePaths[2]) }>
               <img
@@ -56,6 +62,9 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
                 src={ setImagePath(roomImagePaths[2])} 
                 data-index={2}
               />
+              <div className={ styles.imgOverlay}>
+                <i className={ `fas fa-search-plus ${styles.magnifyImgIcon}`}></i>
+              </div> 
             </div>
           </Col>
         </React.Fragment>
@@ -150,12 +159,6 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
           
           </div>
           
-        </Col>
-      </Row>
-      <Row style={{ marginTop: "10px" }}>
-        <Col className={ styles.bookColumn }>
-          <Button variant="info">{t("buttons.bookNow")}</Button>
-          <div className={ styles.bookPriceDiv }>{t("misc.from")}:<span>{ price }</span></div>
         </Col>
       </Row>
     </React.Fragment>
