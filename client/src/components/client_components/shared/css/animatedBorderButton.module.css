@@ -1,0 +1,67 @@
+.exploreBtn {
+  --offset: 10px;
+  --border-size: 2px;
+  display: block;
+  position: relative;
+  padding: 1em 2em;
+  appearance: none;
+  border: 0;
+  background: rgb(44, 53, 49);
+  color: rgb(194, 194, 25);
+  text-transform: uppercase;
+  letter-spacing: .25em;
+  outline: none;
+  cursor: pointer;
+  font-weight: bolder;
+  font-size: 1em;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 var(--border-size) currentcolor;
+}
+.exploreBtn:hover {
+  background: rgba(44, 53, 49, 0.671);
+}
+
+.buttonHorizontal, .buttonVertical {
+  position: absolute;
+  top: var(--horizontal-offset, 0);
+  right: var(--vertical-offset, 0);
+  bottom: var(--horizontal-offset, 0);
+  left: var(--vertical-offset, 0);
+  transition: transform .8s ease;
+  will-change: transform;
+}
+.buttonHorizontal::before, .buttonVertical::before {
+  content: '';
+  position: absolute;
+  border: inherit;
+}
+
+.buttonHorizontal {
+  --vertical-offset: calc(var(--offset) * -1);
+  border-top: var(--border-size) solid currentcolor;
+  border-bottom: var(--border-size) solid currentcolor;
+}
+.buttonHorizontal::before {
+  top: calc(var(--vertical-offset) - var(--border-size));
+  bottom: calc(var(--vertical-offset) - var(--border-size));
+  left: calc(var(--vertical-offset) * -1);
+  right: calc(var(--vertical-offset) * -1);
+}
+.exploreBtn:hover .buttonHorizontal {
+  transform: scaleX(0);
+}
+
+.buttonVertical {
+  --horizontal-offset: calc(var(--offset) * -1);
+  border-left: var(--border-size) solid currentcolor;
+  border-right: var(--border-size) solid currentcolor;
+}
+.buttonVertical::before {
+  top: calc(var(--horizontal-offset) * -1);
+  bottom: calc(var(--horizontal-offset) * -1);
+  left: calc(var(--horizontal-offset) - var(--border-size));
+  right: calc(var(--horizontal-offset) - var(--border-size));
+}
+.exploreBtn:hover .buttonVertical {
+  transform: scaleY(0);
+}

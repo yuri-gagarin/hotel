@@ -4,7 +4,10 @@ import { useTranslation } from "react-i18next";
 // semantic ui components //
 import { Button, Col, Container, Carousel, Modal, Row } from "react-bootstrap";
 // additional components //
+import { AnimatedBorder } from "../shared/AnimatedBorder";
+import { AnimatedBorderButton } from "../shared/AnimatedBorderButton";
 import GenericImgModalCarousel from "../shared/GenericImgModalCarousel";
+import FooterComponent from "../footer/Footer";
 import NavbarComponent from "../navbar/NavbarComponent";
 import Room from "./Room";
 import ClipText from "../../admin/shared/ClipText";
@@ -77,18 +80,28 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props): React.Nod
    setLocalComponentState({ ...localComponentState, showModal: false, imageIndex: 0, imgURLS: [] });
   };
   // 
-  const bookButton = () => {
-
-  };
-
+  const handleScrollToContnent = () => {
+    const windowHeight = window.innerHeight;
+    window.scrollTo({ top: windowHeight - 150, behavior: "smooth" });
+  }
  
   return (
     <div>
       <NavbarComponent/>
-      <div className={ styles.parallax }></div>
+      <div className={ styles.parallax }>
+        <div className={ styles.exploreBtnWrapper }>
+          <AnimatedBorderButton onClick={ handleScrollToContnent } />
+        </div>
+      </div>
       <Row className={ `${styles.roomsIndexHeaderRow} ${ localComponentState.headerFixed ? styles.headerFixed : ""}`} ref={ indexRowRef } >
-        <div className={ `${styles.svgContainer}` }>
-          <ClipText className={ `${styles.svgText} ${ localComponentState.headerFixed ? styles.svgTextFixed : ""}` } text={t("rooms.roomHeader")} textId="rooms" fontSize={"2em"} />
+        <div className={ styles.headerAnimatedBorderTop }>
+          <AnimatedBorder />
+        </div>
+        <div className={ `${styles.svgContainer} ${ localComponentState.headerFixed ? styles.svgContainerFixed : ""}` }>
+          <ClipText className={ `${styles.svgText}` } text={t("rooms.roomHeader")} textId="rooms" fontSize={"2em"} />
+        </div>
+        <div className={ styles.headerAnimatedBorderBottom }>
+          <AnimatedBorder />
         </div>
       </Row>
       <GenericImgModalCarousel
@@ -122,6 +135,7 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props): React.Nod
           )
         })
       } 
+      <FooterComponent />
     </div>
   );
 };

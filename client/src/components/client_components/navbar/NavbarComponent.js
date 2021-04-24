@@ -7,6 +7,8 @@ import { NonHomeScreenNav } from "./NonHomeScreenNav";
 // react router imports //
 import { withRouter } from "react-router-dom";
 import type { RouterHistory } from "react-router-dom";
+// 
+import styles from "./css/generalNavStyles.module.css";
 
 type Props = {
   history: RouterHistory
@@ -83,7 +85,7 @@ const NavbarComponent = ({ history } : Props): React.Node => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style={{ height: navState.height }}>
+    <nav className={`navbar navbar-expand-lg navbar-dark fixed-top ${styles.nonHomeScreenNav}`} id="mainNav" style={{ height: navState.height }}>
       <a 
         className="navbar-brand js-scroll-trigger" 
         onClick={ handleGoHome }

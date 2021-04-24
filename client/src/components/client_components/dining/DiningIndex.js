@@ -58,7 +58,6 @@ const DiningIndexContainer = ({ diningEntertainmentState, _handleFetchDiningEntM
 
   const scrollToContent = () => {
     const intViewportHeight = window.innerHeight;
-    console.log(intViewportHeight);
     window.scrollTo({ top: intViewportHeight - 180, behavior: "smooth" });
   }
 

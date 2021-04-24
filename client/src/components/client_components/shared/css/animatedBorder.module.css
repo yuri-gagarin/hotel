@@ -1,0 +1,15 @@
+/* animated border row */
+.animatedBorder {
+  height: 8px;
+  width: 100%;
+  background: #ffb347;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #ffcc33, #ffb347);  /* Chrome 10-25, Safari 5.1-6 */ 
+  background: linear-gradient(to bottom, #ffcc33, #ffb347); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */  transform: scaleX(0);
+}
+.animateBorder {
+  animation: animateRowBorder 1.5s forwards;
+}
+@keyframes animateRowBorder {
+  from { transform: scaleX(0.1); }
+  to { transform: scaleX(1); }
+}
