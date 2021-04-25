@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import $ from "jquery";
 // component imports //
+import { HomePageServices } from "./services/home_page/HomePageServices";
 import NavbarComponent from "./navbar/NavbarComponent";
 import MainHeaderComponent from "./main_header/MainHeaderComponent";
-import ServicesComponent from "./services/ServicesComponent";
 import ContactForm from "./forms/ContactForm";
 import Footer from "./footer/Footer";
 import MessageFormContainer from "./messaging/MessageFormContainer";
@@ -132,7 +132,7 @@ const HomeComponent = (props) => {
       <NavbarComponent />
       <MainHeaderComponent />
       <BookingForm />
-      <ServicesComponent history={history} />
+      <HomePageServices history={ history } />
       <ContactForm />
       <MessageFormContainer />
       <Footer />

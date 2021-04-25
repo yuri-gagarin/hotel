@@ -1,0 +1,53 @@
+.portfolioSection {
+  border: 4px solid rgb(211, 211, 26);
+  padding: 25px;
+}
+.portfolioContainer {
+  border: 2px solid rgb(44, 53, 49);
+  border-radius: 3px;
+  -webkit-box-shadow: 0px 0px 2px 1px rgba(176,176,176,1);
+  -moz-box-shadow: 0px 0px 2px 1px rgba(176,176,176,1);
+  box-shadow: 0px 0px 2px 1px rgba(176,176,176,1);
+  width: 100%;
+}
+
+.headerCol {
+  text-align: center;
+}
+.headerText {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-style: italic;
+}
+
+
+/* mobile view */
+.mobileViewRow {
+  border: 2px solid rgb(44, 53, 49);
+}
+.carouselCol {
+  padding: 0;
+  height: 100%;
+}
+.mobileViewCarousel {
+  height: 100%;
+  position: relative;
+  padding: 0;
+  background: #ffb347;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #ffcc33, #ffb347);  /* Chrome 10-25, Safari 5.1-6 */ 
+  background: linear-gradient(to bottom, #ffcc33, #ffb347); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+@media only screen and (max-width: 970px) {
+  .portfolioSection {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .portfolioContainer {
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    width: 100%;
+    height: 100%;
+  }
+}
