@@ -37,21 +37,23 @@ const ServiceClientView = ({ service, triggerImgModal } : Props): React.Node => 
 
   return (
     <React.Fragment>
-      <Row className={ styles.serviceRow } key={ service._id }>
+      <Row className={ styles.serviceHeaderRow }>
         <div className={ styles.serviceTitle }>  
           {service.serviceType}
         </div>
-        <Col xs={12} md={4}>
+      </Row>
+      <Row className={ styles.servicesPicRow }>
+        <Col className={ styles.servicesPicCol } xs={12} md={3}>
           <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 0)}>
             <Image className={ styles.serviceImg } src={ imgURLS[0] }></Image>
           </div>
         </Col>
-        <Col xs={12} md={4}>
+        <Col className={ styles.servicesPicCol }  xs={12} md={3}>
           <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 1)}>
             <Image className={ styles.serviceImg } src={ imgURLS[1] }></Image>
           </div>
         </Col>
-        <Col xs={12} md={4}>
+        <Col className={ styles.servicesPicCol }  xs={12} md={3}>
           <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 2)}>
             <Image className={ styles.serviceImg } src={ imgURLS[2] }></Image>
           </div>

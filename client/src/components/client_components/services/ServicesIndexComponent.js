@@ -1,6 +1,8 @@
 // @flow
 import * as React from "react";
 // additonal components //
+import { AnimatedBorder } from "../shared/AnimatedBorder";
+import { AnimatedBorderButton } from "../shared/AnimatedBorderButton";
 import NavbarComponent from "../navbar/NavbarComponent";
 import ClipText from "../../admin/shared/ClipText";
 import ServiceClientView from "./ServiceClientView";
@@ -67,22 +69,32 @@ const ServicesIndexComponent = ({ _handleFetchServices, serviceState }): React.N
     setPictureModalState({ modalOpen: false, imgURLS: [], imageIndex: 0 });
   };
 
+  const handleScrollToContent = () => {
+
+  };
+
   return (
     <div className={ styles.mainContainer }>
       <NavbarComponent />
+      <div className={ styles.parallaxContainer }>
+        <div className={ styles.headerRow }>
+          <div className={ styles.animatedHeaderBorderTop }></div>
+          <div className={ `${styles.headerText} ${ headerFixed ? styles.fixed : ""}`} ref={ indexRowRef }>
+            <ClipText text={"Services"} className={ `${styles.svgElem} ${ headerFixed ? styles.animateSVGElem : ""}` } />
+          </div>
+          <div className={ styles.animatedHeaderBorderTop }></div>
+        </div>
+        <div className={ styles.exploreBtnWrapper }>
+          <AnimatedBorderButton onClick={ handleScrollToContent } />
+        </div>
+      </div>
+     
       <GenericImgModalCarousel  
         show={ picureModalState.modalOpen } 
         imgURLS={ picureModalState.imgURLS } 
         imageIndex={ picureModalState.imageIndex } 
         closePictureModal={ closeModal } 
       />
-      <Row>
-        <div className={ styles.servicesHeader } >
-          <div className={ `${styles.headerText} ${ headerFixed ? styles.fixed : ""}`} ref={ indexRowRef }>
-            <ClipText text={"Services"} className={ `${styles.svgElem} ${ headerFixed ? styles.animateSVGElem : ""}` } />
-          </div>
-        </div>
-      </Row>
 
       { serviceState.createdServices.map(( service ) => {
           return (

@@ -26,12 +26,7 @@
   z-index: 10;
 }
 
-.serviceImgDiv {
-  border: 4px solid rgb(44, 53, 49);
-  border-radius: 4px;
-  height: 250px;
-  overflow: hidden;
-}
+
 .serviceImg {
   width: 100%;
 }
@@ -48,6 +43,20 @@
   background-color: white;
   padding-bottom: 0.5em;
 }
+
+.servicesPicRow {
+  border: 3px solid red;
+  display: flex;
+  justify-content: center;
+}
+.servicesPicCol {
+  border: 3px solid yellow;
+  padding: 10px;
+}
+.serviceImgDiv {
+  border: 2px solid red;
+} 
+
 .serviceInfoColumn {
   border: 2px solid rgb(211, 211, 26);
   padding: 0;

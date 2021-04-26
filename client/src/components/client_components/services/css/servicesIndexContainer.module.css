@@ -1,34 +1,50 @@
 .mainContainer {
-  border: 1px solid red;
-  background-image: url("/assets/images/backgrounds/bg_nature_mtn.jpeg");
   position: relative;
-  /* Set a specific height */
-  min-height: 500px;
-  margin-top: 75px;
+  background-color: rgb(44, 53, 49, 1);
+}
+.parallaxContainer {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
   /* Create the parallax scrolling effect */
+  background-image: url("/assets/images/layered_backgrounds/dining/restaurant_stock1.png");
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;  
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  background-size: cover;
+}
+.exploreBtnWrapper {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.servicesHeader {
-  /* Set a specific height */
-  min-height: 400px;
+.headerRow {
+  height: 300px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0px;
+  right: 0px;
+  left: 0;
   display: flex;
-  flex-grow: 1;
   justify-content: center;
   align-items: center;
+  background-color: rgb(44, 53, 49, .4);
+  z-index: 200;
 }
-.headerText {
-  position: relative;
-  font-size: 4em;
-  font-family: "Lobster";
+.headerFixed {
+  z-index: 999;
+  position: fixed;
+  left: 0px;
   width: 100%;
+  height: 150px;
+  transform: translateY(0);
+  background-color: rgb(44, 53, 49, 1);
+  transition: background-color 1s ease-in, height 1s ease-out;
 }
+
 .svgElem {
   width: 100%;
   opacity: 0.75;
@@ -38,23 +54,6 @@
 .animateSVGElem {
   opacity: 1;
   transition: opacity 0.5s ease-in;
-  color: red;
-}
-.fixed {
-  position: fixed;;
-  left: 0;
-  top: 50px;
-  width: 100%;
-  opacity: 1;
-  transition: opacity 0.5s ease-in;
-  z-index: 100;
-}
-/* */
-
-.servicesBreakpoint {
-  height: 100px;
-  display: flex;
-  flex-grow: 1;
 }
 
 
@@ -74,58 +73,5 @@
   height: 100%;
   z-index: -1;
 }
-/* draw border */
-/*
-.draw {
-  transition: color 0.25s;
-}
-.draw::before,
-.draw::after {
-  border: 10px solid transparent;
-  width: 0;
-  height: 0;
-}
-*/
-/* This covers the top & right borders (expands right, then down) */
-/*
-.draw::before {
-  top: 0;
-  left: 0;
-}
-*/
-/*  And this the bottom & left borders (expands left, then up) */
-/*
-.draw::after {
-  bottom: 0;
-  right: 0;
-}
-*/
-/*
-.draw:hover {
-  color: yellow;
-}
-*/
-/* Hover styles */
-/*
-.draw:hover::before,
-.draw:hover::after {
-  width: 100%;
-  height: 100%;
-}
 
-.draw:hover::before {
-  border-top-color: yellow; 
-  border-right-color: yellow;
-  transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;
-}
-
-.draw:hover::after {
-  border-bottom-color: yellow;
-  border-left-color: yellow;
-  transition:
-    border-color 0s ease-out 0.5s, 
-    width 0.25s ease-out 0.5s,
-    height 0.25s ease-out 0.75s; 
-}
-*/
 
