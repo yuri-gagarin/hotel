@@ -1,11 +1,21 @@
-.serviceRow {
-  background-color: rgb(44, 53, 49);
-  height: 275px;
-  border-top: 4px solid yellow;
+.serviceViewContainer {
+  border: 1px solid rgb(44, 53, 49);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  -webkit-box-shadow: 0px 0px 1px 1px rgba(176,176,176,1);
+  -moz-box-shadow: 0px 0px 1px 1px rgba(176,176,176,1);
+  box-shadow: 0px 0px 1px 1px rgba(176,176,176,1);
+  padding: 0;
+}
+
+.serviceTitleRow  {
   position: relative;
   display: flex;
+  justify-content: center;
   align-items: center;
   background-color: white;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .serviceTitle {
@@ -13,28 +23,13 @@
   justify-content: center;
   align-items: center;
   height: 50px;
-  position: absolute;
   background-color: rgb(211, 211, 26);
-  left: 50%;
-  top: -45px;
-  transform: translateX(-50%);
   padding: 1em;
   font-size: 3em;
   font-family: "Lobster", sans-serif;
   font-weight: 500;
-  color:  rgb(44, 53, 49);
-  z-index: 10;
 }
 
-
-.serviceImg {
-  width: 100%;
-}
-.serviceImg:hover {
-  width: 110%;
-  transition: width 100ms linear;
-  cursor: pointer;
-}
 
 /* service info row */
 .serviceInfoRow {
@@ -45,37 +40,80 @@
 }
 
 .servicesPicRow {
-  border: 3px solid red;
   display: flex;
   justify-content: center;
-}
-.servicesPicCol {
-  border: 3px solid yellow;
-  padding: 10px;
-}
-.serviceImgDiv {
-  border: 2px solid red;
-} 
-
-.serviceInfoColumn {
-  border: 2px solid rgb(211, 211, 26);
-  padding: 0;
-  border-radius: 5px;
-  -webkit-box-shadow: 0px 0px 4px 2px rgba(176,176,176,1);
-  -moz-box-shadow: 0px 0px 4px 2px rgba(176,176,176,1);
-  box-shadow: 0px 0px 4px 2px rgba(176,176,176,1);
-}
-
-.serviceContainer {
-  background: none;
-  border: 0;
-  box-sizing: border-box;
-  /* box-shadow: inset 0 0 0 2px red; */
-  /* color: red; */
-  font-size: inherit;
-  position: relative;
-  padding: 0;
-  z-index: 1;
   background-color: white;
 }
+.servicesPicCol {
+  border: 2px solid rgb(44, 53, 49);
+  overflow: hidden;
+  height: 250px;
+  padding: 0;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+.serviceImgDiv {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+} 
+.serviceImg {
+  height: 100%;
+}
+.serviceImg:hover {
+  height: 110%;
+  transition: height 100ms linear;
+  cursor: pointer;
+}
 
+.serviceInfoRow {
+  padding-top: 1.25em;
+  padding-bottom: 1.25em;
+}
+.serviceInfoColumn {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgb(44, 53, 49);
+  padding: 0;
+  border-radius: 1px;
+  height: 300px;
+}
+.hoursDiv {
+  display: flex;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.hoursDiv > span:nth-child(1) {
+  font-size: 1.25em;
+}
+.hoursDiv > i {
+  font-size: 2.25em;
+}
+.hoursDiv > span:nth-child(3) {
+  font-size: 1.25em;
+}
+.priceDiv {
+  display: flex;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.descDiv {
+  display: flex;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+
+@media only screen and (max-width: 768px) {
+  .serviceImg {
+    width: 100%;
+    height: auto;
+  }
+}
