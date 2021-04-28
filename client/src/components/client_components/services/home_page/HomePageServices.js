@@ -23,7 +23,7 @@ export const HomePageServices = ({ history } : Props): React.Node => {
 
   // event listeners //
   const listenToWindowResize = () => {
-    if (window.innerWidth < 971) {
+    if (window.innerWidth < 550) {
       setLocalState({ showMobileView: true });
     } else {
       setLocalState({ showMobileView: false });
@@ -34,7 +34,7 @@ export const HomePageServices = ({ history } : Props): React.Node => {
     history.push("/rooms");
   };
   const goToDiningEntertainment = () => {
-    history.push("/dining_entertainment");
+    history.push("/dining");
   };
   const goToServices = () => {
     history.push("/services");
@@ -45,7 +45,7 @@ export const HomePageServices = ({ history } : Props): React.Node => {
     // event listener for screen size //
     window.addEventListener("resize", listenToWindowResize);
     //
-    if (window.innerWidth < 971) {
+    if (window.innerWidth < 550) {
       setLocalState({ showMobileView: true });
     }
     return () => {
@@ -68,18 +68,18 @@ export const HomePageServices = ({ history } : Props): React.Node => {
           <Row className={ styles.mobileViewRow }>
             <Col md={12} className={ styles.carouselCol }>
               <Carousel className={ styles.mobileViewCarousel } interval={ null }>
-                <Carousel.Item key="room">
-                  <div className={`portfolio-item`}>
+                <Carousel.Item key="room" className={ styles.carouselItem }>
+                  <div className={`portfolio-item ${styles.carouselItemInner}`} >
                     <HomePageServiceCard modelType="room" handleHomePageServiceClick={ goToRooms } translateFunction={ translateFunction } />
                   </div>
                 </Carousel.Item>
-                <Carousel.Item key="dining">
-                  <div className={`portfolio-item`}>
+                <Carousel.Item key="dining" className={ styles.carouselItem }>
+                  <div className={`portfolio-item ${styles.carouselItemInner}`}>
                     <HomePageServiceCard modelType="dining" handleHomePageServiceClick={ goToDiningEntertainment } translateFunction={ translateFunction } />
                   </div>
                 </Carousel.Item>
-                <Carousel.Item key="service">
-                  <div className={`portfolio-item`}>
+                <Carousel.Item key="service" className={ styles.carouselItem }>
+                  <div className={`portfolio-item ${styles.carouselItemInner}`}>
                     <HomePageServiceCard modelType="service" handleHomePageServiceClick={ goToServices } translateFunction={ translateFunction } />
                   </div>
                 </Carousel.Item>
@@ -87,14 +87,14 @@ export const HomePageServices = ({ history } : Props): React.Node => {
             </Col>
           </Row>
           :
-          <Row>
-            <Col lg={4} md={4} className={`portfolio-item`}>
+          <Row className={ styles.colViewRow }>
+            <Col lg={4} md={6} className={`portfolio-item`}>
               <HomePageServiceCard key="room" modelType="room" handleHomePageServiceClick={ goToRooms } translateFunction={ translateFunction } />
             </Col>
-            <Col lg={4} md={4} className={`portfolio-item`}>
+            <Col lg={4} md={6} className={`portfolio-item`}>
               <HomePageServiceCard key="dining" modelType="dining" handleHomePageServiceClick={ goToDiningEntertainment } translateFunction={ translateFunction } />
             </Col>
-            <Col lg={4} md={4} className={`portfolio-item`}>
+            <Col lg={4} md={6} className={`portfolio-item`}>
               <HomePageServiceCard key="service" modelType="service" handleHomePageServiceClick={ goToServices } translateFunction={ translateFunction } />
             </Col>
           </Row>

@@ -27,9 +27,17 @@
   position: relative;
 }
 
+
+
 @media only screen and (max-width: 970px) {
   .portfolioItemInner {
     border: none;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+  .portfolioItemInner {
+    background-color: rgb(44, 53, 49);
   }
   .portfolioItemPicLink {
     border-left: 3px solid rgb(44, 53, 49);
