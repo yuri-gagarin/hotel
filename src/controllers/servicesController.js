@@ -1,5 +1,5 @@
 import path from "path";
-import ServiceImage from "./../models/ServiceImage";
+import ServiceImage from "../models/ServiceImage";
 import HotelService from "../models/HotelService";
 // helpers //
 import { deleteFile } from "./helpers/apiHelpers"

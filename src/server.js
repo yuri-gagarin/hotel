@@ -1,4 +1,3 @@
-
 import express from "express";
 import http from "http";
 import mongoose from "mongoose";
@@ -19,17 +18,25 @@ const router = express.Router();
 const PORT = process.env.PORT || 8080;
 const clientsMap = new Map();
 // database and connection //
-const { dbSettings } = appConfig;
 const mongoOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: dbSettings.useFindAndModify,
-  user: dbSettings.username,
-  pass: dbSettings.password
-};
-mongoose.connect(process.env.DEV_MONGO_URI, mongoOptions, (err) => {
-  if (err) console.error(err);
-});
+  useFindAndModify: true
+}
+if (process.env.NODE_ENV === "production") {
+  mongoose.connect(process.env.PRODUCTION_MONGO_URI, mongoOptions, (err) => {
+    if (err) console.error(err);
+  });
+} else if (process.env.NODE_ENV === "test") {
+  mongoose.connect(process.env.TEST_MONGO_URI, mongoOptions, (err) => {
+    if (err) console.error(err);
+  });
+} else {
+  mongoose.connect(process.env.DEV_MONGO_URI, mongoOptions, (err) => {
+    if (err) console.error(err);
+  });
+}
+
 mongoose.connection.once("open", () => {
   app.emit("dbReady");
 });
@@ -47,25 +54,28 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // serve the static files from the React app //
-// app.use(express.static(path.join(__dirname, "client/build")));
+
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.resolve(__dirname, "client/build")));
+  app.use(express.static(path.resolve("client", "build")));
   app.get("/", (_req, res) => {
-    res.sendFile(path.resolve(__dirname, "client/dist/index.html"));
+    console.log(__dirname)
+    res.sendFile(path.resolve("client/dist/index.html"));
   });
 }
 else {
-  app.use(express.static(path.resolve(__dirname, "client/src")));
+  console.log(path.resolve())
+  app.use(express.static(path.resolve("client", "src")));
   app.get("/", (_req, res) => {
-    res.sendFile(path.resolve(__dirname, "client/public/index.html"));
+    console.log(__dirname)
+    res.sendFile(path.resolve("client/public/index.html"));
   });
 }
-app.use(express.static(path.resolve(__dirname,  "public"))); 
+
+app.use(express.static(path.resolve("public"))); 
 // Router and routers //
 combineRoutes(router);
 app.use(router);
 
-//app.use()
 // app config //
 export const redisClient = redis.createClient({
   host: process.env.REDIS_HOST || 'localhost',

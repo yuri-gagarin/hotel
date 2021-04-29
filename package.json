@@ -4,7 +4,9 @@
   "description": "A hotel booking with small cms",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon --exec babel-node ./server.js",
+    "build": "babel src -d dist",
+    "start": "NODE_ENV=production node ./dist/server.js",
+    "start:dev": "NODE_ENV=development nodemon --exec babel-node ./src/server.js",
     "test": "NODE_ENV=test nodemon --exec babel-node mocha",
     "seedModels": "NODE_ENV=development babel-node ./helpers/data_generation/generateData.js"
   },
