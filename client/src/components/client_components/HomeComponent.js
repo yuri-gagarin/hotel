@@ -135,7 +135,7 @@ const HomeComponent = (props) => {
       <HomePageServices history={ history } />
       <ContactForm />
       <MessageFormContainer />
-      <Footer />
+      <Footer history={ history } />
     </div>
   );
 };

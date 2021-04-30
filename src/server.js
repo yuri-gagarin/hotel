@@ -1,6 +1,8 @@
 import express from "express";
 import http from "http";
+import dotenv from "dotenv";
 import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
 import bodyParser from "body-parser";
 import socketIo from 'socket.io';
 import redis from "redis";
@@ -10,7 +12,7 @@ import session from "express-session";
 import passportSrategy from "./controllers/helpers/authHelper";
 import appConfig from "./config/appConfig";
 import combineRoutes from "./routes/combineRoutes";
-import dotenv from "dotenv";
+import cors from "cors";
 dotenv.config();
 
 const app = express();
@@ -46,18 +48,47 @@ mongoose.connection.once("open", () => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // passport middleware //
-app.use(session({
-  ...appConfig.session, secret: process.env.SECRET
-}));
+if (process.env.NODE_ENV === "production") {
+  app.use(session({ 
+    secret: process.env.SECRET, 
+    saveUninitialized: false,
+    resave: false,
+    unset: 'destroy',
+    cookie: {
+        sameSite: 'Lax',
+        maxAge: 60000,
+        secure: true
+    } 
+  }));
+
+} else {
+  app.use(session({ secret: process.env.SECRET, saveUninitialized: false,
+    resave: false,
+    unset: 'destroy',
+    cookie: {
+        sameSite: 'Lax',
+        maxAge: 60000,
+        secure: true
+    } 
+  }));
+}
+
 passportSrategy(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-// serve the static files from the React app //
+// cors //
+app.use(cors({origin : '*'}))
 
+// serve the static files from the React app /
+
+app.use(express.static(path.resolve("public"))); 
+// Router and routers //
+combineRoutes(router);
+app.use(router);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.resolve("client", "build")));
-  app.get("/", (_req, res) => {
+  app.get("*", (_req, res) => {
     console.log(__dirname)
     res.sendFile(path.resolve("client/dist/index.html"));
   });
@@ -65,16 +96,11 @@ if (process.env.NODE_ENV === "production") {
 else {
   console.log(path.resolve())
   app.use(express.static(path.resolve("client", "src")));
-  app.get("/", (_req, res) => {
+  app.get("*", (_req, res) => {
     console.log(__dirname)
     res.sendFile(path.resolve("client/public/index.html"));
   });
 }
-
-app.use(express.static(path.resolve("public"))); 
-// Router and routers //
-combineRoutes(router);
-app.use(router);
 
 // app config //
 export const redisClient = redis.createClient({

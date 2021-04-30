@@ -17,12 +17,14 @@ import { handleFetchRooms } from "../../../redux/actions/roomActions";
 // FLOW types //
 import type { RoomState, RoomAction } from "../../../redux/reducers/rooms/flowTypes";
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
+import type { RouterHistory } from "react-router-dom";
 // styles //
 import styles from "./css/roomIndexContainer.module.css";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
 
 type Props = {
+  history: RouterHistory,
   roomState: RoomState,
   _handleFetchRooms: (data? : any) => Promise<boolean>
 };
@@ -35,7 +37,7 @@ type LocalComponentState = {
   headerFixed: boolean
 }
 
-const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props): React.Node => {
+const RoomsIndexContainer = ({ history, roomState, _handleFetchRooms }: Props): React.Node => {
   const { createdRooms } = roomState;
 
   const [ localComponentState, setLocalComponentState ] = React.useState<LocalComponentState>({
@@ -135,7 +137,7 @@ const RoomsIndexContainer = ({ roomState, _handleFetchRooms }: Props): React.Nod
           )
         })
       } 
-      <FooterComponent />
+      <FooterComponent history={history} />
     </div>
   );
 };

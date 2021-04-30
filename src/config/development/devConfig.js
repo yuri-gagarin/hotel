@@ -4,12 +4,6 @@ export default {
         username: process.env.MONGO_USERNAME,
         password: process.env.MONGO_PASSWORD,
         useFindAndModify: false
-    },
-    session: {
-        secret: process.env.SECRET,
-        resave: true,
-        saveUninitialized: true
     }
-
 };
 
