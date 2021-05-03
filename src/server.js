@@ -81,26 +81,23 @@ app.use(passport.session());
 app.use(cors({origin : '*'}))
 
 // serve the static files from the React app /
-
-app.use(express.static(path.resolve("public"))); 
+app.use(express.static(path.join(__dirname, "..", "public"))); 
 // Router and routers //
-combineRoutes(router);
-app.use(router);
+
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.resolve("client", "build")));
-  app.get("*", (_req, res) => {
-    console.log(__dirname)
-    res.sendFile(path.resolve("client/dist/index.html"));
+  app.use(express.static(path.join(__dirname, "..", "client", "build")));
+  app.get("/*", (_req, res) => {
+    res.sendFile(path.join(__dirname, "..", "client/build/index.html"));
   });
 }
 else {
-  console.log(path.resolve())
-  app.use(express.static(path.resolve("client", "src")));
-  app.get("*", (_req, res) => {
-    console.log(__dirname)
-    res.sendFile(path.resolve("client/public/index.html"));
+  app.use(express.static(path.join(__dirname, "..", "client", "public")));
+  app.get("/*", (_req, res) => {
+    res.sendFile(path.join(__dirname, "..", "client/public/index.html"));
   });
 }
+combineRoutes(router);
+app.use(router);
 
 // app config //
 export const redisClient = redis.createClient({
