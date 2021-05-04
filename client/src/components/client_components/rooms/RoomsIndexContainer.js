@@ -113,19 +113,12 @@ const RoomsIndexContainer = ({ history, roomState, _handleFetchRooms }: Props): 
         imageIndex={ localComponentState.imageIndex }
       />
       {
-        createdRooms.map((room) => {
+        createdRooms.map((room, index) => {
           return (
             <React.Fragment key={room._id}>
               <Container className={ styles.roomsIndexContainer } >       
                 <Room  
-                  index={ 0 }
-                  room={room} 
-                  images={room.images} 
-                  openPictureModal={openPictureModal}
-                  picModalState={{ showModal: localComponentState.showModal, imageIndex: localComponentState.imageIndex, direction: 1 }}
-                />
-                <Room  
-                  index={ 1 }
+                  index={ index }
                   room={room} 
                   images={room.images} 
                   openPictureModal={openPictureModal}

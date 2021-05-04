@@ -4,16 +4,19 @@ import path from "path";
 import { checkForExistingPath } from "./helpers/uploaderHelpers";
 import { APP_HOME_DIRECTORY } from "../server";
 
-let imagePath, fileName;
+let imagePath, absolutePath, fileName;
 const storage = multer.diskStorage({
   destination: (req, file, done) => {
-    imagePath = path.join(APP_HOME_DIRECTORY, "public", "uploads", "room_images");
-    checkForExistingPath(imagePath)
-      .then((imagePath) => {
-        done(null, imagePath);
+    imagePath = path.join("public", "uploads", "room_images");
+    absolutePath = path.join(APP_HOME_DIRECTORY, imagePath);
+
+    return checkForExistingPath(absolutePath)
+      .then(() => {
+        done(null, absolutePath);
       })
       .catch((error) => {
-        done(error, imagePath);
+        console.error(error)
+        done(error, absolutePath);
       })
   },
   filename: (req, file, done) => {
@@ -80,7 +83,8 @@ const roomImageUploader = (req, res, next) => {
         req.locals = { roomImageUpload: {
           responseMsg: "File uploaded",
           success: true,
-          imagePath: path.join(imagePath, fileName)
+          imagePath: path.join(imagePath, fileName),
+          absolutePath: path.join(absolutePath, fileName)
           }
         };
         return next();

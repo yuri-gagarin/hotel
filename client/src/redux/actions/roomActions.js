@@ -249,8 +249,8 @@ export const handleFetchRooms = (dispatch: Dispatch<RoomAction>, options?: any):
   const requestOptions = {
     method: "get",
     url: "/api/rooms",
-    params: {
-      options: options ? options : null
+    query: {
+      options: options ? options : {}
     }
   };
 
@@ -258,6 +258,7 @@ export const handleFetchRooms = (dispatch: Dispatch<RoomAction>, options?: any):
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
+      console.log(response)
       const { responseMsg, rooms } : { responseMsg: string, rooms: Array<RoomData> } = data;
 
       const stateData = { status, responseMsg, createdRooms: rooms, numberOfRooms: rooms.length };
@@ -265,6 +266,7 @@ export const handleFetchRooms = (dispatch: Dispatch<RoomAction>, options?: any):
       return Promise.resolve(true);
     })
     .catch((error) => {
+      console.log(error);
       dispatch(handleRoomError(error));
       return Promise.resolve(false);
     });

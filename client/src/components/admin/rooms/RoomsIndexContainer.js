@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import PropTypes from "prop-types";
 import { Button, Card, Grid, Icon, Label, Popup } from "semantic-ui-react";
 // additional imports //
 import APIMessage from "../shared/ApiMessage";
@@ -18,7 +17,7 @@ import { handleFetchRooms, handleOpenRoom, handleCreateNewRoom, handleUpdateRoom
 import { withRouter, Route } from "react-router-dom";
 // FLOW types //
 import type { RoomState, RoomData, ClientRoomFormData } from "../../../redux/reducers/rooms/flowTypes";
-import type { RouterHistory } from "react-router-dom";
+import type { RouterHistory } from "react-router-dom"; 
 // styles and css //
 import styles from "./css/roomIndexCont.module.css";
 
@@ -41,7 +40,7 @@ type Props = {
   _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => Promise<boolean>,
   // online offline actions //
   _handleToggleRoomOnlineOffline: (roomToUpdate: RoomData, currentRoomState: RoomState) => Promise<boolean>,
-  _handleToggleAllOnlineOffline: (data : { live : boolean }) => Promise<boolean> 
+  _handleToggleAllOnlineOffline: (data: { live: boolean }) => Promise<boolean> 
 };
 
 type ConfirmDeleteModalState = {
@@ -101,7 +100,7 @@ const RoomsIndexContainer = (props: Props): React.Node => {
         .then((success) => { 
           if (success) {
             setConfirmDeleteModalState({ confirmDelModalOpen: false, modelIdToDelete: "" });
-          };
+          }
       });
     } else {
       return Promise.resolve();
@@ -189,7 +188,7 @@ const mapDispatchToProps = (dispatch) => {
     _handleDeleteRoom: (roomIdToDelete: string, currentRoomState: RoomState) => handleDeleteRoom(dispatch, roomIdToDelete, currentRoomState),
     // online offline toggles //
     _handleToggleRoomOnlineOffline: (roomToUpdate: RoomData, currentRoomState: RoomState) => handleToggleRoomOnlineOffline(dispatch, roomToUpdate, currentRoomState),
-    _handleToggleAllOnlineOffline: (data : { live: boolean }) => handleToggleAllOnlineOffline(dispatch, data)
+    _handleToggleAllOnlineOffline: (data: { live: boolean }) => handleToggleAllOnlineOffline(dispatch, data)
   }; 
 };
 

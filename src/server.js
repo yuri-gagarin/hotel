@@ -76,27 +76,30 @@ passportSrategy(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 // cors //
 app.use(cors({origin : '*'}))
 
 // serve the static files from the React app /
 app.use(express.static(path.join(__dirname, "..", "public"))); 
-// Router and routers //
 
+// Router and routers //
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "..", "client", "build")));
-  app.get("/*", (_req, res) => {
+  app.get(/^\/(?!api).*/, (_req, res) => {
     res.sendFile(path.join(__dirname, "..", "client/build/index.html"));
   });
 }
 else {
   app.use(express.static(path.join(__dirname, "..", "client", "public")));
-  app.get("/*", (_req, res) => {
+  app.get(/^\/(?!api).*/, (_req, res) => {
     res.sendFile(path.join(__dirname, "..", "client/public/index.html"));
   });
 }
 combineRoutes(router);
 app.use(router);
+
+
 
 // app config //
 export const redisClient = redis.createClient({

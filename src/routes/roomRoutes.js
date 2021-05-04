@@ -1,4 +1,4 @@
-import { isLoggedIn } from "./helpers/routeHelpers";
+//import { isLoggedIn } from "./helpers/routeHelpers";
 import roomsController from "../controllers/roomsController";
 
 export default function (router) {
@@ -36,4 +36,4 @@ export default function (router) {
   router  
     .route("/api/rooms/:roomId")
     .delete(roomsController.deleteRoom);
-};  
+}

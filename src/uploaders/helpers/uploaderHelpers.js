@@ -2,7 +2,7 @@ import fs from "fs";
 
 export const checkForExistingPath = (absoluteImagePath) => {
   return new Promise((resolve, reject) => {
-    fs.access(absoluteImagePath, fs.constants.W_OK, fs.constants.R_OK, (error) => {
+    fs.access(absoluteImagePath, fs.constants.W_OK | fs.constants.R_OK, (error) => {
       if(error) {
         // if error ENOENT make directory //
         if (error.code === "ENOENT") {
@@ -14,11 +14,10 @@ export const checkForExistingPath = (absoluteImagePath) => {
             resolve(absoluteImagePath);
           });
         } else {
-          console.error(error);
           reject(error);
         }
       } else {
-        reject(absoluteImagePath);
+        resolve(absoluteImagePath);
       }
     });
   });

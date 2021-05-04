@@ -5,9 +5,9 @@ import { deleteFile } from "./helpers/apiHelpers";
 
 export default {
   getRooms: (req, res) => {
+    console.log("here");
     const options = req.query.options ? JSON.parse(req.query.options) : null;
     if (options && typeof options === "object") {
-      console.log(11)
       if (options.live) {
         return Room.find({ live: true })
           .populate("images", ["_id", "path"])
@@ -79,7 +79,7 @@ export default {
         return Promise.resolve({ nModified: 0 });
       }
     })
-    .then((_) => {
+    .then(() => {
       return res.status(200).json({
         responseMsg: "Room created",
         newRoom: createdRoom
@@ -122,12 +122,11 @@ export default {
       });
     }
 
-    console.log(allRoomsOnlineStatus)
     if (allRoomsOnlineStatus && typeof allRoomsOnlineStatus === "object" && typeof allRoomsOnlineStatus.live === "boolean") {
       console.log(allRoomsOnlineStatus)
       const { live } = allRoomsOnlineStatus;
       return Room.update({}, { live: live }, { multi: true })
-        .then((response) => {
+        .then(() => {
           return Room.find({}).populate("images").exec();
         })
         .then((updatedRooms) => {
@@ -172,7 +171,7 @@ export default {
         return Promise.resolve({ nModified: 0 });
       }
     })
-    .then((_) => {
+    .then(() => {
       return res.status(200).json({
         responseMsg: "Room Updated",
         updatedRoom: editedRoom
@@ -186,10 +185,9 @@ export default {
       });
     });
   },
+
   deleteRoom: (req, res) => {
     const roomId = req.params.roomId;
-    const { roomData, roomImages } = req.body;
-    let deletedRoom;
     // console.log(req.body);
     let imagePaths = [];
     let imageIds = [];
@@ -214,7 +212,7 @@ export default {
           return Promise.resolve({ n: 0 });
         }
       })
-      .then((response) => {
+      .then(() => {
         return Room.findOneAndDelete({ _id: roomId }).exec();
       })
       .then((deletedRoom) => {
@@ -232,13 +230,13 @@ export default {
       });
   },
   uploadImage: (req, res) => {
-    const imageUploadResult = req.locals.roomImageUpload;
+    const { success, imagePath, absolutePath } = req.locals.roomImageUpload;
     const { roomId } = req.params;
     let uploadedImage, updatedRoom;
-    if (imageUploadResult.success) {
+    if (success) {
       if (roomId) {
         // request is on an existing room //
-        return RoomImage.create({ path: imageUploadResult.imagePath, room: roomId, createdAt: new Date(Date.now()) })
+        return RoomImage.create({ path: imagePath, absolutePath: absolutePath, room: roomId, createdAt: new Date(Date.now()) })
           .then((createdImage) => {
             uploadedImage = createdImage;
             return (
@@ -262,7 +260,7 @@ export default {
           });
       } else {
         // reqeust is on a new room, not created yet //
-        return RoomImage.create({ path: imageUploadResult.imagePath, createdAt: new Date(Date.now()) })
+        return RoomImage.create({ path: imagePath,  absolutePath: absolutePath, createdAt: new Date(Date.now()) })
           .then((createdImage) => {
             return res.status(200).json({
               responseMsg: "Uploaded an image",
