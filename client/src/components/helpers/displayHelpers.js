@@ -47,7 +47,7 @@ export const setStringTranslation = (stringToTranslate: string, i18nLanguage: st
   if (stringToTranslate.length === 0) {
     return "Nothing to translate...";
   }
-  
+
   const translations = stringToTranslate.split(/(<en>|<ru>|<uk>)/g).filter((text) => text.length !== 0);
   // if string is not split according to translation, return string //
   if (translations.length === 1) {
@@ -107,8 +107,6 @@ export const objectValuesEmpty = (obj: any): boolean => {
       return true;
     }
   } else {
-    console.log("display helpers 68:");
-    console.log(typeof obj)
     throw new TypeError("Invalid argument, expected type <object>");
   }
 };
