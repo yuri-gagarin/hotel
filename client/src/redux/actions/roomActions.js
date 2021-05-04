@@ -258,7 +258,6 @@ export const handleFetchRooms = (dispatch: Dispatch<RoomAction>, options?: any):
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      console.log(response)
       const { responseMsg, rooms } : { responseMsg: string, rooms: Array<RoomData> } = data;
 
       const stateData = { status, responseMsg, createdRooms: rooms, numberOfRooms: rooms.length };

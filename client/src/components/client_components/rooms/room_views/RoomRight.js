@@ -156,7 +156,7 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
         </Col>
         <Col xs="12" lg="6" className={ styles.roomDescColumn }>
           <div className={ styles.roomDescDiv }>
-            <p>{ description ?  setStringTranslation(description, i18n) : "No description to translate..." }</p>
+            <p>{ description ?  setStringTranslation(description, i18n.language) : "No description to translate..." }</p>
           </div>
         </Col>
       </Row>

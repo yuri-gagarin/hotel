@@ -10,7 +10,7 @@ import { RoomRight } from "./room_views/RoomRight";
 import styles from "./css/room.module.css";
 // FLOW types //
 import type { RoomData } from "../../../redux/reducers/rooms/flowTypes";
-import { setImagePath} from "../../helpers/displayHelpers";
+import { setImagePath, setStringTranslation } from "../../helpers/displayHelpers";
 // translations //
 
 
@@ -88,7 +88,7 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
         <Col style={{padding: 0}}>
           <div style={{ position: "relative", width: "100%", height: "50px", marginBottom: "1em" }} className={ styles.titleRow }>
             <div className={ styles.strikeThroughDiv }></div>
-            <div className={ styles.roomType }>{room.roomType}</div>
+            <div className={ styles.roomType }>{ setStringTranslation(room.roomType, i18n.language)}</div>
           </div>
         </Col>
       </Row>

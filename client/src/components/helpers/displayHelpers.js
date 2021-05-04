@@ -47,7 +47,13 @@ export const setStringTranslation = (stringToTranslate: string, i18nLanguage: st
   if (stringToTranslate.length === 0) {
     return "Nothing to translate...";
   }
+  
   const translations = stringToTranslate.split(/(<en>|<ru>|<uk>)/g).filter((text) => text.length !== 0);
+  // if string is not split according to translation, return string //
+  if (translations.length === 1) {
+    return translations[0];
+  }
+
   if (i18nLanguage === "en" && translations.indexOf("<en>") !== -1) {
     descriptionText = translations[translations.indexOf("<en>") + 1];
   } else if (i18nLanguage === "ru" && translations.indexOf("<ru>") !== -1) {
