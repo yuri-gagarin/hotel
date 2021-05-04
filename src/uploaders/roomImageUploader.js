@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
       .catch((error) => {
         console.error(error)
         done(error, absolutePath);
-      })
+      });
   },
   filename: (req, file, done) => {
     const extName = path.extname(file.originalname);
@@ -94,7 +94,8 @@ const roomImageUploader = (req, res, next) => {
         req.locals = { roomImageUpload: {
           message: "No file uploaded",
           success: false,
-          imagePath: null
+          imagePath: null,
+          absolutePath: null
           }
         };
         return next();

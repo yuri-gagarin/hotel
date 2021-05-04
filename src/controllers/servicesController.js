@@ -1,4 +1,3 @@
-import path from "path";
 import ServiceImage from "../models/ServiceImage";
 import HotelService from "../models/HotelService";
 // helpers //
@@ -28,6 +27,7 @@ export default {
     const { serviceType, hours, price, description } = clientServiceData
     let createdService;
     const { errors, isValid } = validateHotelService(clientServiceData);
+
     if (!isValid) { 
       return Promise.resolve()
         .then(() => {
@@ -36,7 +36,7 @@ export default {
             error: errors
           });
         });
-    };
+    }
 
     return HotelService.create({ 
       serviceType, 
@@ -61,7 +61,7 @@ export default {
         return Promise.resolve({ nModified: 0 });
       }
     })
-    .then((_) => {
+    .then(() => {
       return res.status(200).json({
         responseMsg: "New Service created",
         newService: createdService
@@ -97,7 +97,7 @@ export default {
           responseMsg, updatedService
         });
       });
-    };
+    }
     
     // check for take all online or offline action //
     if (changeAllOnlineStatus) {
@@ -147,7 +147,7 @@ export default {
     })
     .catch((error) => {
       console.error(error);
-      return res.status(status || 500).json({
+      return res.status(500).json({
         responseMsg: "An error occured",
         error: error
       });
@@ -160,7 +160,7 @@ export default {
     const { serviceImages } = req.body;
     if (serviceImages && Array.isArray(serviceImages) && serviceImages.length > 0) {
       // do image cleanup first //
-      imagePathsToDelete = serviceImages.map((img) => `${img.path}`);
+      imagePathsToDelete = serviceImages.map((img) => `${img.absolutePath}`);
       imageIdsToDelete = serviceImages.map((img) => `${img._id}`);
     }
     return HotelService.findOneAndDelete({ _id: serviceId })
@@ -173,7 +173,7 @@ export default {
           return Promise.resolve([{ success: true }]);
         }
       })
-      .then((deleteArray) => {
+      .then(() => {
         if (imageIdsToDelete) {
           return ServiceImage.deleteMany({ _id: imageIdsToDelete});
         } else {
@@ -196,8 +196,7 @@ export default {
   },
 
   uploadImage: (req, res) => {
-    const imageUploadResult = req.locals.serviceImageUpload;
-    const { imagePath, success } = imageUploadResult;
+    const { imagePath, absolutePath, success } = req.locals.serviceImageUpload;
     const { serviceId } = req.params;
     let uploadedImage, updatedService;
 
@@ -205,7 +204,7 @@ export default {
       if (serviceId) {
         // request is on an existing service //
         return (
-          ServiceImage.create({ path: imagePath, hotelService: serviceId, createdAt: new Date(Date.now()) })
+          ServiceImage.create({ path: imagePath, absolutePath: absolutePath, hotelService: serviceId, createdAt: new Date(Date.now()) })
         )
         .then((createdImage) => {
           uploadedImage = createdImage;
@@ -230,21 +229,19 @@ export default {
           })
         })
       } else {
-        return ServiceImage.create({
-          path: imagePath, createdAt: new Date(Date.now())
-        })
-        .then((serviceImage) => {
-          return res.status(200).json({
-            responseMsg: "Uploaded an image",
-            newImage: serviceImage
+        return ServiceImage.create({ path: imagePath, absolutePath: absolutePath, createdAt: new Date(Date.now()) })
+          .then((serviceImage) => {
+            return res.status(200).json({
+              responseMsg: "Uploaded an image",
+              newImage: serviceImage
+            });
+          })
+          .catch((error) => {
+            return res.status(500).json({
+              responseMsg: "A database error occured",
+              error: error
+            });
           });
-        })
-        .catch((error) => {
-          return res.status(500).json({
-            responseMsg: "A database error occured",
-            error: error
-          });
-        });
       }
     } else {
       return res.status(500).json({
@@ -262,12 +259,12 @@ export default {
         if (deletedImg) {
           deletedImage = deletedImg;
           // remove from the files //
-          return deleteFile(deletedImg.path);
+          return deleteFile(deletedImg.absolutePath);
         } else {
           return Promise.reject(new Error("No Image was found"));
         }
       })
-      .then((_) => {
+      .then(() => {
         const { _id : imageId, hotelService : serviceId } = deletedImage;
         return (
           HotelService
@@ -300,7 +297,7 @@ export default {
     if (serviceImages.length > 0) {
       for (const imgData of serviceImages) {
         serviceImgIds.push(imgData._id);
-        serviceImgPaths.push(path.join(path.resolve(), imgData.path));
+        serviceImgPaths.push(imgData.absolutePath);
       }
     }
     
@@ -317,14 +314,12 @@ export default {
     })
     .then((response) => {
       if (response.length > 0 && serviceImgIds.length > 0) {
-        console.log(310);
-        console.log(serviceImgIds);
         return ServiceImage.deleteMany({ _id: { $in: serviceImgIds } }).exec();
       } else {
         return Promise.resolve({ n: 0 });
       }
     })
-    .then((_) => {
+    .then(() => {
       return res.status(200).json({
         responseMsg: "Removed all images",
       });

@@ -10,6 +10,10 @@ const serviceImageSchema = new Schema({
     type: String,
     required: true
   },
+  absolutePath: {
+    type: String,
+    required: true
+  },
   uploadedAt: {
     type: Date,
     default: Date.now

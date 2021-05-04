@@ -10,10 +10,14 @@ const postImageSchema = new Schema({
     type: String,
     required: true
   },
+  absolutePath: {
+    type: String,
+    required: true
+  },
   uploadedAt: {
     type: Date,
     default: Date.now
   }
 });
 
-export default mongoose.model("PostImage", roomImageSchema);
+export default mongoose.model("PostImage", postImageSchema);

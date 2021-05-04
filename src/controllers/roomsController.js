@@ -5,7 +5,6 @@ import { deleteFile } from "./helpers/apiHelpers";
 
 export default {
   getRooms: (req, res) => {
-    console.log("here");
     const options = req.query.options ? JSON.parse(req.query.options) : null;
     if (options && typeof options === "object") {
       if (options.live) {
@@ -291,7 +290,7 @@ export default {
         if (deletedImg) {
           deletedImage = deletedImg;
           // remove from the files //
-          return deleteFile(deletedImg.path);
+          return deleteFile(deletedImg.absolutePath);
         } else {
           return Promise.reject(new Error("No Image was found"));
         }
@@ -321,10 +320,47 @@ export default {
   },
 
   deleteAllRoomImages: (req, res) => {
-    const { roomImages } = req.body;
-    console.log(roomImages)
-    return res.status(200).json({
-      responseMsg: "All ok"
-    });
+    const { roomImages = [] } = req.body;
+    const roomImgIds = [];
+    const roomImgPaths = [];
+
+    if (roomImages.length > 0) {
+      for (const imgData of roomImages) {
+        roomImgIds.push(imgData._id);
+        roomImgPaths.push(imgData.absolutePath);
+      }
+    }
+
+    return Promise.resolve()
+      .then(() => {
+        const deletePromises = [];
+        if (roomImgPaths.length > 0) {
+          for (const imgPath of roomImgPaths) {
+            deletePromises.push(deleteFile(imgPath));
+          }
+          return Promise.all(deletePromises);
+        } else {
+          return Promise.resolve([]);
+        }
+      })
+      .then((response) => {
+        if (response.length > 0 && roomImgIds.length > 0) {
+          return RoomImage.deleteMany({ _id: { $in: roomImgIds } }).exec();
+        } else {
+          return Promise.resolve({ n: 0 });
+        }
+      })
+      .then(() => {
+        return res.status(200).json({
+          responseMsg: "Removed all images",
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        return res.status(500).json({
+          responseMsg: "An error occured",
+          error: error
+        });
+      });
   }
 };

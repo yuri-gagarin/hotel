@@ -10,6 +10,10 @@ const menuImageSchema = new Schema({
     type: String,
     required: true
   },
+  absolutePath: {
+    type: String,
+    required: true
+  },
   uploadedAt: {
     type: Date,
     default: new Date(Date.now())
