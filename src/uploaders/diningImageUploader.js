@@ -1,13 +1,21 @@
 import multer from "multer";
 import path from "path";
+// 
+import { checkForExistingPath } from "./helpers/uploaderHelpers";
+import { APP_HOME_DIRECTORY } from "../server";
+
 
 let imagePath, fileName;
 const storage = multer.diskStorage({
   destination: (req, file, done) => {
-    imagePath = path.join("public", "uploads", "dining_images");
-    console.log(8)
-    console.log(path.join(path.resolve(), imagePath));
-    done(null, imagePath);
+    imagePath = path.join(APP_HOME_DIRECTORY, "public", "uploads", "dining_images");
+    checkForExistingPath(imagePath)
+      .then((imagePath) => {
+        done(null, imagePath);
+      })
+      .catch((error) => {
+        done(error, imagePath);
+      })
   },
   filename: (req, file, done) => {
     const extName = path.extname(file.originalname);
@@ -42,8 +50,6 @@ const diningImageUploader = (req, res, next) => {
     fileFilter: fileFilter
   }).single("diningImage");
 
-  console.log(43);
-  console.log(req)
   //run the upload function
   upload(req, res, function(error) {
     console.log(error);
@@ -55,7 +61,7 @@ const diningImageUploader = (req, res, next) => {
         return res.status(400).json({
           responseMsg: "File size error",
           error: error,
-          errorMsg: `File size should be less than ${fileSize/1000000} Mb`
+          errorMsg: `File size should be less than ${maxFileSize/1000000} Mb`
         });
       } else {
         console.error(error);

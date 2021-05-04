@@ -1,11 +1,20 @@
 import multer from "multer";
 import path from "path";
+//
+import { checkForExistingPath } from "./helpers/uploaderHelpers";
+import { APP_HOME_DIRECTORY } from "../server";
 
 let imagePath, fileName;
 const storage = multer.diskStorage({
   destination: (req, file, done) => {
-    imagePath = path.join("public", "uploads", "roomImages");
-    done(null, imagePath);
+    imagePath = path.join(APP_HOME_DIRECTORY, "public", "uploads", "room_images");
+    checkForExistingPath(imagePath)
+      .then((imagePath) => {
+        done(null, imagePath);
+      })
+      .catch((error) => {
+        done(error, imagePath);
+      })
   },
   filename: (req, file, done) => {
     const extName = path.extname(file.originalname);
@@ -51,7 +60,7 @@ const roomImageUploader = (req, res, next) => {
         return res.status(400).json({
           responseMsg: "File size error",
           error: error,
-          errorMsg: `File size should be less than ${fileSize/1000000} Mb`
+          errorMsg: `File size should be less than ${maxFileSize/1000000} Mb`
         });
       } else {
         console.error(error);

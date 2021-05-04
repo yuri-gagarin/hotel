@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import MongoStore from "connect-mongo";
+// import MongoStore from "connect-mongo";
 import bodyParser from "body-parser";
 import socketIo from 'socket.io';
 import redis from "redis";
@@ -10,7 +10,6 @@ import path from "path";
 import passport from "passport";
 import session from "express-session";
 import passportSrategy from "./controllers/helpers/authHelper";
-import appConfig from "./config/appConfig";
 import combineRoutes from "./routes/combineRoutes";
 import cors from "cors";
 dotenv.config();
@@ -18,7 +17,7 @@ dotenv.config();
 const app = express();
 const router = express.Router();
 const PORT = process.env.PORT || 8080;
-const clientsMap = new Map();
+let io;
 // database and connection //
 const mongoOptions = {
   useNewUrlParser: true,
@@ -110,7 +109,7 @@ app.on("dbReady", () => {
   server.listen(PORT, () => {
     console.info(`App listening at Port: ${PORT}`);
   });
-  global.io = socketIo.listen(server);
+  io = socketIo.listen(server);
   io.set("origins","*:*");
   io.attach(redisClient);
   // IO functionality //
@@ -129,7 +128,7 @@ app.on("dbReady", () => {
     socket.on("clientLeaving",  (user) => {
       // remove client information from redis //
       if (user._id)
-      redisClient.del(user._id, (error, reply) => {
+      redisClient.del(user._id, (error, _) => {
         if (error) {
           console.error(error);
           socket.emit("socketConnectionError");
@@ -140,8 +139,6 @@ app.on("dbReady", () => {
     });
     // listen for an administrator to connect //
     socket.on("adminConnected", (admin) => {
-      console.log(106)
-      console.log(admin);
       redisClient.hmset(admin._id, admin._id, socket.id, (error, reply) => {
         if (error) {
           console.error(error);
@@ -182,7 +179,11 @@ app.on("dbReady", () => {
     socket.emit("hello", "hello there");
 
   });
+
 });
+// variable exports //
+export const APP_HOME_DIRECTORY = path.join(__dirname, "..");
+export { io as ioInstance };
 
 
 
