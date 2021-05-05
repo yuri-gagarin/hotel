@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { 
-  Button,
-  Container,
-  Grid,
-  Form
-} from "semantic-ui-react";
+//@flow
+import * as React from "react";
+import { Button, Container, Grid, Form, FormInput } from "semantic-ui-react";
 // additional components //
 import ErrorComponent from "../../display_components/ErrorComponent";
 import SuccessComponent from "../../display_components/SuccessComponent";
@@ -15,40 +10,40 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux"; 
 import { loginUser } from "../../../redux/actions/apiActions";
 import { clearAppError } from "../../../redux/actions/appGeneralActions";
+// types //
+import type { RootState, AppAction , Dispatch } from "../../../redux/reducers/_helpers/createReducer";
+import type { RouterHistory } from "react-router-dom";
+// styles //
+import styles from "./css/adminLoginComponent.module.css";
 
-const loginPageStyle = {
-  container: {
-    marginTop: "2em",
-    display: "flex",
-    flexDirection: "column",
-  },
-  titleRow: {
-    //flex: 5,
-    //border: "2px solid red",
-    textAlign: "center",
+type FormState = {
+  email: string;
+  password: string;
+  emailError: string;
+  passwordError: string;
+};
 
-  },
-  formRow: {
-    //flex: 8,
-    //border: "2px solid green"
-  }
+type WrapperProps = {
+
+};
+type RouterProps = {
+  ...WrapperProps;
+  history: RouterHistory;
 }
-const { titleRow, formRow } = loginPageStyle;
+type Props = {
+  ...RouterProps;
+  adminState: any;
+  appGeneralState: any;
+  handleUserLogin: (userData: { email: string, password: string }) => Promise<boolean>;
+  clearAppError: () => void;
+};
 
+const AdminLoginComponent = ({ history, adminState, appGeneralState, handleUserLogin, clearAppError }: Props): React.Node => {
+  const [ formState, setFormState ] = React.useState<FormState>({ email: "", password: "", emailError: "", passwordError: "" });
+  const [ sumbitDisabled, setSubmitDisabled ] = React.useState(true);
+  const [ errorTimeout, setErrorTimeout ] = React.useState(null);
 
-
-const AdminLoginComponent = (props) => {
-  const { history, appGeneralState, handleUserLogin, clearAppError } = props;
-
-  const [formData, setFormData] = useState({ 
-    email: "", password: "", typingEmail: false, typingPass: false
-  });
-  const [sumbitDisabled, setSubmitDisabled] = useState(true);
-  const [emailInputError, setEmailInputError] = useState(false);
-  const [passInputError, setPassInputError] = useState(false);
-  const [errorTimeout, setErrorTimeout] = useState(null);
-
-  useEffect(() => {
+  React.useEffect(() => {
     // to automatically clear error and close error comopnent //
     const { error } = appGeneralState;
     if (error) {
@@ -64,64 +59,34 @@ const AdminLoginComponent = (props) => {
     return errorTimeout ? clearTimeout(errorTimeout) : undefined;
   }, [appGeneralState]);
 
-  // error handlers - client side validation //
-  const handleEmailError = () => {
-    const { email, typingEmail } = formData;
-    if (typingEmail && (email.length === 0)) {
-      setEmailInputError({
-        content: "Email required",
-        pointing: "below"
-      });
-    } else {
-      setEmailInputError(false);
-    }
-  };
-  const handlePassError = () => {
-    const { password, typingPass } = formData;
-    if (typingPass && (password.length < 1)) {
-      setPassInputError({
-        content: "Password is required",
-        pointing: "below"
-      });
-    } else {
-      setPassInputError(false);
-    }
-  };
-  // end error handlers - client side validation //
-  // useEffect handlers for dynamic input validation //
-  useEffect(() => {
-    handleEmailError(formData);
-    handlePassError(formData);
-  }, [formData]);
-
-  useEffect(() => {
-    const { email, password } = formData;
-    if (!passInputError && !emailInputError && email && password) {
+  React.useEffect(() => {
+    const { email, password, emailError, passwordError } = formState;
+    if (email && password && !emailError && !passwordError) {
       setSubmitDisabled(false);
     }
     else {
       setSubmitDisabled(true);
     }
-  },  [emailInputError, passInputError, formData]);
+  },  [ formState ]);
   // end useEffect handlers for dynamic input validation //
   // form input and submit handlers //
-  const handleEmailInput = (e) => {
-    setFormData({
-      ...formData,
-      email: e.target.value,
-      typingEmail: true
-    });
+  const handleEmailInput = (e, data: any) => {
+    if (data.value.length === 0) {
+      setFormState({ ...formState, email: data.value, emailError: "Please enter your email..." });
+    } else {
+      setFormState({ ...formState, email: data.value, emailError: "" });
+    }
   };
-  const handlePassInput = (e) => {
-    setFormData({
-      ...formData, 
-      password: e.target.value,
-      typingPass: true
-    });
+  const handlePassInput = (e, data: any) => {
+   if (data.value.length === 0) {
+     setFormState({ ...formState, password: data.value, passwordError: "Please enter your password..." })
+   } else {
+     setFormState({ ...formState, password: data.value, passwordError: "" });
+   }
   };
   const _handleUserLogin = () => {
     // api call to log in an administrator //
-    const { email, password } = formData;
+    const { email, password } = formState;
     const userData = {
       email: email,
       password: password
@@ -135,29 +100,29 @@ const AdminLoginComponent = (props) => {
   };
   // end form input and sublit handlers //
   return (
-    <Grid style={loginPageStyle.container}>
+    <Grid className={ styles.loginComponentGrid }>
       <ErrorComponent appGeneralState={appGeneralState} clearAppError={clearAppError} />
       <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={"ok"} />
-      <Grid.Row style={titleRow}>
-        <Grid.Column width={16}>
+      <Grid.Row centered>
+        <Grid.Column width={16} textAlign="center">
           <h3>Login</h3>
         </Grid.Column>
       </Grid.Row>
-      <Grid.Row style={formRow}>
+      <Grid.Row>
         <Grid.Column computer={5} mobile={1}>
 
         </Grid.Column>
         <Grid.Column computer={6} mobile={14} paddding={0}>
         <Form>
           <Form.Input
-            error={emailInputError}
+            error={ formState.emailError ? { content: formState.emailError, pointing: "above" } : null }
             onChange={handleEmailInput}
             fluid
             label='Email'
             placeholder='...email'
           />
           <Form.Input
-            error={passInputError}
+            error={ formState.passwordError ? { content: formState.passwordError, pointing: "above" } : null }
             onChange={handlePassInput}
             type={"password"}
             fluid
@@ -176,23 +141,20 @@ const AdminLoginComponent = (props) => {
     </Grid>
   )
 };
-// PropTypes validations //
-AdminLoginComponent.propTypes = {
-  history: PropTypes.object.isRequired,
-  handleUserLogin:  PropTypes.func.isRequired
-};
+
+
 // redux mapState and mapDispatch //
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
     adminState: state.adminState,
     appGeneralState: state.appGeneralState
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch<AppAction>) => {
   return {
-    handleUserLogin: (userData, history) => loginUser(dispatch, userData, history),
+    handleUserLogin: (userData: any, history: RouterHistory) => loginUser(dispatch, userData, history),
     clearAppError: () => dispatch(clearAppError())
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminLoginComponent));
+export default (withRouter((connect(mapStateToProps, mapDispatchToProps)(AdminLoginComponent): React.AbstractComponent<RouterProps>)): React.AbstractComponent<WrapperProps>);

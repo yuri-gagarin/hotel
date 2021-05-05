@@ -18,6 +18,8 @@ const app = express();
 const router = express.Router();
 const PORT = process.env.PORT || 8080;
 let io;
+// directories //
+export const APP_HOME_DIRECTORY = path.join(__dirname, "..");
 // database and connection //
 const mongoOptions = {
   useNewUrlParser: true,
@@ -82,19 +84,19 @@ app.use(passport.session());
 app.use(cors({origin : '*'}))
 
 // serve the static files from the React app /
-app.use(express.static(path.join(__dirname, "..", "public"))); 
+app.use(express.static(path.join(APP_HOME_DIRECTORY, "public"))); 
 
 // Router and routers //
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "..", "client", "build")));
+  app.use(express.static(path.join(APP_HOME_DIRECTORY, "client", "build")));
   app.get(/^\/(?!api).*/, (_req, res) => {
-    res.sendFile(path.join(__dirname, "..", "client/build/index.html"));
+    res.sendFile(path.join(APP_HOME_DIRECTORY, "client/build/index.html"));
   });
 }
 else {
-  app.use(express.static(path.join(__dirname, "..", "client", "public")));
+  app.use(express.static(path.join(APP_HOME_DIRECTORY, "client", "public")));
   app.get(/^\/(?!api).*/, (_req, res) => {
-    res.sendFile(path.join(__dirname, "..", "client/public/index.html"));
+    res.sendFile(path.join(APP_HOME_DIRECTORY, "client/public/index.html"));
   });
 }
 combineRoutes(router);
@@ -186,7 +188,6 @@ app.on("dbReady", () => {
 
 });
 // variable exports //
-export const APP_HOME_DIRECTORY = path.join(__dirname, "..");
 export { io as ioInstance };
 
 
