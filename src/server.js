@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-// import MongoStore from "connect-mongo";
+import MongoStore from "connect-mongo";
 import bodyParser from "body-parser";
 import socketIo from 'socket.io';
 import redis from "redis";
@@ -53,6 +53,7 @@ if (process.env.NODE_ENV === "production") {
     saveUninitialized: false,
     resave: false,
     unset: 'destroy',
+    store: new MongoStore({ mongoUrl: process.env.PRODUCTION_SESSION_MONGO_URI }),
     cookie: {
         sameSite: 'Lax',
         maxAge: 60000,
@@ -119,7 +120,7 @@ app.on("dbReady", () => {
   io.sockets.on("connection", (socket) => {
     socket.on("sendClientCredentials", (user) => {
       // set client id with socket id in redis to prevent multiple connections //
-      redisClient.hmset(user._id, user._id, socket.id, (error, reply) => {
+      redisClient.hmset(user._id, user._id, socket.id, (error) => {
         if (error) {
           console.error(error);
           socket.emit("socketConnectionError");
@@ -131,7 +132,7 @@ app.on("dbReady", () => {
     socket.on("clientLeaving",  (user) => {
       // remove client information from redis //
       if (user._id)
-      redisClient.del(user._id, (error, _) => {
+      redisClient.del(user._id, (error) => {
         if (error) {
           console.error(error);
           socket.emit("socketConnectionError");
@@ -142,7 +143,7 @@ app.on("dbReady", () => {
     });
     // listen for an administrator to connect //
     socket.on("adminConnected", (admin) => {
-      redisClient.hmset(admin._id, admin._id, socket.id, (error, reply) => {
+      redisClient.hmset(admin._id, admin._id, socket.id, (error) => {
         if (error) {
           console.error(error);
           socket.emit("socketConnectionError");
@@ -161,7 +162,7 @@ app.on("dbReady", () => {
       // emits a an event to notify admin of a new message //
       const { conversationId, userId, newMessage } = data;
       const socketId = socket.id;
-      redisClient.hmset(userId, userId, socketId, (error, reply) => {
+      redisClient.hmset(userId, userId, socketId, (error) => {
         if (error) {
           console.error(error);
           return;
