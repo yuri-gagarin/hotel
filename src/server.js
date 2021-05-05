@@ -12,7 +12,7 @@ import session from "express-session";
 import passportSrategy from "./controllers/helpers/authHelper";
 import combineRoutes from "./routes/combineRoutes";
 import cors from "cors";
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 const app = express();
 const router = express.Router();
