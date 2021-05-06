@@ -2,43 +2,44 @@
 import type { LocalFormState } from "../RoomForm";
 export type FormValidationResponse = {
   valid: boolean,
-  errors: Array<string>
+  errors: Array<string>,
+  warnings: Array<string>
 }
 export const checkFormErrors = (data : LocalFormState): FormValidationResponse => {
-  const { roomType, area, sleeps, price, beds, couches, description } = data;
+  const { roomType, area, sleeps, price, twinBeds, queenBeds, kingBeds, couches, description } = data;
   const response: FormValidationResponse = {
     valid: true,
-    errors: []
+    errors: [],
+    warnings: []
   };
 
   if (!roomType) {
-    response.valid = false;
     response.errors.push("Room type is required");
   }
   if (!area) {
-    response.valid = false;
     response.errors.push("Room area is required");
   } 
   if (!sleeps) {
-    response.valid = false;
     response.errors.push("'Sleeps' number is required");
   }
   if (!price) {
-    response.valid = false;
-    response.errors.push("Price 'from' is required");
+    response.warnings.push("Price 'from' not specified");
   }
-  if (!beds) {
-    response.valid = false;
-    response.errors.push("Number of beds is required");
+  if (!twinBeds) {
+    response.errors.push("Number of 'Twin' beds not specified");
+  }
+  if (!queenBeds) {
+    response.errors.push("Number of 'Queen' beds not specified");
+  }
+  if (!kingBeds) {
+    response.errors.push("Number of 'King' beds not specified");
   }
   if (!couches) {
-    response.valid = false;
     response.errors.push("Number of couches is required");
   }
   if (!description) {
-    response.valid = false;
     response.errors.push("Short room description is required");
   }
 
-  return response;
+  return response.errors.length > 0 ? { ...response, valid: false } : { ...response, valid: true };
 };

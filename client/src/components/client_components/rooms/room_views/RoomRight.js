@@ -20,7 +20,7 @@ type Props = {
   handleOpenModal: (imgPath: string) => void,
 }
 export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef, roomData, roomImagePaths, handleOpenModal } : Props): React.Node => {
-  const { area, sleeps, beds, couches, price, description, options } = roomData;
+  const { area, sleeps, twinBeds, queenBeds, kingBeds, couches, price, description, options } = roomData;
   // react i18n //
   const [ t, i18n ] = useTranslation();
   return (
@@ -75,7 +75,9 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
             <div className={ styles.roomDetailsHeader }><span>{t("rooms.details")}:</span></div>
             <div className={ styles.roomDetails }><i className="fas fa-store-alt"></i> {t("rooms.area")}: { area }</div>
             <div className={ styles.roomDetails }><i className="fas fa-users"></i> {t("rooms.sleeps")}: { sleeps }</div>
-            <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { beds }</div>
+            { parseInt(twinBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { twinBeds }</div> : null }
+            { parseInt(queenBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { queenBeds }</div> : null }
+            { parseInt(kingBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { kingBeds }</div> : null }
             <div className={ styles.roomDetails }><i className="fas fa-couch"></i> {t("rooms.couches")}: { couches }</div>
           </div>
           <div className={ styles.roomOptionsContainer }>

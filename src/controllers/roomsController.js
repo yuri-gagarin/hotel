@@ -48,7 +48,7 @@ export default {
   },
   createRoom: (req, res) => {
     const { roomData, roomImages = [] } = req.body;
-    const { roomType, area, sleeps, price, beds, couches, description, options } = roomData;
+    const { roomType, area, sleeps, price, twinBeds, queenBeds, kingBeds, couches, description, options } = roomData;
     let createdRoom;
     ///   channel managert data //
     return Room.create({ 
@@ -56,7 +56,9 @@ export default {
       area,
       sleeps,
       price,
-      beds,
+      twinBeds,
+      queenBeds,
+      kingBeds,
       couches,
       description,
       options,
@@ -97,6 +99,7 @@ export default {
     let status, editedRoom;
     const roomId = req.params.roomId;
     const { roomData = {}, roomImages = [], onlineStatus, allRoomsOnlineStatus } = req.body;
+    const { roomType, area, sleeps, price, twinBeds, queenBeds, kingBeds, couches, description, options } = roomData;
     const updatedImages = roomImages ? roomImages.map((img) => `${img._id}` ) : [];
     
     if (onlineStatus && typeof onlineStatus === "object" && typeof onlineStatus.status === "boolean") {
@@ -122,7 +125,6 @@ export default {
     }
 
     if (allRoomsOnlineStatus && typeof allRoomsOnlineStatus === "object" && typeof allRoomsOnlineStatus.live === "boolean") {
-      console.log(allRoomsOnlineStatus)
       const { live } = allRoomsOnlineStatus;
       return Room.update({}, { live: live }, { multi: true })
         .then(() => {
@@ -146,15 +148,17 @@ export default {
       { _id: roomId },
       {
         $set: { 
-          roomType: roomData.roomType,
-          area: roomData.area,
-          sleeps: roomData.sleeps,
-          price: roomData.price,
-          beds: roomData.beds,
-          couches: roomData.couches,
-          description: roomData.description,
+          roomType: roomType,
+          area: area,
+          sleeps: sleeps,
+          price: price,
+          twinBeds: twinBeds,
+          queenBeds: queenBeds,
+          kingBeds: kingBeds,
+          couches: couches,
+          description: description,
           images: [ ...updatedImages ],
-          options: { ...roomData.options },
+          options: { ...options },
           editedAt: new Date(Date.now())
         },
       },

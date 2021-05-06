@@ -46,8 +46,9 @@ type FormErrors = {
   roomTypeError: string,
   areaError: string,
   sleepsError: string,
-  priceError: string,
-  bedsError: string,
+  twinBedsError: string,
+  queenBedsError: string,
+  kingBedsError: string,
   couchesError: string,
   descriptionError: string
 };
@@ -69,7 +70,7 @@ const RoomForm = (props: Props): React.Node => {
   const { _handleUploadRoomImage, _handleDeleteRoomImage, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom, _handleDeleteAllRoomImages } = props;
   // local form state //
   const [ localFormState, setLocalFormState ] = React.useState<LocalFormState>({ 
-    ...roomData, roomTypeError: "", areaError: "", sleepsError: "", priceError: "", bedsError: "", couchesError: "", descriptionError: "" 
+    ...roomData, roomTypeError: "", areaError: "", sleepsError: "", priceError: "", twinBedsError: "", queenBedsError:"", kingBedsError:"", couchesError: "", descriptionError: "" 
   });
   const [ imageModalState, setImageModalState ] = React.useState<ImageModalState>({ imgModalOpen: false, openImageURL: "" });
   const [ confirmModalState, setConfirmModalState ] = React.useState<ConfirmDeleteModalState>({ confirmDelModalOpen: false, modelIdToDelete: "", modelToDelete: "" });
@@ -97,17 +98,28 @@ const RoomForm = (props: Props): React.Node => {
     }
   };
   const handlePrice = (e, data) => {
+    setLocalFormState({ ...localFormState, price: data.value, priceError: "" });
+  };
+  // beds options //
+  const handleTwinBeds = (e, data) => {
     if (data.value.length === 0) {
-      setLocalFormState({ ...localFormState, price: data.value, priceError: "Please enter a from price..."})
+      setLocalFormState({ ...localFormState, twinBeds: data.value, twinBedsError: "Please enter the number of twin beds..." });
     } else {
-      setLocalFormState({ ...localFormState, price: data.value, priceError: "" });
+      setLocalFormState({ ...localFormState, twinBeds: data.value, twinBedsError: "" });
     }
   };
-  const handleBeds = (e, data) => {
+  const handleQueenBeds = (e, data) => {
     if (data.value.length === 0) {
-      setLocalFormState({ ...localFormState, beds: data.value, bedsError: "Please enter the number of beds..." });
+      setLocalFormState({ ...localFormState, queenBeds: data.value, queenBedsError: "Please enter the number of queen beds..." });
     } else {
-      setLocalFormState({ ...localFormState, beds: data.value, bedsError: "" });
+      setLocalFormState({ ...localFormState, queenBeds: data.value, queenBedsError: "" });
+    }
+  };
+  const handleKingBeds = (e, data) => {
+    if (data.value.length === 0) {
+      setLocalFormState({ ...localFormState, kingBeds: data.value, kingBedsError: "Please enter the number of king beds..." });
+    } else {
+      setLocalFormState({ ...localFormState, kingBeds: data.value, kingBedsError: "" });
     }
   };
   const handleCouches = (e, data) => {
@@ -117,6 +129,7 @@ const RoomForm = (props: Props): React.Node => {
       setLocalFormState({ ...localFormState, couches: data.value, couchesError: "" });
     }
   };
+  // description //
   const handleDescriptionChange = (e, data) => {
     if (data.value.length === 0) {
       setLocalFormState({ ...localFormState, description: data.value, descriptionError: "Please enter a short description..." });
@@ -142,6 +155,18 @@ const RoomForm = (props: Props): React.Node => {
         });
         break;
       } 
+      case "Fan": {
+        checked ? setLocalFormState({ ...localFormState, options: { ...localFormState.options, fan: true } }) : setLocalFormState({ ...localFormState, options: { ...localFormState.options, fan: false } });
+        break;
+      }
+      case "Bath Robes": {
+        checked ? setLocalFormState({ ...localFormState, options: { ...localFormState.options, bathRobes: true } }) : setLocalFormState({ ...localFormState, options: { ...localFormState.options, bathRobes: false } });
+        break;
+      }
+      case "Free Toileteries": {
+        checked ? setLocalFormState({ ...localFormState, options: { ...localFormState.options, freeToileteries: true } }) : setLocalFormState({ ...localFormState, options: { ...localFormState.options, freeToileteries: false } });
+        break;
+      }
       case "Jacuzzi": {
         setLocalFormState((state) => {
           return checked ? { ...state, options: { ...state.options, jacuzzi: true } } : { ...state, options: { ...state.options, jacuzzi: false } };
@@ -214,6 +239,18 @@ const RoomForm = (props: Props): React.Node => {
         })
         break;
       }
+      case "Tea Kettle": {
+        checked ? setLocalFormState({ ...localFormState, options: { ...localFormState.options, teaKettle: true } }) : setLocalFormState({ ...localFormState, options: { ...localFormState.options, teaKettle: false } });
+        break;
+      }
+      case "Free Parking": {
+        checked ? setLocalFormState({ ...localFormState, options: { ...localFormState.options, freeParking: true } }) : setLocalFormState({ ...localFormState, options: { ...localFormState.options, freeParking: false } });
+        break;
+      }
+      case "Paid Parking": {
+        checked ? setLocalFormState({ ...localFormState, options: { ...localFormState.options, paidParking: true } }) : setLocalFormState({ ...localFormState, options: { ...localFormState.options, paidParking: false } });
+        break;
+      }
     };
   };
   // END checkbox handler //
@@ -222,7 +259,7 @@ const RoomForm = (props: Props): React.Node => {
     const { createdRooms, roomImages } = roomState;
 
     // check for errors first //
-    const { valid, errors } = checkFormErrors(localFormState);
+    const { valid, errors, warnings } = checkFormErrors(localFormState);
     if (!valid && errors.length > 0) {
       setFormErrorState({ visible: true, errorMessages: errors });
       return;
@@ -366,7 +403,6 @@ const RoomForm = (props: Props): React.Node => {
           </Form.Group>
           <Form.Group widths='equal'>
             <Form.Field
-              error={ localFormState.priceError ? { content: localFormState.priceError } : null }
               control={Input}
               label='Price from'
               placeholder='...price from (optional)'
@@ -375,12 +411,30 @@ const RoomForm = (props: Props): React.Node => {
 
             />
             <Form.Field
-              error={ localFormState.bedsError ? { content: localFormState.bedsError } : null }
+              error={ localFormState.twinBedsError ? { content: localFormState.twinBedsError } : null }
               control={Input}
-              label='Beds'
-              placeholder='...number of beds'
-              onChange={handleBeds}
-              value={ localFormState.beds }
+              label='Twin Beds'
+              placeholder='...number of twin beds'
+              onChange={ handleTwinBeds }
+              value={ localFormState.twinBeds }
+
+            />
+            <Form.Field
+              error={ localFormState.queenBedsError ? { content: localFormState.queenBedsError } : null }
+              control={Input}
+              label='Queen Beds'
+              placeholder='...number of queen beds'
+              onChange={ handleQueenBeds }
+              value={ localFormState.queenBeds }
+
+            />
+            <Form.Field
+              error={ localFormState.kingBedsError ? { content: localFormState.kingBedsError } : null }
+              control={Input}
+              label='King Beds'
+              placeholder='...number of king beds'
+              onChange={ handleKingBeds }
+              value={ localFormState.kingBeds }
 
             />
             <Form.Field
@@ -403,9 +457,14 @@ const RoomForm = (props: Props): React.Node => {
 
           />
           <div className={ styles.optionsDiv }>
+            <h5>Room options</h5>
+            <span>Check all that apply</span>
             <Form.Field>
               <Checkbox label='Private Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.privateBathroom } className={ localFormState.options.privateBathroom ? styles.optionChecked : styles.optionNotChecked }/>
               <Checkbox label='Suite Bathroom' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.suiteBathroom } className={ localFormState.options.suiteBathroom ? styles.optionChecked: styles.optionNotChecked } />
+              <Checkbox label='Fan' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.fan} className={ localFormState.options.fan ? styles.optionChecked: styles.optionNotChecked } />
+              <Checkbox label='Bath Robes' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.bathRobes } className={ localFormState.options.bathRobes? styles.optionChecked: styles.optionNotChecked } />
+              <Checkbox label='Free Toileteries' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.freeToileteries } className={ localFormState.options.freeToileteries ? styles.optionChecked: styles.optionNotChecked } />
               <Checkbox label='Jacuzzi' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.jacuzzi } className={ localFormState.options.jacuzzi ? styles.optionChecked : styles.optionNotChecked } />
               <Checkbox label='Balcony' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.balcony } className={ localFormState.options.balcony ? styles.optionChecked : styles.optionNotChecked }/>
               <Checkbox label='Terrace' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.terrace } className={ localFormState.options.terrace ? styles.optionChecked : styles.optionNotChecked } />
@@ -418,6 +477,10 @@ const RoomForm = (props: Props): React.Node => {
               <Checkbox label='Air Conditioning' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.airConditioning } className={ localFormState.options.airConditioning ? styles.optionChecked : styles.optionNotChecked } />
               <Checkbox label='Refrigerator' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.refrigerator } className={ localFormState.options.refrigerator ? styles.optionChecked : styles.optionNotChecked } />
               <Checkbox label='Coffee Maker' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.coffeeMaker } className={ localFormState.options.coffeeMaker ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Tea Kettle' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.teaKettle } className={ localFormState.options.teaKettle ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Free Parking' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.freeParking } className={ localFormState.options.freeParking ? styles.optionChecked : styles.optionNotChecked } />
+              <Checkbox label='Paid Parking' style={{margin: "0.5em"}} onChange={handleCheckbox} checked={ localFormState.options.paidParking } className={ localFormState.options.paidParking ? styles.optionChecked : styles.optionNotChecked } />
+
             </Form.Field>
           </div>
           <div className={ styles.imageUploadInputDiv }>

@@ -13,15 +13,21 @@ const roomSchema = new Schema({
   },
   area: {
     type: String,
-    required: true
   },
   sleeps: {
-    type: String
+    type: String,
+    required: true,
   },
   price: {
     type: String
   },
-  beds: {
+  twinBeds: {
+    type: String
+  },
+  queenBeds: {
+    type: String
+  },
+  kingBeds: {
     type: String
   },
   couches: {
@@ -38,6 +44,8 @@ const roomSchema = new Schema({
   options: {
     privateBathroom: { type: Boolean },
     suiteBathroom: { type: Boolean },
+    bathRobes: { type: Boolean },
+    freeToileteries: { type: Boolean },
     jacuzzi: { type: Boolean },
     balcony: { type: Boolean },
     terrace: { type: Boolean },
@@ -47,9 +55,13 @@ const roomSchema = new Schema({
     tv: { type: Boolean },
     wifi: { type: Boolean },
     phone: { type: Boolean },
-    airConditioning: { type: Boolean },
     refrigerator: { type: Boolean },
-    coffeeMaker: { type: Boolean }
+    teaKettle: { type: Boolean },
+    coffeeMaker: { type: Boolean },
+    fan: { type: Boolean },
+    airConditioning: { type: Boolean },
+    paidParing: { type: Boolean },
+    freeParking: { type: Boolean }
   },
   createdAt: {
     type: Date,

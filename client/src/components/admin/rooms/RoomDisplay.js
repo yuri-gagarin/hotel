@@ -48,7 +48,12 @@ const RoomDisplay = ({ roomState } : Props): React.Node => {
           Price: { roomData.price }
         </div>
         <div className={ styles.roomDetail }>
-          Beds: { roomData.beds }
+          Twin Beds: { roomData.twinBeds }
+        </div>
+        <div className={ styles.roomDetail }>
+          Queen Beds: { roomData.queenBeds }
+        </div><div className={ styles.roomDetail }>
+          King Beds: { roomData.kingBeds }
         </div>
         <div className={ styles.roomDetail }>
           Couches: { roomData.couches }

@@ -59,13 +59,17 @@ export const generateEmptyRoomModel = (): RoomData => {
     area: "",
     sleeps: "",
     price: "",
-    beds: "",
+    twinBeds: "",
+    queenBeds: "",
+    kingBeds: "",
     couches: "",
     description: "",
     images: [],
     options: {
       privateBathroom: false,
       suiteBathroom: false,
+      bathRobes: false,
+      freeToileteries: false,
       jacuzzi: false,
       balcony: false,
       terrace: false,
@@ -77,7 +81,11 @@ export const generateEmptyRoomModel = (): RoomData => {
       phone: false,
       airConditioning: false,
       refrigerator: false,
-      coffeeMaker: false
+      coffeeMaker: false,
+      teaKettle: false,
+      fan: false,
+      paidParking: false,
+      freeParking: false
     },
     createdAt: "",
     editedAt: ""
