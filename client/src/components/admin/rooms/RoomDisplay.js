@@ -71,7 +71,19 @@ const RoomDisplay = ({ roomState } : Props): React.Node => {
         </div>
         <div className={`${styles.roomOption} ${ roomData.options.suiteBathroom ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
           <i className="fas fa-bath"></i>
-          <span>Bathtub: { roomData.options.suiteBathroom ? "Yes" : "No"}</span>
+          <span>Suite Bathroom: { roomData.options.suiteBathroom ? "Yes" : "No"}</span>
+        </div>
+        <div className={`${styles.roomOption} ${ roomData.options.fan ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+          <i className="fas fa-fan"></i>
+          <span>Fan: { roomData.options.fan ? "Yes" : "No"}</span>
+        </div>
+        <div className={`${styles.roomOption} ${ roomData.options.bathRobes ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+            <i className="fas fa-shoe-prints"></i>
+            <span>Bath Robes: { roomData.options.bathRobes ? "Yes" : "No"}</span>
+        </div>
+        <div className={`${styles.roomOption} ${ roomData.options.freeToileteries ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+          <i className="fas fa-pump-soap"></i>          
+          <span>Free Toileteries: { roomData.options.freeToileteries ? "Yes" : "No"}</span>
         </div>
         <div className={`${styles.roomOption} ${ roomData.options.jacuzzi ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
           <i className="fas fa-hot-tub"></i>
@@ -120,6 +132,19 @@ const RoomDisplay = ({ roomState } : Props): React.Node => {
         <div className={`${styles.roomOption} ${ roomData.options.coffeeMaker ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
           <i className="fas fa-coffee"></i>
           <span>Coffee Maker: { roomData.options.coffeeMaker ? "Yes" : "No"}</span>
+        </div>
+        <div className={`${styles.roomOption} ${ roomData.options.teaKettle ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+          <i className="fas fa-blender"></i>          
+          <span>Tea Kettle: { roomData.options.teaKettle ? "Yes" : "No"}</span>
+        </div>
+        <div className={`${styles.roomOption} ${ roomData.options.freeParking ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+          <i className="fas fa-car-alt"></i>
+          <span>Free Parking: { roomData.options.freeParking ? "Yes" : "No"}</span>
+        </div>
+        <div className={`${styles.roomOption} ${ roomData.options.paidParking ? styles.roomOptionAvailable : styles.roomOptionNotAvailable}`}>
+          <i className="fas fa-money-bill"></i> 
+          <i className="fas fa-car-alt"></i>         
+          <span>Paid Parking: { roomData.options.paidParking ? "Yes" : "No"}</span>
         </div>
       </div>
       <div className={ styles.imgsPreviewDiv }>

@@ -81,9 +81,9 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
             <div className={ styles.roomDetailsHeader }><span>{t("rooms.details")}:</span></div>
             <div className={ styles.roomDetails }><i className="fas fa-store-alt"></i> {t("rooms.area")}: { area }</div>
             <div className={ styles.roomDetails }><i className="fas fa-users"></i> {t("rooms.sleeps")}: { sleeps }</div>
-            { parseInt(twinBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { twinBeds }</div> : null }
-            { parseInt(queenBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { queenBeds }</div> : null }
-            { parseInt(kingBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { kingBeds }</div> : null }
+            { parseInt(twinBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.twinBeds")}: { twinBeds }</div> : null }
+            { parseInt(queenBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.queenBeds")}: { queenBeds }</div> : null }
+            { parseInt(kingBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.kingBeds")}: { kingBeds }</div> : null }
             <div className={ styles.roomDetails }><i className="fas fa-couch"></i> {t("rooms.couches")}: { couches }</div>
           </div>
           <div className={ styles.roomOptionsContainer }>
@@ -101,31 +101,45 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
                 </div>
               : null
             }
-            { 
-              options.wifi
+            {
+              options.fan
               ? <div className={`${styles.roomOption}`}>
-                  <i className={`fas fa-wifi`}></i> {t("rooms.wifi")}
-                </div> 
+                  <i className="fas fa-fan"></i> {t("rooms.fan")}
+                </div>
               : null
             }
             {
-              options.balcony 
+              options.bathRobes
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-shoe-prints"></i> {t("rooms.bathrobes")}
+                </div>
+              : null
+            }
+            {
+              options.freeToileteries
+              ? <div className={`${styles.roomOption}`}> {t("rooms.toileteries")}
+                  <i className="fas fa-pump-soap"></i>          
+                </div>
+              : null
+            }
+            {
+              options.jacuzzi
+              ? <div className={`${styles.roomOption}`}>
+                <i className="fas fa-hot-tub"></i> {t("rooms.jacuzzi")}
+                </div>
+              : null
+            }
+             {
+              options.balcony
               ? <div className={`${styles.roomOption}`}>
                   <i className={`fas fa-warehouse`}></i> {t("rooms.balcony")}
                 </div>
               : null
             }
-            { 
+             { 
               options.terrace
               ? <div className={`${styles.roomOption}`}>
                   <i className={`fas fa-campground`}></i> {t("rooms.terrace")}
-                </div>
-              : null
-            }
-            { 
-              options.mountainView
-              ? <div className={`${styles.roomOption}`}>
-                  <i className={`fas fa-mountain`}></i> {t("rooms.mtnView")}
                 </div>
               : null
             }
@@ -136,24 +150,80 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
                 </div>
               : null
             } 
+             { 
+              options.mountainView
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-mountain`}></i> {t("rooms.mtnView")}
+                </div>
+              : null
+            }
             { 
               options.riverView
               ? <div className={`${styles.roomOption}`}>
                   <i className={`fas fa-water`}></i> {t("rooms.riverView")}
                 </div>
               : null
-            } 
+            }
             { 
               options.tv
               ? <div className={`${styles.roomOption}`}>
                   <i className={`fas fa-tv`}></i> {t("rooms.tv")}
                 </div>
               : null
+            } 
+            { 
+              options.wifi
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-wifi`}></i> {t("rooms.wifi")}
+                </div> 
+              : null
+            }
+            { 
+              options.phone
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-phone-volume"></i> {t("rooms.phone")}
+                </div> 
+              : null
             }
             {
               options.airConditioning
               ? <div className={`${styles.roomOption}`}>
                   <i className={`fas fa-wind`}></i> {t("rooms.ac")}
+                </div>
+              : null
+            }
+            {
+              options.refrigerator
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-wind`}></i> {t("rooms.refrigerator")}
+                </div>
+              : null
+            }
+            {
+              options.coffeeMaker
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-coffee"></i> {t("rooms.coffeeMaker")}
+                </div>
+              : null
+            }
+            {
+              options.teaKettle
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-blender"></i> {t("rooms.teaKettle")}
+                </div>
+              : null
+            }
+            {
+              options.freeParking
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-car-alt"></i> {t("rooms.freeParking")}
+                </div>
+              : null
+            }
+            {
+              options.paidParking
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-money-bill"></i><i className="fas fa-car-alt"></i> {t("rooms.paidParking")}
                 </div>
               : null
             }
