@@ -70,7 +70,7 @@ const resources = {
         phone: "Phone",
         ac: "Air conditioning",
         refrigerator: "Refrigerator",
-        coffeMaker: "Coffee maker",
+        coffeeMaker: "Coffee maker",
         teaKettle: "Tea kettle",
         freeParking: "Free parking",
         paidParking: "Paid parking"
@@ -145,7 +145,7 @@ const resources = {
         phone: "Телефон",
         ac: "Кондиціонер",
         refrigerator: "Холодильник",
-        coffeMaker: "Кавоварка",
+        coffeeMaker: "Кавоварка",
         teaKettle: "Чайник",
         freeParking: "Бесплатна парковка",
         paidParking: "Платна парковка"
@@ -221,7 +221,7 @@ const resources = {
         phone: "Телефон",
         ac: "Кондиционер",
         refrigerator: "Холодильник",
-        coffeMaker: "Кофеварка",
+        coffeeMaker: "Кофеварка",
         teaKettle: "Чайник",
         freeParking: "Бесплатная парковка",
         paidParking: "Платная парковка"

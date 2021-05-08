@@ -11,21 +11,22 @@ import styles from "./css/room.module.css";
 // FLOW types //
 import type { RoomData } from "../../../redux/reducers/rooms/flowTypes";
 import { setImagePath, setStringTranslation } from "../../helpers/displayHelpers";
+import { setDefaultValues } from "./helpers/setDefaultValues";
 // translations //
 
 
 type Props = {
-  index: number,
-  room: RoomData,
-  openPictureModal: (imgPath: string, roomImagePaths: Array<string>, index: number) => void,
+  index: number;
+  room: RoomData;
+  openPictureModal: (imgPath: string, roomImagePaths: Array<string>, index: number) => void;
   picModalState: {
-    showModal: boolean,
-    imageIndex: number,
-    direction: number
+    showModal: boolean;
+    imageIndex: number;
+    direction: number;
   }
 };
 type LocalState = {
-  showMobileRoomPicsView: boolean
+  showMobileRoomPicsView: boolean;
 };
 
 const Room = ({ index, room, openPictureModal, picModalState } : Props): React.Node => {
@@ -37,7 +38,8 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
   const roomDescRef = React.useRef(null);
   // local state //
   const [ localState, setLocalState ] = React.useState<LocalState>({ showMobileRoomPicsView: false });
-
+  const [ imgURLSArr, setImgURLSArr ] = React.useState<Array<string>>([]);
+  //
   const listenToWindowResize = () => {
     if (window.innerWidth < 992) {
       setLocalState({ ...localState, showMobileRoomPicsView: true });
@@ -73,12 +75,13 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
     }
   }, []);
 
-  const roomImagePaths = room.images.map((image) => image.path);
-  const handleOpenModal = (imagePath: string) => {
-    const clickedImageURL = setImagePath(imagePath);
-    const imgURLSArr = roomImagePaths.map((imagePath) => setImagePath(imagePath) );
-    const index = roomImagePaths.indexOf(imagePath);
-    
+  React.useEffect(() => {
+    const { imageURLS } = setDefaultValues(room);
+    setImgURLSArr([ ...imageURLS ]);
+  }, [ room ]);
+
+  const handleOpenModal = (clickedImageURL: string) => {
+    const index = imgURLSArr.indexOf(clickedImageURL);    
     openPictureModal(clickedImageURL, imgURLSArr, index);
   };
 
@@ -96,7 +99,7 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
         (index % 2 === 0)
         ?
         <React.Fragment>
-          <RoomLeft showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
+          <RoomLeft showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } handleOpenModal={ handleOpenModal } imageURLS={ imgURLSArr } />
           <Row style={{ marginTop: "10px" }}>
             <Col className={ styles.bookColumn }>
               <Button variant="info">{t("buttons.bookNow")}</Button>
@@ -106,11 +109,15 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
         </React.Fragment>
         : 
         <React.Fragment>
-          <RoomRight showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } roomImagePaths={ roomImagePaths } handleOpenModal={ handleOpenModal } />
+          <RoomRight showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } handleOpenModal={ handleOpenModal } imageURLS={ imgURLSArr } />
           <Row style={{ marginTop: "10px" }}>
             <Col className={ styles.bookColumn }>
               <Button variant="info">{t("buttons.bookNow")}</Button>
-              <div className={ styles.bookPriceDiv }>{t("misc.from")}:<span>{ room.price }</span></div>
+              {
+                room.price 
+                ? <div className={ styles.bookPriceDiv }>{t("misc.from")}:<span>{ room.price }</span></div>
+                : null
+              }
             </Col>
           </Row>
         </React.Fragment>

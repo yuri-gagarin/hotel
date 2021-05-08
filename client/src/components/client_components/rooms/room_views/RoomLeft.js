@@ -16,28 +16,27 @@ type Props = {
   roomPicturesRef: any,
   roomDescRef: any,
   roomData: RoomData,
-  roomImagePaths: Array<string>,
+  imageURLS: Array<string>,
   handleOpenModal: (imgPath: string) => void,
 }
-export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef, roomData, roomImagePaths, handleOpenModal } : Props): React.Node => {
+export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef, roomData, imageURLS, handleOpenModal } : Props): React.Node => {
   const { area, sleeps, twinBeds, queenBeds, kingBeds, couches, price, description, options } = roomData;
   // react i18n //
   const [ t, i18n ] = useTranslation();
-
   return (
     <React.Fragment>
       <Row ref={roomPicturesRef} className={ `animatedRoomRow ${ styles.carouselRow }`}>
         {
         showMobileRoomPicsView 
         ?
-          <MobileRoomPicsView roomImgPaths={ roomImagePaths } handleOpenImgModal={ handleOpenModal } />
+          <MobileRoomPicsView roomImgPaths={ imageURLS } handleOpenImgModal={ handleOpenModal } />
         :
         <React.Fragment>
           <Col xs="12" lg="6" className={ styles.leftImgsColumn }>
-            <div className={ `${styles.leftImgContainer}`} onClick={() => handleOpenModal(roomImagePaths[0]) }>
+            <div className={ `${styles.leftImgContainer}`} onClick={() => handleOpenModal(imageURLS[0]) }>
               <img
                 className={ `${styles.roomImg} ${styles.sideImgLeft}` }
-                src={ setImagePath(roomImagePaths[0]) }
+                src={ imageURLS[0] }
                 data-index={0}
               />
               <div className={ styles.imgOverlay}>
@@ -46,20 +45,20 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
             </div>
           </Col>
           <Col xs="12" lg="6"  className={ styles.rightImgsColumn }>
-            <div className={ styles.sideImgContainerTop } onClick={() => handleOpenModal(roomImagePaths[1]) }>
+            <div className={ styles.sideImgContainerTop } onClick={() => handleOpenModal(imageURLS[1]) }>
               <img
                 className={`${styles.roomImg} ${styles.sideImgRightTop}`}
-                src={ setImagePath(roomImagePaths[1])} 
+                src={ imageURLS[0] } 
                 data-index={1}
               />
               <div className={ styles.imgOverlay}>
                 <i className={ `fas fa-search-plus ${styles.magnifyImgIcon}`}></i>
               </div> 
             </div>
-            <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(roomImagePaths[2]) }>
+            <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(imageURLS[2]) }>
               <img
                 className={`${styles.roomImg} ${styles.sideImgRightBottom}`}
-                src={ setImagePath(roomImagePaths[2])} 
+                src={ imageURLS[0] } 
                 data-index={2}
               />
               <div className={ styles.imgOverlay}>
@@ -117,8 +116,8 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
             }
             {
               options.freeToileteries
-              ? <div className={`${styles.roomOption}`}> {t("rooms.toileteries")}
-                  <i className="fas fa-pump-soap"></i>          
+              ? <div className={`${styles.roomOption}`}> 
+                  <i className="fas fa-pump-soap"></i> {t("rooms.toileteries")}         
                 </div>
               : null
             }
@@ -129,7 +128,7 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
                 </div>
               : null
             }
-             {
+            {
               options.balcony
               ? <div className={`${styles.roomOption}`}>
                   <i className={`fas fa-warehouse`}></i> {t("rooms.balcony")}
@@ -227,7 +226,6 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
                 </div>
               : null
             }
-          
           
           </div>
           

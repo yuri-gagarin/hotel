@@ -76,6 +76,8 @@ const RoomsIndexContainer = ({ history, roomState, _handleFetchRooms }: Props): 
   }, []);
   // picture modal togglers //
   const openPictureModal = (imgPath: string, roomImageURLS: Array<string>, index: number): void => {
+    console.log(79)
+    console.log(roomImageURLS)
     setLocalComponentState({ ...localComponentState, showModal: true, imgURLS: roomImageURLS, imageIndex: index });
   };
   const closePictureModal = () => {

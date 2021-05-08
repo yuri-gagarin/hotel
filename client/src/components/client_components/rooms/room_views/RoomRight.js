@@ -12,53 +12,55 @@ import type { RoomData } from "../../../../redux/reducers/rooms/flowTypes";
 import { setImagePath, setStringTranslation } from "../../../helpers/displayHelpers";
 
 type Props = {
-  showMobileRoomPicsView: boolean,
-  roomPicturesRef: any,
-  roomDescRef: any,
-  roomData: RoomData,
-  roomImagePaths: Array<string>,
-  handleOpenModal: (imgPath: string) => void,
+  showMobileRoomPicsView: boolean;
+  roomPicturesRef: any;
+  roomDescRef: any;
+  roomData: RoomData;
+  imageURLS: Array<string>;
+  handleOpenModal: (imgPath: string) => void;
 }
-export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef, roomData, roomImagePaths, handleOpenModal } : Props): React.Node => {
+export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef, roomData, imageURLS, handleOpenModal } : Props): React.Node => {
   const { area, sleeps, twinBeds, queenBeds, kingBeds, couches, price, description, options } = roomData;
   // react i18n //
   const [ t, i18n ] = useTranslation();
+
   return (
     <React.Fragment>
       <Row ref={roomPicturesRef} className={ `animatedRoomRow ${ styles.carouselRow }`}>
         {
           showMobileRoomPicsView ?
-          <MobileRoomPicsView roomImgPaths={ roomImagePaths } handleOpenImgModal={ handleOpenModal } />
+          <MobileRoomPicsView roomImgPaths={ imageURLS } handleOpenImgModal={ handleOpenModal } />
           :
           <React.Fragment>
             <Col xs="12" lg="6"  className={ styles.leftImgsColumn }>
-              <div className={ styles.sideImgContainerTop } onClick={() => handleOpenModal(roomImagePaths[1]) }>
+              <div className={ styles.sideImgContainerTop } onClick={() => handleOpenModal(imageURLS[1]) }>
                 <Image 
                   fluid
                   className={`${styles.roomImg} ${styles.sideImgRightTop}`}
-                  src={ setImagePath(roomImagePaths[1])} 
+                  src={ imageURLS[1] } 
                   data-index={1}
                 />
                 <div className={ styles.imgOverlay}>
                   <i className={ `fas fa-search-plus ${styles.magnifyImgIcon}`}></i>
                 </div>
               </div>
-              <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(roomImagePaths[2]) }>
+              <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(imageURLS[2]) }>
                 <img
                   className={`${styles.roomImg} ${styles.sideImgLeftBottom}`}
-                  src={ setImagePath(roomImagePaths[2])} 
+                  src={ imageURLS[2] } 
                   data-index={2}
                 />
                 <div className={ styles.imgOverlay}>
                   <i className={ `fas fa-search-plus ${styles.magnifyImgIcon}`}></i>
-                </div>              </div>
+                </div>              
+              </div>
             </Col>
             <Col xs="12" lg="6" className={ styles.rightImgsColumn }>
-              <div className={ `${styles.rightImgContainer}`} onClick={() => handleOpenModal(roomImagePaths[0]) }>
+              <div className={ `${styles.rightImgContainer}`} onClick={() => handleOpenModal(imageURLS[0]) }>
                 <Image 
                   fluid
                   className={ `${styles.roomImg} ${styles.sideImgRight}` }
-                  src={ setImagePath(roomImagePaths[0]) }
+                  src={ imageURLS[0] }
                   data-index={0}
                 />
                 <div className={ styles.imgOverlay}>
@@ -75,9 +77,9 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
             <div className={ styles.roomDetailsHeader }><span>{t("rooms.details")}:</span></div>
             <div className={ styles.roomDetails }><i className="fas fa-store-alt"></i> {t("rooms.area")}: { area }</div>
             <div className={ styles.roomDetails }><i className="fas fa-users"></i> {t("rooms.sleeps")}: { sleeps }</div>
-            { parseInt(twinBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { twinBeds }</div> : null }
-            { parseInt(queenBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { queenBeds }</div> : null }
-            { parseInt(kingBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.beds")}: { kingBeds }</div> : null }
+            { parseInt(twinBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.twinBeds")}: { twinBeds }</div> : null }
+            { parseInt(queenBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.queenBeds")}: { queenBeds }</div> : null }
+            { parseInt(kingBeds) > 0 ? <div className={ styles.roomDetails }><i className="fas fa-bed"></i> {t("rooms.kingBeds")}: { kingBeds }</div> : null }
             <div className={ styles.roomDetails }><i className="fas fa-couch"></i> {t("rooms.couches")}: { couches }</div>
           </div>
           <div className={ styles.roomOptionsContainer }>
@@ -95,11 +97,32 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
                 </div>
               : null
             }
-            { 
-              options.wifi
+            {
+              options.fan
               ? <div className={`${styles.roomOption}`}>
-                  <i className={`fas fa-wifi`}></i> {t("rooms.wifi")}
-                </div> 
+                  <i className="fas fa-fan"></i> {t("rooms.fan")}
+                </div>
+              : null
+            }
+            {
+              options.bathRobes
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-shoe-prints"></i> {t("rooms.bathrobes")}
+                </div>
+              : null
+            }
+            {
+              options.freeToileteries
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-pump-soap"></i>  {t("rooms.toileteries")}         
+                </div>
+              : null
+            }
+            {
+              options.jacuzzi
+              ? <div className={`${styles.roomOption}`}>
+                <i className="fas fa-hot-tub"></i> {t("rooms.jacuzzi")}
+                </div>
               : null
             }
             {
@@ -117,19 +140,19 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
               : null
             }
             { 
-              options.mountainView
-              ? <div className={`${styles.roomOption}`}>
-                  <i className={`fas fa-mountain`}></i> {t("rooms.mtnView")}
-                </div>
-              : null
-            }
-            { 
               options.streetView
               ? <div className={`${styles.roomOption}`}>
                   <i className={`fas fa-road`}></i> {t("rooms.streetView")}
                 </div>
               : null
             } 
+            { 
+              options.mountainView
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-mountain`}></i> {t("rooms.mtnView")}
+                </div>
+              : null
+            }     
             { 
               options.riverView
               ? <div className={`${styles.roomOption}`}>
@@ -144,6 +167,20 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
                 </div>
               : null
             }
+            { 
+              options.wifi
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-wifi`}></i> {t("rooms.wifi")}
+                </div> 
+              : null
+            }
+            { 
+              options.phone
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-phone-volume"></i> {t("rooms.phone")}
+                </div> 
+              : null
+            }    
             {
               options.airConditioning
               ? <div className={`${styles.roomOption}`}>
@@ -151,7 +188,41 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
                 </div>
               : null
             }
-          
+            {
+              options.refrigerator
+              ? <div className={`${styles.roomOption}`}>
+                  <i className={`fas fa-wind`}></i> {t("rooms.refrigerator")}
+                </div>
+              : null
+            }
+            {
+              options.coffeeMaker
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-coffee"></i> {t("rooms.coffeeMaker")}
+                </div>
+              : null
+            }
+            {
+              options.teaKettle
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-blender"></i> {t("rooms.teaKettle")}
+                </div>
+              : null
+            }
+            {
+              options.freeParking
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-car-alt"></i> {t("rooms.freeParking")}
+                </div>
+              : null
+            }
+            {
+              options.paidParking
+              ? <div className={`${styles.roomOption}`}>
+                  <i className="fas fa-money-bill"></i><i className="fas fa-car-alt"></i> {t("rooms.paidParking")}
+                </div>
+              : null
+            }
           
           </div>
           

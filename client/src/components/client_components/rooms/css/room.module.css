@@ -46,7 +46,7 @@
 }
 
 /* media queries */
-@media  only screen and (min-width: 550px) {
+@media only screen and (min-width: 550px) {
   .roomType {
     font-size: 2.25em;
   };

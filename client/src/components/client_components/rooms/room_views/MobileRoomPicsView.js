@@ -15,7 +15,6 @@ type Props = {
 };
 
 export const MobileRoomPicsView = ({ roomImgPaths, handleOpenImgModal } : Props): React.Node => {
-  console.log(roomImgPaths);
 
   return (
     <Carousel className={ styles.roomsMobileCarousel }>
