@@ -23,7 +23,7 @@ export default {
       });
   },
   createDiningModel: (req, res) => {
-    const { title, hours, address, description, optionType } = req.body.diningModelData;
+    const { title, hours, description, address, instagramURL, facebookURL, phoneNumber, optionType } = req.body.diningModelData;
     const { images = [], menuImages = []} = req.body;
 
     const imgIds = images.length > 0 ? images.map((img) => img._id) : [];
@@ -32,8 +32,11 @@ export default {
     return DiningEntertainmentModel.create({
       title, 
       hours,
-      address,
       description,
+      address: address ? address : "",
+      instagramURL: instagramURL ? instagramURL : "",
+      facebookURL: facebookURL ? facebookURL : "",
+      phoneNumber: phoneNumber ? phoneNumber : "No number provided",
       optionType,
       live: false,
       images: [ ...imgIds ],
@@ -69,7 +72,7 @@ export default {
     let status;
     const { diningModelId } = req.params;
     const { diningModelData = {}, images = [], menuImages = [], onlineStatus, changeAllOnlineStatus } = req.body;
-    const { title, description, hours } = diningModelData;
+    const { title, description, hours, address, instagramURL, facebookURL, phoneNumber, optionType } = diningModelData;
 
     // check if changing online status first //
     if (onlineStatus && typeof onlineStatus === "object" && typeof onlineStatus.status === "boolean") {
@@ -127,6 +130,11 @@ export default {
           title: title,
           description: description,
           hours: hours,
+          address: address ? address : "",
+          instagramURL: instagramURL ? instagramURL : "",
+          facebookURL: facebookURL ? facebookURL : "",
+          phoneNumber: phoneNumber ? phoneNumber : "No number provided",
+          optionType: optionType,
           images: [ ...updatedDiningModelImages ],
           menuImages: [ ...updatedMenuImages ],
           editedAt: new Date(Date.now())

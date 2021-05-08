@@ -16,11 +16,13 @@ import styles from "./css/diningIndex.module.css";
 // types //
 import type { RootState } from "../../../redux/reducers/_helpers/createReducer";
 import type { DiningEntertainmentState } from "../../../redux/reducers/dining_entertainment/flowTypes";
+import type { RouterHistory } from "react-router-dom";
 // helpers //
 import { navbarCollapseListener } from "../../helpers/componentHelpers";
+import Footer from "../footer/Footer";
 
 type WrapperProps = {|
-  
+  history: RouterHistory;
 |};
 type Props = {|
   ...WrapperProps,
@@ -31,11 +33,12 @@ type LocalState = {
   headerFixed: boolean,
   headerTop: string
 }
-const DiningIndexContainer = ({ diningEntertainmentState, _handleFetchDiningEntModels }: Props) => {
+const DiningIndexContainer = ({ history, diningEntertainmentState, _handleFetchDiningEntModels }: Props) => {
   const headerRowRef = React.useRef<HTMLElement | null>(null);
   const [ headerRowState, setHeaderRowState ] = React.useState<LocalState>({ headerFixed: false, headerTop: "" });
 
   React.useEffect(() => {
+    console.log(history)
     window.scrollTo({ x: 0, y: 0 });
     _handleFetchDiningEntModels({ live: true });
   }, []);
@@ -80,8 +83,13 @@ const DiningIndexContainer = ({ diningEntertainmentState, _handleFetchDiningEntM
           </button>
         </div>
       </div>
+      <RestaurantComponent diningOption= { diningEntertainmentState.diningEntModelData } />
+      <div className={ styles.plainSpacer }></div>
       <CafeComponent diningOption={ diningEntertainmentState.diningEntModelData } />
-      <div className={ styles.parallaxSpacer }></div>
+      <div className={ styles.plainSpacer }></div>
+      <LoungeComponent diningOption={ diningEntertainmentState.diningEntModelData } />
+      <div className={ styles.plainSpacer }></div>
+      <Footer history={ history } />
     </div>
   );
 };

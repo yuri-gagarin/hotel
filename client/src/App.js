@@ -36,7 +36,7 @@ import DiningIndexComponent from './components/client_components/dining/DiningIn
 export const socket = io.connect("http://localhost:8080");
 
 
-const AuthorizedRoute = ({ loggedIn, component, path }) => {
+const AuthorizedRoute = ({ loggedIn, component, path, history }) => {
   if (loggedIn) {
     return (
       <Route 

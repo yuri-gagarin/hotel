@@ -45,6 +45,22 @@ const DiningEntertainmentDisplay = ({ diningEntState }: Props): React.Node => {
           <span>Type: </span>
           <span>{ diningEntModelData.optionType }</span>
         </div>
+        <div className={ styles.detailsDiv }>
+          <span>Address: </span>
+          <span>{ diningEntModelData.address }</span>
+        </div>
+        <div className={ styles.detailsDiv }>
+          <span>Instagram URL: </span>
+          <span>{ diningEntModelData.instagramURL }</span>
+        </div>
+        <div className={ styles.detailsDiv }>
+          <span>Facebook URL: </span>
+          <span>{ diningEntModelData.facebookURL }</span>
+        </div>
+        <div className={ styles.detailsDiv }>
+          <span>Phone number: </span>
+          <span>{ diningEntModelData.phoneNumber }</span>
+        </div>
       </div>
       <div className={ styles.descriptionWrapper }>
         <h5>Description</h5>

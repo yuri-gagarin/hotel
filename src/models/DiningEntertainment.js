@@ -24,6 +24,22 @@ const diningEntertainmentModelSchema = new Schema({
     required: false,
     default: ""
   },
+  instagramURL: {
+    type: String,
+    required: false
+  },
+  facebookURL: {
+    type: String,
+    required: false
+  },
+  email: {
+    type: String,
+    required: false
+  },
+  phoneNumber: {
+    type: String,
+    required: false
+  },
   images: [{
     type: Schema.Types.ObjectId,
     ref: "DiningModelImage"

@@ -58,6 +58,10 @@ type ConfirmDeleteModalState = {
 type FormState = {
   title: string,
   hours: string,
+  address: string,
+  instagramURL: string,
+  facebookURL: string,
+  phoneNumber: string,
   description: string,
   optionType: "restaurant" | "cafe" | "lounge" | "",
   titleError: string,
@@ -114,6 +118,18 @@ const DiningEntertainmentForm = ({
     } else {
       setFormState({ ...formState, hours: data.value, hoursError: "" });
     }
+  };
+  const handleDiningModelAddress = (_e, data) => {
+    setFormState({ ...formState, address: data.value });
+  };
+  const handleDeleteDiningModelInstaURL = (_e, data) => {
+    setFormState({ ...formState, instagramURL: data.value });
+  };
+  const handleDiningModelFacebookURL = (_e, data) => {
+    setFormState({ ...formState, facebookURL: data.value });
+  };
+  const handleDiningModelPhoneNUmber = (_e, data) => {
+    setFormState({ ...formState, phoneNumber: data.value });
   };
   const handleDiningModelDescription = (e, data) => {
     if (data.value.length === 0) {
@@ -272,6 +288,41 @@ const DiningEntertainmentForm = ({
               placeholder='Hours available ...'
               onChange={ handleDiningModelHours } 
               value={ formState.hours }
+            />
+          </Form.Group>
+          <Form.Group widths="16">
+            <Form.Field
+              width="16"
+              control={Input}
+              label='Address'
+              placeholder="Address of the business... (optional)"
+              onChange={ handleDiningModelAddress }
+              value={ formState.address }
+            />
+          </Form.Group>
+          <Form.Group widths="equal">
+            <Form.Field
+              control={Input}
+              label='InstagramURL'
+              placeholder="Instagram... (optional, default instagram.com)"
+              onChange={ handleDeleteDiningModelInstaURL }
+              value={ formState.instagramURL }
+            />
+             <Form.Field
+              error={ formState.titleError ? { content: formState.titleError } : null }
+              control={Input}
+              label='FacebookURL'
+              placeholder="Facebook... (optional, default facebook.com)"
+              onChange={ handleDiningModelFacebookURL }
+              value={ formState.facebookURL }
+            />
+             <Form.Field
+              error={ formState.titleError ? { content: formState.titleError } : null }
+              control={Input}
+              label='Phone Number'
+              placeholder="Phone number... (optional but recommended)"
+              onChange={ handleDiningModelPhoneNUmber }
+              value={ formState.phoneNumber }
             />
           </Form.Group>
           <div className={styles.typeDropdown }>

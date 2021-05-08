@@ -19,7 +19,7 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
   // const [direction, setDirection] = useState(null);
   
   React.useEffect(() => {
-    if (show && imageIndex) setIndex(imageIndex);
+    if (show && typeof imageIndex === "number") setIndex(imageIndex);
   }, [ show ]);
   
   const handleSelect = (selectedIndex: number, e: any) => {

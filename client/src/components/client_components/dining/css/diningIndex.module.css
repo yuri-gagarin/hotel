@@ -25,6 +25,11 @@
   background-size: cover;
   z-index: 1;
 }
+.plainSpacer {
+  width: 100%;
+  height: 150px;
+  background-color: white;
+}
 
 .headerRow {
   height: 300px;
