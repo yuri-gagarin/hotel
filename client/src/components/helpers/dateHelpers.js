@@ -58,7 +58,7 @@ export const formatDate = (date, options) => {
     return `${addZero(day)}/${addZero(month)}/${year}`;
   } else if (options.nextDay) {
     const tomorrow = new Date(date);
-    tomorrow.setDate(new Date().getDate()+1);
+    tomorrow.setDate(tomorrow.getDate()+1);
     return tomorrow.toISOString();
   }
   else {

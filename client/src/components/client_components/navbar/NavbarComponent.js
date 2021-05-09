@@ -41,8 +41,6 @@ const NavbarComponent = ({ history } : Props): React.Node => {
   const scrollListener = () => {
     const el = document.getElementById("booking");
     if (document.body && el) {
-      console.log("Scroll height:" + document.body.scrollHeight + " - " + "Scroll top is: " + window.scrollY);
-      console.log(el.scrollTop);
 
     }
   }
@@ -102,7 +100,7 @@ const NavbarComponent = ({ history } : Props): React.Node => {
     let hotelOptionsVew = document.getElementById("portfolio");
     if (hotelOptionsVew) {
       closeMobileMenus([ mainMenuRef, languageMenuRef ]);
-      hotelOptionsVew.scrollIntoView({ behavior: "smooth" });
+      scrolltoElement({ elementId: "portfolio" });
     }
   };
   

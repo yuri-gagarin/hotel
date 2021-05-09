@@ -13,6 +13,10 @@ type LocalState = {
   checkoutDateString: string;
   checkinDateObj: Date | null;
   checkoutDateObj: Date | null;
+  // these are minimums for calendar //
+  minCheckoutDateObj: Date;
+  minCheckInDateObj: Date;
+  // visibility for calendar //
   checkinCalVisible: boolean;
   checkoutCalVisible: boolean;
 };
@@ -26,7 +30,16 @@ const BookingForm = (): React.Node => {
   const [checkOutDate, setCheckOutDate] = React.useState(null);
   const [todaysDate, setTodaysDate] = React.useState(null);
   const [t, i18n] = useTranslation();
-  const [ localState, setLocalState ] = React.useState<LocalState>({ checkinDateString: "", checkoutDateString: "", checkinDateObj: null, checkoutDateObj: null, checkinCalVisible: false, checkoutCalVisible: false });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ 
+    checkinDateString: "", 
+    checkoutDateString: "", 
+    checkinDateObj: null, 
+    checkoutDateObj: null, 
+    minCheckInDateObj: new Date(),
+    minCheckoutDateObj: new Date(formatDate(new Date().toISOString(), { nextDay: true })),
+    checkinCalVisible: false, 
+    checkoutCalVisible: false 
+  });
 
   const handleGuestChange = (e) => {
     const guestNumber = (e.target[e.target.selectedIndex].getAttribute("data-value"));
@@ -49,6 +62,7 @@ const BookingForm = (): React.Node => {
     }
   }
   const handleCheckoutChange = (value) => {
+    if (!localState.checkinDateObj) return;
     const date = new Date(value);
     const stringInputDate = formatDate(date.toISOString(), { ddmmyyyy: true });
     setLocalState({ ...localState, checkoutDateString: stringInputDate, checkoutDateObj: date, checkoutCalVisible: false });
@@ -72,6 +86,25 @@ const BookingForm = (): React.Node => {
   const tileDisabled = ({ activeStartDate, date }) => {
     return activeStartDate > date;
   }
+
+  // lifecycle hoooks //
+  React.useEffect(() => {
+    const { checkinDateObj } = localState
+    if (checkinDateObj) {
+      const nextDay = new Date(formatDate(checkinDateObj.toISOString(), {nextDay: true }));
+      setLocalState({ ...localState, minCheckoutDateObj: nextDay });
+    }
+  }, [ localState.checkinDateObj ]);
+
+  React.useEffect(() => {
+    const { checkinDateObj, checkoutDateObj } = localState;
+    if (checkinDateObj && checkoutDateObj) {
+      if (checkoutDateObj.getTime() <= checkinDateObj.getTime()) {
+        const nextDay = new Date(formatDate(checkinDateObj.toISOString(), { nextDay: true } ));
+        setLocalState({ ...localState, checkoutDateString: "", checkoutDateObj: null, minCheckoutDateObj: nextDay });
+      }
+    }
+  }, [ localState.checkinDateObj, localState.checkoutDateObj ]);
 
   return (
     <div id="booking" className={`section ${styles.bookingHomeSection}`}>
@@ -118,7 +151,7 @@ const BookingForm = (): React.Node => {
                     <Calendar 
                       className={ styles.checkinCal } 
                       view="month"
-                      minDate={ new Date(Date.now()) }
+                      minDate={ localState.minCheckInDateObj }
                       prev2Label={ null }
                       next2Label= {null }
                       onClickDay={ handleCheckInChange }
@@ -138,7 +171,7 @@ const BookingForm = (): React.Node => {
                     <Calendar 
                       className={ styles.checkinCal } 
                       view="month"
-                      minDate={ new Date(getMinCheckoutDate()) }
+                      minDate={ localState.minCheckoutDateObj }
                       prev2Label={ null }
                       next2Label= {null }
                       onClickDay={ handleCheckoutChange }
@@ -148,7 +181,7 @@ const BookingForm = (): React.Node => {
                   }
                   <div className="form-group">
                     <span className="form-label">{t("checkOut")}</span>
-                    <input className="form-control" onFocus={ toggleCheckoutCalendar } onChange={ handleInputChange } value={ localState.checkoutDateString } placeholder="...check-out date" />
+                    <input className="form-control" onFocus={ toggleCheckoutCalendar } onChange={ handleInputChange } value={ localState.checkoutDateString } placeholder="...check-out date" disabled={ localState.checkinDateObj ? false : true } />
                   </div>
                 </div>
                 <div className="col-md-4">
