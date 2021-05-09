@@ -1,14 +1,32 @@
-import React, { useState } from "react";
+// @flow
+import * as React from "react";
+import Calendar from 'react-calendar';
 import { useTranslation } from "react-i18next";
+// style and css //
+import 'react-calendar/dist/Calendar.css';
+import styles from "./css/bookingForm.module.css";
+// helpers //
+import { formatDate } from "../../helpers/dateHelpers";
  
-const BookingForm = (props) => {
+type LocalState = {
+  checkinDateString: string;
+  checkoutDateString: string;
+  checkinDateObj: Date | null;
+  checkoutDateObj: Date | null;
+  checkinCalVisible: boolean;
+  checkoutCalVisible: boolean;
+};
 
-  const [guests, setGuestCount] = useState(1);
-  const [children, setChildrenCount] = useState(0);
-  const [checkInDate, setCheckInDate] = useState(null);
-  const [checkOutDate, setCheckOutDate] = useState(null);
-  const [todaysDate, setTodaysDate] = useState(null);
+
+const BookingForm = (): React.Node => {
+
+  const [guests, setGuestCount] = React.useState(1);
+  const [children, setChildrenCount] = React.useState(0);
+  const [checkInDate, setCheckInDate] = React.useState(null);
+  const [checkOutDate, setCheckOutDate] = React.useState(null);
+  const [todaysDate, setTodaysDate] = React.useState(null);
   const [t, i18n] = useTranslation();
+  const [ localState, setLocalState ] = React.useState<LocalState>({ checkinDateString: "", checkoutDateString: "", checkinDateObj: null, checkoutDateObj: null, checkinCalVisible: false, checkoutCalVisible: false });
 
   const handleGuestChange = (e) => {
     const guestNumber = (e.target[e.target.selectedIndex].getAttribute("data-value"));
@@ -18,11 +36,22 @@ const BookingForm = (props) => {
     const childNumber = (e.target[e.target.selectedIndex].getAttribute("data-value"));
     setChildrenCount(childNumber);
   };
-  const handleCheckInChange = (e) => {
-
+  const handleCheckInChange = (value): void => {
+    const date = new Date(value);
+    const stringInputDate = formatDate(date.toISOString(), { ddmmyyyy: true });
+    setLocalState({ ...localState, checkinDateString: stringInputDate, checkinDateObj: date, checkinCalVisible: false });
   };
-  const handleCheckoutChange = (e) => {
-
+  const getMinCheckoutDate = (): string => {
+    if (localState.checkinDateObj) {
+      return formatDate(localState.checkinDateObj.toISOString(), { nextDay: true });
+    } else {
+      return formatDate(new Date().toISOString(), { nextDay: true });
+    }
+  }
+  const handleCheckoutChange = (value) => {
+    const date = new Date(value);
+    const stringInputDate = formatDate(date.toISOString(), { ddmmyyyy: true });
+    setLocalState({ ...localState, checkoutDateString: stringInputDate, checkoutDateObj: date, checkoutCalVisible: false });
   };
   const submitReservationInfo = (e) => {
     console.info(e);
@@ -30,10 +59,22 @@ const BookingForm = (props) => {
       guests: guests,
       children: children
     });
+  };
+  const handleInputChange = () => {
+
+  }
+  const toggleCheckinCalendar = () => {
+    setLocalState({ ...localState, checkinCalVisible: !localState.checkinCalVisible });
+  };
+  const toggleCheckoutCalendar = () => {
+    setLocalState({ ...localState, checkoutCalVisible: !localState.checkoutCalVisible });
+  };
+  const tileDisabled = ({ activeStartDate, date }) => {
+    return activeStartDate > date;
   }
 
   return (
-    <div id="booking" className="section">
+    <div id="booking" className={`section ${styles.bookingHomeSection}`}>
       <div className="section-center">
         <div className="container">
           <div className="row">
@@ -71,15 +112,43 @@ const BookingForm = (props) => {
                   </div>
                 </div>
                 <div className="col-md-4">
+                  {
+                    localState.checkinCalVisible
+                    ?
+                    <Calendar 
+                      className={ styles.checkinCal } 
+                      view="month"
+                      minDate={ new Date(Date.now()) }
+                      prev2Label={ null }
+                      next2Label= {null }
+                      onClickDay={ handleCheckInChange }
+                    />
+                    :
+                    null
+                  }
                   <div className="form-group">
                     <span className="form-label">{t("checkIn")}</span>
-                    <input className="form-control" type="date" onChange={handleCheckInChange} required />
+                    <input className="form-control" onFocus={ toggleCheckinCalendar } onChange={ handleInputChange } value={ localState.checkinDateString } placeholder="...check-in date" />
                   </div>
                 </div>
                 <div className="col-md-4">
+                {
+                    localState.checkoutCalVisible
+                    ?
+                    <Calendar 
+                      className={ styles.checkinCal } 
+                      view="month"
+                      minDate={ new Date(getMinCheckoutDate()) }
+                      prev2Label={ null }
+                      next2Label= {null }
+                      onClickDay={ handleCheckoutChange }
+                    />
+                    :
+                    null
+                  }
                   <div className="form-group">
                     <span className="form-label">{t("checkOut")}</span>
-                    <input className="form-control" type="date" onChange={handleCheckoutChange} required />
+                    <input className="form-control" onFocus={ toggleCheckoutCalendar } onChange={ handleInputChange } value={ localState.checkoutDateString } placeholder="...check-out date" />
                   </div>
                 </div>
                 <div className="col-md-4">

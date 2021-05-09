@@ -32,6 +32,8 @@ function formatAMPM(options) {
  * @param {string} date - "A string in ISO date format".
  * @param {Object} options - "An options object".
  * @param {boolean} options.military - "An option for a 24hr format".
+ * @param {boolean} options.ddmmyyyy - "An option for a 24hr format".
+ * @param {boolean} options.nextDay - "An option for next day".
  * @returns {string} - A readable format for a post.
  */
 export const formatDate = (date, options) => {
@@ -51,6 +53,13 @@ export const formatDate = (date, options) => {
     hour = addZero(hour);
     minutes = addZero(minutes);
     return `${month}-${day}-${year}, ${hour}:${minutes}`;
+  }
+  else if (options.ddmmyyyy) {
+    return `${addZero(day)}/${addZero(month)}/${year}`;
+  } else if (options.nextDay) {
+    const tomorrow = new Date(date);
+    tomorrow.setDate(new Date().getDate()+1);
+    return tomorrow.toISOString();
   }
   else {
     let timeOfDay = formatAMPM({hour: hour, minutes: minutes});

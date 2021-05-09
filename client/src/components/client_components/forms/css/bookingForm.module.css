@@ -1,0 +1,12 @@
+.bookingHomeSection {
+  position: relative;
+}
+
+.checkinCal {
+  position: fixed !important;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999 !important;
+  background-color: white;
+}

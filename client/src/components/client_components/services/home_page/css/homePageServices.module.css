@@ -25,6 +25,7 @@
 .itemCol {
   display: flex;
   flex-direction: column;
+  align-self: stretch;
   height: 100% !important;
 }
 
