@@ -96,6 +96,10 @@ export type RoomState = {
   error: null | Error
 };
 
+export type RoomFetchOptions = {
+  limit?: number;
+  live?: boolean;
+}
 // room action types //
 export type RoomAPIRequest = {
   +type: "RoomAPIRequest",

@@ -77,6 +77,7 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
 
   React.useEffect(() => {
     const { imageURLS } = setDefaultValues(room);
+    console.log(imageURLS)
     setImgURLSArr([ ...imageURLS ]);
   }, [ room ]);
 

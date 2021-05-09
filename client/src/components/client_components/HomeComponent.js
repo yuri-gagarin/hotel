@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+// @flow
+import * as React from "react";
 import $ from "jquery";
+import ObjectID from "bson-objectid";
 // component imports //
 import { HomePageServices } from "./services/home_page/HomePageServices";
 import NavbarComponent from "./navbar/NavbarComponent";
@@ -14,13 +15,18 @@ import ErrorComponent from "../display_components/ErrorComponent";
 // redux imports //
 import { connect } from "react-redux";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
+import { handleFetchRooms } from "../../redux/actions/roomActions";
 // react router //
 import { withRouter } from "react-router-dom";
 // additional imports //
-import ObjectID from "bson-objectid";
 import { setGuestClient } from "../../redux/actions/clientActions";
-// 
+import { navbarCollapseListener } from "../helpers/componentHelpers";
 import { socket } from "./../../App";
+// types //
+import type { RouterHistory } from "react-router-dom";
+import type { RootState, Dispatch } from "../../redux/reducers/_helpers/createReducer";
+import type { RoomFetchOptions, RoomState, RoomAction } from "../../redux/reducers/rooms/flowTypes";
+
 
 const handleNewClient = () => {
   return {
@@ -29,52 +35,46 @@ const handleNewClient = () => {
     email: null
   };
 };
-
-const HomeComponent = (props) => {
-  const { 
-    history, appGeneralState, clientState,
-    _clearAppError, _clearSuccessState,
-    _setGuestClient
-  } = props;
-  const [successTimeout, setSuccessTimeout] = useState(null);
-  const [errorTimeout, setErrorTimeout] = useState(null);
+type WrapperProps = {
+  history: RouterHistory;
+}
+type Props = {
+  ...WrapperProps;
+  appGeneralState: any;
+  clientState: any;
+  _clearAppError: () => void;
+  _clearSuccessState: () => void;
+  _setGuestClient: (data: any) => void;
+  _handleFetchRooms: (options?: RoomFetchOptions) => Promise<boolean>;
+};
+const HomeComponent = ({history, appGeneralState, clientState, _clearAppError, _clearSuccessState, _setGuestClient, _handleFetchRooms }: Props): React.Node => {
+  const [successTimeout, setSuccessTimeout] = React.useState(null);
+  const [errorTimeout, setErrorTimeout] = React.useState(null);
 
   const unloadWindowHandler = () => {
     socket.emit("clientLeaving", clientState);
   };
   // set default client info on initial load //
-  useEffect(() => {
+  React.useEffect(() => {
     // automatic form clear for error //
-    (function () {
-      // Collapse Navbar
-      var navbarCollapse = function () {
-        const nav = $("#mainNav");
-        if (nav && nav.offset()) {
-          if (nav.offset().top > 100) {
-            nav.addClass("navbar-shrink");
-          } else {
-            nav.removeClass("navbar-shrink");
-          }
+   navbarCollapseListener();
+   _handleFetchRooms({ live: true, limit: 1 })
+    .then((success) => {
+      if(success) {
+        // check for saved user data in localStorage //
+        const clientId = localStorage.getItem("hotelGuestClientId");
+        const firstName = localStorage.getItem("hotelGuestClientName");
+        if (clientId && firstName) {
+          _setGuestClient({ _id: clientId, firstName: firstName });
         } else {
-          return;
+          _setGuestClient(handleNewClient());
         }
-      };
-      // Collapse now if page is not at top
-      navbarCollapse();
-      // Collapse the navbar when page is scrolled
-      $(window).scroll(navbarCollapse);
-    })();
-    // check for saved user data in localStorage //
-    const clientId = localStorage.getItem("hotelGuestClientId");
-    const firstName = localStorage.getItem("hotelGuestClientName");
-    if (clientId && firstName) {
-      _setGuestClient({ _id: clientId, firstName: firstName });
-    } else {
-      _setGuestClient(handleNewClient());
-    }
+      }
+    })
+   
   }, []); 
   // error and success component triggers //
-  useEffect(() => {
+  React.useEffect(() => {
     const { error, successComponentOpen } = appGeneralState;
     if (error) {
       setErrorTimeout(
@@ -110,7 +110,7 @@ const HomeComponent = (props) => {
   }, [ appGeneralState ]);
   // set localStorage items if they do not exist //
   // listener for closed window or navigation away //
-  useEffect(() => {
+  React.useEffect(() => {
     const storedId = localStorage.getItem("hotelGuestClientId");
     const storedName = localStorage.getItem("hotelGuestClientName");
     const { _id, firstName } = clientState;
@@ -139,28 +139,21 @@ const HomeComponent = (props) => {
     </div>
   );
 };
-// PropTypes validation //
-HomeComponent.propTypes = {
-  //socket: PropTypes.object.isRequired
-  appGeneralState: PropTypes.object.isRequired,
-  clientState: PropTypes.object.isRequired,
-  _setGuestClient: PropTypes.func.isRequired,
-  _clearAppError: PropTypes.func.isRequired,
-  _clearSuccessState: PropTypes.func.isRequired
-};
 
 // redux mapping functions //
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
     clientState: state.clientState,
-    appGeneralState: state.appGeneralState
+    appGeneralState: state.appGeneralState,
+    roomState: state.roomState
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch<RoomAction>) => {
   return {
-    _setGuestClient: (userData) => dispatch(setGuestClient(userData)),
+    _setGuestClient: (userData: any) => dispatch(setGuestClient(userData)),
     _clearAppError: () => dispatch(clearAppError()),
-    _clearSuccessState: () => dispatch(clearSuccessState())
+    _clearSuccessState: () => dispatch(clearSuccessState()),
+    _handleFetchRooms: (options: RoomFetchOptions) => handleFetchRooms(dispatch, options)
   };
 };
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeComponent));
+export default (connect(mapStateToProps, mapDispatchToProps)(HomeComponent): React.AbstractComponent<Props>);

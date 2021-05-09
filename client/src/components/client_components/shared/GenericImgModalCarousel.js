@@ -1,9 +1,12 @@
 // @flow
 import * as React from "react";
 // ui bootstrap imports //
-import { Button, Modal, Carousel } from "react-bootstrap";
+import { Button, Image, Modal } from "react-bootstrap";
+import Slider from "react-slick";
 // styles and css //
 import styles from "./css/genericImgModal.module.css";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 // helper functions //
 import { setImagePath } from "./../../helpers/displayHelpers";
 
@@ -17,7 +20,15 @@ type Props = {
 const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal } : Props): React.Node => {
   const [ index, setIndex ] = React.useState(imageIndex);
   // const [direction, setDirection] = useState(null);
-  
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    autoplay: true,
+    slidesToShow: 1,
+    slidesToScroll: 1
+  };
+
   React.useEffect(() => {
     if (show && typeof imageIndex === "number") setIndex(imageIndex);
   }, [ show ]);
@@ -28,29 +39,20 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
 
   return (
     <Modal show={show} className={ styles.pictureModal } onHide={ closePictureModal }>
-      <Modal.Dialog className={ styles.modalDialog }>
-      <div className={ styles.pictureDialog }>
-        <Carousel fade activeIndex={ index } onSelect={ handleSelect } className={ styles.imgCarousel } >
-          {
-            imgURLS.map((imgURL) => {
-              return (
-                <Carousel.Item key={imgURL} className={ styles.carouselItem }>
-                  <img
-                    className={ `${styles.roomPopupModalImg }` } 
-                    src={ imgURL }
-                    alt="First slide"
-                  />
-                </Carousel.Item>
-              )
-            })
-          }
-        </Carousel>
-        <div className={ styles.closeModalToggle }>
-          <i className={ `fas fa-times` } onClick={ closePictureModal }></i>
-        </div>
-      </div>
-      </Modal.Dialog>
-      
+      <Slider { ...settings } className={ styles.carouselSlider } >
+        {
+          imgURLS.map((url, i) => {
+            return (
+              <div className={ styles.sliderContent } key={ String(url + i) }>
+                <img className={ styles.sliderImg } src={ url }></img>
+              </div>
+            )
+          })
+        }
+      </Slider>
+      <div className={ styles.closeModalToggle }>
+        <i className={ `fas fa-times` } onClick={ closePictureModal }></i>
+      </div>      
     </Modal>
   );
 };

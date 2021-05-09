@@ -48,7 +48,7 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
             <div className={ styles.sideImgContainerTop } onClick={() => handleOpenModal(imageURLS[1]) }>
               <img
                 className={`${styles.roomImg} ${styles.sideImgRightTop}`}
-                src={ imageURLS[0] } 
+                src={ imageURLS[1] } 
                 data-index={1}
               />
               <div className={ styles.imgOverlay}>
@@ -58,7 +58,7 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
             <div className={ styles.sideImgContainerBottom } onClick={() => handleOpenModal(imageURLS[2]) }>
               <img
                 className={`${styles.roomImg} ${styles.sideImgRightBottom}`}
-                src={ imageURLS[0] } 
+                src={ imageURLS[2] } 
                 data-index={2}
               />
               <div className={ styles.imgOverlay}>

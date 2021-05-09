@@ -5,7 +5,6 @@ export const navbarCollapseListener = () => {
   // Navbar collapse implementation // 
   const mainNav = $("#mainNav");
   if (mainNav) {
-    mainNav.css("backgroundColor", "#2c3531");
     (function (){
       // Collapse Navbar
       var navbarCollapse = function() {

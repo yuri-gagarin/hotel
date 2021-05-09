@@ -37,3 +37,22 @@ div.row {
 .dimmed.dimmable > .ui.modals.dimmer.visible {
   display: flex !important;
 }
+
+
+
+@media only screen and (max-width: 550px) {
+  .modal-dialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  .modal-content {
+    background: transparent;
+    padding: 0 !important;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+}

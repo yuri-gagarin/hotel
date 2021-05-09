@@ -7,7 +7,7 @@ import type {
   RoomAPIRequest, RoomCreated, RoomUpdated, RoomDeleted,
   OpenRoom, SetRooms, ClearRoomData, SetRoomImages, RoomError,
   ClientRoomFormData, ToggleRoomOnlineOffline, ToggleAllRoomsOnlineOffline,
-  RoomAction
+  RoomAction, RoomFetchOptions
 } from "../reducers/rooms/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 // helpers //
@@ -245,12 +245,15 @@ export const handleDeleteRoom = (dispatch: Dispatch<RoomAction>, roomIdToDelete:
 /* */
 
 /* non CRUD fetch API actions */
-export const handleFetchRooms = (dispatch: Dispatch<RoomAction>, options?: any): Promise<boolean> => {
+
+export const handleFetchRooms = (dispatch: Dispatch<RoomAction>, options?: RoomFetchOptions): Promise<boolean> => {
+  console.log(250);
+  console.log(options)
   const requestOptions = {
     method: "get",
     url: "/api/rooms",
-    query: {
-      options: options ? options : {}
+    params: {
+      options: options ? options : null
     }
   };
 

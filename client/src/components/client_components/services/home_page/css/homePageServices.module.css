@@ -20,7 +20,7 @@
 .colViewRow {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  justify-content: center;
 }
 .itemCol {
   display: flex;

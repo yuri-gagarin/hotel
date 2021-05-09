@@ -12,8 +12,10 @@ export type RootState = {
   roomState: RoomState,
   contactPostState: ContactPostState,
   diningEntertainmentState: DiningEntertainmentState,
+  // to add later //
   adminState: any,
-  appGeneralState: any
+  appGeneralState: any,
+  clientState: any
 };
 
 export type GenericModelData = (ServiceData | DiningEntModelData | RoomData);
