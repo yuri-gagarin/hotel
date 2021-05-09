@@ -87,14 +87,14 @@ export const HomePageServices = ({ history } : Props): React.Node => {
             </Col>
           </Row>
           :
-          <Row className={ styles.colViewRow }>
-            <Col lg={4} md={6} className={`portfolio-item`}>
+          <Row className={ `${styles.colViewRow}`}>
+            <Col lg={4} md={6} className={`portfolio-item ${styles.itemCol}`}>
               <HomePageServiceCard key="room" modelType="room" handleHomePageServiceClick={ goToRooms } translateFunction={ translateFunction } />
             </Col>
-            <Col lg={4} md={6} className={`portfolio-item`}>
+            <Col lg={4} md={6} className={`portfolio-item ${styles.itemCol}`}>
               <HomePageServiceCard key="dining" modelType="dining" handleHomePageServiceClick={ goToDiningEntertainment } translateFunction={ translateFunction } />
             </Col>
-            <Col lg={4} md={6} className={`portfolio-item`}>
+            <Col lg={4} md={6} className={`portfolio-item ${styles.itemCol}`}>
               <HomePageServiceCard key="service" modelType="service" handleHomePageServiceClick={ goToServices } translateFunction={ translateFunction } />
             </Col>
           </Row>

@@ -88,7 +88,7 @@ const RoomsIndexContainer = ({ history, roomState, _handleFetchRooms }: Props): 
   }
  
   return (
-    <div>
+    <div className={ styles.mainContainer }>
       <NavbarComponent/>
       <div className={ styles.parallax }>
         <div className={ styles.exploreBtnWrapper }>
@@ -116,7 +116,7 @@ const RoomsIndexContainer = ({ history, roomState, _handleFetchRooms }: Props): 
         createdRooms.map((room, index) => {
           return (
             <React.Fragment key={room._id}>
-              <Container className={ styles.roomsIndexContainer } >       
+              <Container fluid className={ styles.roomsIndexContainer } >       
                 <Room  
                   index={ index }
                   room={room} 

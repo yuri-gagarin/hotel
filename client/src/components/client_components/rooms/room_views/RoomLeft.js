@@ -32,7 +32,7 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
           <MobileRoomPicsView roomImgPaths={ imageURLS } handleOpenImgModal={ handleOpenModal } />
         :
         <React.Fragment>
-          <Col xs="12" lg="6" className={ styles.leftImgsColumn }>
+          <Col sm="12" xl="5" lg="6" className={ styles.leftImgsColumn }>
             <div className={ `${styles.leftImgContainer}`} onClick={() => handleOpenModal(imageURLS[0]) }>
               <img
                 className={ `${styles.roomImg} ${styles.sideImgLeft}` }
@@ -44,7 +44,7 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
               </div> 
             </div>
           </Col>
-          <Col xs="12" lg="6"  className={ styles.rightImgsColumn }>
+          <Col sm="12" xl="5" lg="6"  className={ styles.rightImgsColumn }>
             <div className={ styles.sideImgContainerTop } onClick={() => handleOpenModal(imageURLS[1]) }>
               <img
                 className={`${styles.roomImg} ${styles.sideImgRightTop}`}
@@ -70,12 +70,12 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
         }
       </Row>  
       <Row ref={roomDescRef} className={`animatedRoomRow ${styles.descriptionContainerRow}`}>
-        <Col xs="12" lg="6" className={ styles.roomDescColumn }>
+        <Col sm="12" xl="5" lg="6" className={ styles.roomDescColumn }>
           <div className={ styles.roomDescDiv }>
             <p>{ description ?  setStringTranslation(description, i18n.language) : "No description to translate..." }</p>
           </div>
         </Col>
-        <Col xs="12" lg="6" className={ styles.roomDetailsColumn }>
+        <Col sm="12" xl="5" lg="6" className={ styles.roomDetailsColumn }>
           <div className={ styles.roomDetailsContainer }>
             <div className={ styles.roomDetailsHeader }><span>{t("rooms.details")}:</span></div>
             <div className={ styles.roomDetails }><i className="fas fa-store-alt"></i> {t("rooms.area")}: { area }</div>

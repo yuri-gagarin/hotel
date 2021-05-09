@@ -1,6 +1,7 @@
 /* carousel row */
 .carouselRow {
   height: 300px;
+  position: relative;
   box-sizing: content-box;
 }
 
@@ -175,6 +176,7 @@
 }
 .roomOption {
   display: flex;
+  align-items: center;
   flex: 1 0 21%;
   color: rgb(38, 42, 51);
   padding: 0.5em 1em;

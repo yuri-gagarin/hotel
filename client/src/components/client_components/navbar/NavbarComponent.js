@@ -13,38 +13,69 @@ import styles from "./css/generalNavStyles.module.css";
 type Props = {
   history: RouterHistory
 };
+type ReactObjRef = {| current: ( HTMLDivElement | null ) |};
 
 const scrolltoElement = ({ elementId } : { elementId : string }): void => {
   const el = document.getElementById(elementId);
-  if (el) el.scrollIntoView({ behavior: "smooth" });
+  console.log(document.body ? document.body.scrollHeight : 0)
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "end" });
+  } 
+};
+
+const closeMobileMenus = (refs: Array<ReactObjRef>): void => {
+  for (const ref of refs) {
+    if (ref.current) {
+      ref.current.classList.remove("show");
+    }
+  }
 }
 
 const NavbarComponent = ({ history } : Props): React.Node => {
   const [ t, i18n ] = useTranslation();
   const [ navState, setNavState ] = React.useState<{ useHomeScreenNav: boolean, height: string }>({ useHomeScreenNav: false, height: "auto" });
+  // refs //
+  const mainMenuRef = React.useRef<HTMLDivElement | null>(null);
+  const languageMenuRef = React.useRef<HTMLDivElement | null>(null);
+  // lifecycle hooks //
+  const scrollListener = () => {
+    const el = document.getElementById("booking");
+    if (document.body && el) {
+      console.log("Scroll height:" + document.body.scrollHeight + " - " + "Scroll top is: " + window.scrollY);
+      console.log(el.scrollTop);
 
+    }
+  }
   React.useEffect(() => {
     const currentPath = history.location.pathname;
     if (currentPath === "/") {
       setNavState({ useHomeScreenNav: true, height: "auto" });
     } else {
-      setNavState({ useHomeScreenNav: false, height: "50px" })
+      setNavState({ useHomeScreenNav: false, height: "auto" })
+    }
+    window.addEventListener("scroll", scrollListener);
+    return () => {
+      window.removeEventListener("scroll", scrollListener);
     }
   }, [])
 
+
   const changeLanguage = (e) => {
-    const language = (e.target.text);
+    const language = e.target.dataset.lang.toLowerCase();
     switch (language) {
-      case "EN": {
+      case "en": {
         i18n.changeLanguage("en");
+        closeMobileMenus([ mainMenuRef, languageMenuRef ]);
         break;
       };
-      case "UA": {
+      case "uk": {
         i18n.changeLanguage("uk");
+        closeMobileMenus([ mainMenuRef, languageMenuRef ]);
         break;
       };
-      case "RU": {
+      case "ru": {
         i18n.changeLanguage("ru");
+        closeMobileMenus([ mainMenuRef, languageMenuRef ]);
         break;
       };
     }
@@ -57,19 +88,31 @@ const NavbarComponent = ({ history } : Props): React.Node => {
   const goToBooking = () => {
     const { pathname } = history.location;
     if (pathname === "/") {
+      closeMobileMenus([ mainMenuRef, languageMenuRef ]);
       scrolltoElement({ elementId: "booking" });
     } else {
+      closeMobileMenus([ mainMenuRef, languageMenuRef ]);
       history.push("/");
       setTimeout(() => {
         scrolltoElement({ elementId: "booking" });
       }, 100)
     }
   };
+  const scrollToHotelOptions = () => {
+    let hotelOptionsVew = document.getElementById("portfolio");
+    if (hotelOptionsVew) {
+      closeMobileMenus([ mainMenuRef, languageMenuRef ]);
+      hotelOptionsVew.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  
   const goToContactForm = () => {
     const { pathname } = history.location;
     if (pathname === "/") {
+      closeMobileMenus([ mainMenuRef, languageMenuRef ]);
       scrolltoElement({ elementId: "contact" });
     } else {
+      closeMobileMenus([ mainMenuRef, languageMenuRef ]);
       history.push("/");
       setTimeout(() => {
         scrolltoElement({ elementId: "contact" });
@@ -78,14 +121,16 @@ const NavbarComponent = ({ history } : Props): React.Node => {
   };
   // hotel news route //
   const goToNews = () => {
+    closeMobileMenus([ mainMenuRef, languageMenuRef ]);
     history.push("/news");
   };
   const goToAbout = () => {
+    closeMobileMenus([ mainMenuRef, languageMenuRef ]);
     history.push("/about");
   };
 
   return (
-    <nav className={`navbar navbar-expand-lg navbar-dark fixed-top ${styles.nonHomeScreenNav}`} id="mainNav" style={{ height: navState.height }}>
+    <nav className={`navbar navbar-expand-lg navbar-dark fixed-top ${styles.clientNavbar} ${ navState.useHomeScreenNav ? "" : styles.nonHomeScreenNav}`} id="mainNav" style={{ height: navState.height }}>
       <a 
         className="navbar-brand js-scroll-trigger" 
         onClick={ handleGoHome }
@@ -93,24 +138,33 @@ const NavbarComponent = ({ history } : Props): React.Node => {
         >
         {t("title")}
       </a>
-      <button className="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarLanguage" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        Language
-        <i className="fas fa-bars"></i>
-      </button>
-      <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      {
+        /*
+        <button className={ `navbar-toggler navbar-toggler-left ${styles.languageNavBtn}` } type="button" data-toggle="collapse" data-target=".multiCollapse" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Language
+          <i className="fas fa-bars"></i>
+        </button>
+        */
+
+      }
+     
+      <button className={`navbar-toggler .navbar-left`} type="button" data-toggle="collapse" data-target=".multi-collapse" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i className="fas fa-bars"></i>
       </button>
       {
         navState.useHomeScreenNav 
         ? <HomeScreenNav 
+            customRef={ mainMenuRef }
             history={ history }
             goToBooking={ goToBooking }
+            goToOptions={ scrollToHotelOptions }
             goToContactForm={ goToContactForm }
             goToNews={ goToNews }
             goToAbout={ goToAbout }
           />
         : <NonHomeScreenNav 
+            customRef={ mainMenuRef }
             history={ history }
             goToBooking={ goToBooking }
             goToContactForm={ goToContactForm }
@@ -118,21 +172,21 @@ const NavbarComponent = ({ history } : Props): React.Node => {
             goToAbout={ goToAbout }
           />
       }
-      <div className="collapse navbar-collapse" id="navbarLanguage">
+      <div className={`collapse navbar-collapse multi-collapse` } ref={ languageMenuRef }>
         <ul className="navbar-nav ml-auto" style={{cursor: "pointer"}}>
           <li className="nav-item">
-            <a className="nav-link" onClick={ changeLanguage }>UA
-              <img src="/assets/images/flags/ua_flag.svg" style={{ height: "25px", width: "25px" }}></img>
+            <a className="nav-link"  onClick={ changeLanguage } data-lang="uk">UA
+              <img src="/assets/images/flags/ua_flag.svg" data-lang="uk" style={{ height: "25px", width: "25px" }}></img>
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" onClick={ changeLanguage }>EN
-              <img src="/assets/images/flags/uk_flag.svg" style={{ height: "25px", width: "25px" }}></img>
+            <a className="nav-link" onClick={ changeLanguage }  data-lang="en">EN
+              <img src="/assets/images/flags/uk_flag.svg" data-lang="en" style={{ height: "25px", width: "25px" }}></img>
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" onClick={ changeLanguage }>RU
-              <img src="/assets/images/flags/ru_flag.svg" style={{ height: "25px", width: "25px" }}></img>
+            <a className="nav-link" onClick={ changeLanguage }  data-lang="ru">RU
+              <img src="/assets/images/flags/ru_flag.svg" data-lang="ru" style={{ height: "25px", width: "25px" }}></img>
             </a>
           </li>
         </ul>

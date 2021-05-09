@@ -19,8 +19,13 @@
 }
 .colViewRow {
   display: flex;
-  justify-content: center;
-  text-align: center;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.itemCol {
+  display: flex;
+  flex-direction: column;
+  height: 100% !important;
 }
 
 /* mobile view */

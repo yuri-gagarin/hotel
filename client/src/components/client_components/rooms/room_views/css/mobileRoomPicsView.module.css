@@ -14,12 +14,29 @@
 
 
 @media (max-width: 550px) {
+  .carouselItem {
+    position: relative;
+  }
   .carouselImg {
     height: 100%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   };
 }
 
 @media only screen and (min-width: 551px) and (max-width: 992px)  {
+  .roomsMobileCarousel {
+    width: 75%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+  }
+  .carouselItem {
+    position: relative;
+    width: 100%;
+  }
   .carouselImg {
     display: block;
     height: auto;

@@ -1,7 +1,11 @@
 /* carousel row */
 .carouselRow {
   height: 300px;
+  position: relative;
   box-sizing: content-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 /* large side image */
@@ -95,10 +99,11 @@
 
 /* room description */
 .descriptionContainerRow {
-  border-right: 4px solid rgb(252, 219, 3);
-  border-bottom: 4px solid rgb(252, 219, 3);  
   padding-top: 1.5em;
   padding-bottom: 1.5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .roomDescColumn {
@@ -108,6 +113,7 @@
   color: rgb(38, 42, 51);
   padding: 0.5em;
   background-image: linear-gradient(#fdfbfb, #ebedee);
+  border-bottom: 4px solid rgb(252, 219, 3);  
 }
 .roomDescDiv {
   display: flex;
@@ -123,6 +129,8 @@
   display: flex;
   flex-direction: column;
   padding: 0;
+  border-bottom: 4px solid rgb(252, 219, 3); 
+  border-right: 4px solid rgb(252, 219, 3);
 }
 /* room options */
 .roomDetailsContainer {
@@ -168,6 +176,7 @@
 }
 .roomOption {
   display: flex;
+  align-items: center;
   flex: 1 0 21%;
   align-items: center;
   color: rgb(38, 42, 51);
@@ -184,8 +193,17 @@
 }
 
 /* media queries */
+@media only screen and (min-width: 551px) and (max-width: 992px)  {
+  .roomDetails {
+    flex: 1 0 21%;
+  }
+}
 @media only screen and (min-width: 992px) {
+  .roomDetails {
+    flex: 1 0 21%;
+  }
   .carouselRow {
     height: 500px;
   }
 }
+

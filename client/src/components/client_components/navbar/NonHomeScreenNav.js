@@ -7,6 +7,7 @@ import generalStyles from "./css/generalNavStyles.module.css";
 import type { RouterHistory } from "react-router-dom";
 
 type Props = {
+  customRef: any | null,
   history: RouterHistory,
   goToBooking: () => void,
   goToContactForm: () => void,
@@ -14,7 +15,7 @@ type Props = {
   goToAbout: () => void
 };
 
-export const NonHomeScreenNav = ({ history, goToBooking, goToContactForm, goToNews, goToAbout }: Props): React.Node => {
+export const NonHomeScreenNav = ({ customRef, history, goToBooking, goToContactForm, goToNews, goToAbout }: Props): React.Node => {
   const [t] = useTranslation();
 
   
@@ -30,8 +31,8 @@ export const NonHomeScreenNav = ({ history, goToBooking, goToContactForm, goToNe
 
 
   return (
-    <div className="collapse navbar-collapse" id="navbarResponsive">
-      <ul className="navbar-nav text-uppercase ml-auto" id={ generalStyles.navbarLeft }>
+    <div className={ `collapse navbar-collapse multi-collapse ${generalStyles.optionsCollapse}` } ref={ customRef }>
+      <ul className="navbar-nav text-uppercase" id={ generalStyles.navbarLeft }>
         <li className="nav-item">
           <a className="nav-link js-scroll-trigger" onClick={ goToBooking }>{t("book")}</a>
         </li>

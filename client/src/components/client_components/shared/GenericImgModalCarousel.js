@@ -28,6 +28,7 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
 
   return (
     <Modal show={show} className={ styles.pictureModal } onHide={ closePictureModal }>
+      <Modal.Dialog className={ styles.modalDialog }>
       <div className={ styles.pictureDialog }>
         <Carousel fade activeIndex={ index } onSelect={ handleSelect } className={ styles.imgCarousel } >
           {
@@ -48,6 +49,8 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
           <i className={ `fas fa-times` } onClick={ closePictureModal }></i>
         </div>
       </div>
+      </Modal.Dialog>
+      
     </Modal>
   );
 };

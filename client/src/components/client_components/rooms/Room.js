@@ -87,7 +87,7 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
 
   return (
     <React.Fragment>
-      <Row ref={roomTitleRef}>
+      <Row ref={roomTitleRef} className={ styles.roomTitleRow }>
         <Col style={{padding: 0}}>
           <div style={{ position: "relative", width: "100%", height: "50px", marginBottom: "1em" }} className={ styles.titleRow }>
             <div className={ styles.strikeThroughDiv }></div>

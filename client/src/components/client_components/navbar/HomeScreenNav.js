@@ -7,33 +7,29 @@ import generalStyles from "./css/generalNavStyles.module.css";
 import type { RouterHistory } from "react-router-dom";
 
 type Props = {
+  customRef: any | null,
   history: RouterHistory,
   goToBooking: () => void,
+  goToOptions: () => void,
   goToContactForm: () => void,
   goToNews: () => void,
   goToAbout: () => void
 };
 
-export const HomeScreenNav = ({ history, goToBooking, goToContactForm, goToNews, goToAbout }: Props): React.Node => {
+export const HomeScreenNav = ({ customRef, history, goToBooking, goToOptions, goToContactForm, goToNews, goToAbout }: Props): React.Node => {
   const [t] = useTranslation();
 
 
-  const scrollToHotelOptions = () => {
-    let hotelOptionsVew = document.getElementById("portfolio");
-    if (hotelOptionsVew) {
-      hotelOptionsVew.scrollIntoView({ behavior: "smooth" });
-    }
-  };
   
 
   return (
-    <div className="collapse navbar-collapse" id="navbarResponsive">
+    <div className={ `collapse navbar-collapse multi-collapse ${generalStyles.optionsCollapse}` } ref={ customRef }>
       <ul className="navbar-nav text-uppercase" id={ generalStyles.navbarLeft }>
         <li className="nav-item">
           <a className="nav-link js-scroll-trigger" onClick={ goToBooking }>{t("resTitle")}</a>
         </li>
         <li className="nav-item">
-          <a className="nav-link js-scroll-trigger" onClick={ scrollToHotelOptions }>{t("exploreTitle")}</a>
+          <a className="nav-link js-scroll-trigger" onClick={ goToOptions }>{t("exploreTitle")}</a>
         </li>
         <li className="nav-item">
           <a className="nav-link js-scroll-trigger" onClick={ goToNews }>{t("newsTitle")}</a>

@@ -1,6 +1,9 @@
 // @flow 
 import * as React from "react";
 import type { RouterHistory } from "react-router-dom";
+// css //
+import styles from "./css/footer.module.css";
+
 type Props = {
   history: RouterHistory
 }
@@ -14,7 +17,7 @@ const Footer = ({ history } : Props): React.Node => {
       <div className="container">
         <div className="row align-items-center">
           <div className="col-md-4">
-            <span className="copyright">Copyright &copy; Hotel Premier 2019</span>
+            <span className={ `${"copyright"} ${styles.copyright}` }>Copyright &copy; Hotel 2021</span>
           </div>
           <div className="col-md-4">
             <ul className="list-inline social-buttons">

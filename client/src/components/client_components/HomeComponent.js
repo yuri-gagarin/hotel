@@ -126,7 +126,7 @@ const HomeComponent = (props) => {
   }, [clientState])
    
   return (
-    <div style={{ width: "100vw", height: "auto"}}>
+    <div style={{ width: "100vw" }}>
       <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={_clearSuccessState} />
       <ErrorComponent appGeneralState={appGeneralState} clearAppError={_clearAppError} />
       <NavbarComponent />
