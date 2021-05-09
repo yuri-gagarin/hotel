@@ -32,6 +32,7 @@ import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
 import RoomsIndexContainer from './components/client_components/rooms/RoomsIndexContainer';
 import ServicesIndexComponent from "./components/client_components/services/ServicesIndexComponent";
 import DiningIndexComponent from './components/client_components/dining/DiningIndex';
+import { ClientNotFoundComponent } from './components/client_components/shared/ClientNotFoundComponent';
 //
 export const socket = io.connect("http://localhost:8080");
 
@@ -82,6 +83,7 @@ const AppRoutes = (props) => {
         <Route path={"/services"} exact={true} component={ServicesIndexComponent} />
         <Route path={'/dining'} exact={true} component={ DiningIndexComponent } />
         <Route path={appRoutes.HOME_ROUTE} exact={true} component={HomeComponent} />
+        <Route component={ ClientNotFoundComponent } />
        </Switch>
     </Router>
   );

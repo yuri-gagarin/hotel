@@ -1,0 +1,28 @@
+.notFoundDiv {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(64, 169, 196);
+  padding: 1.5em;
+  width: 50%;
+}
+.notFoundHeader {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+.notFoundExclamationIcon {
+  font-size: 4em;
+  color: orange;
+}
+.notFoundContent {
+  padding: 1.5em;
+}
