@@ -13,7 +13,7 @@ const Footer = ({ history } : Props): React.Node => {
     history.push("/admin/dash");
   }
   return(
-    <footer className="footer">
+    <footer className={`footer ${ styles.footerMain }`}>
       <div className="container">
         <div className="row align-items-center">
           <div className="col-md-4">

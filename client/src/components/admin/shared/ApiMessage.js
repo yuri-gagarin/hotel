@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import PropTypes from "prop-types";
 // semantic react imports //
 import { Icon, Message } from "semantic-ui-react";
 // 
@@ -24,21 +23,22 @@ const APIMessage = ({ currentLocalState } : { currentLocalState: LocalState }): 
   }, [ currentLocalState.loading ]);
 
   React.useEffect(() => {
-    if (!currentLocalState.loading && !currentLocalState.error && messageVisible) {
+    const { status, loading, error } = currentLocalState;
+    if (status === 200 && !loading && !error && messageVisible) {
       setTimeout(() => {
         handleDismiss();
-      }, 2000);
+      }, 1000);
     }
-  }, [ currentLocalState.loading, currentLocalState.error ]);
+  }, [ currentLocalState ]);
 
   const handleDismiss = () => {
     setMessageVisible(false);
   };
 
   return (
-    messageVisible 
+    messageVisible
     ? 
-      <div className={ styles.apiMessageContainer } id="message">
+      <div className={ styles.apiMessageContainer }>
         <Message icon onDismiss={ handleDismiss } negative={ error ? true : false } positive={ !error ? true : false }>
           {
             loading
@@ -61,10 +61,6 @@ const APIMessage = ({ currentLocalState } : { currentLocalState: LocalState }): 
     : 
       null
   );
-};
-
-APIMessage.propTypes = {
-  currentLocalState: PropTypes.object.isRequired
 };
 
 export default APIMessage;

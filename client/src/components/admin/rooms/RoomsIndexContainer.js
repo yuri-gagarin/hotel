@@ -55,12 +55,14 @@ const RoomsIndexContainer = (props: Props): React.Node => {
 
   const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<ConfirmDeleteModalState>({ confirmDelModalOpen: false, modelIdToDelete: "" });
 
-
   React.useEffect(() => {
     let mounted = true;
     if (mounted) _handleFetchRooms();
     return () => { mounted = false };
   }, []);
+
+  React.useEffect(() => {
+  }, [ roomState ])
   
   // online offline handlers //
   const handleTakeAllOnline = () => {

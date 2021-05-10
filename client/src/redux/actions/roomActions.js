@@ -268,7 +268,6 @@ export const handleFetchRooms = (dispatch: Dispatch<RoomAction>, options?: RoomF
       return Promise.resolve(true);
     })
     .catch((error) => {
-      console.log(error);
       dispatch(handleRoomError(error));
       return Promise.resolve(false);
     });

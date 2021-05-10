@@ -1,13 +1,13 @@
 .apiMessageContainer {
   position: fixed;
   left: 0%;
-  top: -100px;
-  right: 0%;
+  top: 50%;
+  left: 50%;
   z-index: 999;
+  transform: translate(-50%, -50%);
+  width: 50%;
   font-weight: bold;
-  opacity: 0;
-  animation: fadeInMessage 500ms forwards;
-  -webkit-animation: fadeInMessage 500ms forwards;
+  opacity: 1;  
 }
 
 @keyframes fadeInMessage {

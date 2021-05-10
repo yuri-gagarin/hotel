@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Menu } from 'semantic-ui-react';
+import { Button, Menu } from 'semantic-ui-react';
 import { withRouter } from "react-router-dom";
 
 import { adminRoutes } from "../../../routes/appRoutes";
@@ -79,6 +79,10 @@ const AdminNavMenu = (props) =>  {
     }
     setActiveItem(name);
   };
+
+  const goToHomepage = () => {
+    history.push("/");
+  };
   const _logoutUser = (e) => {
     // todo for logout functionality //
     logoutUser(e)
@@ -122,16 +126,9 @@ const AdminNavMenu = (props) =>  {
         onClick={handleMenuClick}
       />
       <Menu.Menu position='right'>
-        <Menu.Item 
-          name="regulate_users"
-          active={active === "regulate_users"}
-          onClick={handleMenuClick}
-        />
-        <Menu.Item
-          name='logout'
-          active={active === 'logout'}
-          onClick={_logoutUser}
-        />
+        <Button basic color="green" content="View Homepage" onClick={ goToHomepage } />
+        <Button basic color="blue" content="Regulate Users" />
+        <Button basic color="orange" content="Logout" />
       </Menu.Menu>
       
     </Menu>   

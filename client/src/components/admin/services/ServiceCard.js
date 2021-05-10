@@ -46,7 +46,7 @@ const ServiceCard = ({ service, openService, triggerDeleteService } : Props): Re
           <Button basic color='red' onClick={() => triggerDeleteService(serviceId)} icon="trash" content="Delete" />
         </div>
       </Card.Content>
-      <Card.Content>
+      <Card.Content> 
         <div className={ styles.serviceCardOnlineStatus} >
           <div className={ `${styles.serviceCardOnlineBlinker} ${ live ? styles.serviceOnline : styles.serviceOffline }` }>
           </div>

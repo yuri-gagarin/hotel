@@ -7,7 +7,7 @@ import { trimStringToSpecificLength } from "../../helpers/displayHelpers";
 
 const RoomHolder = (props) => {
   const { room, openRoom, deleteRoom } = props;
-  const roomId = room._id;
+  const { _id : roomId, live } = room;
   let firstRoomimagePath, imgSourcePath, imgPath;
   if (room.images[0]) {
     firstRoomimagePath = room.images[0].path;
@@ -19,7 +19,7 @@ const RoomHolder = (props) => {
  
   return (
     <Card >
-      <Card.Content textAlign={"center"}>
+      <Card.Content textAlign={"center"} style={{ height: "90%"}}>
         <Card.Header style={{ marginBottom: "0.5em" }}>
           <div className={ styles.headerTitle }>Room Type:</div>
           <div className={ styles.headerRoomType }>{room.roomType}</div>
@@ -34,7 +34,7 @@ const RoomHolder = (props) => {
           {trimStringToSpecificLength(room.description)}
         </Card.Description>
       </Card.Content>
-      <Card.Content extra>
+      <Card.Content extra style={{ height: "10%", display: "flex", alignItems: "center" }}>
         <div className='ui two buttons'>
           <Button basic color='green' onClick={() => openRoom(roomId)}>
             Open
@@ -42,6 +42,15 @@ const RoomHolder = (props) => {
           <Button basic color='red' onClick={() => deleteRoom(roomId)}>
             Delete
           </Button>
+        </div>
+      </Card.Content>
+      <Card.Content style={{ height: "10%"}}>
+        <div className={ styles.roomCardOnlineStatus} >
+          <div className={ `${styles.roomCardOnlineBlinker} ${ live ? styles.roomOnline : styles.roomOffline }` }>
+          </div>
+          <span className={ styles.roomCardOnlineStatusText }>
+            { live ? "Room is online and visible to clients" : "Room is offline" }
+          </span>
         </div>
       </Card.Content>
     </Card>

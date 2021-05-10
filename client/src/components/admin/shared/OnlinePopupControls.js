@@ -1,9 +1,7 @@
 // @flow
 import * as React from "react";
 // semantic ui react imports //
-import {
-  Button, Popup
-} from "semantic-ui-react";
+import { Button, Popup } from "semantic-ui-react";
 // flow types//
 import type { GenericModelData } from "../../../redux/reducers/_helpers/createReducer";
 import type { RoomData } from "../../../redux/reducers/rooms/flowTypes";
@@ -24,13 +22,17 @@ type Props = {|
 const OnlinePopupControls = ({ handleFormOpen, modelType, createdModels, takeAllOnline, takeAllOffline } : Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<{ createdModelsLength: number, numOnline: number, numOffline: number }>({ createdModelsLength: 0, numOnline: 0, numOffline: 0 });
 
-  React.useEffect(() => {
+  React.useEffect((): void => {
     let numOnline: number = 0; let numOffline: number = 0;
     for (const model of createdModels) {
-      model.live ? numOnline++ : numOffline ++;
+      model.live ? numOnline++ : numOffline++;
     }
     setLocalState({ ...localState, createdModelsLength: createdModels.length, numOnline, numOffline });
   }, [ createdModels ]);
+
+  const refreshData = (): void => {
+    window.location.reload();
+  };
 
   return (
     <div className={ styles.onlinePopupControlsWrapper }>
@@ -63,6 +65,17 @@ const OnlinePopupControls = ({ handleFormOpen, modelType, createdModels, takeAll
         <span>Number offline:</span>
         <div className={ `${styles.onlineOfflineCounter} ${styles.offline}` }><span>{ localState.numOffline }</span></div>
       </div>
+      <div className={ styles.miscControls }>
+        <Button.Group >
+          <Popup 
+              content={`Fetches new data`}
+              trigger={
+                <Button basic color="blue" content={`Refresh`}  onClick={ refreshData } />
+              }
+            />
+        </Button.Group>
+      </div>
+     
     </div>
   );
 };
