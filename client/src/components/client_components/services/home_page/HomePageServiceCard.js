@@ -6,22 +6,29 @@ import { Button } from "react-bootstrap";
 import styles from "./css/homePageServiceCard.module.css";
 // helpers //
 import { setImagePath } from "../../../helpers/displayHelpers";
+// type //
+import type { RoomData } from "../../../../redux/reducers/rooms/flowTypes";
+import type { ServiceData } from "../../../../redux/reducers/service/flowTypes";
+import type { DiningEntModelData } from "../../../../redux/reducers/dining_entertainment/flowTypes";
+
+
 
 type Props = {
   modelType: "room" | "dining" | "service",
+  modelData: RoomData | ServiceData | DiningEntModelData | typeof undefined,
   handleHomePageServiceClick: () => void,
   translateFunction: (stringTotranslate: string) => string
 };
 
-type TranslationConstants = {
-  titleTConst: string,
-  descTCont: string,
-  buttonTConst: string
+type TranslationConst = {
+  titleTConst: string;
+  descTCont: string;
+  buttonTConst: string;
 };
 
-export const HomePageServiceCard = ({ modelType, handleHomePageServiceClick, translateFunction } : Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<TranslationConstants>({ titleTConst: "", descTCont: "", buttonTConst: "" });
-
+export const HomePageServiceCard = ({ modelType, modelData, handleHomePageServiceClick, translateFunction } : Props): React.Node => {
+  const [ localState, setLocalState ] = React.useState<TranslationConst>({ titleTConst: "", descTCont: "", buttonTConst: "" });
+  const [ defaultImgUrl, setDefaultImgURL ] = React.useState<string>("");
   React.useEffect(() => {
     switch (modelType) {
       case "room": {
@@ -29,7 +36,7 @@ export const HomePageServiceCard = ({ modelType, handleHomePageServiceClick, tra
         break;
       };
       case "dining": {
-        setLocalState({ titleTConst: "dining_entertainment", descTCont: "restDesc", buttonTConst: "buttons.goToDiningBtn" });
+        setLocalState({  titleTConst: "dining_entertainment", descTCont: "restDesc", buttonTConst: "buttons.goToDiningBtn" });
         break;
       };
       case "service": {
@@ -39,6 +46,15 @@ export const HomePageServiceCard = ({ modelType, handleHomePageServiceClick, tra
     }
   }, []);
 
+  React.useEffect(() => {
+    if (modelData && modelData.images[0]) {
+      const defaultImagePath = modelData.images[0].path;
+      setDefaultImgURL(setImagePath(defaultImagePath));
+    } else {
+      setDefaultImgURL(setImagePath());
+    }
+  }, [ modelData ]);
+
   return (
     <div className={ styles.portfolioItemInner }>
       <a className={ `portfolio-link ${styles.portfolioItemPicLink}` } onClick={ handleHomePageServiceClick }> 
@@ -47,7 +63,7 @@ export const HomePageServiceCard = ({ modelType, handleHomePageServiceClick, tra
             <i className="fas fa-plus fa-3x"></i>
           </div>
         </div>
-        <img className={ styles.serviceCardImg } src={ setImagePath() } alt="Default img" />
+        <img className={ styles.serviceCardImg } src={ defaultImgUrl } alt="Default img" />
       </a>
       <div  className={ `portfolio-caption ${styles.portfolioItemPicDesc}` }>
         <h4>{ translateFunction(localState.titleTConst) }</h4>

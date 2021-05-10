@@ -26,6 +26,8 @@ import { socket } from "./../../App";
 import type { RouterHistory } from "react-router-dom";
 import type { RootState, Dispatch } from "../../redux/reducers/_helpers/createReducer";
 import type { RoomFetchOptions, RoomState, RoomAction } from "../../redux/reducers/rooms/flowTypes";
+import type { ServiceState } from "../../redux/reducers/service/flowTypes";
+import type { DiningEntertainmentState } from "../../redux/reducers/dining_entertainment/flowTypes";
 
 
 const handleNewClient = () => {
@@ -42,12 +44,15 @@ type Props = {
   ...WrapperProps;
   appGeneralState: any;
   clientState: any;
+  roomState: RoomState;
+  serviceState: ServiceState;
+  diningEntertainmentState: DiningEntertainmentState;
   _clearAppError: () => void;
   _clearSuccessState: () => void;
   _setGuestClient: (data: any) => void;
   _handleFetchRooms: (options?: RoomFetchOptions) => Promise<boolean>;
 };
-const HomeComponent = ({history, appGeneralState, clientState, _clearAppError, _clearSuccessState, _setGuestClient, _handleFetchRooms }: Props): React.Node => {
+const HomeComponent = ({history, appGeneralState, clientState, roomState, serviceState, diningEntertainmentState, _clearAppError, _clearSuccessState, _setGuestClient, _handleFetchRooms }: Props): React.Node => {
   const [successTimeout, setSuccessTimeout] = React.useState(null);
   const [errorTimeout, setErrorTimeout] = React.useState(null);
 
@@ -132,7 +137,7 @@ const HomeComponent = ({history, appGeneralState, clientState, _clearAppError, _
       <NavbarComponent />
       <MainHeaderComponent />
       <BookingForm />
-      <HomePageServices history={ history } />
+      <HomePageServices history={ history } roomState={ roomState } diningEntertainmentState={ diningEntertainmentState } serviceState={ serviceState } />
       <ContactForm />
       <MessageFormContainer />
       <Footer history={ history } />
@@ -145,7 +150,9 @@ const mapStateToProps = (state: RootState) => {
   return {
     clientState: state.clientState,
     appGeneralState: state.appGeneralState,
-    roomState: state.roomState
+    roomState: state.roomState,
+    serviceState: state.serviceState,
+    diningEntertainmentState: state.diningEntertainmentState
   };
 };
 const mapDispatchToProps = (dispatch: Dispatch<RoomAction>) => {

@@ -3,7 +3,7 @@ import { Button, Card, Image } from 'semantic-ui-react';
 // styles and css //
 import styles from "./css/roomHolder.module.css";
 // helpers //
-import { trimStringToSpecificLength } from "../../helpers/displayHelpers";
+import { trimStringToSpecificLength, setStringTranslation } from "../../helpers/displayHelpers";
 
 const RoomHolder = (props) => {
   const { room, openRoom, deleteRoom } = props;
@@ -22,7 +22,7 @@ const RoomHolder = (props) => {
       <Card.Content textAlign={"center"} style={{ height: "90%"}}>
         <Card.Header style={{ marginBottom: "0.5em" }}>
           <div className={ styles.headerTitle }>Room Type:</div>
-          <div className={ styles.headerRoomType }>{room.roomType}</div>
+          <div className={ styles.headerRoomType }>{setStringTranslation(room.roomType, "en")}</div>
         </Card.Header>
         <Image
           size='small'
@@ -31,7 +31,7 @@ const RoomHolder = (props) => {
         />
         <Card.Description>
           <p>Room Description:</p>
-          {trimStringToSpecificLength(room.description)}
+          {trimStringToSpecificLength(setStringTranslation(room.description, "en"))}
         </Card.Description>
       </Card.Content>
       <Card.Content extra style={{ height: "10%", display: "flex", alignItems: "center" }}>

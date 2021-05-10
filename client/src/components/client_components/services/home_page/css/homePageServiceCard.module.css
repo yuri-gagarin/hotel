@@ -13,8 +13,11 @@
   border-radius: 3px;
   height: 55%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
 .serviceCardImg {
+  height: 300px;
   width: 100%;
 }
 .portfolioItemPicDesc {

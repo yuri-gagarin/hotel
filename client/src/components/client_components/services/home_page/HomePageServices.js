@@ -7,18 +7,25 @@ import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { HomePageServiceCard } from "./HomePageServiceCard";
 // type //
 import type { RouterHistory } from "react-router-dom";
+import type { RoomState } from "../../../../redux/reducers/rooms/flowTypes";
+import type { ServiceState } from "../../../../redux/reducers/service/flowTypes";
+import type { DiningEntertainmentState } from "../../../../redux/reducers/dining_entertainment/flowTypes";
+
 // styles and css //
 import styles from "./css/homePageServices.module.css";
 
 type Props = {
-  history: RouterHistory
+  history: RouterHistory;
+  roomState: RoomState;
+  serviceState: ServiceState;
+  diningEntertainmentState: DiningEntertainmentState;
 };
 type LocalState = {
   showMobileView: boolean
 };
 
-export const HomePageServices = ({ history } : Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<LocalState>({ showMobileView:  false });
+export const HomePageServices = ({ history, roomState, serviceState, diningEntertainmentState }: Props): React.Node => {
+  const [ localState, setLocalState ] = React.useState<LocalState>({ showMobileView: false });
   const [ translateFunction, i18n ] = useTranslation();
 
   // event listeners //
@@ -70,17 +77,17 @@ export const HomePageServices = ({ history } : Props): React.Node => {
               <Carousel className={ styles.mobileViewCarousel } interval={ null }>
                 <Carousel.Item key="room" className={ styles.carouselItem }>
                   <div className={`portfolio-item ${styles.carouselItemInner}`} >
-                    <HomePageServiceCard modelType="room" handleHomePageServiceClick={ goToRooms } translateFunction={ translateFunction } />
+                    <HomePageServiceCard modelType="room" modelData={ roomState.createdRooms[0] } handleHomePageServiceClick={ goToRooms } translateFunction={ translateFunction } />
                   </div>
                 </Carousel.Item>
                 <Carousel.Item key="dining" className={ styles.carouselItem }>
                   <div className={`portfolio-item ${styles.carouselItemInner}`}>
-                    <HomePageServiceCard modelType="dining" handleHomePageServiceClick={ goToDiningEntertainment } translateFunction={ translateFunction } />
+                    <HomePageServiceCard modelType="dining"  modelData={ diningEntertainmentState.createdDiningEntModels[0] } handleHomePageServiceClick={ goToDiningEntertainment } translateFunction={ translateFunction } />
                   </div>
                 </Carousel.Item>
                 <Carousel.Item key="service" className={ styles.carouselItem }>
                   <div className={`portfolio-item ${styles.carouselItemInner}`}>
-                    <HomePageServiceCard modelType="service" handleHomePageServiceClick={ goToServices } translateFunction={ translateFunction } />
+                    <HomePageServiceCard modelType="service" modelData={ serviceState.createdServices[0] } handleHomePageServiceClick={ goToServices } translateFunction={ translateFunction } />
                   </div>
                 </Carousel.Item>
               </Carousel>
@@ -89,13 +96,13 @@ export const HomePageServices = ({ history } : Props): React.Node => {
           :
           <Row className={ `${styles.colViewRow}`}>
             <Col lg={4} md={6} className={`portfolio-item ${styles.itemCol}`}>
-              <HomePageServiceCard key="room" modelType="room" handleHomePageServiceClick={ goToRooms } translateFunction={ translateFunction } />
+              <HomePageServiceCard key="room" modelType="room" modelData={ roomState.createdRooms[0] } handleHomePageServiceClick={ goToRooms } translateFunction={ translateFunction } />
             </Col>
             <Col lg={4} md={6} className={`portfolio-item ${styles.itemCol}`}>
-              <HomePageServiceCard key="dining" modelType="dining" handleHomePageServiceClick={ goToDiningEntertainment } translateFunction={ translateFunction } />
+              <HomePageServiceCard key="dining" modelType="dining" modelData={ diningEntertainmentState.createdDiningEntModels[0] } handleHomePageServiceClick={ goToDiningEntertainment } translateFunction={ translateFunction } />
             </Col>
             <Col lg={4} md={6} className={`portfolio-item ${styles.itemCol}`}>
-              <HomePageServiceCard key="service" modelType="service" handleHomePageServiceClick={ goToServices } translateFunction={ translateFunction } />
+              <HomePageServiceCard key="service" modelType="service" modelData={ serviceState.createdServices[0] } handleHomePageServiceClick={ goToServices } translateFunction={ translateFunction } />
             </Col>
           </Row>
         } 
