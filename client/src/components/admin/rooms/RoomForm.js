@@ -5,6 +5,7 @@ import { Button, Checkbox, Form, Input, Popup, TextArea } from "semantic-ui-reac
 // additional component imports  //
 import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import FileInput from "./FileInput";
+import { FormAPILoader } from "../shared/FormAPILoader";
 import { FormErrorMessages } from "../shared/FormErrorMessages";
 import GenericImgModal from "../shared/GenericImgModal";
 import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
@@ -66,7 +67,7 @@ type FormErrorStrate = {
 
 const RoomForm = (props: Props): React.Node => {
   const { roomState, history, toggleEditModal } = props;
-  const { roomData, roomImages } = roomState;
+  const { loading, roomData, roomImages } = roomState;
   const { _handleUploadRoomImage, _handleDeleteRoomImage, _handleCreateNewRoom, _handleUpdateRoom, _handleDeleteRoom, _handleDeleteAllRoomImages } = props;
   // local form state //
   const [ localFormState, setLocalFormState ] = React.useState<LocalFormState>({ 
@@ -338,6 +339,7 @@ const RoomForm = (props: Props): React.Node => {
 
   return (
     <div className={ styles.roomFormWrapper }>
+      { loading ? <FormAPILoader /> : null }
       <ConfirmDeleteModal 
         open={ confirmModalState.confirmDelModalOpen }
         modelName={ "room" }
