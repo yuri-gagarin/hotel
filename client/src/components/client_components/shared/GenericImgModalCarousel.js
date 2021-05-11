@@ -1,7 +1,8 @@
 // @flow
 import * as React from "react";
 // ui bootstrap imports //
-import { Button, Image, Modal } from "react-bootstrap";
+import { Button, Image  } from "react-bootstrap";
+import { Modal } from "semantic-ui-react";
 import Slider from "react-slick";
 // styles and css //
 import styles from "./css/genericImgModal.module.css";
@@ -31,6 +32,7 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
 
   React.useEffect(() => {
     if (show && typeof imageIndex === "number") setIndex(imageIndex);
+    console.log(show)
   }, [ show ]);
   
   const handleSelect = (selectedIndex: number, e: any) => {
@@ -38,8 +40,8 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
   };
 
   return (
-    <Modal show={show} className={ styles.pictureModal } onHide={ closePictureModal }>
-      <Slider { ...settings } className={ styles.carouselSlider } >
+    <Modal open={ show } onClose={ closePictureModal } className={ styles.pictureModal } size="fullscreen">
+      <Slider { ...settings } className={ styles.carouselSlider }>
         {
           imgURLS.map((url, i) => {
             return (

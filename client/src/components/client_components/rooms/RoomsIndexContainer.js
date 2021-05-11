@@ -88,8 +88,15 @@ const RoomsIndexContainer = ({ history, roomState, _handleFetchRooms }: Props): 
   }
  
   return (
+    
     <div className={ styles.mainContainer }>
-      <NavbarComponent/>
+       <GenericImgModalCarousel 
+        show={ localComponentState.showModal }
+        closePictureModal={ closePictureModal }
+        imgURLS={ localComponentState.imgURLS } 
+        imageIndex={ localComponentState.imageIndex }
+      />
+      <NavbarComponent hidden={ localComponentState.showModal ? true : false } />
       <div className={ styles.parallax }>
         <div className={ styles.exploreBtnWrapper }>
           <AnimatedBorderButton onClick={ handleScrollToContnent } />
@@ -106,12 +113,8 @@ const RoomsIndexContainer = ({ history, roomState, _handleFetchRooms }: Props): 
           <AnimatedBorder />
         </div>
       </Row>
-      <GenericImgModalCarousel
-        show={ localComponentState.showModal } 
-        closePictureModal={closePictureModal }
-        imgURLS={ localComponentState.imgURLS } 
-        imageIndex={ localComponentState.imageIndex }
-      />
+     
+      
       {
         createdRooms.map((room, index) => {
           return (

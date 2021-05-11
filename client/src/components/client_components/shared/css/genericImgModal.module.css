@@ -1,8 +1,8 @@
 .pictureModal {
-  position: fixed !important;
-  height: 100vh;
-  width: 100vw;
-  padding: 0 !important;
+  display: flex !important;
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent !important;
 }
 .carouselSlider {
   height: 600px;
@@ -19,7 +19,7 @@
   width: 90%;
   overflow: hidden;
   margin: 0 auto;
-  background-color: black;
+  background: transparent;
 }
 .sliderImg {
   display: flex;
@@ -42,45 +42,20 @@
 
 /* media queries */
 @media only screen and (max-width: 550px) {
-  .carouselSlider {
-    height: 100vh;
-    position: fixed;
-    left: 0%;
-    top: 0%;
-    transform: translateX(0);
-    background-color: transparent;
-    background: black;
-  }
   .pictureModal {
-    background: black;
-    padding: 0;
+    background-color: black !important;
     position: relative;
+    align-items: center;
   }
   .carouselSlider {
-    height: 400px;
+    position: relative;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    background-color: black;
   }
   .sliderImg {
-    height: 400px;
+    width: 100%;
+    height: auto;
   }
-}
-
-@media only screen and (min-width: 551px) {
-  .pictureModal {
-    background: rgba(0, 0, 0, 0.637);
-  }
-  .pictureDialog {
-    position: fixed;
-    height: 90vh;
-    width: 80vw;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-  }
-  .imgCarousel {
-    width: 100vw;
-    height: 75vh;
-  } 
 }

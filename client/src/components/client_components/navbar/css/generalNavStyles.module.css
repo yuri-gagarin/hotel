@@ -15,6 +15,11 @@
   cursor: pointer;
 }
 
+/* hide if needed (ex pic modal open) */
+.hidden {
+  display: none;
+}
+
 
 @media only screen and (min-width: 992px) {
     .nonHomeScreenNav {

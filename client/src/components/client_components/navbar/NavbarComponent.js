@@ -10,9 +10,13 @@ import type { RouterHistory } from "react-router-dom";
 // 
 import styles from "./css/generalNavStyles.module.css";
 
-type Props = {
-  history: RouterHistory
+type WrapperProps = {
+  hidden?: boolean;
 };
+type Props = {
+  ...WrapperProps;
+  history: RouterHistory;
+}
 type ReactObjRef = {| current: ( HTMLDivElement | null ) |};
 
 const scrolltoElement = ({ elementId } : { elementId : string }): void => {
@@ -31,7 +35,7 @@ const closeMobileMenus = (refs: Array<ReactObjRef>): void => {
   }
 }
 
-const NavbarComponent = ({ history } : Props): React.Node => {
+const NavbarComponent = ({ history, hidden } : Props): React.Node => {
   const [ t, i18n ] = useTranslation();
   const [ navState, setNavState ] = React.useState<{ useHomeScreenNav: boolean, height: string }>({ useHomeScreenNav: false, height: "auto" });
   // refs //
@@ -128,7 +132,7 @@ const NavbarComponent = ({ history } : Props): React.Node => {
   };
 
   return (
-    <nav className={`navbar navbar-expand-lg navbar-dark fixed-top ${styles.clientNavbar} ${ navState.useHomeScreenNav ? "" : styles.nonHomeScreenNav}`} id="mainNav" style={{ height: navState.height }}>
+    <nav className={`navbar navbar-expand-lg navbar-dark fixed-top ${styles.clientNavbar} ${ navState.useHomeScreenNav ? "" : styles.nonHomeScreenNav} ${ hidden ? styles.hidden : "" }`} id="mainNav" style={{ height: navState.height }}>
       <a 
         className="navbar-brand js-scroll-trigger" 
         onClick={ handleGoHome }
@@ -193,4 +197,4 @@ const NavbarComponent = ({ history } : Props): React.Node => {
   );
 };
 
-export default (withRouter(NavbarComponent): React.AbstractComponent<{}>);
+export default (withRouter(NavbarComponent): React.AbstractComponent<WrapperProps>);
