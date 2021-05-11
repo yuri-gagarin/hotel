@@ -1,4 +1,4 @@
-// @flow //
+// @flow
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 // semantic ui imports //
@@ -49,11 +49,16 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
   }
   // lifecycle hooks //
   React.useEffect(() => {
-    const animatedRows = document.querySelectorAll(".animatedRoomRow");
+    const animatedRows = document.querySelectorAll(".animatedRoomPicsRow, .animatedRoomDetailsRow");
+    console.log(animatedRows)
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+      entries.forEach((entry, index) => {
         if (entry.intersectionRatio > 0) {
-          entry.target.classList.add("isVisible");
+          if (entry.target.classList.contains("animatedRoomPicsRow")) {
+            entry.target.classList.add("scaleAnimate");
+          } else {
+            entry.target.classList.add("fadeInAnimate");
+          }
         }
       });
     });

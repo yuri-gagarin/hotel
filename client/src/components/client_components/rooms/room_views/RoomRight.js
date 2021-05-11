@@ -26,7 +26,7 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
 
   return (
     <React.Fragment>
-      <Row ref={roomPicturesRef} className={ `animatedRoomRow ${ styles.carouselRow }`}>
+      <Row ref={roomPicturesRef} className={ `animatedRoomPicsRow ${ styles.carouselRow }`}>
         {
           showMobileRoomPicsView ?
           <MobileRoomPicsView roomImgPaths={ imageURLS } handleOpenImgModal={ handleOpenModal } />
@@ -71,7 +71,7 @@ export const RoomRight = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef
           </React.Fragment>
         }
       </Row>  
-      <Row ref={roomDescRef} className={`animatedRoomRow ${styles.descriptionContainerRow}`}>
+      <Row ref={roomDescRef} className={`animatedRoomDetailsRow ${styles.descriptionContainerRow}`}>
         <Col sm="12" xl="5" lg="6" className={ styles.roomDetailsColumn }>
           <div className={ styles.roomDetailsContainer }>
             <div className={ styles.roomDetailsHeader }><span>{t("rooms.details")}:</span></div>

@@ -1,4 +1,4 @@
-.animatedRoomRow {
+.animatedRoomPicsRow {
   /*
   opacity: 0;
   transform: translate(20vh);
@@ -6,17 +6,33 @@
   transition: opacity 0.6s ease-out, transform 1.2s ease-out;
   will-change: opacity, visibility;
   */
+  /*
   transform: translateX(50vw);
+  */
+  opacity: 0;
+  width: 100%;
+  transform: scaleX(0);
 }
-.animatedRoomRow.isVisible {
+.animatedRoomDetailsRow {
+  opacity: 0;
+}
+.animatedRoomPicsRow.scaleAnimate {
   /*
   opacity: 1;
   transform: none;
   visibility: visible;
   
   */
+  /*
   transform: translateX(0vw);
-  transition: all 0.5s ease-in-out;
+  */
+  transform: scaleX(1);
+  opacity: 1;
+  transition: all 0.75s ease-in-out;
+}
+.animatedRoomDetailsRow.fadeInAnimate {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
 }
 .imgOverlay {
   position: absolute;

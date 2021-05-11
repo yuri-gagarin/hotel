@@ -25,7 +25,7 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
   const [ t, i18n ] = useTranslation();
   return (
     <React.Fragment>
-      <Row ref={roomPicturesRef} className={ `animatedRoomRow ${ styles.carouselRow }`}>
+      <Row ref={roomPicturesRef} className={ `animatedRoomPicsRow ${ styles.carouselRow }`}>
         {
         showMobileRoomPicsView 
         ?
@@ -69,7 +69,7 @@ export const RoomLeft = ({ showMobileRoomPicsView, roomPicturesRef, roomDescRef,
         </React.Fragment>
         }
       </Row>  
-      <Row ref={roomDescRef} className={`animatedRoomRow ${styles.descriptionContainerRow}`}>
+      <Row ref={roomDescRef} className={`animatedRoomDetailsRow ${styles.descriptionContainerRow}`}>
         <Col sm="12" xl="5" lg="6" className={ styles.roomDescColumn }>
           <div className={ styles.roomDescDiv }>
             <p>{ description ?  setStringTranslation(description, i18n.language) : "No description to translate..." }</p>
