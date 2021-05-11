@@ -1,6 +1,8 @@
 .roomTitleRow {
   background-color: white;
   padding-top: 1em;
+  display: flex;
+  justify-content: center;
 }
 .titleRow {
   color: rgb(38, 42, 51);

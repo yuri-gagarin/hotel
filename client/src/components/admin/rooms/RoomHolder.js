@@ -1,21 +1,22 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import { Button, Card, Image } from 'semantic-ui-react';
+import { CardOnlineStatusBlinkers } from "../shared/CardOnlineStatusBlinkers";
 // styles and css //
 import styles from "./css/roomHolder.module.css";
 // helpers //
-import { trimStringToSpecificLength, setStringTranslation } from "../../helpers/displayHelpers";
+import { trimStringToSpecificLength, setStringTranslation, setImagePath } from "../../helpers/displayHelpers";
+// types //
+import type { RoomData } from "../../../redux/reducers/rooms/flowTypes";
 
-const RoomHolder = (props) => {
-  const { room, openRoom, deleteRoom } = props;
-  const { _id : roomId, live } = room;
-  let firstRoomimagePath, imgSourcePath, imgPath;
-  if (room.images[0]) {
-    firstRoomimagePath = room.images[0].path;
-    imgSourcePath = firstRoomimagePath.split("/");
-    imgPath = "/" + imgSourcePath[1] + "/" + imgSourcePath[2] + "/" + imgSourcePath[3];
-  } else {
-    imgPath = "/assets/images/roomStock1.jpeg";
-  }
+type Props = {
+  room: RoomData;
+  openRoom: (roomId: string) => void;
+  deleteRoom: (roomId: string) => void;
+};
+
+const RoomHolder = ({ room, openRoom, deleteRoom }: Props): React.Node => {
+  const { _id : roomId, live, images } = room;
  
   return (
     <Card >
@@ -27,7 +28,7 @@ const RoomHolder = (props) => {
         <Image
           size='small'
           rounded
-          src={imgPath}
+          src={ images.length > 0 ? setImagePath(images[0].path) : setImagePath() }
         />
         <Card.Description>
           <p>Room Description:</p>
@@ -44,14 +45,8 @@ const RoomHolder = (props) => {
           </Button>
         </div>
       </Card.Content>
-      <Card.Content style={{ height: "10%"}}>
-        <div className={ styles.roomCardOnlineStatus} >
-          <div className={ `${styles.roomCardOnlineBlinker} ${ live ? styles.roomOnline : styles.roomOffline }` }>
-          </div>
-          <span className={ styles.roomCardOnlineStatusText }>
-            { live ? "Room is online and visible to clients" : "Room is offline" }
-          </span>
-        </div>
+      <Card.Content style={{ height: "10%", display: "flex", alignItems: "center" }}>
+        <CardOnlineStatusBlinkers live={ live } />
       </Card.Content>
     </Card>
   );

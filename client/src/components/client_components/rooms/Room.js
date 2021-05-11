@@ -77,7 +77,6 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
 
   React.useEffect(() => {
     const { imageURLS } = setDefaultValues(room);
-    console.log(imageURLS)
     setImgURLSArr([ ...imageURLS ]);
   }, [ room ]);
 
@@ -89,7 +88,7 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
   return (
     <React.Fragment>
       <Row ref={roomTitleRef} className={ styles.roomTitleRow }>
-        <Col style={{padding: 0}}>
+        <Col style={{padding: 0}} sm="12" xl="10" lg="12">
           <div style={{ position: "relative", width: "100%", height: "50px", marginBottom: "1em" }} className={ styles.titleRow }>
             <div className={ styles.strikeThroughDiv }></div>
             <div className={ styles.roomType }>{ setStringTranslation(room.roomType, i18n.language)}</div>
@@ -101,8 +100,8 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
         ?
         <React.Fragment>
           <RoomLeft showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } handleOpenModal={ handleOpenModal } imageURLS={ imgURLSArr } />
-          <Row style={{ marginTop: "10px" }}>
-            <Col className={ styles.bookColumn }>
+          <Row style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
+            <Col className={ styles.bookColumn } sm="12" xl="10" lg="12">
               <Button variant="info">{t("buttons.bookNow")}</Button>
               <div className={ styles.bookPriceDiv }>{t("misc.from")}:<span>{ room.price }</span></div>
             </Col>
@@ -111,8 +110,8 @@ const Room = ({ index, room, openPictureModal, picModalState } : Props): React.N
         : 
         <React.Fragment>
           <RoomRight showMobileRoomPicsView={ localState.showMobileRoomPicsView } roomPicturesRef={ roomPicturesRef } roomDescRef={ roomDescRef } roomData={ room } handleOpenModal={ handleOpenModal } imageURLS={ imgURLSArr } />
-          <Row style={{ marginTop: "10px" }}>
-            <Col className={ styles.bookColumn }>
+          <Row style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
+            <Col className={ styles.bookColumn }  sm="12" xl="10" lg="12">
               <Button variant="info">{t("buttons.bookNow")}</Button>
               {
                 room.price 

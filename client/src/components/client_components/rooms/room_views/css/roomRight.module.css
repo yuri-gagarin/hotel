@@ -2,6 +2,8 @@
 .carouselRow {
   height: 300px;
   position: relative;
+  display: flex;
+  justify-content: center;
   box-sizing: content-box;
 }
 
@@ -103,8 +105,8 @@
 
 /* room description */
 .descriptionContainerRow {
-  border-left: 4px solid rgb(252, 219, 3);
-  border-bottom: 4px solid rgb(252, 219, 3);  
+  display: flex;
+  justify-content: center;
   padding-top: 1.5em;
   padding-bottom: 1.5em;
 }
@@ -116,6 +118,7 @@
   background-color: rgba(38, 42, 51, 0.082);
   padding: 0.5em;
   background-image: linear-gradient(#fdfbfb, #ebedee);
+  border-bottom: 4px solid rgb(252, 219, 3);  
 }
 .roomDescDiv {
   display: flex;
@@ -131,6 +134,8 @@
   display: flex;
   flex-direction: column;
   padding: 0;
+  border-bottom: 4px solid rgb(252, 219, 3);  
+  border-left: 4px solid rgb(252, 219, 3);
 }
 /* room options */
 .roomDetailsContainer {

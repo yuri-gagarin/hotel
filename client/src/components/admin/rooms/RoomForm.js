@@ -11,7 +11,6 @@ import GenericImgModal from "../shared/GenericImgModal";
 import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 import ModelDeleteBtn from "../shared/ModelDeleteBtn";
 import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
-import RoomImageThumb from "./RoomImages";
 
 // redux imports  //
 import { connect } from "react-redux";
