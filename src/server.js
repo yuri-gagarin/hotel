@@ -4,20 +4,21 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
 import bodyParser from "body-parser";
-import socketIo from 'socket.io';
-import redis from "redis";
+import { Server as SocketIOServer } from 'socket.io';
 import path from "path";
 import passport from "passport";
 import session from "express-session";
 import passportSrategy from "./controllers/helpers/authHelper";
 import combineRoutes from "./routes/combineRoutes";
 import cors from "cors";
+import RedisController from "./controllers/redisController";
+
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 const app = express();
 const router = express.Router();
 const PORT = process.env.PORT || 8080;
-let io;
+const io = new SocketIOServer();
 // directories //
 export const APP_HOME_DIRECTORY = path.join(__dirname, "..");
 // database and connection //
@@ -105,54 +106,51 @@ app.use(router);
 
 
 // app config //
-export const redisClient = redis.createClient({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASS || 'password',
-});
 app.on("dbReady", () => {
   const server = http.createServer(app);
   server.listen(PORT, () => {
     console.info(`App listening at Port: ${PORT}`);
   });
-  io = socketIo.listen(server);
-  io.set("origins","*:*");
-  io.attach(redisClient);
+  io.attach(server);
+
   // IO functionality //
-  io.sockets.on("connection", (socket) => {
-    socket.on("sendClientCredentials", (user) => {
+  io.on("connection", (socket) => {
+    console.log(118);
+    console.log("connection");
+
+    socket.on("receiveClientCredentials", (user) => {
+      const { _id: userId } = user;
+      const { socketId } = socket;
       // set client id with socket id in redis to prevent multiple connections //
-      redisClient.hmset(user._id, user._id, socket.id, (error) => {
-        if (error) {
-          console.error(error);
-          socket.emit("socketConnectionError");
-          return;
-        }
-        socket.emit("clientCredentialsReceived");
-      });
+      RedisController.setClientCredentials({ userId, socketId })
+        .then(() => {
+          socket.emit("clientCredentialsReceived");
+        })
+        .catch(() => {
+          socket.emit("socketConnectionError", { message: "Messenger connection error" });
+        })
     });
-    socket.on("clientLeaving",  (user) => {
+
+    socket.on("clientLeaving", (user) => {
       // remove client information from redis //
-      if (user._id)
-      redisClient.del(user._id, (error) => {
-        if (error) {
+      RedisController.removeClientCredentials(user)
+        .then(() => {
+          // emit to admins ? //
+        })
+        .catch((error) => {
           console.error(error);
-          socket.emit("socketConnectionError");
-          return;
-        }
-      });
-      
+          socket.emit("socketConnectionError", { message: "Somethin went wrong" });
+        })    
     });
     // listen for an administrator to connect //
     socket.on("adminConnected", (admin) => {
-      redisClient.hmset(admin._id, admin._id, socket.id, (error) => {
-        if (error) {
-          console.error(error);
-          socket.emit("socketConnectionError");
-          return;
-        }
-        socket.emit("adminCredentialsReceived");
-      })
+      RedisController.setAdminCredentials(admin)
+        .then(() => {
+          socket.emit("adminCredentialsReceived");
+        })
+        .catch((error) => {
+          console.log(error);
+        })
     })
     // keeping connection alive //
     socket.on("keepConnectionAlive", () => {
@@ -160,24 +158,18 @@ app.on("dbReady", () => {
     //
 
     // client is messaging //
-    socket.on("clientMessageSent", (data) => {
+    socket.on("newMessageSent", (data) => {
       // emits a an event to notify admin of a new message //
-      const { conversationId, userId, newMessage } = data;
-      const socketId = socket.id;
-      redisClient.hmset(userId, userId, socketId, (error) => {
-        if (error) {
+      RedisController.setNewMessage(data)
+        .then(() => {
+          // do something with it //
+        })
+        .catch((error) => {
           console.error(error);
-          return;
-        }
-        socket.broadcast.emit("newClientMessage", { conversationId: conversationId, newMessage: newMessage, socketId: socketId });
-      });
+        })
     });
     // end client messaging //
-    // admin response messaging //
-    socket.on("adminResponseSent", (data) => {
-      const { clientSocketId, newMessage } = data;
-      socket.broadcast.to(clientSocketId).emit("newAdminMessage", newMessage);
-    });
+
     // end admin response 
     socket.once("disconnect", () => {
       console.log("client disconnected");
