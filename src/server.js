@@ -111,7 +111,7 @@ app.on("dbReady", () => {
   server.listen(PORT, () => {
     console.info(`App listening at Port: ${PORT}`);
   });
-  io.attach(server);
+  io.attach(server, { cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] } });
 
   // IO functionality //
   io.on("connection", (socket) => {

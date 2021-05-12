@@ -30,9 +30,9 @@ import redis from "redis";
  * @param { ...RedisOpts } redisOpts - Connection options
  */
 const RedisController = ((redisOpts) => {
-  this.redisInstance;
+  let redisInstance;
   (() => {
-    this.redisInstance = redis.createClient({ ...redisOpts});
+    redisInstance = redis.createClient({ ...redisOpts});
   })();
 
   /**
@@ -44,7 +44,7 @@ const RedisController = ((redisOpts) => {
     const { userId, socketId } = clientData;
     const userKey = `CLIENT:${socketId}`;
     return new Promise((resolve, reject) => {
-      this.redisInstance.HMSET(userKey, userId, (err, res) => {
+      redisInstance.HMSET(userKey, userId, (err, res) => {
         if (err) reject(err);
         resolve(res);
       });
@@ -61,7 +61,7 @@ const RedisController = ((redisOpts) => {
     const userKey = `CLIENT_${socketId}:`;
 
     return new Promise((resolve, reject) => {
-      this.redisInstance.DEL(userKey, (err, res) => {
+      redisInstance.DEL(userKey, (err, res) => {
         if (err) reject(err);
         resolve(res);
       });
@@ -78,7 +78,7 @@ const RedisController = ((redisOpts) => {
     const userKey = `ADMIN_${socketId}:`;
 
     return new Promise((resolve, reject) => {
-      this.redisInstance.HMSET(userKey, userId, (err, res) => {
+      redisInstance.HMSET(userKey, userId, (err, res) => {
         if (err) reject(err);
         resolve(res);
       });
@@ -105,7 +105,7 @@ const RedisController = ((redisOpts) => {
       try {
         const stringifiedMsgData = JSON.stringify(newMessage);
 
-        this.redisInstance.LPUSH(conversationKey, stringifiedMsgData, (err, num) => {
+        redisInstance.LPUSH(conversationKey, stringifiedMsgData, (err, num) => {
           if (err) reject(err);
           resolve(num.toString());
         });
