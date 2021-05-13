@@ -1,4 +1,12 @@
-export const normalizeErrorMessages = (data) => {
+// @flow
+export type NormalizedAxiosErrRes = {
+  status: number;
+  responseMsg: string;
+  errorMessages: Array<string>;
+  error: any;
+};
+
+export const normalizeErrorMessages = (data: any): Array<string> => {
   // assumes an error object from the server //
   const errorMessages = [];
   if (data.error || (typeof data.error === "object")) {
@@ -11,8 +19,7 @@ export const normalizeErrorMessages = (data) => {
   return errorMessages;
 };
 
-export const setAxiosError = (err) => {
-  console.log(err);
+export const setAxiosError = (err: any): NormalizedAxiosErrRes => {
   if (err.response) {
     const { status, data, statusText } = err.response;
     const errorMessages = [];

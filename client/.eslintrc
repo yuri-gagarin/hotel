@@ -1,4 +1,7 @@
 {
+  "env": {
+    "browser": true
+  },
   "extends": [
     "plugin:flowtype/recommended"
   ],
@@ -8,7 +11,7 @@
   ],
   "rules": {
     "no-unused-vars": ["off", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
-    "space-before-type-colon": ["never"]
+    "space-before-type-colon": ["off"]
 
-}
+  }
 }

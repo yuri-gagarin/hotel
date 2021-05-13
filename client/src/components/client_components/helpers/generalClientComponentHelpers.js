@@ -1,21 +1,16 @@
 // @flow 
 import ObjectID from "bson-objectid";
+import type { ClientData } from "../../../redux/reducers/client/flowTypes";
 
-export type ClientData = {
-  _id: string;
-  name?: string;
-  email?: string;
-};
 type Callback = (data: ClientData) => void;
 
 export const setClient = (setGuestClient: Callback): Promise<void> => {
-  console.log(sessionStorage)
-  let storedClientId = sessionStorage.getItem("hotelGuestClientId");
-  let storedName = sessionStorage.getItem("hotelGuestClientName");
+  let storedClientId = window.sessionStorage.getItem("hotelGuestClientId");
+  let storedName = window.sessionStorage.getItem("hotelGuestClientName");
 
   if (!storedClientId) storedClientId = ObjectID().toHexString();
   if (!storedName) storedName = "Anonymous User";
 
-  setGuestClient({ _id: storedClientId, name: storedName });
+  setGuestClient({ _id: storedClientId, name: storedName, email: "" });
   return Promise.resolve();
 };

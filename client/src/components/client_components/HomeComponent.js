@@ -19,16 +19,17 @@ import { handleFetchRooms } from "../../redux/actions/roomActions";
 // react router //
 import { withRouter } from "react-router-dom";
 // additional imports //
-import { setGuestClient } from "../../redux/actions/clientActions";
+import { handleSetGuestClient } from "../../redux/actions/clientActions";
 import { navbarCollapseListener } from "../helpers/componentHelpers";
 import { socket } from "./../../App";
 import { setClient } from "./helpers/generalClientComponentHelpers";
 // types //
 import type { RouterHistory } from "react-router-dom";
-import type { RootState, Dispatch } from "../../redux/reducers/_helpers/createReducer";
+import type { RootState, Dispatch, AppAction } from "../../redux/reducers/_helpers/createReducer";
 import type { RoomFetchOptions, RoomState, RoomAction } from "../../redux/reducers/rooms/flowTypes";
 import type { ServiceState } from "../../redux/reducers/service/flowTypes";
 import type { DiningEntertainmentState } from "../../redux/reducers/dining_entertainment/flowTypes";
+import type { ClientData, ClientState, ClientAction } from "../../redux/reducers/client/flowTypes";
 
 type WrapperProps = {
   history: RouterHistory;
@@ -36,7 +37,7 @@ type WrapperProps = {
 type Props = {
   ...WrapperProps;
   appGeneralState: any;
-  clientState: any;
+  clientState: ClientState;
   roomState: RoomState;
   serviceState: ServiceState;
   diningEntertainmentState: DiningEntertainmentState;
@@ -142,9 +143,9 @@ const mapStateToProps = (state: RootState) => {
     diningEntertainmentState: state.diningEntertainmentState
   };
 };
-const mapDispatchToProps = (dispatch: Dispatch<RoomAction>) => {
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
   return {
-    _setGuestClient: (userData: any) => dispatch(setGuestClient(userData)),
+    _handleSetGuestClient: (clientData: ClientData) => handleSetGuestClient(dispatch, clientData),
     _clearAppError: () => dispatch(clearAppError()),
     _clearSuccessState: () => dispatch(clearSuccessState()),
     _handleFetchRooms: (options: RoomFetchOptions) => handleFetchRooms(dispatch, options)
