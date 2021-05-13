@@ -22,6 +22,7 @@ import { withRouter } from "react-router-dom";
 import { setGuestClient } from "../../redux/actions/clientActions";
 import { navbarCollapseListener } from "../helpers/componentHelpers";
 import { socket } from "./../../App";
+import { setClient } from "./helpers/generalClientComponentHelpers";
 // types //
 import type { RouterHistory } from "react-router-dom";
 import type { RootState, Dispatch } from "../../redux/reducers/_helpers/createReducer";
@@ -29,17 +30,9 @@ import type { RoomFetchOptions, RoomState, RoomAction } from "../../redux/reduce
 import type { ServiceState } from "../../redux/reducers/service/flowTypes";
 import type { DiningEntertainmentState } from "../../redux/reducers/dining_entertainment/flowTypes";
 
-
-const handleNewClient = () => {
-  return {
-    _id: ObjectID.generate(Date.now()).toString(),
-    firstName: "guest",
-    email: null
-  };
-};
 type WrapperProps = {
   history: RouterHistory;
-}
+};
 type Props = {
   ...WrapperProps;
   appGeneralState: any;
@@ -52,31 +45,34 @@ type Props = {
   _setGuestClient: (data: any) => void;
   _handleFetchRooms: (options?: RoomFetchOptions) => Promise<boolean>;
 };
-const HomeComponent = ({history, appGeneralState, clientState, roomState, serviceState, diningEntertainmentState, _clearAppError, _clearSuccessState, _setGuestClient, _handleFetchRooms }: Props): React.Node => {
-  const [successTimeout, setSuccessTimeout] = React.useState(null);
-  const [errorTimeout, setErrorTimeout] = React.useState(null);
+
+const HomeComponent = ({ history, appGeneralState, clientState, roomState, serviceState, diningEntertainmentState, _clearAppError, _clearSuccessState, _setGuestClient, _handleFetchRooms }: Props): React.Node => {
+  const [ successTimeout, setSuccessTimeout ] = React.useState(null);
+  const [ errorTimeout, setErrorTimeout ] = React.useState(null);
+
 
   const unloadWindowHandler = () => {
     socket.emit("clientLeaving", clientState);
   };
-  // set default client info on initial load //
+
+  // set default client info on initial load and load data //
   React.useEffect(() => {
     // automatic form clear for error //
-   navbarCollapseListener();
-   _handleFetchRooms({ live: true, limit: 1 })
-    .then((success) => {
-      if(success) {
-        // check for saved user data in localStorage //
-        const clientId = localStorage.getItem("hotelGuestClientId");
-        const firstName = localStorage.getItem("hotelGuestClientName");
-        if (clientId && firstName) {
-          _setGuestClient({ _id: clientId, firstName: firstName });
-        } else {
-          _setGuestClient(handleNewClient());
-        }
-      }
-    })
-   
+    window.addEventListener("beforeunload", unloadWindowHandler);
+    navbarCollapseListener();
+    setClient(_setGuestClient)
+      .then(() => {
+        _handleFetchRooms({ live: true, limit: 1 })
+      })
+      .then((success) => {
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    return () => {
+      window.removeEventListener("beforeunload", unloadWindowHandler);
+    }
   }, []); 
   // error and success component triggers //
   React.useEffect(() => {
@@ -113,22 +109,13 @@ const HomeComponent = ({history, appGeneralState, clientState, roomState, servic
       }
     }
   }, [ appGeneralState ]);
-  // set localStorage items if they do not exist //
-  // listener for closed window or navigation away //
+
   React.useEffect(() => {
-    const storedId = localStorage.getItem("hotelGuestClientId");
-    const storedName = localStorage.getItem("hotelGuestClientName");
-    const { _id, firstName } = clientState;
-    if ( _id && firstName ) {
-      if (!storedId || !storedName) {
-        localStorage.setItem("hotelGuestClientId", _id);
-        localStorage.setItem("hotelGuestClientName", firstName);
-      }
-      window.addEventListener("beforeunload", unloadWindowHandler);
-      // emit client information to the server //
-      socket.emit("sendClientCredentials",  clientState);
+    if (clientState._id) {
+      console.log(117);
+      console.log(clientState);
     }
-  }, [clientState])
+  }, [ clientState ]);
    
   return (
     <div style={{ width: "100vw" }}>

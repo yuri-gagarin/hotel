@@ -3,7 +3,9 @@ import type { ServiceAction, ServiceState, ServiceData,ServiceImgData } from "..
 import type { ContactPostAction, ContactPostState, ContactPostData } from "../contact_posts/flowTypes";
 import type { DiningEntModelAction, DiningEntertainmentState, DiningEntModelData, DiningImgData, MenuImageData } from "../dining_entertainment/flowTypes";
 import type { RoomAction, RoomState, RoomData, RoomImgData } from "../rooms/flowTypes";
-export type AppAction = ServiceAction | ContactPostAction | DiningEntModelAction | RoomAction;
+import type { ClientAction, ClientState } from "../client/flowTypes";
+
+export type AppAction = ServiceAction | ContactPostAction | DiningEntModelAction | RoomAction | ClientAction;
 export type Reducer<S, A: AppAction> = (S, A) => S;
 export type Dispatch<A> = (action: A) => any;
 
@@ -15,7 +17,7 @@ export type RootState = {
   // to add later //
   adminState: any,
   appGeneralState: any,
-  clientState: any
+  clientState: ClientState
 };
 
 export type GenericModelData = (ServiceData | DiningEntModelData | RoomData);

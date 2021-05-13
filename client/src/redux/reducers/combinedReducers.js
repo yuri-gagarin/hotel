@@ -4,7 +4,7 @@ import adminConversation from "./adminConversationsReducer";
 import diningEntertainmentReducer from "./dining_entertainment/diningEntertainmentReducer";
 import roomReducer from "./rooms/roomReducer";
 import appGeneralReducer from "./appGeneralReducer";
-import clientReducer from "./clientReducer";
+import clientReducer from "./client/clientReducer";
 import contactPostReducer from "./contact_posts/contactPostReducer";
 import conversationReducer from "./conversationReducer";
 import messageReducer from "./messageReducer";
