@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { 
-  Form,
-  Button
-} from "react-bootstrap";
-// redux imports //
+// @flow
+import * as React from "react";
+import { Button, Form } from "semantic-ui-react";
+// redux imports and actions  //
 import { connect } from "react-redux";
 import { fetchClientConversation } from "./../../../redux/actions/conversationActions";
 import MessageForm from "./MessageForm";
@@ -13,18 +11,14 @@ import { messageFormContainer } from "./style/styles";
 
 const MessageFormContainer = (props) => {
  
-  const [formOpen, setFormOpen] = useState({open: false});
-  const [conversationId, setConversationId] = useState(localStorage.getItem("conversationId"));
-  const  { handleOldConversation } = props;
-  useEffect(() => {
-    if (conversationId) {
-      handleOldConversation(conversationId);
-    }
-  }, []);
+  const [ formOpen, setFormOpen ] = React.useState({open: false});
+  const [conversationId, setConversationId] = React.useState(localStorage.getItem("conversationId"));
+
   const handleFormOpen = (e) => {
     // toggles between messaging form and back //
     const messageForm = document.getElementById("clientMessageForm");
-    messageForm.classList.add("transitionedForm");
+    if (messageForm) messageForm.classList.add("transitionedForm");
+
   }
   // render conditionally //
   return (
@@ -45,4 +39,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MessageFormContainer);
+export default (connect(mapStateToProps, mapDispatchToProps)(MessageFormContainer) :;

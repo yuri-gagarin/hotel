@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+// @flow
+import * as React from "react";
 import ReactDom from "react-dom";
-import PropTypes from "prop-types";
 // styles  and images //
-import { messageForm} from "./style/styles";
+import { messageForm } from "./style/styles";
 // additional compononets //
 import MessagesInitView from "./MessageInitView";
 import MessageView from "./MessageView";
@@ -11,33 +11,35 @@ import Message from "./Message";
 import { connect } from "react-redux";
 import { sendClientMessage } from "./../../../redux/actions/messageActions";
 import { updateConversation } from "./../../../redux/actions/conversationActions";
-import { setGuestClient } from "./../../../redux/actions/clientActions";
+import { handleSetGuestClient } from "./../../../redux/actions/clientActions";
 // socket io //
 import { socket } from "./../../../App";
+// types //
+import type { ClientState } from "../../../redux/reducers/client/flowTypes";
 
-const MessageForm = (props) => {
-  const [messageSounds, setMessageSounds] = useState({}); 
-  const messageFormRef = useRef(null);
+type Props = {
+  clientState: ClientState;
+  conversationState: any;
+  messageState: any;
+  handleFormOpen: () => void;
+  _handleSendClientMessage: () => void;
+  _handleUpdateConversation: () => void;
+  _handleSetGuestClient: () => void;
+}
+const MessageForm = ({ clientState, conversationState, messageState }: Props): React.Node => {
+  const [messageSounds, setMessageSounds] = React.useState({}); 
+  const messageFormRef = React.useRef(null);
   // redux state objects //
-  const { 
-    clientState,
-    conversationState,
-    messageState,
-  } = props;
-  // redux action dispatch functions //
-  const {
-    _sendClientMessage, _setGuestClient, _updateConversation
-  } = props;
   // additional functions //
   const { handleFormOpen } = props;
   const { messages, userMessaging, conversationId } = conversationState;
   const user = { ...clientState };
 
-  useEffect(() => {
+  React.useEffect(() => {
     socket.on("newAdminMessage", (data) => {
       // listen for new incoming messages from admin //
       const { clientSocketId, newMessage } = data;
-      _updateConversation({clientSocketId: clientSocketId, conversationId: newMessage.conversationId,
+      _handleIpdateConversation({clientSocketId: clientSocketId, conversationId: newMessage.conversationId,
                           message: newMessage, adminSocketId: null });
     });
   }, []);
@@ -121,24 +123,7 @@ const MessageForm = (props) => {
   );
   
 };
-// PropTypes validation //
-MessageForm.propTypes = {
-  clientState: PropTypes.object.isRequired,
-  conversationState: PropTypes.object.isRequired,
-  messageState: PropTypes.object.isRequired,
-  handleFormOpen: PropTypes.func.isRequired,
-  _sendClientMessage: PropTypes.func.isRequired,
-  _setGuestClient: PropTypes.func.isRequired
-};
 
-// redux connect //
-const mapStateToProps = (state) => {
-  return {
-    clientState: state.clientState,
-    conversationState: state.conversationState,
-    messageState: state.messageState
-  };
-};
 const mapDispatchToProps = (dispatch) => {
   return {
     _sendClientMessage: (conversationId, messageContent, user) => {
@@ -149,4 +134,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MessageForm);
+export default connect(null, mapDispatchToProps)(MessageForm);

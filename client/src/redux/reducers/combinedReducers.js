@@ -6,7 +6,7 @@ import roomReducer from "./rooms/roomReducer";
 import appGeneralReducer from "./appGeneralReducer";
 import clientReducer from "./client/clientReducer";
 import contactPostReducer from "./contact_posts/contactPostReducer";
-import conversationReducer from "./conversationReducer";
+import conversationReducer from "./conversations/conversationReducer";
 import messageReducer from "./messageReducer";
 import serviceReducer from "./service/serviceReducer";
 

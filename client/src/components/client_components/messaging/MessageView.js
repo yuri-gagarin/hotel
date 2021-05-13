@@ -1,3 +1,4 @@
+/*
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
@@ -38,3 +39,4 @@ MessageView.propTypes = {
 };
 
 export default MessageView;
+*/
