@@ -4,8 +4,9 @@ import type { ContactPostAction, ContactPostState, ContactPostData } from "../co
 import type { DiningEntModelAction, DiningEntertainmentState, DiningEntModelData, DiningImgData, MenuImageData } from "../dining_entertainment/flowTypes";
 import type { RoomAction, RoomState, RoomData, RoomImgData } from "../rooms/flowTypes";
 import type { ClientAction, ClientState } from "../client/flowTypes";
+import type { ConversationAction, ConversationState } from "../conversations/flowTypes";
 
-export type AppAction = ServiceAction | ContactPostAction | DiningEntModelAction | RoomAction | ClientAction;
+export type AppAction = ServiceAction | ContactPostAction | DiningEntModelAction | RoomAction | ClientAction | ConversationAction;
 export type Reducer<S, A: AppAction> = (S, A) => S;
 export type Dispatch<A> = (action: A) => any;
 
@@ -17,7 +18,8 @@ export type RootState = {
   // to add later //
   adminState: any,
   appGeneralState: any,
-  clientState: ClientState
+  clientState: ClientState,
+  conversationState: ConversationState
 };
 
 export type GenericModelData = (ServiceData | DiningEntModelData | RoomData);
@@ -25,6 +27,6 @@ export type GenericImgData = (DiningImgData | MenuImageData | RoomImgData | Serv
 
 export default function createReducer<S, A: *>(initialState: S, handlers: { [key: string]: Reducer<S, A> }): Reducer<S, A> {
   return function reducer(state: S = initialState, action: A): S {
-    return handlers.hasOwnProperty(action.type) ? handlers[action.type](state, action) : state;
+    return Object.prototype.hasOwnProperty.call(handlers, action.type) ? handlers[action.type](state, action) : state;
   };
-};
+}

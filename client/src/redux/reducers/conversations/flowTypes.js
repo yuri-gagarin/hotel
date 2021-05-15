@@ -3,59 +3,85 @@ export type ConversationState = {
   status: number;
   responseMsg: string;
   loading: boolean;
-  userMessaging: boolean;
+  messageSending: boolean;
+  messengerOpen: boolean;
   senderSocketId: string;
-  receiverSocketId: string;
   conversationId: string;
-  messages: Array<string>;
-  conversationError: any;
+  messages: Array<MessageData>;
+  error: any;
+  errorMessages: Array<string> | null;
+};
+
+export type MessageData = {
+  conversationId: string;
+  receiverSocketId: string | Array<string>;
+  sender: "client" | "admin";
+  content: string;
+  senderSocketId: string;
+  messageContent: string;
+  sentAt: string;
 };
 
 // action types //
+export type ConversationAPIRequest = {
+  +type: "ConversationAPIRequest";
+  payload: {
+    loading: boolean;
+    error: null;
+  }
+};
 export type OpenConversation = {
   +type: "OpenConversation";
   payload: {
+    status: number;
+    loading: boolean;
+    messengerOpen: boolean;
     conversationId: string;
     senderSocketId: string;
-    receiverSocketId: string;
-    messages: Array<string>;
+    messages: Array<MessageData>;
   }
 };
 export type CloseConversation = {
   +type: "CloseConversation";
   payload: {
-    conversationId: string;
-    senderSocketId: string;
-    receiverSocketId: string;
-    messages: Array<string>;
+    messengerOpen: boolean;
   }
 };
 export type UpdateConversation = {
   +type: "UpdateConversation";
   payload: {
+    status: number;
+    loading: boolean;
     conversationId: string;
     senderSocketId: string;
-    receiverSocketId: string;
-    messages: Array<string>;
+    messages: Array<MessageData>;
   }
 };
 export type DeleteConversation = {
   +type: "DeleteConversation";
   payload: {
+    status: number;
+    loading: boolean;
     conversationId: string;
     senderSocketId: string;
     receiverSocketId: string;
-    messages: Array<string>;
+    messages: Array<MessageData>;
   }
 };
 // messages //
 export type SendMessage = {
   +type: "SendMessage";
   payload: {
-    conversationId: string;
-    senderSocketId: string;
-    receiverSocketId: string;
-    message: string;
+    loading: boolean;
+    messageSending: boolean;
+  }
+};
+export type SendMessageSuccess = {
+  +type: "SendMessageSuccess";
+  payload: {
+    loading: boolean;
+    messageSending: boolean;
+    message: MessageData;
   }
 };
 export type ReceiveMessage = {
@@ -63,11 +89,20 @@ export type ReceiveMessage = {
   payload: {
     conversationId: string;
     senderSocketId: string;
-    receiverSocketId: string;
-    message: string;
+    message: MessageData;
+  }
+};
+// error handling //
+export type SetConversationError = {
+  +type: "SetConversationError";
+  payload: {
+    status: number;
+    responseMsg: string;
+    error: any;
+    errorMessages: Array<string>;
   }
 };
 
 
-export type ConversationAction = OpenConversation | CloseConversation | UpdateConversation | DeleteConversation |
-                                 SendMessage | ReceiveMessage;
+export type ConversationAction =  ConversationAPIRequest | OpenConversation | CloseConversation | UpdateConversation | DeleteConversation |
+                                 SendMessage | SendMessageSuccess | ReceiveMessage | SetConversationError;

@@ -5,12 +5,14 @@ const initialState: ConversationState = {
   status: 200,
   responseMsg: "",
   loading: false,
-  userMessaging: false,
+  messageSending: false,
+  messengerOpen: false,
   receiverSocketId: "",
   senderSocketId: "",
   conversationId: "",
   messages: [],
-  conversationError: null
+  error: null,
+  errorMessages: null
 };
 
 const conversationReducer = (state: ConversationState = initialState, action: ConversationAction): ConversationState => {
@@ -19,8 +21,10 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
     case "OpenConversation": {
       return {
         ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        messengerOpen: action.payload.messengerOpen,
         conversationId: action.payload.conversationId,
-        receiverSocketId: action.payload.receiverSocketId,
         senderSocketId: action.payload.senderSocketId,
         messages: [ ...action.payload.messages ],
         error: null
@@ -29,20 +33,18 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
     case "CloseConversation": {
       return {
         ...state,
-        conversationId: action.payload.conversationId,
-        receiverSocketId: action.payload.receiverSocketId,
-        senderSocketId: action.payload.senderSocketId,
-        messages: [...action.payload.messages ],
+        messengerOpen: action.payload.messengerOpen,
         error: null
       };
     }
     case "UpdateConversation": {
       return {
         ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
         conversationId: action.payload.conversationId,
-        receiverSocketId: action.payload.receiverSocketId,
         senderSocketId: action.payload.senderSocketId,
-        messages: [...action.payload.messages ], 
+        messages: [ ...action.payload.messages ], 
         error: null
       };
     }
@@ -52,25 +54,31 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         conversationId: action.payload.conversationId,
         receiverSocketId: action.payload.receiverSocketId,
         senderSocketId: action.payload.senderSocketId,
-        messages: [...action.payload.messages ], 
+        messages: [ ...action.payload.messages ], 
         error: null
       };
     }
     case "SendMessage": {
       return {
         ...state,
-        conversationId: action.payload.conversationId,
-        receiverSocketId: action.payload.receiverSocketId,
-        senderSocketId: action.payload.senderSocketId,
-        messages: [ ...state.messages, action.payload.message ], 
+        loading: action.payload.loading,
+        messageSending: action.payload.messageSending,
         error: null
       };
+    }
+    case "SendMessageSuccess": {
+      return {
+        ...state,
+        loading: action.payload.loading,
+        messageSending: action.payload.messageSending,
+        messages: [ ...state.messages, action.payload.message ],
+        error: null
+      }
     }
     case "ReceiveMessage": {
       return {
         ...state,
         conversationId: action.payload.conversationId,
-        receiverSocketId: action.payload.receiverSocketId,
         senderSocketId: action.payload.senderSocketId,
         messages: [ ...state.messages, action.payload.message ], 
         error: null
