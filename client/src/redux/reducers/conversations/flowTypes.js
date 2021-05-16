@@ -13,10 +13,10 @@ export type ConversationState = {
 };
 
 export type MessageData = {
+  _id: string;
   conversationId: string;
   receiverSocketId: string | Array<string>;
   sender: "client" | "admin";
-  content: string;
   senderSocketId: string;
   messageContent: string;
   sentAt: string;

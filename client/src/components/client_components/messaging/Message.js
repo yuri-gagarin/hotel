@@ -2,6 +2,8 @@
 import * as React from "react";
 import { Comment } from "semantic-ui-react";
 import { formatDate } from "./../../helpers/dateHelpers";
+// types //
+import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
 
 export const messageStyle = {
   borderRadius: "5px",
@@ -29,10 +31,13 @@ export const responseStyle = {
   clear: "both"
 }
 
-export const Message = (props) => {
-  const { content, read, sender, sentAt } = props.message;
-  const { clientState } = props;
-  if (clientState.firstName === sender) {
+type Props = {
+  messageData: MessageData;
+}
+
+export const Message = ({ messageData }: Props): React.Node => {
+  const { messageContent, sender, sentAt } = messageData;
+  if (sender ==="client") {
     return (
       <Comment style={messageStyle}>
         <Comment.Content>
@@ -40,11 +45,10 @@ export const Message = (props) => {
             { sender }
           </Comment.Author>
           <Comment.Text>
-            { content }
+            { messageData }
           </Comment.Text>
           <Comment.Metadata>
             <div>{ formatDate(sentAt, { military: true }) }</div>
-            <div>{ read }</div>
           </Comment.Metadata>
         </Comment.Content>
       </Comment>
@@ -57,11 +61,10 @@ export const Message = (props) => {
             { sender }
           </Comment.Author>
           <Comment.Text>
-            { content }
+            { messageData }
           </Comment.Text>
           <Comment.Metadata>
             <div>{ formatDate(sentAt, { military: true }) }</div>
-            <div>{ read }</div>
           </Comment.Metadata>
         </Comment.Content>
       </Comment>

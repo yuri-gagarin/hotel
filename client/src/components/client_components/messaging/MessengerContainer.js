@@ -3,7 +3,7 @@ import * as React from "react";
 import { Button, Form } from "semantic-ui-react";
 // redux imports and actions  //
 import { connect } from "react-redux";
-import { handleConversationOpen, handleConversationClose, handleFetchConversation, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage } from "./../../../redux/actions/conversationActions";
+import { handleConversationOpen, handleConversationClose, handleFetchConversation, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage } from "../../../redux/actions/conversationActions";
 import MessageForm from "./MessageForm";
 import OpenMessageForm from "./OpenMessageForm";
 // types //
@@ -13,7 +13,11 @@ import type { ConversationState, ConversationAction, MessageData } from "../../.
 
 import { messageFormContainer } from "./style/styles";
 
+type WrapperProps = {
+
+}
 type Props = {
+  ...WrapperProps;
   clientState: ClientState;
   conversationState: ConversationState;
   // non API calling redux actions //
@@ -23,25 +27,28 @@ type Props = {
   _handleFetchConversation: (conversationId: string) => Promise<boolean>;
   _handleSendMessage: (messageData: MessageData) => Promise<boolean>;
   _handleSendMessageSuccess: (messageData: MessageData) => Promise<boolean>;
-  _handleReceiveMesssage: (messageData: MessageData) => Promise<boolean>;
+  _handleReceiveMessage: (messageData: MessageData) => Promise<boolean>;
 };
 
-const MessageFormContainer = ({ clientState, conversationState, _handleConversationOpen, _handleConversationClose, _handleFetchConversation, _handleSendMessage }: Props): React.Node => {
+const MessengerContainer = ({ 
+    clientState, conversationState, _handleConversationOpen, _handleConversationClose,
+   _handleFetchConversation, _handleSendMessage, _handleSendMessageSuccess, _handleReceiveMessage }: Props): React.Node => {
  
   const handleClientMessengerOpen = (e) => {
     // toggles between messaging form and back //
-    const messageForm = document.getElementById("clientMessageForm");
-    if (messageForm) messageForm.classList.add("transitionedForm");
-
+   _handleConversationOpen(conversationState);
   }
   // render conditionally //
   return (
     <React.Fragment>
       <OpenMessageForm handleFormOpen={ _handleConversationOpen } />
       <MessageForm 
-        open={ conversationState.messengerOpen } 
-        handleClose={ _handleConversationClose }
-        handleSendMessage={ _handleSendMessage  }
+        clientState={ clientState }
+        conversationState={ conversationState }
+        handleConversationClose={ _handleConversationClose }
+        handleSendMessage={ _handleSendMessage }
+        handleSendMessageSuccess={ _handleSendMessageSuccess }
+        handleReceiveMessage={ _handleReceiveMessage }
       />
     </React.Fragment>
   );
@@ -54,8 +61,11 @@ const mapStateToProps = (state: RootState) => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<ConversationAction>) => {
   return {
-    _handleFetchConversation: (conversationId: string) => handleFetchConversation(dispatch, conversationId)
+    _handleFetchConversation: (conversationId: string) => handleFetchConversation(dispatch, conversationId),
+    _handleSendMessage: (messageData: MessageData) => handleSendMessage(dispatch, messageData),
+    _handleSendMessageSuccess: (messageData: MessageData) => handleSendMessageSuccess(dispatch, messageData), 
+    _handleReceiveMessage: (socketId: string, messageData: MessageData) => handleReceiveMessage(dispatch, socketId, messageData),
   };
 };
 
-export default (connect(mapStateToProps, mapDispatchToProps)(MessageFormContainer): React.AbstractComponent<Props>);
+export default (connect(mapStateToProps, mapDispatchToProps)(MessengerContainer): React.AbstractComponent<WrapperProps>);

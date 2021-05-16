@@ -8,7 +8,7 @@ import NavbarComponent from "./navbar/NavbarComponent";
 import MainHeaderComponent from "./main_header/MainHeaderComponent";
 import ContactForm from "./forms/ContactForm";
 import Footer from "./footer/Footer";
-import MessageFormContainer from "./messaging/MessageFormContainer";
+import MessengerContainer from "./messaging/MessengerContainer";
 import BookingForm from "./forms/BookingForm";
 import SuccessComponent from "../display_components/SuccessComponent";
 import ErrorComponent from "../display_components/ErrorComponent";
@@ -127,7 +127,7 @@ const HomeComponent = ({ history, appGeneralState, clientState, roomState, servi
       <BookingForm />
       <HomePageServices history={ history } roomState={ roomState } diningEntertainmentState={ diningEntertainmentState } serviceState={ serviceState } />
       <ContactForm />
-      <MessageFormContainer />
+      <MessengerContainer />
       <Footer history={ history } />
     </div>
   );
