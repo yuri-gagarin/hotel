@@ -5,8 +5,9 @@ import type { DiningEntModelAction, DiningEntertainmentState, DiningEntModelData
 import type { RoomAction, RoomState, RoomData, RoomImgData } from "../rooms/flowTypes";
 import type { ClientAction, ClientState } from "../client/flowTypes";
 import type { ConversationAction, ConversationState } from "../conversations/flowTypes";
+import type { AdminConversationAction, AdminConversationState } from "../admin_conversations/flowTypes";
 
-export type AppAction = ServiceAction | ContactPostAction | DiningEntModelAction | RoomAction | ClientAction | ConversationAction;
+export type AppAction = ServiceAction | ContactPostAction | DiningEntModelAction | RoomAction | ClientAction | ConversationAction | AdminConversationAction;
 export type Reducer<S, A: AppAction> = (S, A) => S;
 export type Dispatch<A> = (action: A) => any;
 
@@ -17,6 +18,7 @@ export type RootState = {
   diningEntertainmentState: DiningEntertainmentState,
   // to add later //
   adminState: any,
+  adminConversationState: AdminConversationState,
   appGeneralState: any,
   clientState: ClientState,
   conversationState: ConversationState
