@@ -28,7 +28,7 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         error: null
       };
     }
-    case "FetchAdminConversations": {
+    case "SetAdminConversations": {
       return {
         ...state,
         status: action.payload.status,
@@ -55,7 +55,7 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         status: action.payload.status,
         responseMsg: action.payload.responseMsg,
         loading: action.payload.loading,
-        activeConversation: action.payload.activeConversation,
+        activeConversation: action.payload.updatedActiveConversation,
         loadedAdminConversations: action.payload.updatedAdminConversations,
         numberOfConversations: action.payload.numberOfConversations,
         error: null

@@ -1,186 +1,183 @@
+// @flow 
 import axios from "axios";
-import store from '../store';
-import { conversationConstants } from "../constants";
-import { updateConversation } from "./conversationActions";
 import { setAxiosError } from "./helpers/errorHelpers";
-const { 
-  SET_ADMIN_CONVERSATIONS, UPDATE_ADMIN_CONVERSATIONS, ADMIN_CONVERSATIONS_ERROR, 
-  REMOVE_ADMIN_CONVERSATION, HANDLE_NEW_MESSAGE
-} = conversationConstants;
+import { generateEmptyAdminConversationModel } from "../reducers/_helpers/emptyDataGenerators";
+// types //
+import type { Dispatch } from "../reducers/_helpers/createReducer";
+import type { 
+  AdminConversationData, AdminConversationAction, AdminConversationState, 
+  OpenAdminConversation, CloseAdminConversation, AdminConversationAPIRequest, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
+  NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
+} from "../reducers/admin_conversations/flowTypes";
+import type { MessageData } from "../reducers/conversations/flowTypes";
 
-export const setAdminConversations = ({ status, responseMsg }, conversations = []) => {
+// non api actions //
+const openAdminConversation = (data: { activeConversation: AdminConversationData }): OpenAdminConversation => {
+  const { activeConversation } = data;
   return {
-    type: SET_ADMIN_CONVERSATIONS,
-    payload: {
-      status: status,
-      responseMsg: responseMsg,
-      currentConversationId: "",
-      loading: false,
-      conversations: [...conversations],
-      numberOfConversations: conversations.length,
-      error: null
-    }
+    type: "OpenAdminConversation",
+    payload: { activeConversation }
+  };
+};
+const closeAdminConversation = (data: { activeConversation: AdminConversationData }): CloseAdminConversation => {
+  const { activeConversation } = data;
+  return {
+    type: "CloseAdminConversation",
+    payload: { activeConversation }
+  };
+};
+// API related actions //
+const adminConversationAPIRequest = (): AdminConversationAPIRequest => {
+  return {
+    type: "AdminConversationAPIRequest",
+    payload: { loading: true }
+  };
+};
+const setAdminConversations = (data: { status: number, responseMsg: string, adminConversations: Array<AdminConversationData> }): SetAdminConversations => {
+  const { status, responseMsg, adminConversations } = data;
+  return {
+    type: "SetAdminConversations",
+    payload: { loading: false, status, responseMsg, adminConversations }
+  };
+};
+const createNewAdminConversation = (data: { status: number, responseMsg: string, newAdminConversation: AdminConversationData }): CreateNewAdminConveration => {
+  const { status, responseMsg, newAdminConversation } = data;
+  return {
+    type: "CreateNewAdminConversation",
+    payload: { loading: false, status, responseMsg, newAdminConversation }
+  };
+};
+const deleteAdminConversation = (data: { status: number, responseMsg: string, updatedActiveConversation: AdminConversationData, updatedAdminConversations: Array<AdminConversationData> }): DeleteAdminConversation => {
+  const { status, responseMsg, updatedActiveConversation, updatedAdminConversations } = data;
+  return {
+    type: "DeleteAdminConversation",
+    payload: { loading: false, status, responseMsg, updatedActiveConversation, updatedAdminConversations, numberOfConversations: updatedAdminConversations.length }
+  };
+};
+// messaging //
+const newClientMessage = (data: { status: number, responseMsg: string, activeConversation: AdminConversationData, updatedAdminConversations: Array<AdminConversationData> }): NewClientMessage => {
+  const { status, responseMsg, activeConversation, updatedAdminConversations } = data;
+  return {
+    type: "NewClientMessage",
+    payload: { loading: false, status, responseMsg, activeConversation, updatedAdminConversations }
+  };
+};
+const sendAdminMessage = (data: { status: number, responseMsg: string, activeConversation: AdminConversationData, updatedAdminConversations: Array<AdminConversationData> }): SendAdminMessage => {
+  const { status, responseMsg, activeConversation, updatedAdminConversations } = data;
+  return {
+    type: "SendAdminMessage",
+    payload: { loading: false, status, responseMsg, activeConversation, updatedAdminConversations }
+  };
+};
+// error handling //
+const setAdminConversationError = (err: any): SetAdminConversationError => {
+  const { status, responseMsg, error, errorMessages } = setAxiosError(err);
+  return {
+    type: "SetAdminConversationError",
+    payload: { status, loading: false, responseMsg, error, errorMessages }
+  };
+};
+const clearAdminConversationError = (): ClearAdminConversationError => {
+  return {
+    type: "ClearAdminConversationError",
+    payload: { responseMsg: "", error: null, errorMessages: [] }
   };
 };
 
-export const adminConversationsError = (error) => {
-  return {
-    type: ADMIN_CONVERSATIONS_ERROR,
-    payload: {
-      responseMsg: "an error occurred",
-      loading: false,
-      error: error
-    }
-  };
-};
 
-export const updateAdminConversations = (updatedConversations = []) => {
-  console.log("called update conversations")
-  return {
-    type: UPDATE_ADMIN_CONVERSATIONS,
-    payload: {
-      status: "ok",
-      responseMsg: "ok",
-      loading: false,
-      conversations: updatedConversations,
-      error: null
-    }
-  };
-};
 
-export const removeAdminConversation = (conversationId, responseMsg) => {
-  const adminConversationState = store.getState().adminConvState;
-  const updatedConversations = adminConversationState.conversations.filter((conversation) => {
-    return conversation._id != conversationId;
-  });
-  return {
-    type: REMOVE_ADMIN_CONVERSATION,
-    payload: {
-      status: "ok",
-      responseMsg: responseMsg,
-      loading: false,
-      conversations: [...updatedConversations],
-      error: null
-    }
-  };
+// exported actions to the components //
+export const handleOpenAdminConversation = (dispatch: Dispatch<AdminConversationAction>, conversationId: string, currentAdminConvState: AdminConversationState): void => {
+  const conversationToOpen: AdminConversationData = currentAdminConvState.loadedAdminConversations.filter((convData) => convData.conversationId === conversationId)[0];
+  dispatch(openAdminConversation({ activeConversation: { ...conversationToOpen } } ));
 };
-
-export const adminConversationError = ({ status, responseMsg, errorMessages, error }) => {
-  return {
-    type: ADMIN_CONVERSATIONS_ERROR,
-    payload: {
-      status: status,
-      responseMsg: responseMsg,
-      loading: false,
-      errorMessages: errorMessages,
-      error: error
-    }
-  };
+export const handleCloseAdminConversation = (dispatch: Dispatch<AdminConversationAction>): void => {
+  dispatch(closeAdminConversation({ activeConversation: generateEmptyAdminConversationModel() } ));
 };
-
-/**
- * Handles a new client message in admin screen and updates conversations
- * @param {function} dispatch - Redux dispatch function
- * @param {Object} data - A message data object 
- * @param {Object} adminConvState - Admin conversation state
- * @returns {Promise<Boolean>} A promise which resolves to true if successful
- */
-export const newClientMessage = (dispatch, data, adminConvState = {}) => {
-  const { conversationId, clientSocketId, newMessage } = data;
-  const { currentConversationId, conversations } = adminConvState;
-  let updatedConversations;
-  console.log(91)
-
-  // check if new message coming in is current active conversation //
-  if (currentConversationId == conversationId) {
-    updatedConversations = conversations.map((conversation) => {
-      if (conversation._id == conversationId) {
-        return {
-          ...conversation,
-          clientSocketId: clientSocketId,
-          lastMessage: {
-            ...newMessage
-          }
-        };
-      } else {
-        return conversation;
-      }
-    });
-    dispatch(updateAdminConversations(updatedConversations));
-    dispatch(updateConversation({ conversationId: conversationId, clientSocketId: conversationId, message: newMessage }));
-    return Promise.resolve(true);
-  }
-  // first check if conversation already exists //
-  const conversation = conversations.filter((conv) => conv._id == conversationId);
-  if (conversation && conversation.length === 1) {
-    // conversation already exists update with a new message //
-    updatedConversations = conversations.map((conversation) => {
-      if (conversation._id == conversationId) {
-        return {
-          ...conversation,
-          clientSocketId: clientSocketId,
-          lastMessage: {
-            ...newMessage
-          }
-        }
-      } else {
-        return conversation;
-      }
-    });
-    console.log(129)
-    console.log(updatedConversations);
-    dispatch(updateAdminConversations(updatedConversations));
-    return Promise.resolve(true);
-  } else {
-    // fetch a new conversation and set it //
-    console.log("should call")
-    const requestOptions = {
-      method: "get",
-      url: "/api/conversations/" + conversationId,
-    }
-    return axios(requestOptions)
-      .then((response) => {
-        const { status, data } = response;
-        const { responseMsg, conversation } = data;
-        updatedConversations = [ ...conversations,  { ...conversation, clientSocketId: clientSocketId, lastMessage: newMessage }];
-        console.log(updatedConversations);
-        dispatch(updateAdminConversations(updatedConversations));
-        return true;
-      })
-      .catch((err) => {
-        const error = setAxiosError(err);
-        console.error(err);
-        dispatch(adminConversationError(error));
-        return false;
-      });
-  }
-  
-};
-/**
- * Fetches all saved conversations in the database 
- * @param {function} dispatch - Redux dispatch function
- * @returns {Promise<Boolean>} A Promise which resolves to true or false
- */
-export const fetchAllConversations = (dispatch) => {
-  let status, data;
-  dispatch(conversationRequest());
-  const requestOptions = {
-    method: "get",
+// exported API related actions //
+export const handleFetchAdminConversations = (dispatch: Dispatch<AdminConversationAction>): Promise<boolean> => {
+  const axiosOpts = {
+    method: "GET",
     url: "/api/conversations"
   };
-  return axios(requestOptions)
+
+  return axios(axiosOpts)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, conversations } = data;
-      dispatch(conversationSuccess(null, []));
-      dispatch(setAdminConversations({ status, responseMsg }, conversations));
-      return true;
+      const { responseMsg, adminConversations }: { responseMsg: string, adminConversations: Array<AdminConversationData> } = data;
+      const stateUpdateData = { status, responseMsg, adminConversations };
+      dispatch(setAdminConversations(stateUpdateData));
+      return Promise.resolve(true);
     })
-    .catch((error) => {
-      console.error(error);
-      dispatch(conversationError(error));
-      return false;
+    .catch((err) => {
+      dispatch(setAdminConversationError(err));
+      return Promise.resolve(false);
+    });
+};
+export const handleCreateNewAdminConversation = (dispatch: Dispatch<AdminConversationAction>, newConversationData: AdminConversationData): Promise<boolean> => {
+  const axiosOpts = {
+    method: "POST",
+    url: "/api/conversation",
+    data: newConversationData
+  };
+
+  return axios(axiosOpts)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, newAdminConversation }: { responseMsg: string, newAdminConversation: AdminConversationData } = data;
+      dispatch(createNewAdminConversation({ status, responseMsg, newAdminConversation }));
+      return Promise.resolve(true);
+    })
+    .catch((err) => {
+      dispatch(setAdminConversationError(err));
+      return Promise.resolve(false);
+    });
+};
+export const handleDeleteAdminConversation = (dispatch: Dispatch<AdminConversationAction>, conversationIdToDelete: string, currentAdminConversationState: AdminConversationState): Promise<boolean> => {
+  const { activeConversation, loadedAdminConversations, numberOfConversations } = currentAdminConversationState;
+  const axiosOpts = {
+    method: "DELETE",
+    url: "/api/conversations/:conversationId"
+  };
+
+  return axios(axiosOpts) 
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, deletedAdminConversation }: { responseMsg: string, deletedAdminConversation: AdminConversationData } = data;
+      const updatedAdminConversations = loadedAdminConversations.filter((convData) => convData.conversationId !== deletedAdminConversation.conversationId);
+      const updatedActiveConversation = deletedAdminConversation.conversationId === activeConversation.conversationId ? generateEmptyAdminConversationModel() : { ...activeConversation };
+      dispatch(deleteAdminConversation({ status, responseMsg, updatedActiveConversation, updatedAdminConversations }));
+      return Promise.resolve(true);
+    })
+    .catch((err) => {
+      dispatch(setAdminConversationError(err));
+      return Promise.resolve(false);
     });
 };
 
-
+export const handleNewMessage = (dispatch: Dispatch<AdminConversationAction>, newMessageData: MessageData, currentAdminConversationState: AdminConversationState): Promise<boolean> => {
+  const { activeConversation, loadedAdminConversations } = currentAdminConversationState;
+  const { conversationId, sender } = newMessageData;
+  // 
+  let stateUpdateData: { status: number, responseMsg: string, activeConversation: AdminConversationData, updatedAdminConversations: Array<AdminConversationData> } = { status: 200, responseMsg: "", activeConversation: { ...activeConversation }, updatedAdminConversations: [] };
+  if (conversationId === activeConversation.conversationId) { 
+    stateUpdateData.activeConversation.messages = [ ...activeConversation.messages, newMessageData ];
+    stateUpdateData.updatedAdminConversations = loadedAdminConversations.map((conversationData) => {
+      if (conversationData.conversationId === conversationId) {
+        return { ...conversationData, messages: [ ...conversationData.messages, newMessageData ]};
+      } else {
+        return conversationData;
+      }
+    });
+  } else {
+    stateUpdateData.updatedAdminConversations = loadedAdminConversations.map((conversationData) => {
+      if (conversationData.conversationId === conversationId) {
+        return { ...conversationData, messages: [ ...conversationData.messages, newMessageData ]};
+      } else {
+        return conversationData;
+      }
+    })
+  }
+  sender === "admin" ? dispatch(sendAdminMessage(stateUpdateData)) : dispatch(newClientMessage(stateUpdateData));
+  return Promise.resolve(true);
+};

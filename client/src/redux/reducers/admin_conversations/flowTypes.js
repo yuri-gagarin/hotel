@@ -1,7 +1,7 @@
 // @flow 
 import type { MessageData } from "../conversations/flowTypes";
 
-export type AdminConversationState = {
+export type AdminConversationState = {|
   status: number;
   loading: boolean;
   responseMsg: string;
@@ -10,41 +10,47 @@ export type AdminConversationState = {
   numberOfConversations: number;
   error: any | null;
   errorMessages: Array<string>;
-};
+|};
 
-export type AdminConversationData = {
+export type AdminConversationData = {|
   conversationId: string;
   archived: boolean;
   receiverSocketId: string;
   newMessages: Array<MessageData>;
   messages: Array<MessageData>;
   createdAt: string;
-};
+|};
 
 // //
-type OpenAdminConversation = {
+export type OpenAdminConversation = {|
   +type: "OpenAdminConversation";
   +payload: {
     activeConversation: AdminConversationData;
   }
-};
-type CloseAdminConversation = {
+|};
+export type CloseAdminConversation = {|
   +type: "CloseAdminConversation";
   +payload: {
     activeConversation: AdminConversationData;
   }
-};
-
-type FetchAdminConversations = {
-  +type: "FetchAdminConversations";
+|};
+//
+export type AdminConversationAPIRequest = {|
+  +type: "AdminConversationAPIRequest";
+  +payload: {
+    loading: boolean;
+  }
+|};
+ export type SetAdminConversations = {|
+  +type: "SetAdminConversations";
   +payload: {
     status: number;
     responseMsg: string;
     loading: boolean;
     adminConversations: Array<AdminConversationData>;
   }
-};
-type CreateNewAdminConveration = {
+|};
+export type CreateNewAdminConveration = {|
   +type: "CreateNewAdminConversation";
   +payload: {
     status: number;
@@ -52,20 +58,20 @@ type CreateNewAdminConveration = {
     loading: boolean;
     newAdminConversation: AdminConversationData;
   }
-};
-type DeleteAdminConversation = {
+|};
+export type DeleteAdminConversation = {
   +type: "DeleteAdminConversation";
   +payload: {
     status: number;
     responseMsg: string;
     loading: boolean;
-    activeConversation: AdminConversationData;
+    updatedActiveConversation: AdminConversationData;
     updatedAdminConversations: Array<AdminConversationData>;
     numberOfConversations: number;
   }
 };
 
-type NewClientMessage = {
+export type NewClientMessage = {
   +type: "NewClientMessage";
   +payload: {
     status: number;
@@ -76,7 +82,7 @@ type NewClientMessage = {
   }
 };
 
-type SendAdminMessage = {
+export type SendAdminMessage = {
   +type: "SendAdminMessage";
   +payload: {
     status: number;
@@ -87,7 +93,7 @@ type SendAdminMessage = {
   }
 };
 
-type SetAdminConversationError = {
+export type SetAdminConversationError = {
   +type: "SetAdminConversationError";
   +payload: {
     status: number;
@@ -97,7 +103,7 @@ type SetAdminConversationError = {
     errorMessages: Array<string>;
   }
 };
-type ClearAdminConversationError = {
+export type ClearAdminConversationError = {
   +type: "ClearAdminConversationError";
   +payload: {
     responseMsg: string;
@@ -106,5 +112,5 @@ type ClearAdminConversationError = {
   }
 };
 
-export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | FetchAdminConversations | CreateNewAdminConveration |
+export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | AdminConversationAPIRequest | SetAdminConversations | CreateNewAdminConveration |
                                       CreateNewAdminConveration | DeleteAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;
