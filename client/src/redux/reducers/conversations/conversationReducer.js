@@ -72,7 +72,6 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         ...state,
         loading: action.payload.loading,
         messageSending: action.payload.messageSending,
-        messages: [ ...state.messages, action.payload.message ],
         error: null
       }
     }

@@ -54,6 +54,11 @@
   flex-direction: column;
   flex: 8;
   overflow-y: scroll;
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+.messengerContentView::-webkit-scrollbar {
+  display: none;
 }
 .messengerInputDiv {
   display: flex;

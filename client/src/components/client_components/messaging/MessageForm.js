@@ -30,6 +30,7 @@ type SoundState = {
   receiveMessageSound: HTMLAudioElement | null;
 };
 
+/*
 const mockMessageData: Array<MessageData> = [
   { _id: "1", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "client", messageContent: "fafaefe faefae faef aefaefea", sentAt: new Date().toISOString() },
   { _id: "2", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "client", messageContent: "fafaefe faefae faef aefaefea", sentAt: new Date().toISOString() },
@@ -38,8 +39,8 @@ const mockMessageData: Array<MessageData> = [
   { _id: "5", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() },
   { _id: "6", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() },
   { _id: "7", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() }
-
 ];
+*/
 
 const MessageForm = ({ open, clientState, conversationState, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage, handleConversationClose }: Props): React.Node => {
   const [ messageSounds, setMessageSounds ] = React.useState<SoundState>({ sendMessageSound: null, receiveMessageSound: null }); 
@@ -132,7 +133,7 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
       </div>
       <div className={ styles.messengerContentView } ref={messagesContentRef}>
           { 
-            mockMessageData.map((message) => {
+            messages.map((message) => {
               return (
                 <Message key={ message._id } messageData={ message } />
               )

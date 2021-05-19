@@ -76,10 +76,6 @@ const HomeComponent = ({ history, appGeneralState, clientState, roomState, servi
       .catch((error) => {
         console.log(error);
       });
-
-      socket.on("messageDelivered", () => {
-        console.log("messageDelivered");
-      });
       
   }, []); 
   // error and success component triggers //

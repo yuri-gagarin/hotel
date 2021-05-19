@@ -4,12 +4,16 @@ import { Button, Form } from "semantic-ui-react";
 // redux imports and actions  //
 import { connect } from "react-redux";
 import { handleConversationOpen, handleConversationClose, handleFetchConversation, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage } from "../../../redux/actions/conversationActions";
+// additional components //
 import MessageForm from "./MessageForm";
 import MessengerClosedComponent from "./MessengerClosedComp";
 // types //
 import type { Dispatch, RootState } from "../../../redux/reducers/_helpers/createReducer";
 import type { ClientState } from "../../../redux/reducers/client/flowTypes";
 import type { ConversationState, ConversationAction, MessageData } from "../../../redux/reducers/conversations/flowTypes";
+// socketio //
+import { socket } from "../../../App";
+
 type WrapperProps = {
 
 }
@@ -34,7 +38,13 @@ const MessengerContainer = ({
   const handleClientMessengerOpen = () => {
     // toggles between messaging form and back //
    _handleConversationOpen(conversationState);
-  }
+  };
+
+  React.useEffect(() => {
+    socket.on("messageDelivered", (messageData: MessageData) => {
+      return _handleSendMessageSuccess(messageData);
+    });
+  }, []);
 
   return (
     <React.Fragment>
