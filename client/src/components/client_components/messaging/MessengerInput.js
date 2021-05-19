@@ -5,7 +5,7 @@ import { Button, Input } from "semantic-ui-react";
 type Props = {
   sendMessage: (content: string) => Promise<boolean>;
 }
-const MessageView = ({ sendMessage }: Props): React.Node => {
+const MessengerInput = ({ sendMessage }: Props): React.Node => {
   const [ message, setMessage ] = React.useState<string>("");
 
   const handleInputChange = (e) => {
@@ -23,11 +23,11 @@ const MessageView = ({ sendMessage }: Props): React.Node => {
   };
   
   return (
-    <Input type="text" placeholder="message..." action onChange={handleInputChange} style={{ border: "2px solid red", width: "100%"}}>
+    <Input type="text" placeholder="message..." action onChange={handleInputChange} style={{ width: "100%"}}>
       <input />
       <Button onClick={handleMessageSend}>Send</Button>
     </Input>
   );
 };
 
-export default MessageView;
+export default MessengerInput;

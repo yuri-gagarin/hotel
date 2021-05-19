@@ -2,10 +2,9 @@
 import * as React from "react";
 import ObjectID from "bson-objectid";
 // styles  and images //
-import { messageForm } from "./style/styles";
 import styles from "./css/messageForm.module.css";
 // additional compononets //
-import MessageView from "./MessageView";
+import MessengerInput from "./MessengerInput";
 import Message from "./Message";
 // socket io //
 import { socket } from "./../../../App";
@@ -104,7 +103,9 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
   return (
     <div className={ `${styles.messageForm} ${ open ? styles.messageFormDisplayed : ""}` } ref={messageFormRef}>
       <div className={ styles.messageFormControls } onClick={ closeMessageForm }>
-        <i className={ `far fa-times-circle ${ styles.messageFormCloseIcon }` }></i>
+        <div className={ styles.messageFormControlsWrapper }>
+          <i className={ `far fa-times-circle ${ styles.messageFormCloseIcon }` }></i>
+        </div>
       </div>
       <div className={ styles.messengerContentView }>
           { 
@@ -119,10 +120,13 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
             })
           }
       </div>
-      <MessageView 
-        sendMessage={ sendMessage }
-        clientState={clientState}
-      />
+      <div className={ styles.messengerInputDiv }>
+        <MessengerInput
+          sendMessage={ sendMessage }
+          clientState={clientState}
+        />
+      </div>
+      
     </div>
   );
   

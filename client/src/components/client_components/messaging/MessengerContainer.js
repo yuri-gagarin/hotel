@@ -5,14 +5,11 @@ import { Button, Form } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { handleConversationOpen, handleConversationClose, handleFetchConversation, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage } from "../../../redux/actions/conversationActions";
 import MessageForm from "./MessageForm";
-import OpenMessageForm from "./OpenMessageForm";
+import MessengerClosedComponent from "./MessengerClosedComp";
 // types //
 import type { Dispatch, RootState } from "../../../redux/reducers/_helpers/createReducer";
 import type { ClientState } from "../../../redux/reducers/client/flowTypes";
 import type { ConversationState, ConversationAction, MessageData } from "../../../redux/reducers/conversations/flowTypes";
-
-import { messageFormContainer } from "./style/styles";
-
 type WrapperProps = {
 
 }
@@ -41,7 +38,7 @@ const MessengerContainer = ({
   // render conditionally //
   return (
     <React.Fragment>
-      <OpenMessageForm handleFormOpen={ handleClientMessengerOpen } />
+      <MessengerClosedComponent handleFormOpen={ handleClientMessengerOpen } />
       <MessageForm 
         open={ conversationState.messengerOpen }
         clientState={ clientState }
