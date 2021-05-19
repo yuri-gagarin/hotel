@@ -73,7 +73,6 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
       messageContent: content,
       sentAt: new Date(Date.now()).toISOString(),
     };
-    console.log(newMessageData)
     return handleSendMessage(newMessageData)
       .then((success) => {
         if (success) {
@@ -127,8 +126,8 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
       </div>
       <div className={ styles.messengerInputDiv }>
         <MessengerInput
+          loading={ conversationState.messageSending }
           sendMessage={ sendMessage }
-          clientState={clientState}
         />
       </div>
       

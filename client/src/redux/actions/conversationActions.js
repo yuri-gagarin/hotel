@@ -125,7 +125,7 @@ export const handleFetchConversation = (dispatch: Dispatch<ConversationAction>, 
 /* send - receive messages */
 export const handleSendMessage = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
   if (socket.connected) {
-    socket.emit("newMessageSent", { messageData, socketId: socket.id });
+    socket.emit("newMessageSent", messageData);
     dispatch(sendMessage());
     return Promise.resolve(true);
   } else {

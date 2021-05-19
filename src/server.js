@@ -166,9 +166,10 @@ app.on("dbReady", () => {
     // client is messaging //
     socket.on("newMessageSent", (data) => {
       // emits a an event to notify admin of a new message //
-      RedisController.setNewMessage(data)
+      return RedisController.setNewMessage(data)
         .then(() => {
           // do something with it //
+          io.to(socket.id).emit("messageDelivered");
         })
         .catch((error) => {
           console.error(error);
@@ -182,8 +183,7 @@ app.on("dbReady", () => {
       const { id : socketId } = socket;
       // remove from redis mem //
       return RedisController.removeClientCredentials({ socketId })
-        .then((data) => {
-          console.log(data);
+        .then(() => {
         })
         .catch((err) => {
           console.error(err);

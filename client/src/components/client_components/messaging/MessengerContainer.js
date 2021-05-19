@@ -35,7 +35,7 @@ const MessengerContainer = ({
     // toggles between messaging form and back //
    _handleConversationOpen(conversationState);
   }
-  // render conditionally //
+
   return (
     <React.Fragment>
       <MessengerClosedComponent handleFormOpen={ handleClientMessengerOpen } />

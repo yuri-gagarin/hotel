@@ -29,6 +29,7 @@
   flex-direction: row;
   align-items: center;
   flex: 1;
+  background-color: rgb(223, 222, 222);
 }
 .messageFormControlsWrapper {
   background-color: rgb(63, 168, 63);
@@ -51,8 +52,6 @@
 .messengerContentView {
   display: flex;
   flex: 8;
-  border-top: 1px solid grey;
-  border-bottom: 1px solid grey;
 }
 .messengerInputDiv {
   display: flex;

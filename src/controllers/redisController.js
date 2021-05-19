@@ -13,13 +13,16 @@ import redis from "redis";
  */
 /**
  * @typedef {Object} NewMessage
- * @property {string} senderId - Message sender user id
+ * @property {string} _id - Message id
+ * @property {string} conversationId - Message conversation id
  * @property {string} senderSocketId - Message sender socket id
- * @property {string} content - Message content
+ * @property {string} sender - Message sender type
+ * @property {string} messageContent - Message content
+ * @property {string} sentAt - Message sent at date ISO string
  */
 /**
  * @typedef {Object} MessageData
- * @property {string} conversationID - Client convesation id
+ * @property {string} conversationId - Client convesation id
  * @property {string} userId - Client user id
  * @property {NewMessage} newMessage - Client newMessage object
  */
@@ -86,30 +89,33 @@ const RedisController = ((redisOpts) => {
   };
 
   /**
-   * @param {MessageData} messageData - message data coming from client socketIO connection
+   * @param {NewMessage} messageData - message data coming from client socketIO connection
    * @returns {Promise<string>}
    */
   const setNewMessage = (messageData) => {
     let conversationKey;
-    const { conversationId, userId, newMessage } = messageData;
+    const { conversationId, senderSocketId, messageContent } = messageData;
 
-    if (!userId || !newMessage) {
+    if (!senderSocketId || !messageContent) {
       return Promise.reject(new Error("Invalid data"));
     }
 
     if (!conversationId) {
-      conversationKey = `CONVERSATION_${userId}:`;
+      conversationKey = `CONVERSATION_${senderSocketId}`;
     }
 
-    return Promise.resolve((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       try {
-        const stringifiedMsgData = JSON.stringify(newMessage);
+        const stringifiedMsgData = JSON.stringify(messageData);
 
         redisInstance.LPUSH(conversationKey, stringifiedMsgData, (err, num) => {
           if (err) reject(err);
-          resolve(num.toString());
+          console.log(113)
+          console.log(num)
+          resolve(num);
         });
       } catch (error) {
+        console.error(error)
         reject(error);
       }
     });
