@@ -41,10 +41,11 @@ const RedisController = ((redisOpts) => {
    * @returns {Promise<string>}
    */
   const setClientCredentials = (clientData) => {
-    const { userId, socketId } = clientData;
-    const userKey = `CLIENT:${socketId}`;
+    const { userId, name, socketId } = clientData;
+    const userKey = `CLIENT_${socketId}`;
+
     return new Promise((resolve, reject) => {
-      redisInstance.HMSET(userKey, userId, (err, res) => {
+      redisInstance.HMSET(userKey, [ "userId", userId, "userName", name ], (err, res) => {
         if (err) reject(err);
         resolve(res);
       });
@@ -57,9 +58,8 @@ const RedisController = ((redisOpts) => {
    * @returns {Promise<boolean>}
    */
   const removeClientCredentials = (clientData) => {
-    const { socketId  } = clientData;
-    const userKey = `CLIENT_${socketId}:`;
-
+    const { socketId } = clientData;
+    const userKey = `CLIENT_${socketId}`;
     return new Promise((resolve, reject) => {
       redisInstance.DEL(userKey, (err, res) => {
         if (err) reject(err);

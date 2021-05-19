@@ -6,7 +6,6 @@ import { deleteFile } from "./helpers/apiHelpers";
 export default {
   getRooms: (req, res) => {
     const options = req.query.options ? JSON.parse(req.query.options) : null;
-    console.log(options);
     if (options && typeof options === "object") {
       if (options.live) {
         return Room.find({ live: true }).limit(options.limit ? options.limit : null)

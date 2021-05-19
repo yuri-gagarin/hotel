@@ -34,7 +34,7 @@ import ServicesIndexComponent from "./components/client_components/services/Serv
 import DiningIndexComponent from './components/client_components/dining/DiningIndex';
 import { ClientNotFoundComponent } from './components/client_components/shared/ClientNotFoundComponent';
 //
-export const socket = io.connect("http://192.168.0.101:8080");
+export const socket = io.connect("http://localhost:8080");
 
 
 const AuthorizedRoute = ({ loggedIn, component, path, history }) => {

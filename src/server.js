@@ -115,25 +115,31 @@ app.on("dbReady", () => {
 
   // IO functionality //
   io.on("connection", (socket) => {
-    console.log(118);
     console.log("connection");
 
-    socket.on("receiveClientCredentials", (user) => {
-      const { _id: userId } = user;
-      const { socketId } = socket;
+    socket.on("receiveClientCredentials", (userState) => {
+      const { _id: userId, name } = userState;
+      const { id: socketId } = socket;
+      if (!userId || !name) {
+        socket.emit("generalSocketError", ({ message: "Could not resolve user" }));
+        return;
+      }
       // set client id with socket id in redis to prevent multiple connections //
-      RedisController.setClientCredentials({ userId, socketId })
+      return RedisController.setClientCredentials({ userId, socketId, name })
         .then(() => {
           socket.emit("clientCredentialsReceived");
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err)
           socket.emit("socketConnectionError", { message: "Messenger connection error" });
         })
     });
 
-    socket.on("clientLeaving", (user) => {
+    socket.on("clientLeaving", (userState) => {
       // remove client information from redis //
-      RedisController.removeClientCredentials(user)
+      console.log("client leaving event")
+      const { _id: userId } = userState;
+      RedisController.removeClientCredentials({ userId })
         .then(() => {
           // emit to admins ? //
         })
@@ -173,6 +179,15 @@ app.on("dbReady", () => {
     // end admin response 
     socket.once("disconnect", () => {
       console.log("client disconnected");
+      const { id : socketId } = socket;
+      // remove from redis mem //
+      return RedisController.removeClientCredentials({ socketId })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.error(err);
+        })
     })
     socket.emit("hello", "hello there");
 

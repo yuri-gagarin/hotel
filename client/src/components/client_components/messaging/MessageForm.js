@@ -72,12 +72,17 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
       sender: "client",
       messageContent: content,
       sentAt: new Date(Date.now()).toISOString(),
-    }
+    };
+    console.log(newMessageData)
     return handleSendMessage(newMessageData)
       .then((success) => {
         if (success) {
           if (messageSounds.sendMessageSound) {
-            messageSounds.sendMessageSound.play();
+            try {
+              messageSounds.sendMessageSound.play();
+            } catch (error) {
+              console.log(error);
+            }
           }
         }
         return Promise.resolve(true);

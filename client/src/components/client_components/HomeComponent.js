@@ -52,14 +52,20 @@ const HomeComponent = ({ history, appGeneralState, clientState, roomState, servi
   const [ errorTimeout, setErrorTimeout ] = React.useState(null);
 
 
-  const unloadWindowHandler = () => {
+  /*
+  const unloadWindowHandler = (e: any): void => {
+    //e.preventDefault();
     socket.emit("clientLeaving", clientState);
   };
+  */
+
+  window.onbeforeunload = () => {
+    socket.emit("clientLeaving", clientState)
+  }
 
   // set default client info on initial load and load data //
   React.useEffect(() => {
     // automatic form clear for error //
-    window.addEventListener("beforeunload", unloadWindowHandler);
     navbarCollapseListener();
     setClient(_handleSetGuestClient)
       .then(() => {
@@ -70,10 +76,6 @@ const HomeComponent = ({ history, appGeneralState, clientState, roomState, servi
       .catch((error) => {
         console.log(error);
       });
-
-    return () => {
-      window.removeEventListener("beforeunload", unloadWindowHandler);
-    }
   }, []); 
   // error and success component triggers //
   React.useEffect(() => {
@@ -112,9 +114,8 @@ const HomeComponent = ({ history, appGeneralState, clientState, roomState, servi
   }, [ appGeneralState ]);
 
   React.useEffect(() => {
-    if (clientState._id) {
-      console.log(117);
-      console.log(clientState);
+    if (clientState._id && clientState.name) {
+      socket.emit("receiveClientCredentials", clientState);
     }
   }, [ clientState ]);
    
