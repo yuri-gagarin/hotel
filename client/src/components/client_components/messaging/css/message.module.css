@@ -1,0 +1,22 @@
+.messageWrapperDiv {
+  display: flex;
+  padding: 0 0.25em;
+  margin-bottom: 0.25em;
+}
+.messageDiv {
+  display: flex;
+  max-width: 66%;
+  padding: 0.5em 1em;
+  color: white;
+}
+
+.messageLeft {
+  align-self: flex-start;
+  background-color: rgb(92, 148, 90);
+  border-radius: 10px 10px 10px 0px;
+}
+.messageRight {
+  margin-left: auto;
+  background-color: rgb(67, 141, 201);
+  border-radius: 10px 10px 0px 10px;
+}

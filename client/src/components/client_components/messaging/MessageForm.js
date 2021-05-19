@@ -30,9 +30,21 @@ type SoundState = {
   receiveMessageSound: HTMLAudioElement | null;
 };
 
+const mockMessageData: Array<MessageData> = [
+  { _id: "1", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "client", messageContent: "fafaefe faefae faef aefaefea", sentAt: new Date().toISOString() },
+  { _id: "2", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "client", messageContent: "fafaefe faefae faef aefaefea", sentAt: new Date().toISOString() },
+  { _id: "3", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "client", messageContent: "fafaefe faefae faef aefaefea", sentAt: new Date().toISOString() },
+  { _id: "4", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() },
+  { _id: "5", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() },
+  { _id: "6", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() },
+  { _id: "7", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() }
+
+];
+
 const MessageForm = ({ open, clientState, conversationState, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage, handleConversationClose }: Props): React.Node => {
   const [ messageSounds, setMessageSounds ] = React.useState<SoundState>({ sendMessageSound: null, receiveMessageSound: null }); 
   const messageFormRef = React.useRef<HTMLDivElement | null>(null);
+  const messagesContentRef = React.useRef<HTMLDivElement | null>(null);
   // redux state objects //
   // additional functions //
   const { _id: clientId } = clientState;
@@ -62,6 +74,13 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
       setMessageSounds({});
     };
   }, []);
+
+  React.useEffect(() => {
+    if (messagesContentRef.current) {
+      //console.log(messagesContentRef.current.scrollHeight);
+      messagesContentRef.current.scrollTop = messagesContentRef.current.scrollHeight;
+    }
+  }, [ messagesContentRef.current, messages ]);
 
   const sendMessage = (content: string): Promise<boolean> => {
     const newMessageData: MessageData = {
@@ -111,15 +130,11 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
           <i className={ `far fa-times-circle ${ styles.messageFormCloseIcon }` }></i>
         </div>
       </div>
-      <div className={ styles.messengerContentView }>
+      <div className={ styles.messengerContentView } ref={messagesContentRef}>
           { 
-            messages.map((message) => {
+            mockMessageData.map((message) => {
               return (
-                <Message 
-                  key={ message._id }
-                  messageData={ message }
-                  clientState={ clientState } 
-              />
+                <Message key={ message._id } messageData={ message } />
               )
             })
           }

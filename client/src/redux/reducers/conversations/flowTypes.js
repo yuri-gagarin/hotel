@@ -74,6 +74,7 @@ export type SendMessage = {
   payload: {
     loading: boolean;
     messageSending: boolean;
+    newMessage: MessageData;
   }
 };
 export type SendMessageSuccess = {

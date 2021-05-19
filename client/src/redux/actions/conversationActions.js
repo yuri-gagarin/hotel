@@ -48,10 +48,10 @@ export const updateConversation = (data: { status: number,  conversationId: stri
   };
 };
 
-export const sendMessage = (): SendMessage => {
+export const sendMessage = (newMessage: MessageData): SendMessage => {
   return {
     type: "SendMessage",
-    payload: { loading: true, messageSending: true }
+    payload: { loading: true, messageSending: true, newMessage: newMessage }
   };
 };
 
@@ -126,7 +126,7 @@ export const handleFetchConversation = (dispatch: Dispatch<ConversationAction>, 
 export const handleSendMessage = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
   if (socket.connected) {
     socket.emit("newMessageSent", messageData);
-    dispatch(sendMessage());
+    dispatch(sendMessage(messageData));
     return Promise.resolve(true);
   } else {
     // do a regular api call here to save to DB //
