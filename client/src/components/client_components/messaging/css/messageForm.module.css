@@ -1,0 +1,60 @@
+.messageForm {
+  position: fixed;
+  border: 3px solid grey;
+  border-radius: 5px;
+  right: 0%;
+  bottom: 50px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  height: 100vh;
+  width: 100vw;
+  z-index: 999;
+}
+
+.messageFormDisplayed {
+  animation: animateMessageFormOpen 300ms linear;
+  -webkit-animation-fill-mode: forwards; 
+  animation-fill-mode: forwards;
+}
+.hideMessageForm {
+  animation: animateMessageFormClose 300ms linear;
+  -webkit-animation-fill-mode: forwards; 
+  animation-fill-mode: forwards;
+}
+
+.messageFormControls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+}
+.messageFormCloseIcon {
+  font-size: 2em;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.messengerContentView {
+  border: 5px solid green;
+  display: flex;
+  flex: 8;
+}
+
+@keyframes animateMessageFormOpen {
+  0% { transform: translateX(100%); }
+  90% { transform: translateX(-10%); }
+  100% {transform: translateX(0%); }
+}
+@keyframes animateMessageFormClose {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}
+
+/* media queries */
+@media only screen and (min-width: 550px) {
+  .messageForm {
+    height: 400px;
+    width: 300px;
+  }
+}

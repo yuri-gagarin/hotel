@@ -1,17 +1,20 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
+// @flow
+import * as React from "react";
 // style imports //
 import { openMessageForm } from "./style/styles";
 
-const OpenMessageForm = (props) => {
-  const {handleFormOpen} = props;
+type Props = {
+  handleFormOpen: () => void;
+};
+
+const OpenMessageForm = ({ handleFormOpen }: Props): React.Node => {
  
   return (
     <div style={openMessageForm.formContainer}> 
       <div style={openMessageForm.adminOnlineIndicator}>
       </div>
       <div>Online</div>
-      <div style={openMessageForm.messageBtn} onClick={handleFormOpen}>
+      <div style={openMessageForm.messageBtn} onClick={ handleFormOpen }>
         Message Us
       </div>
     </div>

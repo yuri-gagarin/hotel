@@ -1,9 +1,9 @@
 // @flow
 import * as React from "react";
-import ReactDom from "react-dom";
 import ObjectID from "bson-objectid";
 // styles  and images //
 import { messageForm } from "./style/styles";
+import styles from "./css/messageForm.module.css";
 // additional compononets //
 import MessageView from "./MessageView";
 import Message from "./Message";
@@ -14,6 +14,7 @@ import type { ClientState } from "../../../redux/reducers/client/flowTypes";
 import type { ConversationState, MessageData } from "../../../redux/reducers/conversations/flowTypes";
 
 type Props = {
+  open: boolean;
   clientState: ClientState;
   conversationState: ConversationState;
   // redux actions //
@@ -30,9 +31,9 @@ type SoundState = {
   receiveMessageSound: HTMLAudioElement | null;
 };
 
-const MessageForm = ({ clientState, conversationState, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage, handleConversationClose }: Props): React.Node => {
+const MessageForm = ({ open, clientState, conversationState, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage, handleConversationClose }: Props): React.Node => {
   const [ messageSounds, setMessageSounds ] = React.useState<SoundState>({ sendMessageSound: null, receiveMessageSound: null }); 
-  const messageFormRef = React.useRef(null);
+  const messageFormRef = React.useRef<HTMLDivElement | null>(null);
   // redux state objects //
   // additional functions //
   const { _id: clientId } = clientState;
@@ -90,23 +91,31 @@ const MessageForm = ({ clientState, conversationState, handleSendMessage, handle
 
 
   const closeMessageForm = (e) => {
-    handleConversationClose();
+    setTimeout(() => {
+      handleConversationClose();
+    }, 1000);
+    if (messageFormRef && messageFormRef.current) {
+      messageFormRef.current.classList.add(styles.hideMessageForm);
+    }
+    
     // maybe animate later //
   };
 
   return (
-    <div className="clientMessageFormContainer" ref={messageFormRef} id="clientMessageForm">
-      <div style={messageForm.closeMessageForm} onClick={ closeMessageForm }>
-        <span>X</span>
+    <div className={ `${styles.messageForm} ${ open ? styles.messageFormDisplayed : ""}` } ref={messageFormRef}>
+      <div className={ styles.messageFormControls } onClick={ closeMessageForm }>
+        <i className={ `far fa-times-circle ${ styles.messageFormCloseIcon }` }></i>
       </div>
-      <div style={messageForm.messageView}>
+      <div className={ styles.messengerContentView }>
           { 
             messages.map((message) => {
-              return <Message 
-                key={ message._id }
-                messageData={ message }
-                clientState={ clientState } 
+              return (
+                <Message 
+                  key={ message._id }
+                  messageData={ message }
+                  clientState={ clientState } 
               />
+              )
             })
           }
       </div>

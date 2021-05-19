@@ -43,11 +43,11 @@ type Props = {
   diningEntertainmentState: DiningEntertainmentState;
   _clearAppError: () => void;
   _clearSuccessState: () => void;
-  _setGuestClient: (data: any) => void;
+  _handleSetGuestClient: (data: any) => void;
   _handleFetchRooms: (options?: RoomFetchOptions) => Promise<boolean>;
 };
 
-const HomeComponent = ({ history, appGeneralState, clientState, roomState, serviceState, diningEntertainmentState, _clearAppError, _clearSuccessState, _setGuestClient, _handleFetchRooms }: Props): React.Node => {
+const HomeComponent = ({ history, appGeneralState, clientState, roomState, serviceState, diningEntertainmentState, _clearAppError, _clearSuccessState, _handleSetGuestClient, _handleFetchRooms }: Props): React.Node => {
   const [ successTimeout, setSuccessTimeout ] = React.useState(null);
   const [ errorTimeout, setErrorTimeout ] = React.useState(null);
 
@@ -61,7 +61,7 @@ const HomeComponent = ({ history, appGeneralState, clientState, roomState, servi
     // automatic form clear for error //
     window.addEventListener("beforeunload", unloadWindowHandler);
     navbarCollapseListener();
-    setClient(_setGuestClient)
+    setClient(_handleSetGuestClient)
       .then(() => {
         _handleFetchRooms({ live: true, limit: 1 })
       })

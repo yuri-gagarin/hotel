@@ -126,6 +126,11 @@ const mapStateToProps = (state: RootState) => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<AdminConversationAction>) => {
   return {
+    _handleOpenAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => handleOpenAdminConversation(dispatch, conversationId, currentAdminConversationState),
+    _handleCloseAdminConversation: () => handleCloseAdminConversation(dispatch),
+    _handleFetchAdminConversations: () => handleFetchAdminConversations(dispatch),
+    _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => handleDeleteAdminConversation(dispatch, conversationId, currentAdminConversationState),
+    _handleNewMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => handleNewMessage(dispatch, messageData, currentAdminConversationState)
   }
 };  
 

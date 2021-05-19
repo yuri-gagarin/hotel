@@ -10,7 +10,7 @@ import {
 import { connect } from "react-redux";
 import { handleFetchContactPosts } from "./../../../redux/actions/contactPostActions";
 import { handleFetchRooms } from "./../../../redux/actions/roomActions";
-import { fetchAllConversations } from "./../../../redux/actions/conversationActions";
+import { handleFetchAdminConversations } from "./../../../redux/actions/adminConversationActions";
 // aditional component imports //
 import VisitorGraph from "../graphs/VisitorGraph";
 import BookingGraph from "../graphs/BookingsGraph";
@@ -153,16 +153,6 @@ const AdminDashComponent = (props) => {
       
   );
 };
-// Proptypes Validations //
-AdminDashComponent.propTypes = {
-  history: PropTypes.object.isRequired,
-  adminState: PropTypes.object.isRequired,
-  adminConvState: PropTypes.object.isRequired,
-  roomState: PropTypes.object.isRequired,
-  appGeneralState: PropTypes.object.isRequired,
-  contactPostState: PropTypes.object.isRequired,
-  serviceState: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (state) => {
   return {
@@ -171,7 +161,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchContactPosts: () => handleFetchContactPosts(dispatch),
-    fetchAllConversations: () => fetchAllConversations(dispatch),
+    fetchAllConversations: () => handleFetchAdminConversations(dispatch),
     _handleFetchRooms: () => handleFetchRooms(dispatch)
   };
 };

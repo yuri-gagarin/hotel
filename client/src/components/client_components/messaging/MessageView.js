@@ -1,16 +1,12 @@
-/*
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import {
-  Button,
-  Input
-} from "semantic-ui-react";
+// @flow
+import * as React from "react";
+import { Button, Input } from "semantic-ui-react";
 
-import { messageForm } from "./style/styles";
-
-const MessageView = (props) => {
-  const { sendMessage } = props;
-  const [ message, setMessage ] = useState("");
+type Props = {
+  sendMessage: (content: string) => Promise<boolean>;
+}
+const MessageView = ({ sendMessage }: Props): React.Node => {
+  const [ message, setMessage ] = React.useState<string>("");
 
   const handleInputChange = (e) => {
     if (e.charCode === 13) {
@@ -33,10 +29,5 @@ const MessageView = (props) => {
     </Input>
   );
 };
-// PropTypes validation //
-MessageView.propTypes = {
-  sendMessage: PropTypes.func.isRequired
-};
 
 export default MessageView;
-*/

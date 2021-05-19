@@ -34,15 +34,16 @@ const MessengerContainer = ({
     clientState, conversationState, _handleConversationOpen, _handleConversationClose,
    _handleFetchConversation, _handleSendMessage, _handleSendMessageSuccess, _handleReceiveMessage }: Props): React.Node => {
  
-  const handleClientMessengerOpen = (e) => {
+  const handleClientMessengerOpen = () => {
     // toggles between messaging form and back //
    _handleConversationOpen(conversationState);
   }
   // render conditionally //
   return (
     <React.Fragment>
-      <OpenMessageForm handleFormOpen={ _handleConversationOpen } />
+      <OpenMessageForm handleFormOpen={ handleClientMessengerOpen } />
       <MessageForm 
+        open={ conversationState.messengerOpen }
         clientState={ clientState }
         conversationState={ conversationState }
         handleConversationClose={ _handleConversationClose }
@@ -61,6 +62,8 @@ const mapStateToProps = (state: RootState) => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<ConversationAction>) => {
   return {
+    _handleConversationOpen: (conversationState: ConversationState) => handleConversationOpen(dispatch, conversationState),
+    _handleConversationClose: () => handleConversationClose(dispatch),
     _handleFetchConversation: (conversationId: string) => handleFetchConversation(dispatch, conversationId),
     _handleSendMessage: (messageData: MessageData) => handleSendMessage(dispatch, messageData),
     _handleSendMessageSuccess: (messageData: MessageData) => handleSendMessageSuccess(dispatch, messageData), 
