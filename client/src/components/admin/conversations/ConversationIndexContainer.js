@@ -4,6 +4,7 @@ import { Button, Grid, Segment } from "semantic-ui-react";
 // additional components //
 import ConversationComponent from "./ConversationComponent";
 import MessagesView from "./MessagesView";
+import { MessagesSplashScreen } from "./MessageSplashScreen";
 // styles imports //
 import { closeConvoButton } from "./styles/style";
 import { withRouter } from "react-router-dom";
@@ -19,31 +20,6 @@ import type { MessageData } from "../../../redux/reducers/conversations/flowType
 import { socket } from "./../../../App";
 // helpers //
 import { objectValuesEmpty } from "../../helpers/displayHelpers";
-
-const MessagesSplashScreen = (): React.Node => {
-  return (
-    <Grid.Column width={11}>
-      <div className="messageArea">
-        <div className="messageAreaTitle">
-          <h1>Hotel Instant Messaging</h1>
-          <p>Open a message to access a conversation</p>
-        </div>
-        <ul className="circles">
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-         </ul>
-      </div>
-    </Grid.Column>
-  )
-};
 
 type WrapperProps = {|
   history: RouterHistory;
