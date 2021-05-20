@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 // additional redux imports //
 import { connect } from "react-redux";
-import { setAdmin } from "./redux/actions/apiActions";
+import { handleSetAdmin } from "./redux/actions/apiActions";
 import store from "./redux/store";
 // socketio //
 import io from "socket.io-client";
@@ -135,7 +135,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    _setAdmin: (adminData) => dispatch(setAdmin(adminData))
+    _setAdmin: (adminData) => dispatch(handleSetAdmin(adminData))
   };
 };
 

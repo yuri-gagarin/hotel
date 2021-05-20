@@ -8,7 +8,7 @@ import SuccessComponent from "../../display_components/SuccessComponent";
 import { withRouter } from "react-router-dom";
 // redux //
 import { connect } from "react-redux"; 
-import { loginUser } from "../../../redux/actions/apiActions";
+import { handleLoginUser } from "../../../redux/actions/apiActions";
 import { clearAppError } from "../../../redux/actions/appGeneralActions";
 // types //
 import type { RootState, AppAction , Dispatch } from "../../../redux/reducers/_helpers/createReducer";
@@ -152,7 +152,7 @@ const mapStateToProps = (state: RootState) => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<AppAction>) => {
   return {
-    handleUserLogin: (userData: any, history: RouterHistory) => loginUser(dispatch, userData, history),
+    handleUserLogin: (userData: any, history: RouterHistory) => handleLoginUser(dispatch, userData, history),
     clearAppError: () => dispatch(clearAppError())
   };
 };
