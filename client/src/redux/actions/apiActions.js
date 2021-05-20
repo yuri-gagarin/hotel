@@ -59,7 +59,7 @@ const logOutAdmin = () => {
   };
 };
 
-export const setAdmin = (adminData) => {
+export const handleSetAdmin = (adminData) => {
   const {
     loggedIn,
     loading,
@@ -87,7 +87,7 @@ export const setAdmin = (adminData) => {
   }
 }
 
-export const loginUser = (dispatch, userCredentials) => {
+export const handleLoginUser = (dispatch, userCredentials) => {
   const { email, password } = userCredentials;
   const requestOptions = {
     method: "post",
@@ -124,7 +124,7 @@ export const loginUser = (dispatch, userCredentials) => {
     });
 };
 
-export const logOutUser = (dispatch, history) => {
+export const handleLogOutUser = (dispatch, history) => {
   const requestOptions = {
     method: "delete",
     url: "/api/logout"

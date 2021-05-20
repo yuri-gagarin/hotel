@@ -169,7 +169,7 @@ app.on("dbReady", () => {
       return RedisController.setNewMessage(data)
         .then(() => {
           // do something with it //
-          io.to(socket.id).emit("messageDelivered");
+          io.to(socket.id).emit("messageDelivered", data);
         })
         .catch((error) => {
           console.error(error);
