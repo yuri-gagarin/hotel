@@ -104,7 +104,7 @@ export const handleFetchAdminConversations = (dispatch: Dispatch<AdminConversati
   return axios(axiosOpts)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, adminConversations }: { responseMsg: string, adminConversations: Array<AdminConversationData> } = data;
+      const { responseMsg, adminConversations = [] }: { responseMsg: string, adminConversations: Array<AdminConversationData> } = data;
       const stateUpdateData = { status, responseMsg, adminConversations };
       dispatch(setAdminConversations(stateUpdateData));
       return Promise.resolve(true);

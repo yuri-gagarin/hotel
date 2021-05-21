@@ -32,7 +32,7 @@ type Props = {
   _handleCloseAdminConversation: () => void;
   _handleFetchAdminConversations: () => Promise<boolean>;
   _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => void;
-  _handleNewMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => Promise<Boolean>;
+  _handleNewMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
 };
 const ConversationIndexContainer = ({ history, adminState, adminConversationState, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleFetchAdminConversations, _handleDeleteAdminConversation, _handleNewMessage }: Props): React.Node => {
     // redux state props //

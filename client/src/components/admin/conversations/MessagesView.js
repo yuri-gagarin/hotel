@@ -1,29 +1,27 @@
-import React, { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
-import {
-  Comment,
-  Grid,
-  Input,
-  Segment
-} from "semantic-ui-react";
+// @flow
+import * as React from "react";
+import { Comment, Grid, Input, Segment } from "semantic-ui-react";
+import ObjectID from "bson-objectid";
 // additional component imports //
 import Message from "./Message";
 // style imports //
 import { conversationTitle } from "./styles/style";
-
-const MessagesView = (props) => {
-  const { 
-    adminState, 
-    conversationState,
-    messages, 
-    sendAdminMessage,
-    closeConversation
-  } = props;
-  const [message, setMessage] = useState("");
-  const [messageSounds, setMessageSounds] = useState({});
-  const [sendBtnDisabled, setSendButtondDisabled] = useState(true);
+// types //
+import type { AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
+import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
+type Props = {
+  adminState: any;
+  adminConversationState: AdminConversationState;
+  sendAdminMessage: (messageData: MessageData, adminConversationState: AdminConversationState) => Promise<boolean>;
+  closeConversation: () => void;
+}
+const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, closeConversation }: Props): React.Node => {
+  const { activeConversation, loadedAdminConversations } = adminConversationState;
+  const [ message, setMessage ] = React.useState("");
+  const [messageSounds, setMessageSounds] = React.useState({});
+  const [sendBtnDisabled, setSendButtondDisabled] = React.useState(true);
   // set the sound effects for send, receive instant message //
-  useEffect(() => { 
+  React.useEffect(() => { 
     // load sounds upon component load //
     const messageInput = document.getElementById("messageInput");
     setMessageSounds({
@@ -31,19 +29,19 @@ const MessagesView = (props) => {
       sendMessageSound: new Audio("/assets/media/sounds/sentMsg.mp3"),
       receiveMessageSound: new Audio("/assets/media/sounds/receiveMsg.mp3")
     });
-    messageInput.scrollIntoView();
-   
+    if (messageInput) messageInput.scrollIntoView();
+  
     return function cleanup () { 
       setMessageSounds({});
     };
   }, [])
   // 
-  useEffect(() => {
+  React.useEffect(() => {
     const messagesView = document.getElementById("messagesView");
     const messageInput = document.getElementById("messageInput");
-    messageInput.scrollIntoView();
-    messagesView.scrollTo(0, messagesView.scrollHeight);
-  }, [messages]);
+    if (messageInput) messageInput.scrollIntoView();
+    if (messagesView) messagesView.scrollTo(0, messagesView.scrollHeight);
+  }, [ loadedAdminConversations ]);
 
   const setConversationTitle = (messages, adminState) => {
     let conversationTitle;
@@ -58,40 +56,47 @@ const MessagesView = (props) => {
   const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
-  const handleSendMessage = (e) => {
+  const handleSendMessage = (e): void => {
     // first get the user information //
-    console.log("calling")
-    const messageData = {
-      user: adminState,
-      messageData: message,
-      conversationId: conversationState.conversationId,
-      clientSocketId: conversationState.clientSocketId
+    const messageData: MessageData = {
+      _id: ObjectID().toHexString(),
+      conversationId: activeConversation.conversationId,
+      sender: "admin",
+      senderSocketId: "",
+      receiverSocketId: "",
+      messageContent: message,
+      sentAt: new Date().toISOString()
     };
-    e.target.value = "";
-    sendAdminMessage(messageData)
+    sendAdminMessage(messageData, adminConversationState)
       .then((success) => {
-        if (success && messageSounds.sendMessageSound) {
-          messageSounds.sendMessageSound.play();
-        }
+        if (success && messageSounds.sendMessageSound) messageSounds.sendMessageSound.play();
+      })
+      .catch((error) => {
+        console.log(error);
       });
+      
   };
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e): void => {
     if (e.key === "Enter") {
       // handle messages submission here //
-      const messageData = {
-        user: adminState,
-        messageData: message,
-        conversationId: conversationState.conversationId,
-        clientSocketId: conversationState.clientSocketId
+      const messageData: MessageData = {
+        _id: ObjectID().toHexString(),
+        conversationId: activeConversation.conversationId,
+        sender: "admin",
+        senderSocketId: "",
+        receiverSocketId: activeConversation.receiverSocketId,
+        messageContent: message,
+        sentAt: new Date().toISOString()
       };
-      e.target.value = "";
-      sendMessageRequest(messageData)
+      sendAdminMessage(messageData, adminConversationState)
         .then((success) => {
-          if (success && messageSounds.sendMessageSound) {
-            messageSounds.sendMessageSound.play();
-          }
+          if (success && messageSounds.sendMessageSound) messageSounds.sendMessageSound.play();
+        })
+        .catch((error) => {
+          // error handling here later //
+          console.log(error);
         });
-    };
+    }
   };
 
   return (
@@ -100,15 +105,15 @@ const MessagesView = (props) => {
         <Comment.Group style={{ maxWidth: "none" }}>
           <div className="adminConvHeader">
             <div className="adminConvTitle">
-              <p>ConversationWith: {setConversationTitle(messages, adminState)}</p>
+              <p>ConversationWith: { setConversationTitle(activeConversation.messages, adminState) }</p>
             </div>
-            <div className="adminCloseConvButton" onClick={closeConversation}>
+            <div className="adminCloseConvButton" onClick={ closeConversation }>
               <p>Close Conversation</p>
             </div>
           </div>
          
           {
-            messages.map((message) => {
+            activeConversation.messages.map((message) => {
               return <Message key={message._id} message={message} adminState={adminState} />
             })
           }
@@ -129,14 +134,6 @@ const MessagesView = (props) => {
         />
     </Grid.Column>
   )
-};
-
-// PropTypes validation //
-MessagesView.propTypes = {
-  messages: PropTypes.array.isRequired,
-  conversationState: PropTypes.object.isRequired,
-  sendAdminMessage: PropTypes.func.isRequired,
-  closeConversation: PropTypes.func.isRequired
 };
 
 export default MessagesView;
