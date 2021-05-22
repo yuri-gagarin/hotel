@@ -158,6 +158,32 @@ app.on("dbReady", () => {
           console.log(error);
         })
     })
+    // admin messenger online offline listener //
+    socket.on("toggleAdminOnlineStatus", (data) => {
+      const { messengerOnline } = data;
+      const { id : socketId } = socket;
+      console.log("Status: " + messengerOnline);
+      if (messengerOnline) {
+        // take admin messenger online //
+        return RedisController.setNewVisibleAdmin(socketId)
+          .then(() => {
+            io.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: true });
+          })
+          .catch((error) => {
+            io.to(socketId).emit("generalSocketIOError", error);
+          });
+      } else {
+        // take admin messenger offline //
+        return RedisController.removeVisibleAdmin(socketId)
+          .then(() => {
+            io.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: false });
+          })
+          .catch((error) => {
+            console.log(error);
+            io.to(socketId).emit("generalSocketIOError", error);
+          })
+      }
+    })
     // keeping connection alive //
     socket.on("keepConnectionAlive", () => {
     });

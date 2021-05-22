@@ -5,9 +5,11 @@ const initialState: AdminConversationState = {
   status: 200,
   responseMsg: "",
   loading: false,
+  messengerOnline: false,
   activeConversation: generateEmptyAdminConversationModel(),
   loadedAdminConversations: [],
   numberOfConversations: 0,
+  connectedOnlineClients: [],
   error: null,
   errorMessages: []
 };
@@ -26,6 +28,13 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         ...state,
         activeConversation: action.payload.activeConversation,
         error: null
+      };
+    }
+    case "ToggleAdminMessengerOnlineStatus": {
+      return {
+        ...state,
+        loading: action.payload.loading,
+        messengerOnline: action.payload.messengerOnline,
       };
     }
     case "SetAdminConversations": {

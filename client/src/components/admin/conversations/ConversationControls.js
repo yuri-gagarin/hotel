@@ -1,14 +1,19 @@
 // @flow 
 import * as React from "react";
 import { Dropdown, Grid, Menu, Popup } from "semantic-ui-react";
-import type { AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
+import type { AdminConversationState, MessengerOnlineToggleArgs } from "../../../redux/reducers/admin_conversations/flowTypes";
 // styles //
 import styles from "./css/conversationControls.module.css";
 
 type Props = {
   adminConversationState: AdminConversationState;
+  handleToggleAdminMessengerOnlineStatus: (data: MessengerOnlineToggleArgs) => void;
 }
-export const ConversationControls = ({ adminConversationState }: Props): React.Node => {
+export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus }: Props): React.Node => {
+  const { messengerOnline } = adminConversationState;
+  const toggleMessegnerOnlineOffline = () => {
+    handleToggleAdminMessengerOnlineStatus({ messengerOnline: !messengerOnline });
+  };
 
   return (
     <React.Fragment>
@@ -18,8 +23,8 @@ export const ConversationControls = ({ adminConversationState }: Props): React.N
             <Menu.Item>
               <Dropdown text="Messenger Options" icon="caret down" pointing>
                 <Dropdown.Menu>
-                  <Dropdown.Item>
-                    Disconnect
+                  <Dropdown.Item onClick={ toggleMessegnerOnlineOffline }>
+                    { messengerOnline ? "Disconnect" : "Connect" }
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item>

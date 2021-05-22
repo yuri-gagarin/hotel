@@ -11,11 +11,11 @@ import { closeConvoButton } from "./styles/style";
 import styles from "./css/conversationIndexContainer.module.css";
 // redux imports  //
 import { connect } from "react-redux";
-import { handleOpenAdminConversation, handleCloseAdminConversation, handleFetchAdminConversations, handleDeleteAdminConversation, handleNewMessage } from "../../../redux/actions/adminConversationActions";
+import { handleOpenAdminConversation, handleCloseAdminConversation, handleToggleAdminMessengerOnlineStatus, handleSetAdminMessengerOnlineStatus, handleFetchAdminConversations, handleDeleteAdminConversation, handleNewMessage } from "../../../redux/actions/adminConversationActions";
 // flow types //
 import type { RouterHistory } from "react-router-dom";
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
-import type { AdminConversationAction, AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
+import type { AdminConversationAction, AdminConversationState, MessengerOnlineToggleArgs } from "../../../redux/reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
 // socket import //
 import { socket } from "./../../../App";
@@ -29,13 +29,17 @@ type Props = {
   ...WrapperProps;
   adminState: any;
   adminConversationState: AdminConversationState;
+  _handleToggleAdminMessengerOnlineStatus: (data: MessengerOnlineToggleArgs) => void,
+  _handleSetAdminMessengerOnlineStatus: (data: MessengerOnlineToggleArgs) => void,
   _handleOpenAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => void;
   _handleCloseAdminConversation: () => void;
   _handleFetchAdminConversations: () => Promise<boolean>;
   _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => void;
   _handleNewMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
 };
-const ConversationIndexContainer = ({ history, adminState, adminConversationState, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleFetchAdminConversations, _handleDeleteAdminConversation, _handleNewMessage }: Props): React.Node => {
+const ConversationIndexContainer = ({ 
+  history, adminState, adminConversationState, 
+  _handleToggleAdminMessengerOnlineStatus, _handleSetAdminMessengerOnlineStatus, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleFetchAdminConversations, _handleDeleteAdminConversation, _handleNewMessage }: Props): React.Node => {
     // redux state props //
 
   React.useEffect(() => {
@@ -43,10 +47,15 @@ const ConversationIndexContainer = ({ history, adminState, adminConversationStat
 
     if (mounted) {
       socket.on("newClientMessage", (data: MessageData) => {
-       _handleNewMessage(data, adminConversationState);
-    });
-
-    _handleFetchAdminConversations();
+        _handleNewMessage(data, adminConversationState);
+      });
+      socket.on("generalSocketIOError", (err) => {
+        console.log(err);
+      });
+      socket.on("setAdminMessengerOnlineStatus", ({ messengerOnline }: { messengerOnline: boolean }) => {
+       _handleSetAdminMessengerOnlineStatus({ messengerOnline });
+      });
+      _handleFetchAdminConversations();
     }
     return () => { mounted = false };
   }, []);
@@ -67,7 +76,10 @@ const ConversationIndexContainer = ({ history, adminState, adminConversationStat
   return (
     <React.Fragment>
       <Grid.Row centered style={{ height: "10%", padding: 0 }}>
-        <ConversationControls adminConversationState={ adminConversationState } />
+        <ConversationControls 
+          adminConversationState={ adminConversationState } 
+          handleToggleAdminMessengerOnlineStatus={ _handleToggleAdminMessengerOnlineStatus }
+        />
       </Grid.Row>
       <Grid.Row centered style={{ height: "80%" }} className={ styles.messengerIndexRow }>
         <Grid.Column largeScreen={4} tablet={8} className={ styles.conversationsColumn }>
@@ -108,6 +120,8 @@ const mapStateToProps = (state: RootState) => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<AdminConversationAction>) => {
   return {
+    _handleToggleAdminMessengerOnlineStatus: ({ messengerOnline }: MessengerOnlineToggleArgs) => handleToggleAdminMessengerOnlineStatus(dispatch, { messengerOnline }),
+    _handleSetAdminMessengerOnlineStatus: ({ messengerOnline }: MessengerOnlineToggleArgs) => handleSetAdminMessengerOnlineStatus(dispatch, { messengerOnline }),
     _handleOpenAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => handleOpenAdminConversation(dispatch, conversationId, currentAdminConversationState),
     _handleCloseAdminConversation: () => handleCloseAdminConversation(dispatch),
     _handleFetchAdminConversations: () => handleFetchAdminConversations(dispatch),

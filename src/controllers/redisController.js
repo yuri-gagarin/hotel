@@ -12,6 +12,13 @@ import redis from "redis";
  * @property {string} socketId - Client user id
  */
 /**
+ * @typedef {Object} AdminMessengerStatus
+ * @property {boolean} online - Messenger online status
+ * @property {string} socketId - Admin user socket id
+ * @property {number} numberAdded - Number added to online array
+ * @property {number} numberRemoved - Number removed from online array
+ */
+/**
  * @typedef {Object} NewMessage
  * @property {string} _id - Message id
  * @property {string} conversationId - Message conversation id
@@ -89,6 +96,35 @@ const RedisController = ((redisOpts) => {
   };
 
   /**
+   * 
+   * @param {string} socketId - admin socket id to add to visible list
+   * @returns {Promise<AdminMessengerStatus>} 
+   */
+  const setNewVisibleAdmin = (socketId) => {
+    const listKey = "VISIBLE_ADMINS";
+    return new Promise((resolve, reject) => {
+      redisInstance.LPUSH(listKey, socketId, (err, num) => {
+        if (err) reject(err);
+        console.log(num, socketId)
+        resolve({ numberAdded: num, socketId: socketId });
+      });
+    });
+  };
+  /**
+   * 
+   * @param {string} socketId - admin socket id to remove from the visible list
+   * @returns {Promise<AdminMessengerStatus>} 
+   */
+  const removeVisibleAdmin = (socketId) => {
+    const listKey = "VISIBLE_ADMINS";
+    return new Promise((resolve, reject) => {
+      redisInstance.LREM(listKey, 0, socketId, (err, num) => {
+        if (err) reject(err);
+        resolve({ numberRemoved: num, socketId: socketId });
+      });
+    });
+  };
+  /**
    * @param {NewMessage} messageData - message data coming from client socketIO connection
    * @returns {Promise<string>}
    */
@@ -121,7 +157,7 @@ const RedisController = ((redisOpts) => {
     });
   }
 
-  return { setClientCredentials, removeClientCredentials, setAdminCredentials, setNewMessage  }
+  return { setClientCredentials, removeClientCredentials, setAdminCredentials, setNewMessage, setNewVisibleAdmin, removeVisibleAdmin };
 
 })();
 

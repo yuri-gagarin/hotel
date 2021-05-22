@@ -5,9 +5,11 @@ export type AdminConversationState = {|
   status: number;
   loading: boolean;
   responseMsg: string;
+  messengerOnline: boolean;
   activeConversation: AdminConversationData;
   loadedAdminConversations: Array<AdminConversationData>;
   numberOfConversations: number;
+  connectedOnlineClients: Array<string>;
   error: any | null;
   errorMessages: Array<string>;
 |};
@@ -21,7 +23,18 @@ export type AdminConversationData = {|
   createdAt: string;
 |};
 
+export type MessengerOnlineToggleArgs = {|
+  messengerOnline: boolean;
+|};
+
 // //
+export type ToggleAdminMessengerOnlineStatus = {|
+  +type: "ToggleAdminMessengerOnlineStatus";
+  +payload: {
+    loading: boolean;
+    messengerOnline: boolean;
+  }
+|};
 export type OpenAdminConversation = {|
   +type: "OpenAdminConversation";
   +payload: {
@@ -112,5 +125,5 @@ export type ClearAdminConversationError = {
   }
 };
 
-export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | AdminConversationAPIRequest | SetAdminConversations | CreateNewAdminConveration |
+export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | SetAdminConversations | CreateNewAdminConveration |
                                       CreateNewAdminConveration | DeleteAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;

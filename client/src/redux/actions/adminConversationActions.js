@@ -6,11 +6,12 @@ import { generateEmptyAdminConversationModel } from "../reducers/_helpers/emptyD
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 import type { 
   AdminConversationData, AdminConversationAction, AdminConversationState, 
-  OpenAdminConversation, CloseAdminConversation, AdminConversationAPIRequest, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
+  OpenAdminConversation, CloseAdminConversation, AdminConversationAPIRequest, ToggleAdminMessengerOnlineStatus, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
   NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
 } from "../reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../reducers/conversations/flowTypes";
-
+// socket io //
+import { socket } from "../../App";
 // non api actions //
 const openAdminConversation = (data: { activeConversation: AdminConversationData }): OpenAdminConversation => {
   const { activeConversation } = data;
@@ -31,6 +32,12 @@ const adminConversationAPIRequest = (): AdminConversationAPIRequest => {
   return {
     type: "AdminConversationAPIRequest",
     payload: { loading: true }
+  };
+};
+const toggleAdminMessengerOnlineStatus = ({ messengerOnline }: { messengerOnline: boolean }): ToggleAdminMessengerOnlineStatus => {
+  return {
+    type: "ToggleAdminMessengerOnlineStatus",
+    payload: { loading: false, messengerOnline }
   };
 };
 const setAdminConversations = (data: { status: number, responseMsg: string, adminConversations: Array<AdminConversationData> }): SetAdminConversations => {
@@ -95,6 +102,13 @@ export const handleCloseAdminConversation = (dispatch: Dispatch<AdminConversatio
   dispatch(closeAdminConversation({ activeConversation: generateEmptyAdminConversationModel() } ));
 };
 // exported API related actions //
+export const handleToggleAdminMessengerOnlineStatus = (dispatch: Dispatch<AdminConversationAction>, { messengerOnline }: { messengerOnline: boolean }): void => {
+  dispatch(adminConversationAPIRequest());
+  socket.emit("toggleAdminOnlineStatus", { messengerOnline });
+};
+export const handleSetAdminMessengerOnlineStatus = (dispatch: Dispatch<AdminConversationAction>, { messengerOnline }: { messengerOnline: boolean }): void => {
+  dispatch(toggleAdminMessengerOnlineStatus({ messengerOnline }));
+};
 export const handleFetchAdminConversations = (dispatch: Dispatch<AdminConversationAction>): Promise<boolean> => {
   const axiosOpts = {
     method: "GET",
