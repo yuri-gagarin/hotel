@@ -3,6 +3,7 @@ import * as React from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
 // additional components //
 import ConversationComponent from "./ConversationComponent";
+import { ConversationControls } from "./ConversationControls";
 import MessagesView from "./MessagesView";
 import { MessagesSplashScreen } from "./MessageSplashScreen";
 // styles imports //
@@ -65,11 +66,11 @@ const ConversationIndexContainer = ({ history, adminState, adminConversationStat
 
   return (
     <React.Fragment>
-      <Grid.Row>
-        
+      <Grid.Row centered style={{ height: "10%", padding: 0 }}>
+        <ConversationControls adminConversationState={ adminConversationState } />
       </Grid.Row>
-      <Grid.Row centered className={ styles.messengerIndexRow }>
-        <Grid.Column width={4} className={ styles.conversationsColumn }>
+      <Grid.Row centered style={{ height: "80%" }} className={ styles.messengerIndexRow }>
+        <Grid.Column largeScreen={4} tablet={8} className={ styles.conversationsColumn }>
           <ConversationComponent 
             adminConversationState={ adminConversationState } 
             openConversation={ openConversation }
@@ -77,7 +78,7 @@ const ConversationIndexContainer = ({ history, adminState, adminConversationStat
             deleteConversation={ deleteConversation }
           />          
         </Grid.Column>
-        <Grid.Column width={10} className={ styles.messagesColumn }>
+        <Grid.Column largeScreen={10} tablet={8} className={ styles.messagesColumn }>
           {
             objectValuesEmpty(adminConversationState.activeConversation) 
             ? 

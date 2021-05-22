@@ -1,0 +1,39 @@
+.conversationControlsMenuWrapper {
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+.rightMenu {
+  width: 100%;
+}
+.conversationOnlineStatus {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background: green;
+}
+.messengerStatusDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+.conversationOptionsMenu {
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+.conversationDetailsWrapper {
+  display: flex;
+  flex: 2;
+  height: 100%;
+  border: 1px solid rgba(34,36,38,.15);
+}
+
+.conversationDetailsDiv {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
