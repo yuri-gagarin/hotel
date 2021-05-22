@@ -1,0 +1,19 @@
+.messengerIndexRow {
+  height: 90vh;
+  padding: 0 !important;
+  justify-content: center;
+}
+.conversationsColumn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  height: 100%;
+}
+.messagesColumn  {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  height: 100%;
+}

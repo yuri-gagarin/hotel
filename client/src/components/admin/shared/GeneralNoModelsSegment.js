@@ -7,10 +7,10 @@ type Props = {
   customContentMessage?: string
 };
 
-export const GeneralNoModelsSegment = ({ customHeaderMessage, customContentMessage } : Props): React.Node => {
+export const GeneralNoModelsSegment = ({ customHeaderMessage, customContentMessage }: Props): React.Node => {
 
   return (
-    <Segment placeholder textAlign="center" style={{ height: "100%" }}>
+    <Segment placeholder textAlign="center" style={{ height: "100%", width: "100%" }}>
       <Header icon>
         <Icon name='search' />
         {

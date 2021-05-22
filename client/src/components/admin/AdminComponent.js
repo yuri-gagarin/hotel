@@ -80,7 +80,7 @@ const AdminComponent = ({
     }
     // event listener for closed window //
     window.addEventListener("beforeunload", saveAdminState);
-    history.push("/admin/rooms");
+    history.push("/admin/messages");
     return function () {
       window.removeEventListener("beforeunload", saveAdminState);
     }
@@ -121,7 +121,7 @@ const AdminComponent = ({
   };
 
   return (
-    <Grid stackable style={{ border: "4px solid green", height: "100vh" }}>
+    <Grid stackable style={{ height: "100vh" }}>
       <Grid.Row style={{ height: "10%" }}>
         <AdminNavComponent logoutUser={logoutUser} />
       </Grid.Row>

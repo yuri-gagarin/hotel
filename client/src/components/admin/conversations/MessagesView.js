@@ -6,6 +6,7 @@ import ObjectID from "bson-objectid";
 import Message from "./Message";
 // style imports //
 import { conversationTitle } from "./styles/style";
+import styles from "./css/messagesView.module.css";
 // types //
 import type { AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
@@ -100,8 +101,8 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
   };
 
   return (
-    <Grid.Column width={11} style={{ height: "90vh", padding: 0 }}>
-      <Segment style={{ overflowY: "scroll", height: "100%", paddingBottom: "60px", position: "relative" }} id="messagesView">
+    <React.Fragment>
+      <div className={ styles.messagesViewWrapper } id="messagesView">
         <Comment.Group style={{ maxWidth: "none" }}>
           <div className="adminConvHeader">
             <div className="adminConvTitle">
@@ -118,21 +119,24 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
             })
           }
         </Comment.Group>
-      </Segment>
-      <Input 
-        id="messageInput"
-        action={{
-          icon: "send",
-          content: "Send",
-          onClick: sendAdminMessage,
-          disabled: sendBtnDisabled
-        }}
-        onChange={handleInputChange}
-        placeholder='message...' 
-        style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
-        onKeyPress={handleKeyPress}
-        />
-    </Grid.Column>
+      </div>
+      <div className={ styles.messagesInputWrapper}>
+        <Input 
+          className={ styles.messagesInput }
+          id="messageInput"
+          action={{
+            icon: "send",
+            content: "Send",
+            onClick: sendAdminMessage,
+            disabled: sendBtnDisabled
+          }}
+          onChange={handleInputChange}
+          placeholder='message...' 
+          style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
+          onKeyPress={handleKeyPress}
+          />
+        </div>
+    </React.Fragment>
   )
 };
 

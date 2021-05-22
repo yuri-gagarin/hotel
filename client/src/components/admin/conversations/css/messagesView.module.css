@@ -1,0 +1,25 @@
+.messagesViewWrapper {
+  height: 93%;
+  border-top: 1px solid grey;
+  border-left: 1px solid grey;
+  border-right: 1px solid grey;
+  border-radius: 3px 3px 0 0;
+}
+.messagesInputWrapper {
+  height: 7%;
+  display: flex;
+  position: relative;
+  background: white;
+  border-right: 1px solid grey;
+  border-bottom: 1px solid grey;
+  border-left: 1px solid grey;
+  border-radius: 0 0 3px 3px;
+}
+.messagesInput {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: auto !important;
+}

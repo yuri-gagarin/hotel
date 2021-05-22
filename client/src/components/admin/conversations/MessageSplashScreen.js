@@ -1,10 +1,10 @@
 // @flow 
 import * as React from "react";
-import { Grid } from "semantic-ui-react";
+import styles from "./css/messagesSplashScreen.module.css";
 
 export const MessagesSplashScreen = (): React.Node => {
   return (
-    <Grid.Column width={11}>
+    <div className={ styles.messagesSplashScreenWrapper }>
       <div className="messageArea">
         <div className="messageAreaTitle">
           <h1>Hotel Instant Messaging</h1>
@@ -23,6 +23,6 @@ export const MessagesSplashScreen = (): React.Node => {
           <li></li>
          </ul>
       </div>
-    </Grid.Column>
+    </div>
   );
 };

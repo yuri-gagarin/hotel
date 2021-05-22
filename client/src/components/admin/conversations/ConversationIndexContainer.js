@@ -7,7 +7,7 @@ import MessagesView from "./MessagesView";
 import { MessagesSplashScreen } from "./MessageSplashScreen";
 // styles imports //
 import { closeConvoButton } from "./styles/style";
-import { withRouter } from "react-router-dom";
+import styles from "./css/conversationIndexContainer.module.css";
 // redux imports  //
 import { connect } from "react-redux";
 import { handleOpenAdminConversation, handleCloseAdminConversation, handleFetchAdminConversations, handleDeleteAdminConversation, handleNewMessage } from "../../../redux/actions/adminConversationActions";
@@ -65,8 +65,11 @@ const ConversationIndexContainer = ({ history, adminState, adminConversationStat
 
   return (
     <React.Fragment>
-      <Grid.Row style={{borderTop: "1px solid grey", borderBottom: "1px solid grey" }}>
-        <Grid.Column width={5} style={{ height: "90vh", paddingLeft: "0.5em", paddingRight: 0 }}>
+      <Grid.Row>
+        
+      </Grid.Row>
+      <Grid.Row centered className={ styles.messengerIndexRow }>
+        <Grid.Column width={4} className={ styles.conversationsColumn }>
           <ConversationComponent 
             adminConversationState={ adminConversationState } 
             openConversation={ openConversation }
@@ -74,18 +77,20 @@ const ConversationIndexContainer = ({ history, adminState, adminConversationStat
             deleteConversation={ deleteConversation }
           />          
         </Grid.Column>
-        {
-          objectValuesEmpty(adminConversationState.activeConversation) 
-          ? 
+        <Grid.Column width={10} className={ styles.messagesColumn }>
+          {
+            objectValuesEmpty(adminConversationState.activeConversation) 
+            ? 
+            <MessagesSplashScreen />
+            :
             <MessagesView 
               adminState={ adminState }
               adminConversationState={ adminConversationState }
               sendAdminMessage={ _handleNewMessage }
               closeConversation={ closeConversation }
-            /> :
-            <MessagesSplashScreen />
-        }
-        
+            /> 
+          }
+        </Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <div className="ui divider"></div>
