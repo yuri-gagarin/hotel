@@ -23,15 +23,15 @@ export type MessageData = {
 };
 
 // action types //
-export type ConversationAPIRequest = {
-  +type: "ConversationAPIRequest";
+export type ClientConversationAPIRequest = {
+  +type: "ClientConversationAPIRequest";
   payload: {
     loading: boolean;
     error: null;
   }
 };
-export type OpenConversation = {
-  +type: "OpenConversation";
+export type OpenClientConversation = {
+  +type: "OpenClientConversation";
   payload: {
     status: number;
     loading: boolean;
@@ -41,14 +41,14 @@ export type OpenConversation = {
     messages: Array<MessageData>;
   }
 };
-export type CloseConversation = {
-  +type: "CloseConversation";
+export type CloseClientConversation = {
+  +type: "CloseClientConversation";
   payload: {
     messengerOpen: boolean;
   }
 };
-export type UpdateConversation = {
-  +type: "UpdateConversation";
+export type UpdateClientConversation = {
+  +type: "UpdateClientConversation";
   payload: {
     status: number;
     loading: boolean;
@@ -57,8 +57,8 @@ export type UpdateConversation = {
     messages: Array<MessageData>;
   }
 };
-export type DeleteConversation = {
-  +type: "DeleteConversation";
+export type DeleteClientConversation = {
+  +type: "DeleteClientConversation";
   payload: {
     status: number;
     loading: boolean;
@@ -69,35 +69,44 @@ export type DeleteConversation = {
   }
 };
 // messages //
-export type SendMessage = {
-  +type: "SendMessage";
+export type SendClientMessage = {
+  +type: "SendClientMessage";
   payload: {
     loading: boolean;
     messageSending: boolean;
     newMessage: MessageData;
   }
 };
-export type SendMessageSuccess = {
-  +type: "SendMessageSuccess";
+export type SendClientMessageSuccess = {
+  +type: "SendClientMessageSuccess";
   payload: {
     loading: boolean;
     messageSending: boolean;
     message: MessageData;
   }
 };
-export type ReceiveMessage = {
-  +type: "ReceiveMessage";
+export type ReceiveAdminMessage = {
+  +type: "ReceiveAdminMessage";
   payload: {
     conversationId: string;
     senderSocketId: string;
     message: MessageData;
   }
 };
+export type AdminMessengerOfflineResponse = {
+  +type: "AdminMessengerOfflineResponse";
+  payload: {
+    loading: boolean;
+    newMessage: MessageData;
+  }
+};
 // error handling //
-export type SetConversationError = {
-  +type: "SetConversationError";
+export type SetClientConversationError = {
+  +type: "SetClientConversationError";
   payload: {
     status: number;
+    loading: boolean;
+    messageSending: boolean;
     responseMsg: string;
     error: any;
     errorMessages: Array<string>;
@@ -105,5 +114,5 @@ export type SetConversationError = {
 };
 
 
-export type ConversationAction =  ConversationAPIRequest | OpenConversation | CloseConversation | UpdateConversation | DeleteConversation |
-                                 SendMessage | SendMessageSuccess | ReceiveMessage | SetConversationError;
+export type ConversationAction =  ClientConversationAPIRequest | OpenClientConversation | CloseClientConversation | UpdateClientConversation | DeleteClientConversation |
+                                 SendClientMessage | SendClientMessageSuccess | ReceiveAdminMessage | AdminMessengerOfflineResponse | SetClientConversationError;

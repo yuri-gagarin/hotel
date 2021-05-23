@@ -18,7 +18,7 @@ const initialState: ConversationState = {
 const conversationReducer = (state: ConversationState = initialState, action: ConversationAction): ConversationState => {
 
   switch (action.type) {
-    case "OpenConversation": {
+    case "OpenClientConversation": {
       return {
         ...state,
         status: action.payload.status,
@@ -30,14 +30,14 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         error: null
       };
     }
-    case "CloseConversation": {
+    case "CloseClientConversation": {
       return {
         ...state,
         messengerOpen: action.payload.messengerOpen,
         error: null
       };
     }
-    case "UpdateConversation": {
+    case "UpdateClientConversation": {
       return {
         ...state,
         status: action.payload.status,
@@ -48,7 +48,7 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         error: null
       };
     }
-    case "DeleteConversation": {
+    case "DeleteClientConversation": {
       return {
         ...state,
         conversationId: action.payload.conversationId,
@@ -58,7 +58,7 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         error: null
       };
     }
-    case "SendMessage": {
+    case "SendClientMessage": {
       return {
         ...state,
         loading: action.payload.loading,
@@ -67,7 +67,7 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         error: null
       };
     }
-    case "SendMessageSuccess": {
+    case "SendClientMessageSuccess": {
       return {
         ...state,
         loading: action.payload.loading,
@@ -75,7 +75,7 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         error: null
       }
     }
-    case "ReceiveMessage": {
+    case "ReceiveAdminMessage": {
       return {
         ...state,
         conversationId: action.payload.conversationId,
@@ -84,7 +84,24 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         error: null
       };
     }
-
+    case "AdminMessengerOfflineResponse": {
+      return {
+        ...state,
+        loading: action.payload.loading,
+        messages: [ ...state.messages, action.payload.newMessage ],
+        error: null
+      };
+    }
+    case "SetClientConversationError": {
+      return {
+        ...state,
+        responseMsg: action.payload.responseMsg,
+        loading: action.payload.loading,
+        messageSending: action.payload.messageSending,
+        error: action.payload.error,
+        errorMessages: action.payload.errorMessages
+      };
+    }
     default: {
       return state;
     }

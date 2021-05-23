@@ -3,74 +3,74 @@ import axios from "axios";
 // types //
 import type { Dispatch } from "../../redux/reducers/_helpers/createReducer";
 import type { 
-  ConversationState, MessageData, ConversationAction, ConversationAPIRequest, OpenConversation, CloseConversation, DeleteConversation, UpdateConversation, 
-  SendMessage, SendMessageSuccess, ReceiveMessage, SetConversationError 
+  ConversationState, MessageData, ConversationAction, ClientConversationAPIRequest, OpenClientConversation, CloseClientConversation, DeleteClientConversation, UpdateClientConversation, 
+  SendClientMessage, SendClientMessageSuccess, ReceiveAdminMessage, AdminMessengerOfflineResponse, SetClientConversationError 
 } from "../reducers/conversations/flowTypes";
 import { socket } from "../../App";
 // helpers //
 import { setAxiosError } from "./helpers/errorHelpers";
 
-const conversationAPIRequest = (): ConversationAPIRequest => {
+const clientConversationAPIRequest = (): ClientConversationAPIRequest => {
   return {
-    type: "ConversationAPIRequest",
+    type: "ClientConversationAPIRequest",
     payload: { loading: true, error: null }
   };
 };
 
-const setConversationError = (err: any): SetConversationError => {
+const setClientConversationError = (err: any): SetClientConversationError => {
   const { status, responseMsg, error, errorMessages } = setAxiosError(err);
   return {
-    type: "SetConversationError",
-    payload: { status, responseMsg, error, errorMessages  }
+    type: "SetClientConversationError",
+    payload: { loading: false, messageSending: false, status, responseMsg, error, errorMessages }
   };
 };
 
-export const openConversation = (data: { status: number, conversationId: string, senderSocketId: string, messages: Array<MessageData> }): OpenConversation => {
+export const openClientConversation = (data: { status: number, conversationId: string, senderSocketId: string, messages: Array<MessageData> }): OpenClientConversation => {
   const { status, conversationId, senderSocketId, messages } = data;
   return {
-    type: "OpenConversation",
+    type: "OpenClientConversation",
     payload: { loading: false, messengerOpen: true, status, conversationId, senderSocketId, messages }
   };
 };
 
-export const closeConversation = (): CloseConversation => {
+export const closeClientConversation = (): CloseClientConversation => {
   return {
-    type: "CloseConversation",
+    type: "CloseClientConversation",
     payload: { messengerOpen: false }
   };
 };
 
-export const updateConversation = (data: { status: number,  conversationId: string, receiverSocketId: string, senderSocketId: string, messages: Array<MessageData> }): UpdateConversation => {
+export const updateClientConversation = (data: { status: number,  conversationId: string, receiverSocketId: string, senderSocketId: string, messages: Array<MessageData> }): UpdateClientConversation => {
   const { status, conversationId, receiverSocketId, senderSocketId, messages } = data;
   return {
-    type: "UpdateConversation",
+    type: "UpdateClientConversation",
     payload: { loading: false, status, conversationId, receiverSocketId, senderSocketId, messages }
   };
 };
 
-export const sendMessage = (newMessage: MessageData): SendMessage => {
+export const sendClientMessage = (newMessage: MessageData): SendClientMessage => {
   return {
-    type: "SendMessage",
+    type: "SendClientMessage",
     payload: { loading: true, messageSending: true, newMessage: newMessage }
   };
 };
 
-export const sendMessageSuccess = (messageData: MessageData): SendMessageSuccess => {
+export const sendClientMessageSuccess = (messageData: MessageData): SendClientMessageSuccess => {
   return {
-    type: "SendMessageSuccess",
+    type: "SendClientMessageSuccess",
     payload: { loading: false, messageSending: false, message: messageData }
   };
 };
 
-export const receiveMessage = (socketId: string, messageData: MessageData): ReceiveMessage => {
+export const receiveAdminMessage = (socketId: string, messageData: MessageData): ReceiveAdminMessage => {
   const { senderSocketId, receiverSocketId, conversationId } = messageData;
   return {
-    type: "ReceiveMessage",
+    type: "ReceiveAdminMessage",
     payload: { conversationId: conversationId, message: messageData, senderSocketId: socketId }
   };
 };
 
-const adminMessengerOfflineResponse = (data: { newMessage: MessageData }): any => {
+const adminMessengerOfflineResponse = (data: { newMessage: MessageData }): AdminMessengerOfflineResponse => {
   const { newMessage } = data;
   return {
     type: "AdminMessengerOfflineResponse",
@@ -105,7 +105,7 @@ export const handleFetchConversation = (dispatch: Dispatch<ConversationAction>, 
     url: `/api/conversations/${conversationId}`
   };
 
-  dispatch(conversationAPIRequest());
+  dispatch(clientConversationAPIRequest());
 
   return axios(requestOptions)
     .then((response) => {
@@ -121,11 +121,11 @@ export const handleFetchConversation = (dispatch: Dispatch<ConversationAction>, 
 
       const allMessages = [ ...readMessages, ...unreadMessages ];
       const stateData = { status, responseMsg, conversationId, senderSocketId:"", receiverSocketId: "", messages: allMessages };
-      dispatch(openConversation(stateData));
+      dispatch(openClientConversation(stateData));
       return Promise.resolve(true);
     })
     .catch((error) => {
-      dispatch(setConversationError(error));
+      dispatch(setClientConversationError(error));
       return Promise.resolve(false);
     });
 };
@@ -134,7 +134,7 @@ export const handleFetchConversation = (dispatch: Dispatch<ConversationAction>, 
 export const handleSendMessage = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
   if (socket.connected) {
     socket.emit("newClientMessageSent", messageData);
-    dispatch(sendMessage(messageData));
+    dispatch(sendClientMessage(messageData));
     return Promise.resolve(true);
   } else {
     // do a regular api call here to save to DB //
@@ -142,11 +142,11 @@ export const handleSendMessage = (dispatch: Dispatch<ConversationAction>, messag
   }
 };
 export const handleSendMessageSuccess = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
-  dispatch(sendMessageSuccess(messageData));
+  dispatch(sendClientMessageSuccess(messageData));
   return Promise.resolve(true);
 };
 export const handleReceiveMessage = (dispatch: Dispatch<ConversationAction>, socketId: string, messageData: MessageData): Promise<boolean> => {
-  dispatch(receiveMessage(socketId, messageData));
+  dispatch(receiveAdminMessage(socketId, messageData));
   return Promise.resolve(true);
 };
 export const handleAdminMessengerOfflineResponse = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
@@ -159,10 +159,10 @@ export const handleAdminMessengerOfflineResponse = (dispatch: Dispatch<Conversat
 /* non API related actions to components */
 export const handleConversationOpen = (dispatch: Dispatch<ConversationAction>, currentState: ConversationState): void => {
   const { status, conversationId, senderSocketId, messages } = currentState;
-  return dispatch(openConversation({ status, conversationId, senderSocketId, messages }));
+  return dispatch(openClientConversation({ status, conversationId, senderSocketId, messages }));
 };
 export const handleConversationClose = (dispatch: Dispatch<ConversationAction>): void => {
-  return dispatch(closeConversation());
+  return dispatch(closeClientConversation());
 };
 /*
 export const fetchAllConversations = (dispatch) => {
