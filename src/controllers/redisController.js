@@ -12,6 +12,10 @@ import redis from "redis";
  * @property {string} socketId - Client user id
  */
 /**
+ * @typedef {Object} VisibleAdminData 
+ * @property {number} numberOfVisibleAdmins - Number of admins visible
+ * @property {Array<string>} visibleAdminSocketIds -Visible admin socket ids
+/**
  * @typedef {Object} AdminMessengerStatus
  * @property {boolean} online - Messenger online status
  * @property {string} socketId - Admin user socket id
@@ -125,6 +129,26 @@ const RedisController = ((redisOpts) => {
     });
   };
   /**
+   * 
+   * @returns {Promise<VisibleAdminData>}
+   */
+  const getVisibleAdmins = () => {
+    const listKey = "VISIBLE_ADMINS";
+    return new Promise((resolve, reject) => {
+      redisInstance.LLEN(listKey, (err, num) => {
+        if (err) reject(err);
+        if (num === 0) {
+          resolve({ numberOfVisibleAdmins: 0, visibleAdminSocketIds: [] });
+        } else {
+          redisInstance.LRANGE(listKey, 0, -1, (err, socketIds) => {
+            if (err) reject(err);
+            resolve({ numberOfVisibleAdmins: num, visibleAdminSocketIds: socketIds });
+          })
+        }
+      });
+    });
+  };
+  /**
    * @param {NewMessage} messageData - message data coming from client socketIO connection
    * @returns {Promise<string>}
    */
@@ -157,7 +181,7 @@ const RedisController = ((redisOpts) => {
     });
   }
 
-  return { setClientCredentials, removeClientCredentials, setAdminCredentials, setNewMessage, setNewVisibleAdmin, removeVisibleAdmin };
+  return { setClientCredentials, removeClientCredentials, setAdminCredentials, setNewMessage, setNewVisibleAdmin, removeVisibleAdmin, getVisibleAdmins };
 
 })();
 

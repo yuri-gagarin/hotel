@@ -113,6 +113,7 @@ app.on("dbReady", () => {
   });
   io.attach(server, { cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] } });
 
+  // TODO this needs to be separated to separate controller //
   // IO functionality //
   io.on("connection", (socket) => {
     console.log("connection");
@@ -190,19 +191,43 @@ app.on("dbReady", () => {
     //
 
     // client is messaging //
-    socket.on("newMessageSent", (data) => {
+    socket.on("newClientMessageSent", (data) => {
       // emits a an event to notify admin of a new message //
-      return RedisController.setNewMessage(data)
-        .then(() => {
-          // do something with it //
-          io.to(socket.id).emit("messageDelivered", data);
+      return RedisController.getVisibleAdmins()
+        .then(({ numberOfVisibleAdmins, visibleAdminSocketIds }) => {
+          if (numberOfVisibleAdmins === 0) {
+            // emit a messenger offline message //
+            // save message to the database ? //
+            const genericResponseMsg = {
+              _id: mongoose.Types.ObjectId(),
+              conversationId: "",
+              receiverSocketId: "",
+              sender: "admin",
+              senderSocketId: "",
+              messageContent: "We are offline but your message has been sent to our servers",
+              sentAt: new Date().toDateString()
+            }
+            socket.emit("adminMessengerOffline", genericResponseMsg);
+          } else {
+            for (const socketId of visibleAdminSocketIds) {
+              io.to(socketId).emit("newClientMessage", data);
+            }
+            return RedisController.setNewMessage(data)
+              .then(() => {
+                // do something with it //
+                io.to(socket.id).emit("messageDelivered", data);
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          }
         })
         .catch((error) => {
-          console.error(error);
+          console.log(error);
         })
+      
     });
     // end client messaging //
-
     // end admin response 
     socket.once("disconnect", () => {
       console.log("client disconnected");
@@ -218,7 +243,6 @@ app.on("dbReady", () => {
     socket.emit("hello", "hello there");
 
   });
-
 });
 // variable exports //
 export { io as ioInstance };

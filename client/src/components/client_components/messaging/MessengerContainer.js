@@ -11,8 +11,12 @@ import MessengerClosedComponent from "./MessengerClosedComp";
 import type { Dispatch, RootState } from "../../../redux/reducers/_helpers/createReducer";
 import type { ClientState } from "../../../redux/reducers/client/flowTypes";
 import type { ConversationState, ConversationAction, MessageData } from "../../../redux/reducers/conversations/flowTypes";
+import type { Socket } from "socket.io-client";
 // socketio //
 import { socket } from "../../../App";
+// helpers //
+import { setClientSocketIOListeners, removeClientSocketIOListeneres } from "./helpers/messageHelpers";
+import { setStringTranslation } from "../../helpers/displayHelpers";
 
 type WrapperProps = {
 
@@ -29,11 +33,13 @@ type Props = {
   _handleSendMessage: (messageData: MessageData) => Promise<boolean>;
   _handleSendMessageSuccess: (messageData: MessageData) => Promise<boolean>;
   _handleReceiveMessage: (messageData: MessageData) => Promise<boolean>;
+  // for socketio listeners //
+  _dispatch: Dispatch<ConversationAction>;
 };
 
 const MessengerContainer = ({ 
     clientState, conversationState, _handleConversationOpen, _handleConversationClose,
-   _handleFetchConversation, _handleSendMessage, _handleSendMessageSuccess, _handleReceiveMessage }: Props): React.Node => {
+   _handleFetchConversation, _handleSendMessage, _handleSendMessageSuccess, _handleReceiveMessage, _dispatch }: Props): React.Node => {
  
   const handleClientMessengerOpen = () => {
     // toggles between messaging form and back //
@@ -41,9 +47,9 @@ const MessengerContainer = ({
   };
 
   React.useEffect(() => {
-    socket.on("messageDelivered", (messageData: MessageData) => {
-      return _handleSendMessageSuccess(messageData);
-    });
+    const socketInstance: Socket = socket; // remove after typing <App.js> //
+    setClientSocketIOListeners(socketInstance, _dispatch);
+    socketInstance.emit("hello", { data: "mockdata" });
   }, []);
 
   return (
@@ -75,6 +81,7 @@ const mapDispatchToProps = (dispatch: Dispatch<ConversationAction>) => {
     _handleSendMessage: (messageData: MessageData) => handleSendMessage(dispatch, messageData),
     _handleSendMessageSuccess: (messageData: MessageData) => handleSendMessageSuccess(dispatch, messageData), 
     _handleReceiveMessage: (socketId: string, messageData: MessageData) => handleReceiveMessage(dispatch, socketId, messageData),
+    _dispatch: dispatch
   };
 };
 

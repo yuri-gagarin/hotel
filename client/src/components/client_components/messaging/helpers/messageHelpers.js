@@ -1,5 +1,16 @@
+// @flow
 import axios from "axios";
-
+// state changing redux actions //
+import { handleSendMessageSuccess, handleAdminMessengerOfflineResponse } from "../../../../redux/actions/conversationActions";
+// type imports //
+import type { Socket } from "socket.io-client";
+import type { Dispatch } from "../../../../redux/reducers/_helpers/createReducer";
+import type { MessageData } from "../../../../redux/reducers/conversations/flowTypes";
+// constants //
+import { SOCKETIO_CONSTANTS } from "./constants";
+ 
+const { EMITTER_CONSTANTS, LISTENER_CONSTANTS } = SOCKETIO_CONSTANTS;
+/*
 export const sendMessage = ({ firstName, email, userId }, { messageData, conversationId }, cb) => {
   const requestOptions = {
     method: "post",
@@ -22,3 +33,26 @@ export const sendMessage = ({ firstName, email, userId }, { messageData, convers
       cb(error, null);
     });
 };
+*/
+export const setClientSocketIOListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>): void => {
+  socketIOInstance.on(LISTENER_CONSTANTS.AMDIN_MESSENGER_OFFLINE, (messageData: MessageData) => {
+    console.log("messenger offline");
+    handleAdminMessengerOfflineResponse(dispatch, messageData);
+  });
+  socketIOInstance.on(LISTENER_CONSTANTS.MESSAGE_DELIVERED, (data: MessageData) => {
+    console.log("message delivered");
+    console.log(data);
+  });
+  // errors responses //
+  socketIOInstance.on(LISTENER_CONSTANTS.GENERAL_SOCKET_IO_ERR, (data: any) => {
+    console.log("general socketio error");
+    console.log(data);
+  });
+};
+
+export const removeClientSocketIOListeneres = (socketIOInstance: Socket): void => {
+  socketIOInstance.removeAllListeners(LISTENER_CONSTANTS.AMDIN_MESSENGER_OFFLINE);
+  socketIOInstance.removeAllListeners(LISTENER_CONSTANTS.MESSAGE_DELIVERED);
+  socketIOInstance.removeAllListeners(LISTENER_CONSTANTS.GENERAL_SOCKET_IO_ERR);
+};
+

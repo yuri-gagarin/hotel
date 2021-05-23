@@ -70,6 +70,14 @@ export const receiveMessage = (socketId: string, messageData: MessageData): Rece
   };
 };
 
+const adminMessengerOfflineResponse = (data: { newMessage: MessageData }): any => {
+  const { newMessage } = data;
+  return {
+    type: "AdminMessengerOfflineResponse",
+    payload: { loading: false, newMessage }
+  };
+};
+
 
 /*
 export const clearConversationState = () => {
@@ -125,7 +133,7 @@ export const handleFetchConversation = (dispatch: Dispatch<ConversationAction>, 
 /* send - receive messages */
 export const handleSendMessage = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
   if (socket.connected) {
-    socket.emit("newMessageSent", messageData);
+    socket.emit("newClientMessageSent", messageData);
     dispatch(sendMessage(messageData));
     return Promise.resolve(true);
   } else {
@@ -141,6 +149,12 @@ export const handleReceiveMessage = (dispatch: Dispatch<ConversationAction>, soc
   dispatch(receiveMessage(socketId, messageData));
   return Promise.resolve(true);
 };
+export const handleAdminMessengerOfflineResponse = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
+  return new Promise((res) => {
+    dispatch(adminMessengerOfflineResponse({ newMessage: messageData }));
+    res(true);
+  });
+};  
 
 /* non API related actions to components */
 export const handleConversationOpen = (dispatch: Dispatch<ConversationAction>, currentState: ConversationState): void => {
