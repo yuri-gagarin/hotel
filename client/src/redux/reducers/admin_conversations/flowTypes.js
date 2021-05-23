@@ -23,9 +23,9 @@ export type AdminConversationData = {|
   createdAt: string;
 |};
 
-export type MessengerOnlineToggleArgs = {|
+export type MessengerOnlineToggleArgs = {
   messengerOnline: boolean;
-|};
+};
 
 // //
 export type ToggleAdminMessengerOnlineStatus = {|

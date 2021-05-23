@@ -195,3 +195,7 @@ export const handleNewMessage = (dispatch: Dispatch<AdminConversationAction>, ne
   sender === "admin" ? dispatch(sendAdminMessage(stateUpdateData)) : dispatch(newClientMessage(stateUpdateData));
   return Promise.resolve(true);
 };
+
+export const handleSetAdminConversationError = (dispatch: Dispatch<AdminConversationAction>, error: any): void => {
+  dispatch(setAdminConversationError(error));
+};

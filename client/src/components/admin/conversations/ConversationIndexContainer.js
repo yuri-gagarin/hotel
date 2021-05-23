@@ -21,6 +21,7 @@ import type { MessageData } from "../../../redux/reducers/conversations/flowType
 import { socket } from "./../../../App";
 // helpers //
 import { objectValuesEmpty } from "../../helpers/displayHelpers";
+import { setClientSocketIOEventListeners, removeClientSocketIOEventListeners } from "../_helpers/clientSocketIOHelpers";
 
 type WrapperProps = {|
   history: RouterHistory;
@@ -36,9 +37,10 @@ type Props = {
   _handleFetchAdminConversations: () => Promise<boolean>;
   _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => void;
   _handleNewMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
+  _dispatch: Dispatch<AdminConversationAction>;
 };
 const ConversationIndexContainer = ({ 
-  history, adminState, adminConversationState, 
+  history, adminState, adminConversationState, _dispatch,
   _handleToggleAdminMessengerOnlineStatus, _handleSetAdminMessengerOnlineStatus, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleFetchAdminConversations, _handleDeleteAdminConversation, _handleNewMessage }: Props): React.Node => {
     // redux state props //
 
@@ -46,18 +48,13 @@ const ConversationIndexContainer = ({
     let mounted = true;
 
     if (mounted) {
-      socket.on("newClientMessage", (data: MessageData) => {
-        _handleNewMessage(data, adminConversationState);
-      });
-      socket.on("generalSocketIOError", (err) => {
-        console.log(err);
-      });
-      socket.on("setAdminMessengerOnlineStatus", ({ messengerOnline }: { messengerOnline: boolean }) => {
-       _handleSetAdminMessengerOnlineStatus({ messengerOnline });
-      });
+      setClientSocketIOEventListeners(socket, _dispatch);
       _handleFetchAdminConversations();
     }
-    return () => { mounted = false };
+    return () => { 
+      mounted = false;
+      removeClientSocketIOEventListeners(socket);
+    };
   }, []);
 
   const openConversation = (conversationId: string): void => {
@@ -126,8 +123,9 @@ const mapDispatchToProps = (dispatch: Dispatch<AdminConversationAction>) => {
     _handleCloseAdminConversation: () => handleCloseAdminConversation(dispatch),
     _handleFetchAdminConversations: () => handleFetchAdminConversations(dispatch),
     _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => handleDeleteAdminConversation(dispatch, conversationId, currentAdminConversationState),
-    _handleNewMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => handleNewMessage(dispatch, messageData, currentAdminConversationState)
-  }
+    _handleNewMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => handleNewMessage(dispatch, messageData, currentAdminConversationState),
+    _dispatch: dispatch
+  };
 };  
 
 export default (connect(mapStateToProps, mapDispatchToProps)(ConversationIndexContainer): React.AbstractComponent<WrapperProps>);
