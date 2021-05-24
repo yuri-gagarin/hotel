@@ -32,7 +32,6 @@ import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
 import RoomsIndexContainer from './components/client_components/rooms/RoomsIndexContainer';
 import ServicesIndexComponent from "./components/client_components/services/ServicesIndexComponent";
 import DiningIndexComponent from './components/client_components/dining/DiningIndex';
-import { ClientNotFoundComponent } from './components/client_components/shared/ClientNotFoundComponent';
 //
 export const socket = io.connect("http://localhost:8080");
 
@@ -72,18 +71,14 @@ const AppRoutes = (props) => {
     }
   }, []);
   
-
+  // admin routes should be protected lated //
   return (
     <Router>
       <ScrollToTop />
       <Switch>
+        <Route path={adminRoutes.ADMIN_LOGIN} component={AdminLoginComponent} />
         <Route path={"/admin"} loggedIn={true} component={AdminComponent} />
-        <Route path={adminRoutes.ADMIN_LOGIN} exact={true} component={AdminLoginComponent} />
-        <Route path={"/rooms"} exact={true} component={RoomsIndexContainer} />
-        <Route path={"/services"} exact={true} component={ServicesIndexComponent} />
-        <Route path={'/dining'} exact={true} component={ DiningIndexComponent } />
-        <Route path={appRoutes.HOME_ROUTE} exact={true} component={HomeComponent} />
-        <Route component={ ClientNotFoundComponent } />
+        <Route path={"/"} component={HomeComponent} />
        </Switch>
     </Router>
   );

@@ -30,17 +30,6 @@ type SoundState = {
   receiveMessageSound: HTMLAudioElement | null;
 };
 
-/*
-const mockMessageData: Array<MessageData> = [
-  { _id: "1", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "client", messageContent: "fafaefe faefae faef aefaefea", sentAt: new Date().toISOString() },
-  { _id: "2", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "client", messageContent: "fafaefe faefae faef aefaefea", sentAt: new Date().toISOString() },
-  { _id: "3", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "client", messageContent: "fafaefe faefae faef aefaefea", sentAt: new Date().toISOString() },
-  { _id: "4", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() },
-  { _id: "5", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() },
-  { _id: "6", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() },
-  { _id: "7", conversationId: "", senderSocketId: "", receiverSocketId: "", sender: "admin", messageContent: "fafaefe faefae faef aefaefea faef aefaefea faef aefaefea", sentAt: new Date().toISOString() }
-];
-*/
 
 const MessageForm = ({ open, clientState, conversationState, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage, handleConversationClose }: Props): React.Node => {
   const [ messageSounds, setMessageSounds ] = React.useState<SoundState>({ sendMessageSound: null, receiveMessageSound: null }); 
@@ -53,18 +42,6 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
 
   React.useEffect(() => {
     const messageInput = document.getElementById("lastMessageSpacer");
-
-    socket.on("sendMessageSuccess", (messageData: MessageData) => {
-      handleReceiveMessage(messageData);
-    });
-    socket.on("messageReceived", (messageData: MessageData) => {
-      // listen for new incoming messages from admin //
-      const { id: socketId } = socket;
-      handleReceiveMessage(messageData);
-    });
-  }, []);
- 
-  React.useEffect(() => {
     // cache the message sounds //
     setMessageSounds({ 
       sendMessageSound: new Audio("/assets/media/sounds/sentMsg.mp3"),

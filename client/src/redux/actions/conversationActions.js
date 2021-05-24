@@ -25,7 +25,7 @@ const setClientConversationError = (err: any): SetClientConversationError => {
   };
 };
 
-export const openClientConversation = (data: { status: number, conversationId: string, senderSocketId: string, messages: Array<MessageData> }): OpenClientConversation => {
+const openClientConversation = (data: { status: number, conversationId: string, senderSocketId: string, messages: Array<MessageData> }): OpenClientConversation => {
   const { status, conversationId, senderSocketId, messages } = data;
   return {
     type: "OpenClientConversation",
@@ -33,14 +33,14 @@ export const openClientConversation = (data: { status: number, conversationId: s
   };
 };
 
-export const closeClientConversation = (): CloseClientConversation => {
+const closeClientConversation = (): CloseClientConversation => {
   return {
     type: "CloseClientConversation",
     payload: { messengerOpen: false }
   };
 };
 
-export const updateClientConversation = (data: { status: number,  conversationId: string, receiverSocketId: string, senderSocketId: string, messages: Array<MessageData> }): UpdateClientConversation => {
+const updateClientConversation = (data: { status: number,  conversationId: string, receiverSocketId: string, senderSocketId: string, messages: Array<MessageData> }): UpdateClientConversation => {
   const { status, conversationId, receiverSocketId, senderSocketId, messages } = data;
   return {
     type: "UpdateClientConversation",
@@ -48,21 +48,21 @@ export const updateClientConversation = (data: { status: number,  conversationId
   };
 };
 
-export const sendClientMessage = (newMessage: MessageData): SendClientMessage => {
+const sendClientMessage = (newMessage: MessageData): SendClientMessage => {
   return {
     type: "SendClientMessage",
     payload: { loading: true, messageSending: true, newMessage: newMessage }
   };
 };
 
-export const sendClientMessageSuccess = (messageData: MessageData): SendClientMessageSuccess => {
+const sendClientMessageSuccess = (messageData: MessageData): SendClientMessageSuccess => {
   return {
     type: "SendClientMessageSuccess",
     payload: { loading: false, messageSending: false, message: messageData }
   };
 };
 
-export const receiveAdminMessage = (socketId: string, messageData: MessageData): ReceiveAdminMessage => {
+const receiveAdminMessage = (socketId: string, messageData: MessageData): ReceiveAdminMessage => {
   const { senderSocketId, receiverSocketId, conversationId } = messageData;
   return {
     type: "ReceiveAdminMessage",
@@ -77,26 +77,6 @@ const adminMessengerOfflineResponse = (data: { newMessage: MessageData }): Admin
     payload: { loading: false, newMessage }
   };
 };
-
-
-/*
-export const clearConversationState = () => {
-  console.log("called clear conversation state")
-  return {
-    type: CLEAR_CONVERSATION_STATE,
-    payload: {
-      responseMsg: "",
-      loading: false,
-      userMessaging: false,
-      conversationId: null,
-      clientSocketId: null,
-      adminSocketId: null,
-      messages: [],
-      error: null
-    }
-  }
-};
-*/
 
 /* exported actions to components */
 export const handleFetchConversation = (dispatch: Dispatch<ConversationAction>, conversationId: string): Promise<boolean> => {
@@ -132,14 +112,16 @@ export const handleFetchConversation = (dispatch: Dispatch<ConversationAction>, 
 
 /* send - receive messages */
 export const handleSendMessage = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
-  if (socket.connected) {
-    socket.emit("newClientMessageSent", messageData);
-    dispatch(sendClientMessage(messageData));
-    return Promise.resolve(true);
-  } else {
-    // do a regular api call here to save to DB //
-    return Promise.resolve(true);
-  }
+  return new Promise((resolve, reject) => {
+    if (socket.connected) {
+      dispatch(sendClientMessage(messageData));
+      socket.emit("newClientMessageSent", messageData);
+      resolve(true);
+    } else {
+      // do a regular api call here to save to DB //
+      reject(new Error("Error in insant messenger connection"));
+    }
+  })
 };
 export const handleSendMessageSuccess = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
   dispatch(sendClientMessageSuccess(messageData));
@@ -164,52 +146,3 @@ export const handleConversationOpen = (dispatch: Dispatch<ConversationAction>, c
 export const handleConversationClose = (dispatch: Dispatch<ConversationAction>): void => {
   return dispatch(closeClientConversation());
 };
-/*
-export const fetchAllConversations = (dispatch) => {
-  let status, data;
-  dispatch(conversationRequest());
-  const requestOptions = {
-    method: "get",
-    url: "/api/conversations"
-  };
-  return axios(requestOptions)
-    .then((response) => {
-      const { status, data } = response;
-      const { responseMsg, conversations } = data;
-      dispatch(conversationSuccess(null, []))
-      dispatch(setAdminConversations({ status, responseMsg }, conversations));
-    })
-    .catch((error) => {
-      console.error(error);
-      dispatch(conversationError(error));
-    });
-};
-*/
-
-/*
-export const deleteConversation = (dispatch, conversationId, currentConversationId) => {
-  let status, data;
-  dispatch(conversationRequest());
-  const requestOptions = {
-    method: "delete",
-    url: "/api/conversations/" + conversationId
-  };
-  return axios(requestOptions)
-    .then((response) => {
-      status = response.status;
-      const { responseMsg, conversationId } = response.data;
-      // remove active conversation from the admin dash //
-      dispatch(removeAdminConversation(conversationId, responseMsg));
-      if (currentConversationId && (currentConversationId == conversationId)) {
-        console.log(217)
-        dispatch(clearConversationState());
-      }
-      return true;
-    })
-    .catch((error) => {
-      console.log(152)
-      dispatch(conversationError(error));
-      return false;
-    });
-};
-*/

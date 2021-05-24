@@ -49,7 +49,10 @@ const MessengerContainer = ({
   React.useEffect(() => {
     const socketInstance: Socket = socket; // remove after typing <App.js> //
     setClientSocketIOListeners(socketInstance, _dispatch);
-    socketInstance.emit("hello", { data: "mockdata" });
+    return () => {
+      // remove socket listeners on component unload //
+      removeClientSocketIOListeneres(socketInstance);
+    }
   }, []);
 
   return (

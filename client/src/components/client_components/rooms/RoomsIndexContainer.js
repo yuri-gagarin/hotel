@@ -7,8 +7,6 @@ import { Button, Col, Container, Carousel, Modal, Row } from "react-bootstrap";
 import { AnimatedBorder } from "../shared/AnimatedBorder";
 import { AnimatedBorderButton } from "../shared/AnimatedBorderButton";
 import GenericImgModalCarousel from "../shared/GenericImgModalCarousel";
-import FooterComponent from "../footer/Footer";
-import NavbarComponent from "../navbar/NavbarComponent";
 import Room from "./Room";
 import ClipText from "../../admin/shared/ClipText";
 // redux imports //
@@ -26,7 +24,7 @@ import { setImagePath } from "../../helpers/displayHelpers";
 type Props = {
   history: RouterHistory,
   roomState: RoomState,
-  _handleFetchRooms: (data? : any) => Promise<boolean>
+  _handleFetchRooms: (data?: any) => Promise<boolean>
 };
 
 type LocalComponentState = {
@@ -96,7 +94,6 @@ const RoomsIndexContainer = ({ history, roomState, _handleFetchRooms }: Props): 
         imgURLS={ localComponentState.imgURLS } 
         imageIndex={ localComponentState.imageIndex }
       />
-      <NavbarComponent hidden={ localComponentState.showModal ? true : false } />
       <div className={ styles.parallax }>
         <div className={ styles.exploreBtnWrapper }>
           <AnimatedBorderButton onClick={ handleScrollToContnent } />
@@ -133,7 +130,6 @@ const RoomsIndexContainer = ({ history, roomState, _handleFetchRooms }: Props): 
           )
         })
       } 
-      <FooterComponent history={history} />
     </div>
   );
 };

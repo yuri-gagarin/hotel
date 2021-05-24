@@ -3,6 +3,7 @@ import * as React from "react";
 import $ from "jquery";
 import ObjectID from "bson-objectid";
 // component imports //
+import { ClientNotFoundComponent } from './shared/ClientNotFoundComponent';
 import { HomePageServices } from "./services/home_page/HomePageServices";
 import NavbarComponent from "./navbar/NavbarComponent";
 import MainHeaderComponent from "./main_header/MainHeaderComponent";
@@ -12,12 +13,16 @@ import MessengerContainer from "./messaging/MessengerContainer";
 import BookingForm from "./forms/BookingForm";
 import SuccessComponent from "../display_components/SuccessComponent";
 import ErrorComponent from "../display_components/ErrorComponent";
+import RoomsIndexContainer from "./rooms/RoomsIndexContainer";
+import DiningIndexContainer from "./dining/DiningIndex";
+import ServicesIndexComponent from "./services/ServicesIndexComponent";
 // redux imports //
 import { connect } from "react-redux";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
 import { handleFetchRooms } from "../../redux/actions/roomActions";
+import { handleFetchServices } from "../../redux/actions/serviceActions";
 // react router //
-import { withRouter } from "react-router-dom";
+import { withRouter, Route, Switch } from "react-router-dom";
 // additional imports //
 import { handleSetGuestClient } from "../../redux/actions/clientActions";
 import { navbarCollapseListener } from "../helpers/componentHelpers";
@@ -45,9 +50,12 @@ type Props = {
   _clearSuccessState: () => void;
   _handleSetGuestClient: (data: any) => void;
   _handleFetchRooms: (options?: RoomFetchOptions) => Promise<boolean>;
+  _handleFetchServices: (options?: any) => Promise<boolean>;
 };
 
-const HomeComponent = ({ history, appGeneralState, clientState, roomState, serviceState, diningEntertainmentState, _clearAppError, _clearSuccessState, _handleSetGuestClient, _handleFetchRooms }: Props): React.Node => {
+const HomeComponent = ({ 
+  history, appGeneralState, clientState, roomState, serviceState, diningEntertainmentState,
+  _clearAppError, _clearSuccessState, _handleSetGuestClient, _handleFetchRooms, _handleFetchServices }: Props): React.Node => {
   const [ successTimeout, setSuccessTimeout ] = React.useState(null);
   const [ errorTimeout, setErrorTimeout ] = React.useState(null);
 
@@ -122,14 +130,34 @@ const HomeComponent = ({ history, appGeneralState, clientState, roomState, servi
    
   return (
     <div style={{ width: "100vw" }}>
-      <SuccessComponent appGeneralState={appGeneralState} clearSuccessState={_clearSuccessState} />
-      <ErrorComponent appGeneralState={appGeneralState} clearAppError={_clearAppError} />
       <NavbarComponent />
-      <MainHeaderComponent />
-      <BookingForm />
-      <HomePageServices history={ history } roomState={ roomState } diningEntertainmentState={ diningEntertainmentState } serviceState={ serviceState } />
-      <ContactForm />
-      <MessengerContainer />
+      <Route path={"/rooms"}>
+        <RoomsIndexContainer 
+          history={history}
+          roomState={roomState}
+          _handleFetchRooms={_handleFetchRooms}
+        />
+      </Route>
+      <Route path={"/dining"}>
+        <DiningIndexContainer
+          history={history}
+        />
+      </Route>
+      <Route path={"/services"}>
+        <ServicesIndexComponent
+          history={history}
+          serviceState={ serviceState }
+          _handleFetchServices={ _handleFetchServices }
+        />
+      </Route>
+      <Route path={"/"} exact={true}>
+        <MainHeaderComponent />
+        <BookingForm />
+        <HomePageServices history={ history } roomState={ roomState } diningEntertainmentState={ diningEntertainmentState } serviceState={ serviceState } />
+        <ContactForm />
+        <MessengerContainer />
+      </Route>
+      <Route component={ ClientNotFoundComponent } />
       <Footer history={ history } />
     </div>
   );
@@ -150,7 +178,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     _handleSetGuestClient: (clientData: ClientData) => handleSetGuestClient(dispatch, clientData),
     _clearAppError: () => dispatch(clearAppError()),
     _clearSuccessState: () => dispatch(clearSuccessState()),
-    _handleFetchRooms: (options: RoomFetchOptions) => handleFetchRooms(dispatch, options)
+    _handleFetchRooms: (options: RoomFetchOptions) => handleFetchRooms(dispatch, options),
+    _handleFetchServices: (options: any) => handleFetchServices(dispatch)
   };
 };
 export default (connect(mapStateToProps, mapDispatchToProps)(HomeComponent): React.AbstractComponent<Props>);

@@ -6,7 +6,6 @@ import { Row, Col } from "react-bootstrap";
 import ClipText from "../../admin/shared/ClipText";
 import { CafeComponent } from "./cafe/CafeComponent";
 import { LoungeComponent } from "./lounge/LoungeComponent";
-import NavbarComponent from "../navbar/NavbarComponent";
 import { RestaurantComponent } from "./restaurant/RestaurantComponent";
 // redux //
 import { connect } from "react-redux";
@@ -18,8 +17,6 @@ import type { RootState } from "../../../redux/reducers/_helpers/createReducer";
 import type { DiningEntertainmentState } from "../../../redux/reducers/dining_entertainment/flowTypes";
 import type { RouterHistory } from "react-router-dom";
 // helpers //
-import { navbarCollapseListener } from "../../helpers/componentHelpers";
-import Footer from "../footer/Footer";
 
 type WrapperProps = {|
   history: RouterHistory;
@@ -43,22 +40,6 @@ const DiningIndexContainer = ({ history, diningEntertainmentState, _handleFetchD
     _handleFetchDiningEntModels({ live: true });
   }, []);
 
-  React.useEffect(() => {
-    if (headerRowRef.current) {
-      window.onscroll = () => {
-        const headerRowRefY: number = headerRowRef.current ? headerRowRef.current.getBoundingClientRect().top : 0;
-        if (headerRowRefY <= 50) {
-          if (!headerRowState.headerFixed) {
-            setHeaderRowState({ headerFixed: true, headerTop: "50px" });
-          }
-        }
-      }
-    }
-    return () => {
-      window.onscroll = null;
-    }
-  }, [ headerRowRef.current ]);
-
   const scrollToContent = () => {
     const intViewportHeight = window.innerHeight;
     window.scrollTo({ top: intViewportHeight - 180, behavior: "smooth" });
@@ -66,7 +47,6 @@ const DiningIndexContainer = ({ history, diningEntertainmentState, _handleFetchD
 
   return (
     <div className={ styles.diningIndexContainer }>
-      <NavbarComponent />
       <div className={ `${styles.parallaxGroup} ${styles.parallaxContainer}` }>
         <div className={ `${styles.headerRow} ${headerRowState.headerFixed ? styles.headerFixed : ""}` } style={ headerRowState.headerFixed ? { top: headerRowState.headerTop } : {}} ref={ headerRowRef }>
           <div className={ `${styles.svgContainer} ${headerRowState.headerFixed ? styles.svgContainerFixed : "" }` }>
@@ -89,7 +69,6 @@ const DiningIndexContainer = ({ history, diningEntertainmentState, _handleFetchD
       <div className={ styles.plainSpacer }></div>
       <LoungeComponent diningOption={ diningEntertainmentState.diningEntModelData } />
       <div className={ styles.plainSpacer }></div>
-      <Footer history={ history } />
     </div>
   );
 };

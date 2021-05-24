@@ -3,7 +3,6 @@ import * as React from "react";
 // additonal components //
 import { AnimatedBorder } from "../shared/AnimatedBorder";
 import { AnimatedBorderButton } from "../shared/AnimatedBorderButton";
-import NavbarComponent from "../navbar/NavbarComponent";
 import ClipText from "../../admin/shared/ClipText";
 import ServiceClientView from "./ServiceClientView";
 import GenericImgModalCarousel from "../shared/GenericImgModalCarousel";
@@ -17,7 +16,6 @@ import { handleFetchServices } from "../../../redux/actions/serviceActions";
 import type { ServiceState, ServiceAction } from "../../../redux/reducers/service/flowTypes";
 import type { Dispatch, RootState } from "../../../redux/reducers/_helpers/createReducer";
 // helpers //
-import { navbarCollapseListener } from "../../helpers/componentHelpers";
 
 type Props = {
   serviceState: ServiceState,
@@ -34,31 +32,8 @@ const ServicesIndexComponent = ({ _handleFetchServices, serviceState }): React.N
   const [ picureModalState, setPictureModalState ] = React.useState<PicureModalState>({ modalOpen: false, imgURLS: [], imageIndex: 0 })
   const indexRowRef = React.useRef<HTMLElement | null>(null);
 
-  React.useEffect(() => {
-    if (indexRowRef.current) {
-      const mainNav = document.getElementById("mainNav");
-      if (mainNav) {
-        const navHeight = mainNav.getBoundingClientRect().height;
-        window.onscroll = () => {
-          const indexRowRefY = indexRowRef.current ? indexRowRef.current.getBoundingClientRect().top : 0;
-          if (indexRowRefY <= navHeight) {
-            if (!headerFixed) {
-              console.log(91)
-              setHeaderFixed(true);
-            }
-          }
-  
-        }
-      }
-     
-    }
-    return () => {
-      window.onscroll = null;
-    }
-  }, [ indexRowRef.current, headerFixed ]);
 
   React.useEffect(() => {
-    navbarCollapseListener();
     _handleFetchServices();
   }, []);
 
@@ -75,7 +50,6 @@ const ServicesIndexComponent = ({ _handleFetchServices, serviceState }): React.N
 
   return (
     <div className={ styles.mainContainer }>
-      <NavbarComponent />
       <div className={ styles.parallaxContainer }>
         <div className={ styles.headerRow }>
           <div className={ styles.animatedHeaderBorderTop }></div>
