@@ -63,7 +63,7 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
   const sendMessage = (content: string): Promise<boolean> => {
     const newMessageData: MessageData = {
       _id: ObjectID().toHexString(),
-      conversationId: conversationId ? conversationId : "",
+      conversationId: conversationId ? conversationId : ObjectID().toHexString(),
       receiverSocketId: "",
       senderSocketId: socket.id,
       sender: "client",

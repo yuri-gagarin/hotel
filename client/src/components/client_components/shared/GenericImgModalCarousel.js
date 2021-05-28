@@ -18,7 +18,7 @@ type Props = {
   imageIndex: number,
   closePictureModal: () => any
 }
-const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal } : Props): React.Node => {
+const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal }: Props): React.Node => {
   const [ index, setIndex ] = React.useState(imageIndex);
   // const [direction, setDirection] = useState(null);
   const settings = {

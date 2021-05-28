@@ -151,6 +151,7 @@ app.on("dbReady", () => {
     });
     // listen for an administrator to connect //
     socket.on("adminConnected", (admin) => {
+      console.log("adminConnected")
       RedisController.setAdminCredentials(admin)
         .then(() => {
           socket.emit("adminCredentialsReceived");
@@ -200,8 +201,8 @@ app.on("dbReady", () => {
             // save message to the database ? //
             const genericResponseMsg = {
               _id: mongoose.Types.ObjectId(),
-              conversationId: "",
-              receiverSocketId: "",
+              conversationId: socket.id,
+              receiverSocketId: socket.id,
               sender: "admin",
               senderSocketId: "",
               messageContent: "We are offline but your message has been sent to our servers",
@@ -209,6 +210,7 @@ app.on("dbReady", () => {
             }
             socket.emit("adminMessengerOffline", genericResponseMsg);
           } else {
+            console.log(data)
             for (const socketId of visibleAdminSocketIds) {
               io.to(socketId).emit("newClientMessage", data);
             }
@@ -233,12 +235,15 @@ app.on("dbReady", () => {
       console.log("client disconnected");
       const { id : socketId } = socket;
       // remove from redis mem //
-      return RedisController.removeClientCredentials({ socketId })
-        .then(() => {
-        })
-        .catch((err) => {
-          console.error(err);
-        })
+      return Promise.all([
+        RedisController.removeClientCredentials({ socketId }),
+        RedisController.removeVisibleAdmin(socketId)
+      ])
+      .then(() => {
+      })
+      .catch((err) => {
+        console.error(err);
+      })
     })
     socket.emit("hello", "hello there");
 

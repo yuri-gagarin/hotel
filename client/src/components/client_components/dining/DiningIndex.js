@@ -40,6 +40,22 @@ const DiningIndexContainer = ({ history, diningEntertainmentState, _handleFetchD
     _handleFetchDiningEntModels({ live: true });
   }, []);
 
+  React.useEffect(() => {
+    if (headerRowRef.current) {
+      window.onscroll = () => {
+        const headerRowRefY: number = headerRowRef.current ? headerRowRef.current.getBoundingClientRect().top : 0;
+        if (headerRowRefY <= 50) {
+          if (!headerRowState.headerFixed) {
+            setHeaderRowState({ headerFixed: true, headerTop: "50px" });
+          }
+        }
+      }
+    }
+    return () => {
+      window.onscroll = null;
+    }
+  }, [ headerRowRef.current ]);
+
   const scrollToContent = () => {
     const intViewportHeight = window.innerHeight;
     window.scrollTo({ top: intViewportHeight - 180, behavior: "smooth" });

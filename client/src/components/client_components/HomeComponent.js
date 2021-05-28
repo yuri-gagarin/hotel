@@ -3,7 +3,6 @@ import * as React from "react";
 import $ from "jquery";
 import ObjectID from "bson-objectid";
 // component imports //
-import { ClientNotFoundComponent } from './shared/ClientNotFoundComponent';
 import { HomePageServices } from "./services/home_page/HomePageServices";
 import NavbarComponent from "./navbar/NavbarComponent";
 import MainHeaderComponent from "./main_header/MainHeaderComponent";
@@ -131,33 +130,32 @@ const HomeComponent = ({
   return (
     <div style={{ width: "100vw" }}>
       <NavbarComponent />
-      <Route path={"/rooms"}>
+      <Route path={"/"} exact={true}>
+        <MainHeaderComponent />
+        <BookingForm />
+        <HomePageServices history={ history } roomState={ roomState } diningEntertainmentState={ diningEntertainmentState } serviceState={ serviceState } />
+        <ContactForm />
+      </Route>
+      <Route path={"/rooms"} exact={true}>
         <RoomsIndexContainer 
           history={history}
           roomState={roomState}
           _handleFetchRooms={_handleFetchRooms}
         />
       </Route>
-      <Route path={"/dining"}>
+      <Route path={"/dining"} exact={true}>
         <DiningIndexContainer
           history={history}
         />
       </Route>
-      <Route path={"/services"}>
+      <Route path={"/services"} exact={true}>
         <ServicesIndexComponent
           history={history}
           serviceState={ serviceState }
           _handleFetchServices={ _handleFetchServices }
         />
       </Route>
-      <Route path={"/"} exact={true}>
-        <MainHeaderComponent />
-        <BookingForm />
-        <HomePageServices history={ history } roomState={ roomState } diningEntertainmentState={ diningEntertainmentState } serviceState={ serviceState } />
-        <ContactForm />
-        <MessengerContainer />
-      </Route>
-      <Route component={ ClientNotFoundComponent } />
+      <MessengerContainer />
       <Footer history={ history } />
     </div>
   );

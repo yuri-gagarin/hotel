@@ -3,6 +3,8 @@
   left: 50%;
   transform: translateX(-50%);
   background: transparent !important;
+  z-index: 9999;
+  border: 5px solid red;
 }
 .carouselSlider {
   height: 600px;
