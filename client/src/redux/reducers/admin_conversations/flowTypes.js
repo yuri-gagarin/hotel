@@ -9,7 +9,7 @@ export type AdminConversationState = {|
   activeConversation: AdminConversationData;
   loadedAdminConversations: Array<AdminConversationData>;
   numberOfConversations: number;
-  connectedOnlineClients: Array<string>;
+  connectedOnlineClients: Array<ConnectedClientData>;
   error: any | null;
   errorMessages: Array<string>;
 |};
@@ -22,6 +22,12 @@ export type AdminConversationData = {|
   messages: Array<MessageData>;
   createdAt: string;
 |};
+export type ConnectedClientData = {|
+  _id: string;
+  email: string;
+  name: string;
+  socketId: string;
+|};
 
 export type MessengerOnlineToggleArgs = {
   messengerOnline: boolean;
@@ -33,6 +39,18 @@ export type ToggleAdminMessengerOnlineStatus = {|
   +payload: {
     loading: boolean;
     messengerOnline: boolean;
+  }
+|};
+export type NewClientConnection = {|
+  +type: "NewClientConnection";
+  +payload: {
+    newConnectedClientData: ConnectedClientData;
+  }
+|};
+export type ClientDisconnection = {|
+  +type: "ClientDisconnection";
+  +payload: {
+    updatedConnectedClients: Array<ConnectedClientData>;
   }
 |};
 export type OpenAdminConversation = {|
@@ -125,5 +143,5 @@ export type ClearAdminConversationError = {
   }
 };
 
-export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | SetAdminConversations | CreateNewAdminConveration |
+export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | NewClientConnection | ClientDisconnection | SetAdminConversations | CreateNewAdminConveration |
                                       CreateNewAdminConveration | DeleteAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;

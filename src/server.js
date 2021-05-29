@@ -127,7 +127,21 @@ app.on("dbReady", () => {
       }
       // set client id with socket id in redis to prevent multiple connections //
       return RedisController.setClientCredentials({ userId, socketId, name })
-        .then(() => {
+        .then((res) => {
+          if (res && res === 1) {
+            // new user //
+            return RedisController.getVisibleAdmins();
+          } else {
+            return Promise.resolve({ visibleAdminSocketIds: [] });
+          }
+          // emit new connection to admin? //
+        })
+        .then(({ visibleAdminSocketIds }) => {
+          if (visibleAdminSocketIds.length > 0) {
+            for (const adminSocketId of visibleAdminSocketIds) {
+              io.to(adminSocketId).emit("newClientConnected", { ...userState, socketId: socketId });
+            }
+          }
           socket.emit("clientCredentialsReceived");
         })
         .catch((err) => {
@@ -136,19 +150,7 @@ app.on("dbReady", () => {
         })
     });
 
-    socket.on("clientLeaving", (userState) => {
-      // remove client information from redis //
-      console.log("client leaving event")
-      const { _id: userId } = userState;
-      RedisController.removeClientCredentials({ userId })
-        .then(() => {
-          // emit to admins ? //
-        })
-        .catch((error) => {
-          console.error(error);
-          socket.emit("socketConnectionError", { message: "Somethin went wrong" });
-        })    
-    });
+
     // listen for an administrator to connect //
     socket.on("adminConnected", (admin) => {
       console.log("adminConnected")
@@ -235,10 +237,23 @@ app.on("dbReady", () => {
       console.log("client disconnected");
       const { id : socketId } = socket;
       // remove from redis mem //
-      return Promise.all([
-        RedisController.removeClientCredentials({ socketId }),
-        RedisController.removeVisibleAdmin(socketId)
-      ])
+      return RedisController.removeClientCredentials(socketId)
+        .then((res) => {
+          if (res && res === 1) {
+            console.log("guest client exited");
+            return RedisController.getVisibleAdmins()
+              .then(({ visibleAdminSocketIds }) => {
+                if (visibleAdminSocketIds.length > 0) {
+                  for (const adminSocketId of visibleAdminSocketIds) {
+                    io.to(adminSocketId).emit("clientDisconnected", { clientSocketId: socketId });
+                  }
+                }
+                return Promise.resolve()
+              })
+          } else {
+            return RedisController.removeVisibleAdmin(socketId);
+          }
+        })
       .then(() => {
       })
       .catch((err) => {

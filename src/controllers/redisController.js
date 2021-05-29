@@ -15,6 +15,12 @@ import redis from "redis";
  * @typedef {Object} VisibleAdminData 
  * @property {number} numberOfVisibleAdmins - Number of admins visible
  * @property {Array<string>} visibleAdminSocketIds -Visible admin socket ids
+ */
+/**
+ * @typedef {Object} ConnectedClientData 
+ * @property {number} numberOfConnectedClients = nnumber of connected clients
+ * @property {Array<string>} visibleClientSocketIds -Visible client socket ids
+ */
 /**
  * @typedef {Object} AdminMessengerStatus
  * @property {boolean} online - Messenger online status
@@ -55,12 +61,12 @@ const RedisController = ((redisOpts) => {
    * @returns {Promise<string>}
    */
   const setClientCredentials = (clientData) => {
-    const { userId, name, socketId } = clientData;
-    const userKey = `CLIENT_${socketId}`;
+    const { socketId } = clientData;
+    const userKey = `CONNECTED_CLIENTS`;
 
     return new Promise((resolve, reject) => {
-      redisInstance.HMSET(userKey, [ "userId", userId, "userName", name ], (err, res) => {
-        if (err) reject(err);
+      redisInstance.SADD(userKey, socketId, (err, res) => {
+        if (err) return reject(err);
         resolve(res);
       });
     });
@@ -68,15 +74,14 @@ const RedisController = ((redisOpts) => {
 
   /**
    * 
-   * @param {ClientData} clientData - Client data from socket connection
+   * @param {string} socketId - Socket Id string
    * @returns {Promise<boolean>}
    */
-  const removeClientCredentials = (clientData) => {
-    const { socketId } = clientData;
-    const userKey = `CLIENT_${socketId}`;
+  const removeClientCredentials = (socketId) => {
+    const userKey = `CONNECTED_CLIENTS`;
     return new Promise((resolve, reject) => {
-      redisInstance.DEL(userKey, (err, res) => {
-        if (err) reject(err);
+      redisInstance.SREM(userKey, socketId, (err, res) => {
+        if (err) return reject(err);
         resolve(res);
       });
     });
@@ -93,7 +98,7 @@ const RedisController = ((redisOpts) => {
 
     return new Promise((resolve, reject) => {
       redisInstance.HMSET(userKey, userId, (err, res) => {
-        if (err) reject(err);
+        if (err) return reject(err);
         resolve(res);
       });
     });
@@ -108,8 +113,7 @@ const RedisController = ((redisOpts) => {
     const listKey = "VISIBLE_ADMINS";
     return new Promise((resolve, reject) => {
       redisInstance.LPUSH(listKey, socketId, (err, num) => {
-        if (err) reject(err);
-        console.log(num, socketId)
+        if (err) return reject(err);
         resolve({ numberAdded: num, socketId: socketId });
       });
     });
@@ -123,7 +127,7 @@ const RedisController = ((redisOpts) => {
     const listKey = "VISIBLE_ADMINS";
     return new Promise((resolve, reject) => {
       redisInstance.LREM(listKey, 0, socketId, (err, num) => {
-        if (err) reject(err);
+        if (err) return reject(err);
         resolve({ numberRemoved: num, socketId: socketId });
       });
     });
@@ -136,18 +140,39 @@ const RedisController = ((redisOpts) => {
     const listKey = "VISIBLE_ADMINS";
     return new Promise((resolve, reject) => {
       redisInstance.LLEN(listKey, (err, num) => {
-        if (err) reject(err);
+        if (err) return reject(err);
         if (num === 0) {
-          resolve({ numberOfVisibleAdmins: 0, visibleAdminSocketIds: [] });
+          return resolve({ numberOfVisibleAdmins: 0, visibleAdminSocketIds: [] });
         } else {
           redisInstance.LRANGE(listKey, 0, -1, (err, socketIds) => {
-            if (err) reject(err);
-            resolve({ numberOfVisibleAdmins: num, visibleAdminSocketIds: socketIds });
+            if (err) return reject(err);
+            return resolve({ numberOfVisibleAdmins: num, visibleAdminSocketIds: socketIds });
           })
         }
       });
     });
   };
+  /**
+   * Gets all visible connected guest clients
+   * @returns {Promise<ConnectedClientData>}
+   */
+  const getConnectedClients = () => {
+    const listKey = "CONNECTED_CLIENTS";
+    return new Promise((resolve, reject) => {
+      redisInstance.SCARD(listKey, (err, num) => {
+        if (err) return reject(err);
+        if (num === 0) {
+          return resolve({ numberOfConnectedClients: 0, visibleClientSocketIds: [] });
+        } else {
+          redisInstance.SMEMBERS(listKey, (err, socketIds) => {
+            if (err) return reject(err);
+            return resolve({ getConnectedClients: num, visibleClientSocketIds: [ socketIds ]});
+          })
+        }
+
+      })
+    })
+  }
   /**
    * @param {NewMessage} messageData - message data coming from client socketIO connection
    * @returns {Promise<string>}
@@ -177,7 +202,7 @@ const RedisController = ((redisOpts) => {
     });
   }
 
-  return { setClientCredentials, removeClientCredentials, setAdminCredentials, setNewMessage, setNewVisibleAdmin, removeVisibleAdmin, getVisibleAdmins };
+  return { setClientCredentials, removeClientCredentials, setAdminCredentials, setNewMessage, setNewVisibleAdmin, removeVisibleAdmin, getVisibleAdmins, getConnectedClients };
 
 })();
 
