@@ -48,6 +48,7 @@ const ConversationIndexContainer = ({
     let mounted = true;
 
     if (mounted) {
+      setClientSocketIOEventListeners(socket, _dispatch);
       _handleFetchAdminConversations();
     }
     return () => { 
@@ -55,10 +56,6 @@ const ConversationIndexContainer = ({
       removeClientSocketIOEventListeners(socket);
     };
   }, []);
-
-  React.useEffect(() => {
-    setClientSocketIOEventListeners(socket, _dispatch, adminConversationState);
-  }, [ adminConversationState ]);
 
   const openConversation = (conversationId: string): void => {
     _handleOpenAdminConversation(conversationId, adminConversationState);

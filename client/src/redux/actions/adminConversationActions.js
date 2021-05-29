@@ -2,6 +2,7 @@
 import axios from "axios";
 import { setAxiosError } from "./helpers/errorHelpers";
 import { generateEmptyAdminConversationModel } from "../reducers/_helpers/emptyDataGenerators";
+import store from "../../redux/store";
 // types //
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 import type { 
@@ -110,8 +111,9 @@ export const handleSetAdminMessengerOnlineStatus = (dispatch: Dispatch<AdminConv
   dispatch(toggleAdminMessengerOnlineStatus({ messengerOnline }));
 };
 
-export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationAction>, newMessageData: MessageData, adminConversationState: AdminConversationState): Promise<boolean> => {
+export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationAction>, newMessageData: MessageData): Promise<boolean> => {
   // check if conversation already exists //
+  const adminConversationState: AdminConversationState = store.getState().adminConversationState;
   const conversationToUpdate = adminConversationState.loadedAdminConversations.filter((convData) => newMessageData.conversationId === convData.conversationId);
   let updatedState: AdminConversationState;
   if (conversationToUpdate.length === 1) {

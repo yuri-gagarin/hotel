@@ -201,7 +201,7 @@ app.on("dbReady", () => {
             // save message to the database ? //
             const genericResponseMsg = {
               _id: mongoose.Types.ObjectId(),
-              conversationId: socket.id,
+              conversationId: `CONVERSATION_${socket.id}`,
               receiverSocketId: socket.id,
               sender: "admin",
               senderSocketId: "",

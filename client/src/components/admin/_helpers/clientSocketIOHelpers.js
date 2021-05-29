@@ -6,9 +6,9 @@ import type { MessengerOnlineToggleArgs, AdminConversationState } from "../../..
 // redux state update actions //
 import { handleSetAdminMessengerOnlineStatus, handleSetAdminConversationError, handleNewClientMessage } from "../../../redux/actions/adminConversationActions";
 
-
-export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>, adminConversationState: AdminConversationState): void => {
+export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>): void => {
   // error listeners //
+  console.log(socketIOInstance.hasListeners("receiveClientMessage"))
   socketIOInstance.on("setAdminMessengerOnlineStatus", (data: MessengerOnlineToggleArgs) => {
     const { messengerOnline } = data;
     if (typeof messengerOnline === "boolean") {
@@ -20,9 +20,8 @@ export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispat
   });
   socketIOInstance.on("receiveClientMessage", (messageData: MessageData): void => {
     // new client message functionality //
-    console.log("client message received");
-    console.log(messageData);
-    handleNewClientMessage(dispatch, messageData, adminConversationState);
+    console.log(24);
+    handleNewClientMessage(dispatch, messageData);
   });
   socketIOInstance.on("generalSocketIOError", (error: any) => {
     handleSetAdminConversationError(dispatch, error);
