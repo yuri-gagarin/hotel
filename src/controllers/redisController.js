@@ -9,6 +9,8 @@ import redis from "redis";
 /**
  * @typedef {Object} ClientData
  * @property {string} userId - Client user id
+ * @property {string} name - Client name
+ * @property {string} email - Client email
  * @property {string} socketId - Client user id
  */
 /**
@@ -20,6 +22,7 @@ import redis from "redis";
  * @typedef {Object} ConnectedClientData 
  * @property {number} numberOfConnectedClients = nnumber of connected clients
  * @property {Array<string>} visibleClientSocketIds -Visible client socket ids
+ * @property {Array<string>} clientsDataArr -Visible clients data
  */
 /**
  * @typedef {Object} AdminMessengerStatus
@@ -51,6 +54,9 @@ import redis from "redis";
  */
 const RedisController = ((redisOpts) => {
   let redisInstance;
+  const clientsSetKey = `CONNECTED_CLIENTS_SET`;
+  const clientsHashMapKey = `CLIENT_DATA_HASH`;
+
   (() => {
     redisInstance = redis.createClient({ ...redisOpts});
   })();
@@ -62,12 +68,17 @@ const RedisController = ((redisOpts) => {
    */
   const setClientCredentials = (clientData) => {
     const { socketId } = clientData;
-    const userKey = `CONNECTED_CLIENTS`;
+    const userKey = `CONNECTED_CLIENTS_SET`;
+    const hashMapKey = `CLIENT_DATA_HASH`;
 
     return new Promise((resolve, reject) => {
-      redisInstance.SADD(userKey, socketId, (err, res) => {
+      const stringifiedData = JSON.stringify(clientData);
+      redisInstance.SADD(userKey, socketId,  (err, res) => {
         if (err) return reject(err);
-        resolve(res);
+        redisInstance.HMSET(hashMapKey, [ socketId, stringifiedData ], (err, res) => {
+          if (err) return reject(err);
+          return resolve(res);
+        })
       });
     });
   };
@@ -78,11 +89,14 @@ const RedisController = ((redisOpts) => {
    * @returns {Promise<boolean>}
    */
   const removeClientCredentials = (socketId) => {
-    const userKey = `CONNECTED_CLIENTS`;
+  
     return new Promise((resolve, reject) => {
-      redisInstance.SREM(userKey, socketId, (err, res) => {
+      redisInstance.SREM(clientsSetKey, socketId, (err, res) => {
         if (err) return reject(err);
-        resolve(res);
+        redisInstance.HDEL(clientsHashMapKey, socketId, (err, res) => {
+          if (err) return reject(err);
+          return resolve(true);
+        })
       });
     });
   };
@@ -157,22 +171,23 @@ const RedisController = ((redisOpts) => {
    * @returns {Promise<ConnectedClientData>}
    */
   const getConnectedClients = () => {
-    const listKey = "CONNECTED_CLIENTS";
     return new Promise((resolve, reject) => {
-      redisInstance.SCARD(listKey, (err, num) => {
+      redisInstance.SCARD(clientsSetKey, (err, num) => {
         if (err) return reject(err);
         if (num === 0) {
-          return resolve({ numberOfConnectedClients: 0, visibleClientSocketIds: [] });
+          return resolve({ numberOfConnectedClients: 0, visibleClientSocketIds: [], clientsDataArr: [] });
         } else {
-          redisInstance.SMEMBERS(listKey, (err, socketIds) => {
+          redisInstance.SMEMBERS(clientsSetKey, (err, socketIds) => {
             if (err) return reject(err);
-            return resolve({ getConnectedClients: num, visibleClientSocketIds: [ socketIds ]});
-          })
+            redisInstance.HVALS(clientsHashMapKey, (err, data) => {
+              if (err) return reject(err);
+              return resolve({ numberOfConnectedClients: num, visibleClientSocketIds: socketIds, clientsDataArr: data });
+            });
+          });
         }
-
-      })
-    })
-  }
+      });
+    });
+  };
   /**
    * @param {NewMessage} messageData - message data coming from client socketIO connection
    * @returns {Promise<string>}

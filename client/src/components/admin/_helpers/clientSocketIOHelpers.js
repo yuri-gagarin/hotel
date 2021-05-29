@@ -4,15 +4,27 @@ import type { Dispatch, AppAction } from "../../../redux/reducers/_helpers/creat
 import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
 import type { MessengerOnlineToggleArgs, AdminConversationState, ConnectedClientData } from "../../../redux/reducers/admin_conversations/flowTypes";
 // redux state update actions //
-import { handleSetAdminMessengerOnlineStatus, handleNewClientConnection, handleClientDisconnection, handleSetAdminConversationError, handleNewClientMessage } from "../../../redux/actions/adminConversationActions";
+import { handleSetAdminMessengerOnlineStatus, handleSetOnlineClients, handleNewClientConnection, handleClientDisconnection, handleSetAdminConversationError, handleNewClientMessage } from "../../../redux/actions/adminConversationActions";
 
 export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>): void => {
   // error listeners //
   console.log("ran set listeneres")
   socketIOInstance.on("setAdminMessengerOnlineStatus", (data: MessengerOnlineToggleArgs) => {
-    const { messengerOnline } = data;
+    const { messengerOnline, clientsDataArr } = data;
     if (typeof messengerOnline === "boolean") {
       handleSetAdminMessengerOnlineStatus(dispatch, { messengerOnline });
+      if (clientsDataArr && Array.isArray(clientsDataArr) && clientsDataArr.length > 0) {
+        const onlineClientsDataArr: Array<ConnectedClientData> = [];
+        try {
+          for (const clientDataString of clientsDataArr) {
+            const { userId, socketId, name, email }: { userId: string, socketId: string, name: string, email: string } = JSON.parse(clientDataString);
+            onlineClientsDataArr.push({ _id: userId, name, email, socketId });
+          }
+          handleSetOnlineClients(dispatch, onlineClientsDataArr);
+        } catch (error) {
+          console.log(error);
+        }
+      }
     } else {
       // handle an error here ? //
       handleSetAdminConversationError(dispatch, new TypeError("Invalid data type"));
@@ -26,8 +38,8 @@ export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispat
     const newConnectedClientData: ConnectedClientData = { _id, name, email, socketId };
     handleNewClientConnection(dispatch, newConnectedClientData);
   });
-  socketIOInstance.on("clientDisconnected", (data: ConnectedClientData) => {
-    handleClientDisconnection(dispatch, data);
+  socketIOInstance.on("clientDisconnected", ({ clientSocketId }: { clientSocketId: string }) => {
+    handleClientDisconnection(dispatch, { clientSocketId });
   });
   socketIOInstance.on("receiveClientMessage", (messageData: MessageData): void => {
     // new client message functionality //

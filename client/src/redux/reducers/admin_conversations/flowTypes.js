@@ -31,6 +31,9 @@ export type ConnectedClientData = {|
 
 export type MessengerOnlineToggleArgs = {
   messengerOnline: boolean;
+  numberOfConnectedClients?: number;
+  visibleClientsSocketIds?: Array<string | number>;
+  clientsDataArr?: Array<string>
 };
 
 // //
@@ -51,6 +54,12 @@ export type ClientDisconnection = {|
   +type: "ClientDisconnection";
   +payload: {
     updatedConnectedClients: Array<ConnectedClientData>;
+  }
+|};
+export type SetOnlineClients = {|
+  +type: "SetOnlineClients";
+  +payload: {
+    onlineClientsArr: Array<ConnectedClientData>;
   }
 |};
 export type OpenAdminConversation = {|
@@ -143,5 +152,5 @@ export type ClearAdminConversationError = {
   }
 };
 
-export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | NewClientConnection | ClientDisconnection | SetAdminConversations | CreateNewAdminConveration |
+export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | NewClientConnection | ClientDisconnection | SetOnlineClients | SetAdminConversations | CreateNewAdminConveration |
                                       CreateNewAdminConveration | DeleteAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;

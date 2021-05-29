@@ -119,14 +119,14 @@ app.on("dbReady", () => {
     console.log("connection");
 
     socket.on("receiveClientCredentials", (userState) => {
-      const { _id: userId, name } = userState;
+      const { _id: userId, name, email } = userState;
       const { id: socketId } = socket;
       if (!userId || !name) {
         socket.emit("generalSocketError", ({ message: "Could not resolve user" }));
         return;
       }
       // set client id with socket id in redis to prevent multiple connections //
-      return RedisController.setClientCredentials({ userId, socketId, name })
+      return RedisController.setClientCredentials({ userId, socketId, name, email })
         .then((res) => {
           if (res && res === 1) {
             // new user //
@@ -169,13 +169,17 @@ app.on("dbReady", () => {
       console.log("Status: " + messengerOnline);
       if (messengerOnline) {
         // take admin messenger online //
-        return RedisController.setNewVisibleAdmin(socketId)
-          .then(() => {
-            io.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: true });
-          })
-          .catch((error) => {
-            io.to(socketId).emit("generalSocketIOError", error);
-          });
+        return Promise.all( [
+          RedisController.setNewVisibleAdmin(socketId),
+          RedisController.getConnectedClients(),
+        ])
+        .then(([ _, connectedClientsRes ]) => {
+          const { numberOfConnectedClients, visibleClientSocketIds, clientsDataArr } = connectedClientsRes;
+          io.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: true, numberOfConnectedClients, visibleClientSocketIds, clientsDataArr });
+        })
+        .catch((error) => {
+          io.to(socketId).emit("generalSocketIOError", error);
+        });
       } else {
         // take admin messenger offline //
         return RedisController.removeVisibleAdmin(socketId)

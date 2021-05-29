@@ -49,6 +49,12 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         connectedOnlineClients: [ ...action.payload.updatedConnectedClients ]
       };
     }
+    case "SetOnlineClients": {
+      return {
+        ...state,
+        connectedOnlineClients: [ ...action.payload.onlineClientsArr ]
+      };
+    }
     case "SetAdminConversations": {
       return {
         ...state,

@@ -6,7 +6,7 @@ import store from "../../redux/store";
 // types //
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 import type { 
-  AdminConversationData, AdminConversationAction, AdminConversationState, ConnectedClientData, NewClientConnection, ClientDisconnection,
+  AdminConversationData, AdminConversationAction, AdminConversationState, ConnectedClientData, NewClientConnection, ClientDisconnection, SetOnlineClients,
   OpenAdminConversation, CloseAdminConversation, AdminConversationAPIRequest, ToggleAdminMessengerOnlineStatus, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
   NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
 } from "../reducers/admin_conversations/flowTypes";
@@ -51,6 +51,12 @@ const clientDisconnection = ({ updatedConnectedClients }: { updatedConnectedClie
   return {
     type: "ClientDisconnection",
     payload: { updatedConnectedClients }
+  };
+};
+const setOnlineClients = ({ onlineClientsArr }: { onlineClientsArr: Array<ConnectedClientData> }): SetOnlineClients => {
+  return {
+    type: "SetOnlineClients",
+    payload: { onlineClientsArr }
   };
 };
 //
@@ -126,10 +132,13 @@ export const handleSetAdminMessengerOnlineStatus = (dispatch: Dispatch<AdminConv
 export const handleNewClientConnection = (dispatch: Dispatch<AdminConversationAction>, newConnectedClientData: ConnectedClientData): void => {
   dispatch(newClientConnection({ newConnectedClientData }));
 };
-export const handleClientDisconnection = (dispatch: Dispatch<AdminConversationAction>, disconnectedClientData: ConnectedClientData): void => {
+export const handleClientDisconnection = (dispatch: Dispatch<AdminConversationAction>, { clientSocketId }: { clientSocketId: string }): void => {
   const adminConversationState: AdminConversationState = store.getState().adminConversationState;
-  const updatedConnectedClients = adminConversationState.connectedOnlineClients.filter((clientData) => clientData.socketId !== disconnectedClientData.socketId);
+  const updatedConnectedClients = adminConversationState.connectedOnlineClients.filter((clientData) => clientData.socketId !== clientSocketId);
   dispatch(clientDisconnection({ updatedConnectedClients }));
+};
+export const handleSetOnlineClients = (dispatch: Dispatch<AdminConversationAction>, onlineClientsArr: Array<ConnectedClientData>): void => {
+  dispatch(setOnlineClients({ onlineClientsArr }));
 };
 
 export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationAction>, newMessageData: MessageData): Promise<boolean> => {
