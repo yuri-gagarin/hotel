@@ -1,0 +1,16 @@
+.usersModalWrapperDiv {
+  border: 5px solid green;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+.onlineClientsModal {
+  border: 5px solid red;
+  position: absolute;
+  left: 50%;
+  top: 0%;
+  height: auto;
+  transform: translateX(-50%);
+}

@@ -238,13 +238,11 @@ app.on("dbReady", () => {
     // end client messaging //
     // end admin response 
     socket.once("disconnect", () => {
-      console.log("client disconnected");
       const { id : socketId } = socket;
       // remove from redis mem //
       return RedisController.removeClientCredentials(socketId)
         .then((res) => {
           if (res && res === 1) {
-            console.log("guest client exited");
             return RedisController.getVisibleAdmins()
               .then(({ visibleAdminSocketIds }) => {
                 if (visibleAdminSocketIds.length > 0) {

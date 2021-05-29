@@ -2,6 +2,7 @@
 import * as React from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
 // additional components //
+import { ConnectedClientsModal } from "./ConnectedClientsModal";
 import ConversationComponent from "./ConversationComponent";
 import { ConversationControls } from "./ConversationControls";
 import MessagesView from "./MessagesView";
@@ -43,7 +44,7 @@ const ConversationIndexContainer = ({
   history, adminState, adminConversationState, _dispatch,
   _handleToggleAdminMessengerOnlineStatus, _handleSetAdminMessengerOnlineStatus, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleFetchAdminConversations, _handleDeleteAdminConversation, _handleNewAdminMessage }: Props): React.Node => {
     // redux state props //
-
+  const [ onlineUsersModalOpen, setOnlineUsersModalOpen ] = React.useState<boolean>(false);
   React.useEffect(() => {
     let mounted = true;
 
@@ -69,13 +70,22 @@ const ConversationIndexContainer = ({
   const deleteConversation = (converstionId: string): void => {
     _handleDeleteAdminConversation
   };
+  const toggleModal = () => {
+    setOnlineUsersModalOpen(!onlineUsersModalOpen);
+  }
 
   return (
     <React.Fragment>
+      <ConnectedClientsModal 
+        modalOpen={ onlineUsersModalOpen }
+        toggleModal={ toggleModal }
+        onlineClients={ adminConversationState.connectedOnlineClients }
+      />
       <Grid.Row centered style={{ height: "10%", padding: 0 }}>
         <ConversationControls 
           adminConversationState={ adminConversationState } 
           handleToggleAdminMessengerOnlineStatus={ _handleToggleAdminMessengerOnlineStatus }
+          openUsersModal={ toggleModal }
         />
       </Grid.Row>
       <Grid.Row centered style={{ height: "80%" }} className={ styles.messengerIndexRow }>

@@ -8,8 +8,9 @@ import styles from "./css/conversationControls.module.css";
 type Props = {
   adminConversationState: AdminConversationState;
   handleToggleAdminMessengerOnlineStatus: (data: MessengerOnlineToggleArgs) => void;
+  openUsersModal: () => void;
 }
-export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus }: Props): React.Node => {
+export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, openUsersModal }: Props): React.Node => {
   const { messengerOnline } = adminConversationState;
   const toggleMessegnerOnlineOffline = () => {
     handleToggleAdminMessengerOnlineStatus({ messengerOnline: !messengerOnline });
@@ -42,7 +43,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
                     Message All
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item>
+                  <Dropdown.Item onClick={ openUsersModal }>
                     View All Users
                   </Dropdown.Item>
                   <Dropdown.Item>
