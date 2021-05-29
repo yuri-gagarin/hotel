@@ -30,7 +30,7 @@ const ConversationComponent = ({ adminConversationState, openConversation, close
               return (
                 <ConversationHolder 
                   key={conversation.conversationId}
-                  conversationState={adminConversationState}
+                  adminConversationState={adminConversationState}
                   conversation={conversation}
                   openConversation={openConversation}
                   closeConversation={closeConversation}

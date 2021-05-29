@@ -1,12 +1,13 @@
 // @flow
 import type { Socket } from "socket.io-client";
 import type { Dispatch, AppAction } from "../../../redux/reducers/_helpers/createReducer";
-import type { MessengerOnlineToggleArgs } from "../../../redux/reducers/admin_conversations/flowTypes";
+import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
+import type { MessengerOnlineToggleArgs, AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
 // redux state update actions //
-import { handleSetAdminMessengerOnlineStatus, handleSetAdminConversationError } from "../../../redux/actions/adminConversationActions";
+import { handleSetAdminMessengerOnlineStatus, handleSetAdminConversationError, handleNewClientMessage } from "../../../redux/actions/adminConversationActions";
 
 
-export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>): void => {
+export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>, adminConversationState: AdminConversationState): void => {
   // error listeners //
   socketIOInstance.on("setAdminMessengerOnlineStatus", (data: MessengerOnlineToggleArgs) => {
     const { messengerOnline } = data;
@@ -17,8 +18,11 @@ export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispat
       handleSetAdminConversationError(dispatch, new TypeError("Invalid data type"));
     }
   });
-  socketIOInstance.on("receiveClientMessage", () => {
+  socketIOInstance.on("receiveClientMessage", (messageData: MessageData): void => {
     // new client message functionality //
+    console.log("client message received");
+    console.log(messageData);
+    handleNewClientMessage(dispatch, messageData, adminConversationState);
   });
   socketIOInstance.on("generalSocketIOError", (error: any) => {
     handleSetAdminConversationError(dispatch, error);

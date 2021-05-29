@@ -154,15 +154,13 @@ const RedisController = ((redisOpts) => {
    */
   const setNewMessage = (messageData) => {
     let conversationKey;
-    const { conversationId, senderSocketId, messageContent } = messageData;
+    const { senderSocketId, messageContent } = messageData;
 
     if (!senderSocketId || !messageContent) {
       return Promise.reject(new Error("Invalid data"));
     }
 
-    if (!conversationId) {
-      conversationKey = `CONVERSATION_${senderSocketId}`;
-    }
+    conversationKey = `CONVERSATION_${senderSocketId}`;
 
     return new Promise((resolve, reject) => {
       try {
@@ -170,8 +168,6 @@ const RedisController = ((redisOpts) => {
 
         redisInstance.LPUSH(conversationKey, stringifiedMsgData, (err, num) => {
           if (err) reject(err);
-          console.log(113)
-          console.log(num)
           resolve(num);
         });
       } catch (error) {

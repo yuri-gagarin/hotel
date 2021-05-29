@@ -109,6 +109,70 @@ export const handleToggleAdminMessengerOnlineStatus = (dispatch: Dispatch<AdminC
 export const handleSetAdminMessengerOnlineStatus = (dispatch: Dispatch<AdminConversationAction>, { messengerOnline }: { messengerOnline: boolean }): void => {
   dispatch(toggleAdminMessengerOnlineStatus({ messengerOnline }));
 };
+
+export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationAction>, newMessageData: MessageData, adminConversationState: AdminConversationState): Promise<boolean> => {
+  // check if conversation already exists //
+  const conversationToUpdate = adminConversationState.loadedAdminConversations.filter((convData) => newMessageData.conversationId === convData.conversationId);
+  let updatedState: AdminConversationState;
+  if (conversationToUpdate.length === 1) {
+    // update is on an existing conversation and currently active conversation //
+    const updatedLoadedConversations = adminConversationState.loadedAdminConversations.map((convoData) => {
+      if (convoData.conversationId === newMessageData.conversationId) {
+        return {
+          ...convoData,
+          messages: [ ...convoData.messages, newMessageData ],
+          newMessages: [ ...convoData.newMessages, newMessageData ]
+        }
+      } else {
+        return convoData;
+      }
+    });
+    //
+    // update is on an existing non active conversation? //
+    if (conversationToUpdate[0].conversationId === adminConversationState.activeConversation.conversationId) {
+      updatedState = { 
+        ...adminConversationState, 
+        activeConversation: { 
+          ...adminConversationState.activeConversation, 
+          messages: [ ...adminConversationState.activeConversation.messages, newMessageData ],
+          newMessages: [ ...adminConversationState.activeConversation.newMessages, newMessageData ]
+        },
+        loadedAdminConversations: updatedLoadedConversations
+      };
+    } else {
+      const updatedLoadedConversations = adminConversationState.loadedAdminConversations.map((convoData) => {
+        if (convoData.conversationId === newMessageData.conversationId) {
+          return {
+            ...convoData,
+            messages: [ ...convoData.messages, newMessageData ],
+            newMessages: [ ...convoData.newMessages, newMessageData ]
+          }
+        } else {
+          return convoData;
+        }
+      });
+      updatedState = {
+        ...adminConversationState,
+        loadedAdminConversations: updatedLoadedConversations
+      };
+    }
+  } else {
+    const newConversation: AdminConversationData = {
+      archived: false,
+      conversationId: newMessageData.conversationId,
+      receiverSocketId: "",
+      messages: [ newMessageData ],
+      newMessages: [ newMessageData ],
+      createdAt: new Date().toISOString()
+    };
+    updatedState = {
+      ...adminConversationState,
+      loadedAdminConversations: [ ...adminConversationState.loadedAdminConversations, newConversation ]
+    }
+  }
+  dispatch(newClientMessage({ status: 200, responseMsg: "", activeConversation: updatedState.activeConversation, updatedAdminConversations: updatedState.loadedAdminConversations }));
+  return Promise.resolve(true);
+}
 export const handleFetchAdminConversations = (dispatch: Dispatch<AdminConversationAction>): Promise<boolean> => {
   const axiosOpts = {
     method: "GET",
@@ -169,33 +233,27 @@ export const handleDeleteAdminConversation = (dispatch: Dispatch<AdminConversati
     });
 };
 
-export const handleNewMessage = (dispatch: Dispatch<AdminConversationAction>, newMessageData: MessageData, currentAdminConversationState: AdminConversationState): Promise<boolean> => {
+
+export const handleNewAdminMessage = (dispatch: Dispatch<AdminConversationAction>, newMessageData: MessageData, currentAdminConversationState: AdminConversationState): Promise<boolean> => {
   const { activeConversation, loadedAdminConversations } = currentAdminConversationState;
-  const { conversationId, sender } = newMessageData;
-  // 
-  let stateUpdateData: { status: number, responseMsg: string, activeConversation: AdminConversationData, updatedAdminConversations: Array<AdminConversationData> } = { status: 200, responseMsg: "", activeConversation: { ...activeConversation }, updatedAdminConversations: [] };
-  if (conversationId === activeConversation.conversationId) { 
-    stateUpdateData.activeConversation.messages = [ ...activeConversation.messages, newMessageData ];
-    stateUpdateData.updatedAdminConversations = loadedAdminConversations.map((conversationData) => {
-      if (conversationData.conversationId === conversationId) {
-        return { ...conversationData, messages: [ ...conversationData.messages, newMessageData ]};
-      } else {
-        return conversationData;
-      }
-    });
-  } else {
-    stateUpdateData.updatedAdminConversations = loadedAdminConversations.map((conversationData) => {
-      if (conversationData.conversationId === conversationId) {
-        return { ...conversationData, messages: [ ...conversationData.messages, newMessageData ]};
-      } else {
-        return conversationData;
-      }
-    })
-  }
-  sender === "admin" ? dispatch(sendAdminMessage(stateUpdateData)) : dispatch(newClientMessage(stateUpdateData));
+  let updatedConversations: Array<AdminConversationData> = loadedAdminConversations.map((conversationData) => {
+    if (conversationData.conversationId === newMessageData.conversationId) {
+      return {
+        ...conversationData,
+        messages: [ ...conversationData.messages, newMessageData ]
+      };
+    } else {
+      return conversationData;
+    }
+  })
+  let stateUpdateData: { status: number, responseMsg: string, activeConversation: AdminConversationData, updatedAdminConversations: Array<AdminConversationData> } = {
+     status: 200, 
+     responseMsg: "", 
+     activeConversation: { ...activeConversation, messages: [ ...activeConversation.messages, newMessageData ] }, 
+     updatedAdminConversations: updatedConversations
+  };
   return Promise.resolve(true);
 };
-
 export const handleSetAdminConversationError = (dispatch: Dispatch<AdminConversationAction>, error: any): void => {
   dispatch(setAdminConversationError(error));
 };

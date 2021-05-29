@@ -11,7 +11,7 @@ import { closeConvoButton } from "./styles/style";
 import styles from "./css/conversationIndexContainer.module.css";
 // redux imports  //
 import { connect } from "react-redux";
-import { handleOpenAdminConversation, handleCloseAdminConversation, handleToggleAdminMessengerOnlineStatus, handleSetAdminMessengerOnlineStatus, handleFetchAdminConversations, handleDeleteAdminConversation, handleNewMessage } from "../../../redux/actions/adminConversationActions";
+import { handleOpenAdminConversation, handleCloseAdminConversation, handleToggleAdminMessengerOnlineStatus, handleSetAdminMessengerOnlineStatus, handleFetchAdminConversations, handleDeleteAdminConversation, handleNewAdminMessage } from "../../../redux/actions/adminConversationActions";
 // flow types //
 import type { RouterHistory } from "react-router-dom";
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
@@ -36,19 +36,18 @@ type Props = {
   _handleCloseAdminConversation: () => void;
   _handleFetchAdminConversations: () => Promise<boolean>;
   _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => void;
-  _handleNewMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
+  _handleNewAdminMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
   _dispatch: Dispatch<AdminConversationAction>;
 };
 const ConversationIndexContainer = ({ 
   history, adminState, adminConversationState, _dispatch,
-  _handleToggleAdminMessengerOnlineStatus, _handleSetAdminMessengerOnlineStatus, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleFetchAdminConversations, _handleDeleteAdminConversation, _handleNewMessage }: Props): React.Node => {
+  _handleToggleAdminMessengerOnlineStatus, _handleSetAdminMessengerOnlineStatus, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleFetchAdminConversations, _handleDeleteAdminConversation, _handleNewAdminMessage }: Props): React.Node => {
     // redux state props //
 
   React.useEffect(() => {
     let mounted = true;
 
     if (mounted) {
-      setClientSocketIOEventListeners(socket, _dispatch);
       _handleFetchAdminConversations();
     }
     return () => { 
@@ -56,6 +55,10 @@ const ConversationIndexContainer = ({
       removeClientSocketIOEventListeners(socket);
     };
   }, []);
+
+  React.useEffect(() => {
+    setClientSocketIOEventListeners(socket, _dispatch, adminConversationState);
+  }, [ adminConversationState ]);
 
   const openConversation = (conversationId: string): void => {
     _handleOpenAdminConversation(conversationId, adminConversationState);
@@ -96,7 +99,7 @@ const ConversationIndexContainer = ({
             <MessagesView 
               adminState={ adminState }
               adminConversationState={ adminConversationState }
-              sendAdminMessage={ _handleNewMessage }
+              sendAdminMessage={ _handleNewAdminMessage }
               closeConversation={ closeConversation }
             /> 
           }
@@ -123,7 +126,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AdminConversationAction>) => {
     _handleCloseAdminConversation: () => handleCloseAdminConversation(dispatch),
     _handleFetchAdminConversations: () => handleFetchAdminConversations(dispatch),
     _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => handleDeleteAdminConversation(dispatch, conversationId, currentAdminConversationState),
-    _handleNewMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => handleNewMessage(dispatch, messageData, currentAdminConversationState),
+    _handleNewAdminMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => handleNewAdminMessage(dispatch, messageData, currentAdminConversationState),
     _dispatch: dispatch
   };
 };  

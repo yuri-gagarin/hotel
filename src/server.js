@@ -210,9 +210,9 @@ app.on("dbReady", () => {
             }
             socket.emit("adminMessengerOffline", genericResponseMsg);
           } else {
-            console.log(data)
             for (const socketId of visibleAdminSocketIds) {
-              io.to(socketId).emit("newClientMessage", data);
+              console.log(214)
+              io.to(socketId).emit("receiveClientMessage", data);
             }
             return RedisController.setNewMessage(data)
               .then(() => {
