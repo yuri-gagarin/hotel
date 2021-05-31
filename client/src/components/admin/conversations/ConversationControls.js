@@ -59,15 +59,15 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
             <Menu.Menu position="right" className={ styles.rightMenu }>
               <div className={ styles.messengerStatusDisplay }>
                 <Popup 
-                  content="Your instant messenger is online"
+                  content={`${ messengerOnline ? "Your instant messenger is online" : "Your instant messenger is offline"}`}
                   position="top center"
                   trigger={
-                    <div className={ styles.conversationOnlineStatus }>
+                    <div className={ `${styles.conversationOnlineStatus} ${ messengerOnline ? styles.messengerOnline : styles.messengerOffline }` }>
 
                     </div>
                   }
                 />
-                <span>Online</span>
+                <span>{ messengerOnline ? "Online" : "Offline" }</span>
               </div>
             </Menu.Menu>
           </Menu>

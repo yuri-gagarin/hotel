@@ -1,9 +1,47 @@
 .messagesViewWrapper {
   height: 93%;
+  display: flex;
   border-top: 1px solid grey;
   border-left: 1px solid grey;
   border-right: 1px solid grey;
   border-radius: 3px 3px 0 0;
+  flex-direction: column;
+}
+.adminConvHeaderWrapper {
+  display: flex;
+  flex: 1;
+}
+.adminConvHeader {
+  display: flex;
+  flex: 8;
+  align-items: center;
+  background: #76b852;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #8DC26F, #76b852);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #8DC26F, #76b852); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  padding-left: 1em;
+  color: white;
+  font-weight: bold;
+}
+.adminConvClose {
+  display: flex;
+  flex: 2;
+  justify-content: center;
+  align-items: center;
+  background-color: orange;
+  cursor: pointer;
+  color: white;
+}
+.adminConvClose:hover {
+  background-color: rgb(245, 174, 41);
+}
+.messagesViewMessageDiv {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  flex: 9;
+
 }
 .messagesInputWrapper {
   height: 7%;

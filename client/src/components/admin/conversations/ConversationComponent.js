@@ -1,12 +1,14 @@
 // @flow
 import * as React from "react";
-import { Comment, Header, Segment } from "semantic-ui-react";
+import { Card, Header, Segment } from "semantic-ui-react";
 // addiotinal component imports //
-import ConversationHolder from "./ConversationHolder";
+import { ConversationCard } from "./ConversationCard";
 import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 // type imports //
 import type { AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
+// styles //
 import styles from "./css/conversationComponent.module.css";
+
 
 type Props = {
   adminConversationState: AdminConversationState;
@@ -14,21 +16,21 @@ type Props = {
   closeConversation: () => void;
   deleteConversation: (conversationId: string) => void;
 }
+
 const ConversationComponent = ({ adminConversationState, openConversation, closeConversation, deleteConversation}: Props): React.Node => {
   const { loadedAdminConversations } = adminConversationState;
+
+
   return (
     <div className={ styles.conversationComponentWrapper }>
       {
-        loadedAdminConversations.length > 0
+        adminConversationState.loadedAdminConversations.length > 0
         ?
-        <Comment.Group style={{ paddingRight: "0.5em" }}>
-          <Header as='h3' style={{textAlign: "center"}}>
-            Active Conversations
-          </Header>
+        <Card.Group centered className={ styles.conversationCardGroup }>
           {
-            loadedAdminConversations.map((conversation) => {
+            adminConversationState.loadedAdminConversations.map((conversation) => {
               return (
-                <ConversationHolder 
+                <ConversationCard
                   key={conversation.conversationId}
                   adminConversationState={adminConversationState}
                   conversation={conversation}
@@ -39,7 +41,7 @@ const ConversationComponent = ({ adminConversationState, openConversation, close
               );
             })
           }
-        </Comment.Group>
+        </Card.Group>
         :
         <GeneralNoModelsSegment customHeaderMessage="No Conversations" customContentMessage="You dont have any active conversations" />
       }

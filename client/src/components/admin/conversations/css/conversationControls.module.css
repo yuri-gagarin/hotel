@@ -10,7 +10,12 @@
   height: 25px;
   width: 25px;
   border-radius: 50%;
-  background: green;
+}
+.messengerOnline {
+  background-color: green;
+}
+.messengerOffline {
+  background-color: red;
 }
 .messengerStatusDisplay {
   display: flex;

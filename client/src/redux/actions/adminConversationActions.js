@@ -60,7 +60,7 @@ const setOnlineClients = ({ onlineClientsArr }: { onlineClientsArr: Array<Connec
   };
 };
 //
-const setAdminConversations = (data: { status: number, responseMsg: string, adminConversations: Array<AdminConversationData> }): SetAdminConversations => {
+export const setAdminConversations = (data: { status: number, responseMsg: string, adminConversations: Array<AdminConversationData> }): SetAdminConversations => {
   const { status, responseMsg, adminConversations } = data;
   return {
     type: "SetAdminConversations",

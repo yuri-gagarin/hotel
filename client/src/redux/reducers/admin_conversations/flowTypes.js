@@ -16,6 +16,7 @@ export type AdminConversationState = {|
 
 export type AdminConversationData = {|
   conversationId: string;
+  conversationName?: string;
   archived: boolean;
   receiverSocketId: string;
   newMessages: Array<MessageData>;

@@ -9,4 +9,10 @@
   border: 1px solid grey;
   border-radius: 3px;
   background: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.conversationCardGroup {
+  border: 5px solid red !important;
 }

@@ -1,48 +1,25 @@
-import React from "react";
-import {
-  Comment
-} from "semantic-ui-react";
+// @flow
+import * as React from "react";
 // style imports //
-import { messageStyle, responseStyle } from "./styles/style";
+import styles from "./css/message.module.css";
+// types //
+import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
 // additional dependencies //
 import { formatDate } from "../../helpers/dateHelpers";
-const Message = (props) => {
-  const { message, adminState } = props;
-  if (message.sender !== adminState.firstName) {
-    return (
-      <Comment style={responseStyle}>
-        <Comment.Content>
-          <Comment.Author style={{ marginBottom: "0.5em" }}>
-            <span>From: </span>{message.sender}</Comment.Author>
-          <Comment.Content style={{ marginBottom: "0.5em" }}>
-            {message.content}
-          </Comment.Content>
-          <Comment.Metadata style={{ marginLeft: 0 }}>
-            Sent At: {formatDate(message.sentAt, { military: true })}
-          </Comment.Metadata>
-          <Comment.Metadata>Read</Comment.Metadata>
-        </Comment.Content>
-      </Comment>
-    );
-  } else {
-    return(
-      <Comment style={messageStyle}>
-        <Comment.Content>
-          <Comment.Author style={{ marginBottom: "0.5em" }}>
-            <span>From: </span>{message.sender}
-          </Comment.Author>
-          <Comment.Content style={{ marginBottom: "0.5em" }}>
-            {message.content}
-          </Comment.Content>
-          <Comment.Metadata style={{ marginLeft: 0 }}>
-            Sent At: {formatDate(message.sentAt, { military: true })}
-          </Comment.Metadata>
-          <Comment.Metadata>Read</Comment.Metadata>
-        </Comment.Content>
-      </Comment>
-    );
-  }
-  
+
+type Props = {
+  adminState: any;
+  messageData: MessageData;
+}
+const Message = ({ adminState, messageData }: Props): React.Node => {
+
+  return (
+    <div className={ `${styles.messageWrapper} ${messageData.sender === "client" ? styles.messageLeft : styles.messageRight}` }>
+      <div className={ `${styles.message } ${messageData.sender === "client" ? styles.left : styles.right}`}>
+        <div>{messageData.messageContent}</div>
+      </div>
+    </div>
+  )
 };
 
 export default Message;

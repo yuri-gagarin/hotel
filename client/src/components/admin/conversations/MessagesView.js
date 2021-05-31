@@ -19,8 +19,7 @@ type Props = {
 const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, closeConversation }: Props): React.Node => {
   const { activeConversation, loadedAdminConversations } = adminConversationState;
   const [ message, setMessage ] = React.useState("");
-  const [messageSounds, setMessageSounds] = React.useState({});
-  const [sendBtnDisabled, setSendButtondDisabled] = React.useState(true);
+  const [ messageSounds, setMessageSounds ] = React.useState({});
   // set the sound effects for send, receive instant message //
   React.useEffect(() => { 
     // load sounds upon component load //
@@ -35,12 +34,10 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
     return function cleanup () { 
       setMessageSounds({});
     };
-  }, [])
+  }, []);
   // 
   React.useEffect(() => {
     const messagesView = document.getElementById("messagesView");
-    const messageInput = document.getElementById("messageInput");
-    if (messageInput) messageInput.scrollIntoView();
     if (messagesView) messagesView.scrollTo(0, messagesView.scrollHeight);
   }, [ loadedAdminConversations ]);
 
@@ -59,6 +56,7 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
   };
   const handleSendMessage = (e): void => {
     // first get the user information //
+    if (message.length === 0) return;
     const messageData: MessageData = {
       _id: ObjectID().toHexString(),
       conversationId: activeConversation.conversationId,
@@ -80,6 +78,7 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
   const handleKeyPress = (e): void => {
     if (e.key === "Enter") {
       // handle messages submission here //
+      if (message.length === 0) return;
       const messageData: MessageData = {
         _id: ObjectID().toHexString(),
         conversationId: activeConversation.conversationId,
@@ -102,23 +101,24 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
 
   return (
     <React.Fragment>
-      <div className={ styles.messagesViewWrapper } id="messagesView">
-        <Comment.Group style={{ maxWidth: "none" }}>
-          <div className="adminConvHeader">
-            <div className="adminConvTitle">
-              <p>ConversationWith: { setConversationTitle(activeConversation.messages, adminState) }</p>
-            </div>
-            <div className="adminCloseConvButton" onClick={ closeConversation }>
-              <p>Close Conversation</p>
-            </div>
+      <div className={ styles.messagesViewWrapper }>
+        <div className={ styles.adminConvHeaderWrapper }>
+          <div className={ styles.adminConvHeader }>
+            <p>ConversationWith: { setConversationTitle(activeConversation.messages, adminState) }</p>
           </div>
+          <div className={ styles.adminConvClose } onClick={ closeConversation }>
+            <p>Close Conversation</p>
+          </div>
+        </div>
+        <div className={ styles.messagesViewMessageDiv} id="messagesView">
+          
          
           {
             activeConversation.messages.map((message) => {
-              return <Message key={message._id} message={message} adminState={adminState} />
+              return <Message key={message._id} messageData={message} adminState={adminState} />
             })
           }
-        </Comment.Group>
+        </div>
       </div>
       <div className={ styles.messagesInputWrapper}>
         <Input 
@@ -127,8 +127,7 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
           action={{
             icon: "send",
             content: "Send",
-            onClick: sendAdminMessage,
-            disabled: sendBtnDisabled
+            onClick: sendAdminMessage
           }}
           onChange={handleInputChange}
           placeholder='message...' 

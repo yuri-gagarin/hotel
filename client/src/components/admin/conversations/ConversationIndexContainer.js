@@ -12,7 +12,7 @@ import { closeConvoButton } from "./styles/style";
 import styles from "./css/conversationIndexContainer.module.css";
 // redux imports  //
 import { connect } from "react-redux";
-import { handleOpenAdminConversation, handleCloseAdminConversation, handleToggleAdminMessengerOnlineStatus, handleSetAdminMessengerOnlineStatus, handleFetchAdminConversations, handleDeleteAdminConversation, handleNewAdminMessage } from "../../../redux/actions/adminConversationActions";
+import { handleOpenAdminConversation, handleCloseAdminConversation, handleToggleAdminMessengerOnlineStatus, handleSetAdminMessengerOnlineStatus, handleFetchAdminConversations, handleDeleteAdminConversation, handleNewAdminMessage, setAdminConversations } from "../../../redux/actions/adminConversationActions";
 // flow types //
 import type { RouterHistory } from "react-router-dom";
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
@@ -23,6 +23,8 @@ import { socket } from "./../../../App";
 // helpers //
 import { objectValuesEmpty } from "../../helpers/displayHelpers";
 import { setClientSocketIOEventListeners, removeClientSocketIOEventListeners } from "../_helpers/clientSocketIOHelpers";
+import { generateMockConversations } from "../../helpers/mockData";
+
 
 type WrapperProps = {|
   history: RouterHistory;
@@ -50,7 +52,9 @@ const ConversationIndexContainer = ({
 
     if (mounted) {
       setClientSocketIOEventListeners(socket, _dispatch);
-      _handleFetchAdminConversations();
+      //_handleFetchAdminConversations();
+      const mockConversations = generateMockConversations(12);
+      _dispatch(setAdminConversations({ status: 200, responseMsg: "ok", adminConversations: mockConversations }))
     }
     return () => { 
       mounted = false;
@@ -63,7 +67,7 @@ const ConversationIndexContainer = ({
   };
 
   const closeConversation = (): void => {
-    _handleCloseAdminConversation;
+    _handleCloseAdminConversation();
   };
   // TODO //
   // add a confirmation modal //

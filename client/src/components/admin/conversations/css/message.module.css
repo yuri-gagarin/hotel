@@ -1,0 +1,25 @@
+.messageWrapper {
+  display: flex;
+}
+.message {
+  display: flex;
+  border: 1px solid white;
+  padding: 1em 1em;
+  max-width: 75%;
+  color: white;
+}
+.messageLeft {
+  justify-content: flex-start;
+}
+.messageRight {
+  justify-content: flex-end;
+}
+
+.left {
+  background-color: rgb(68, 168, 68);
+  border-radius: 10px 10px 10px 0;
+}
+.right {
+  background-color: rgb(100, 164, 194);
+  border-radius: 10px 10px 0 10px;
+}
