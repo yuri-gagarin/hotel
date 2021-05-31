@@ -230,7 +230,8 @@ export const handleCreateNewAdminConversation = (dispatch: Dispatch<AdminConvers
     url: "/api/conversation",
     data: newConversationData
   };
-
+  // deal with api later //
+  /*
   return axios(axiosOpts)
     .then((response) => {
       const { status, data } = response;
@@ -242,7 +243,11 @@ export const handleCreateNewAdminConversation = (dispatch: Dispatch<AdminConvers
       dispatch(setAdminConversationError(err));
       return Promise.resolve(false);
     });
+    */
+  dispatch(createNewAdminConversation({ status: 200, responseMsg: "Ok", newAdminConversation: newConversationData }));
+  return Promise.resolve(true);
 };
+
 export const handleDeleteAdminConversation = (dispatch: Dispatch<AdminConversationAction>, conversationIdToDelete: string, currentAdminConversationState: AdminConversationState): Promise<boolean> => {
   const { activeConversation, loadedAdminConversations, numberOfConversations } = currentAdminConversationState;
   const axiosOpts = {

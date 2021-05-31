@@ -43,7 +43,7 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
           </span>
         </div>
         <div className={ `${styles.conversationContent} ${convoSelected ? styles.textColorSelected : ""}`}>
-          { conversation.messages[conversation.messages.length - 1].messageContent}
+          { conversation.messages.length > 0 ? conversation.messages[conversation.messages.length - 1].messageContent : "No messages"}
         </div>
         <div className={ `${styles.conversationDate} ${convoSelected ? styles.textColorSelected : ""}` }>
           Created at: { formatDate(conversation.createdAt, { military: true }) }

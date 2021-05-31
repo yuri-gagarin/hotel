@@ -12,9 +12,13 @@ type Props = {
 }
 export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, openUsersModal }: Props): React.Node => {
   const { messengerOnline } = adminConversationState;
+
   const toggleMessegnerOnlineOffline = () => {
     handleToggleAdminMessengerOnlineStatus({ messengerOnline: !messengerOnline });
   };
+  const toggleConversation = () => {
+
+  }
 
   return (
     <React.Fragment>

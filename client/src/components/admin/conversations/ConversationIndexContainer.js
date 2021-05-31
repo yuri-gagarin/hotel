@@ -12,11 +12,11 @@ import { closeConvoButton } from "./styles/style";
 import styles from "./css/conversationIndexContainer.module.css";
 // redux imports  //
 import { connect } from "react-redux";
-import { handleOpenAdminConversation, handleCloseAdminConversation, handleToggleAdminMessengerOnlineStatus, handleSetAdminMessengerOnlineStatus, handleFetchAdminConversations, handleDeleteAdminConversation, handleNewAdminMessage, setAdminConversations } from "../../../redux/actions/adminConversationActions";
+import { handleOpenAdminConversation, handleCloseAdminConversation, handleToggleAdminMessengerOnlineStatus, handleSetAdminMessengerOnlineStatus, handleFetchAdminConversations, handleCreateNewAdminConversation, handleDeleteAdminConversation, handleNewAdminMessage, setAdminConversations } from "../../../redux/actions/adminConversationActions";
 // flow types //
 import type { RouterHistory } from "react-router-dom";
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
-import type { AdminConversationAction, AdminConversationState, MessengerOnlineToggleArgs } from "../../../redux/reducers/admin_conversations/flowTypes";
+import type { AdminConversationAction, AdminConversationState, AdminConversationData, MessengerOnlineToggleArgs } from "../../../redux/reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
 // socket import //
 import { socket } from "./../../../App";
@@ -38,13 +38,15 @@ type Props = {
   _handleOpenAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => void;
   _handleCloseAdminConversation: () => void;
   _handleFetchAdminConversations: () => Promise<boolean>;
+  _handleCreateNewAdminConversation: (adminConversationData: AdminConversationData) => Promise<boolean>;
   _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => void;
   _handleNewAdminMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
   _dispatch: Dispatch<AdminConversationAction>;
 };
 const ConversationIndexContainer = ({ 
   history, adminState, adminConversationState, _dispatch,
-  _handleToggleAdminMessengerOnlineStatus, _handleSetAdminMessengerOnlineStatus, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleFetchAdminConversations, _handleDeleteAdminConversation, _handleNewAdminMessage }: Props): React.Node => {
+  _handleToggleAdminMessengerOnlineStatus, _handleSetAdminMessengerOnlineStatus, _handleOpenAdminConversation, _handleCloseAdminConversation,
+  _handleFetchAdminConversations, _handleCreateNewAdminConversation, _handleDeleteAdminConversation, _handleNewAdminMessage }: Props): React.Node => {
     // redux state props //
   const [ onlineUsersModalOpen, setOnlineUsersModalOpen ] = React.useState<boolean>(false);
   React.useEffect(() => {
@@ -62,6 +64,12 @@ const ConversationIndexContainer = ({
     };
   }, []);
 
+  React.useEffect(() => {
+    if(!objectValuesEmpty(adminConversationState.activeConversation) && onlineUsersModalOpen) {
+      setOnlineUsersModalOpen(false);
+    } 
+  }, [ adminConversationState.activeConversation ]);
+
   const openConversation = (conversationId: string): void => {
     _handleOpenAdminConversation(conversationId, adminConversationState);
   };
@@ -76,13 +84,34 @@ const ConversationIndexContainer = ({
   };
   const toggleModal = () => {
     setOnlineUsersModalOpen(!onlineUsersModalOpen);
-  }
+  };
+  const toggleConversation = (socketId: string): void => {
+    const conversationId = `CONVERSATION_${socketId}`;
+    const existingConversation = adminConversationState.loadedAdminConversations.filter((convData) => convData.conversationId === conversationId);
+    if (existingConversation.length === 1) {
+      // open existing conversation //
+      _handleOpenAdminConversation(conversationId, adminConversationState);
+    } else {
+      // create a new conversation push to top and open //
+      const newConversation: AdminConversationData = {
+        conversationId: conversationId,
+        receiverSocketId: "",
+        archived: false,
+        conversationName: "",
+        messages: [],
+        newMessages: [],
+        createdAt: new Date().toISOString()
+      }
+      _handleCreateNewAdminConversation(newConversation);
+    }
+  };
 
   return (
     <React.Fragment>
       <ConnectedClientsModal 
         modalOpen={ onlineUsersModalOpen }
         toggleModal={ toggleModal }
+        handleToggleConversation={ toggleConversation }
         onlineClients={ adminConversationState.connectedOnlineClients }
       />
       <Grid.Row centered style={{ height: "10%", padding: 0 }}>
@@ -136,6 +165,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AdminConversationAction>) => {
     _handleOpenAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => handleOpenAdminConversation(dispatch, conversationId, currentAdminConversationState),
     _handleCloseAdminConversation: () => handleCloseAdminConversation(dispatch),
     _handleFetchAdminConversations: () => handleFetchAdminConversations(dispatch),
+    _handleCreateNewAdminConversation: (conversationData: AdminConversationData) => handleCreateNewAdminConversation(dispatch, conversationData),
     _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => handleDeleteAdminConversation(dispatch, conversationId, currentAdminConversationState),
     _handleNewAdminMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => handleNewAdminMessage(dispatch, messageData, currentAdminConversationState),
     _dispatch: dispatch

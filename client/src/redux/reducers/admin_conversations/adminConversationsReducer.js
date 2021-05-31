@@ -71,6 +71,7 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         status: action.payload.status,
         responseMsg: action.payload.responseMsg,
         loading: action.payload.loading,
+        activeConversation: { ...action.payload.newAdminConversation },
         loadedAdminConversations: [ action.payload.newAdminConversation, ...state.loadedAdminConversations ],
         numberOfConversations: (state.loadedAdminConversations.length + 1),
         error: null
