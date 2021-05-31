@@ -3,7 +3,7 @@ import * as React from "react";
 import { Button, Form } from "semantic-ui-react";
 // redux imports and actions  //
 import { connect } from "react-redux";
-import { handleConversationOpen, handleConversationClose, handleFetchConversation, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage } from "../../../redux/actions/conversationActions";
+import { handleConversationOpen, handleConversationClose, handleFetchConversation, handleSendMessage, handleSendMessageSuccess } from "../../../redux/actions/conversationActions";
 // additional components //
 import MessageForm from "./MessageForm";
 import MessengerClosedComponent from "./MessengerClosedComp";
@@ -32,14 +32,13 @@ type Props = {
   _handleFetchConversation: (conversationId: string) => Promise<boolean>;
   _handleSendMessage: (messageData: MessageData) => Promise<boolean>;
   _handleSendMessageSuccess: (messageData: MessageData) => Promise<boolean>;
-  _handleReceiveMessage: (messageData: MessageData) => Promise<boolean>;
   // for socketio listeners //
   _dispatch: Dispatch<ConversationAction>;
 };
 
 const MessengerContainer = ({ 
     clientState, conversationState, _handleConversationOpen, _handleConversationClose,
-   _handleFetchConversation, _handleSendMessage, _handleSendMessageSuccess, _handleReceiveMessage, _dispatch }: Props): React.Node => {
+   _handleFetchConversation, _handleSendMessage, _handleSendMessageSuccess, _dispatch }: Props): React.Node => {
  
   const handleClientMessengerOpen = () => {
     // toggles between messaging form and back //
@@ -65,7 +64,6 @@ const MessengerContainer = ({
         handleConversationClose={ _handleConversationClose }
         handleSendMessage={ _handleSendMessage }
         handleSendMessageSuccess={ _handleSendMessageSuccess }
-        handleReceiveMessage={ _handleReceiveMessage }
       />
     </React.Fragment>
   );
@@ -83,7 +81,6 @@ const mapDispatchToProps = (dispatch: Dispatch<ConversationAction>) => {
     _handleFetchConversation: (conversationId: string) => handleFetchConversation(dispatch, conversationId),
     _handleSendMessage: (messageData: MessageData) => handleSendMessage(dispatch, messageData),
     _handleSendMessageSuccess: (messageData: MessageData) => handleSendMessageSuccess(dispatch, messageData), 
-    _handleReceiveMessage: (socketId: string, messageData: MessageData) => handleReceiveMessage(dispatch, socketId, messageData),
     _dispatch: dispatch
   };
 };

@@ -232,10 +232,17 @@ app.on("dbReady", () => {
         })
         .catch((error) => {
           console.log(error);
-        })
+        });
       
     });
     // end client messaging //
+
+    socket.on("newAdminMessageSent", (data) => {
+      const { receiverSocketId } = data;
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("receiveAdminReply", data);
+      }
+    });
     // end admin response 
     socket.once("disconnect", () => {
       const { id : socketId } = socket;

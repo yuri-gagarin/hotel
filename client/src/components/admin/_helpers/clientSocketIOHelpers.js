@@ -8,7 +8,6 @@ import { handleSetAdminMessengerOnlineStatus, handleSetOnlineClients, handleNewC
 
 export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>): void => {
   // error listeners //
-  console.log("ran set listeneres")
   socketIOInstance.on("setAdminMessengerOnlineStatus", (data: MessengerOnlineToggleArgs) => {
     const { messengerOnline, clientsDataArr } = data;
     if (typeof messengerOnline === "boolean") {

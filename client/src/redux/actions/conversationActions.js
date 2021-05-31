@@ -62,11 +62,11 @@ const sendClientMessageSuccess = (messageData: MessageData): SendClientMessageSu
   };
 };
 
-const receiveAdminMessage = (socketId: string, messageData: MessageData): ReceiveAdminMessage => {
+const receiveAdminMessage = (messageData: MessageData): ReceiveAdminMessage => {
   const { senderSocketId, receiverSocketId, conversationId } = messageData;
   return {
     type: "ReceiveAdminMessage",
-    payload: { conversationId: conversationId, message: messageData, senderSocketId: socketId }
+    payload: { conversationId: conversationId, message: messageData, senderSocketId: "" }
   };
 };
 
@@ -127,8 +127,8 @@ export const handleSendMessageSuccess = (dispatch: Dispatch<ConversationAction>,
   dispatch(sendClientMessageSuccess(messageData));
   return Promise.resolve(true);
 };
-export const handleReceiveMessage = (dispatch: Dispatch<ConversationAction>, socketId: string, messageData: MessageData): Promise<boolean> => {
-  dispatch(receiveAdminMessage(socketId, messageData));
+export const handleReceiveMessage = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
+  dispatch(receiveAdminMessage(messageData));
   return Promise.resolve(true);
 };
 export const handleAdminMessengerOfflineResponse = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {

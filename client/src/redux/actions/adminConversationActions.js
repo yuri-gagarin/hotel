@@ -208,7 +208,7 @@ export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationActio
       archived: false,
       new: true,
       conversationId: newMessageData.conversationId,
-      receiverSocketId: "",
+      receiverSocketId: newMessageData.senderSocketId,
       messages: [ newMessageData ],
       newMessages: [ newMessageData ],
       createdAt: new Date().toISOString()
@@ -299,12 +299,16 @@ export const handleNewAdminMessage = (dispatch: Dispatch<AdminConversationAction
       return conversationData;
     }
   })
+  console.log(302)
+  console.log(newMessageData)
   let stateUpdateData: { status: number, responseMsg: string, activeConversation: AdminConversationData, updatedAdminConversations: Array<AdminConversationData> } = {
      status: 200, 
      responseMsg: "", 
      activeConversation: { ...activeConversation, messages: [ ...activeConversation.messages, newMessageData ] }, 
      updatedAdminConversations: updatedConversations
   };
+  dispatch(sendAdminMessage(stateUpdateData));
+  socket.emit("newAdminMessageSent", newMessageData);
   return Promise.resolve(true);
 };
 export const handleSetAdminConversationError = (dispatch: Dispatch<AdminConversationAction>, error: any): void => {

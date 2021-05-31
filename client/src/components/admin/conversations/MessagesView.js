@@ -62,13 +62,14 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
       conversationId: activeConversation.conversationId,
       sender: "admin",
       senderSocketId: "",
-      receiverSocketId: "",
+      receiverSocketId: activeConversation.receiverSocketId,
       messageContent: message,
       sentAt: new Date().toISOString()
     };
     sendAdminMessage(messageData, adminConversationState)
       .then((success) => {
         if (success && messageSounds.sendMessageSound) messageSounds.sendMessageSound.play();
+        setMessage("")
       })
       .catch((error) => {
         console.log(error);
@@ -91,6 +92,7 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
       sendAdminMessage(messageData, adminConversationState)
         .then((success) => {
           if (success && messageSounds.sendMessageSound) messageSounds.sendMessageSound.play();
+          setMessage("");
         })
         .catch((error) => {
           // error handling here later //
@@ -123,7 +125,6 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
       <div className={ styles.messagesInputWrapper}>
         <Input 
           className={ styles.messagesInput }
-          id="messageInput"
           action={{
             icon: "send",
             content: "Send",
@@ -133,6 +134,7 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
           placeholder='message...' 
           style={{position: "absolute", bottom: 0, left: 0, right: 0, height: "50px"}}
           onKeyPress={handleKeyPress}
+          value={ message }
           />
         </div>
     </React.Fragment>

@@ -22,7 +22,6 @@ type Props = {
   // messaging //
   handleSendMessage: (messageDate: MessageData) => Promise<boolean>;
   handleSendMessageSuccess: (messageData: MessageData) => Promise<boolean>;
-  handleReceiveMessage: (messageData: MessageData) => Promise<boolean>;
 };
 
 type SoundState = {
@@ -31,7 +30,7 @@ type SoundState = {
 };
 
 
-const MessageForm = ({ open, clientState, conversationState, handleSendMessage, handleSendMessageSuccess, handleReceiveMessage, handleConversationClose }: Props): React.Node => {
+const MessageForm = ({ open, clientState, conversationState, handleSendMessage, handleSendMessageSuccess, handleConversationClose }: Props): React.Node => {
   const [ messageSounds, setMessageSounds ] = React.useState<SoundState>({ sendMessageSound: null, receiveMessageSound: null }); 
   const messageFormRef = React.useRef<HTMLDivElement | null>(null);
   const messagesContentRef = React.useRef<HTMLDivElement | null>(null);
