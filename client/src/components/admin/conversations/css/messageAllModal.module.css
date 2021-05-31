@@ -1,0 +1,28 @@
+.messageAllModalDiv {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.messageAllModal {
+  position: absolute;
+  left: 50%;
+  top: 0%;
+  height: auto;
+  transform: translateX(-50%);
+}
+
+.messageInputArea {
+  height: 300px;
+  position: relative;
+}
+.messageInputArea > textarea {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  resize: none !important;
+}

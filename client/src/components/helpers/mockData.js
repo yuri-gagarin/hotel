@@ -12,6 +12,7 @@ export const generateMockConversation = (numOfmessages?: number): AdminConversat
   const newConversation: AdminConversationData = {
     conversationId: conversationId,
     archived: false,
+    new: true,
     conversationName: faker.lorem.word(),
     receiverSocketId: "",
     messages: [],

@@ -32,7 +32,7 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
   }
 
   return (
-    <Card fluid color="green" className={ `${styles.conversationCard} ${ convoSelected ? styles.selectedConversation : ""}` } onClick={ selectConversation }>
+    <Card fluid color="green" className={ `${conversation.new ? styles.newConversationCard : ""} ${styles.conversationCard} ${convoSelected ? styles.selectedConversation : ""}` } onClick={ selectConversation }>
       <Card.Content>
         <div className={ `${styles.conversationName}` }>
           <span className={ `${convoSelected ? styles.textColorSelected : ""}`}>
@@ -49,6 +49,16 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
           Created at: { formatDate(conversation.createdAt, { military: true }) }
         </div>
       </Card.Content>
+      {
+        conversation.new ?
+          <div className={ styles.newNotificationDiv }>
+            <span>New</span>
+            <Icon name="exclamation" />
+          </div>
+        : 
+          null
+      }
+      
     </Card>
   );
 };  

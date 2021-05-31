@@ -5,7 +5,9 @@ import { Button, Grid, Segment } from "semantic-ui-react";
 import { ConnectedClientsModal } from "./ConnectedClientsModal";
 import ConversationComponent from "./ConversationComponent";
 import { ConversationControls } from "./ConversationControls";
+import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 import MessagesView from "./MessagesView";
+import { MessageAllModal } from "./MessageAllModal";
 import { MessagesSplashScreen } from "./MessageSplashScreen";
 // styles imports //
 import { closeConvoButton } from "./styles/style";
@@ -49,6 +51,8 @@ const ConversationIndexContainer = ({
   _handleFetchAdminConversations, _handleCreateNewAdminConversation, _handleDeleteAdminConversation, _handleNewAdminMessage }: Props): React.Node => {
     // redux state props //
   const [ onlineUsersModalOpen, setOnlineUsersModalOpen ] = React.useState<boolean>(false);
+  const [ messageAllModalOpen, setMessageAllModalOpen ] = React.useState<boolean>(false);
+  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<{ open: boolean, conversationId: string }>({ open: false, conversationId: "" });
   React.useEffect(() => {
     let mounted = true;
 
@@ -56,7 +60,7 @@ const ConversationIndexContainer = ({
       setClientSocketIOEventListeners(socket, _dispatch);
       //_handleFetchAdminConversations();
       const mockConversations = generateMockConversations(12);
-      _dispatch(setAdminConversations({ status: 200, responseMsg: "ok", adminConversations: mockConversations }))
+      _dispatch(setAdminConversations({ status: 200, responseMsg: "ok", adminConversations: mockConversations }));
     }
     return () => { 
       mounted = false;
@@ -77,14 +81,13 @@ const ConversationIndexContainer = ({
   const closeConversation = (): void => {
     _handleCloseAdminConversation();
   };
-  // TODO //
-  // add a confirmation modal //
-  const deleteConversation = (converstionId: string): void => {
-    _handleDeleteAdminConversation
-  };
+ 
   const toggleModal = () => {
     setOnlineUsersModalOpen(!onlineUsersModalOpen);
   };
+  const toggleMessageAllModal = (): void => {
+    setMessageAllModalOpen(!messageAllModalOpen);
+  }
   const toggleConversation = (socketId: string): void => {
     const conversationId = `CONVERSATION_${socketId}`;
     const existingConversation = adminConversationState.loadedAdminConversations.filter((convData) => convData.conversationId === conversationId);
@@ -97,6 +100,7 @@ const ConversationIndexContainer = ({
         conversationId: conversationId,
         receiverSocketId: "",
         archived: false,
+        new: false,
         conversationName: "",
         messages: [],
         newMessages: [],
@@ -106,19 +110,43 @@ const ConversationIndexContainer = ({
     }
   };
 
+  const handleSendGroupMessage = () => {
+
+  };
+
+  // add a confirmation modal //
+  const toggleDeleteConversation = (conversationId: string): void => {
+    if (!conversationId) return;
+    setConfirmDeleteModalState({ open: true, conversationId: conversationId });
+  };
+  const cancelConversationDelete = (): void => {
+    setConfirmDeleteModalState({ open: false, conversationId: "" });
+  };
+  const confirmConversationDelete = (): Promise<boolean> => {
+    return Promise.resolve(true);
+  }
   return (
     <React.Fragment>
+      <ConfirmDeleteModal open={ confirmDeleteModalState.open } modelName="conversation" cancelAction={ cancelConversationDelete } confirmAction={ confirmConversationDelete } />
       <ConnectedClientsModal 
         modalOpen={ onlineUsersModalOpen }
         toggleModal={ toggleModal }
         handleToggleConversation={ toggleConversation }
         onlineClients={ adminConversationState.connectedOnlineClients }
       />
+      <MessageAllModal 
+        modalOpen={ messageAllModalOpen }
+        toggleModal={ toggleMessageAllModal }
+        handleSendGroupMessage= { handleSendGroupMessage }
+        onlineClients={ adminConversationState.connectedOnlineClients }
+      />
       <Grid.Row centered style={{ height: "10%", padding: 0 }}>
         <ConversationControls 
           adminConversationState={ adminConversationState } 
           handleToggleAdminMessengerOnlineStatus={ _handleToggleAdminMessengerOnlineStatus }
+          handleToggleDeleteConversation={ toggleDeleteConversation }
           openUsersModal={ toggleModal }
+          openMessageAllModal={ toggleMessageAllModal }
         />
       </Grid.Row>
       <Grid.Row centered style={{ height: "80%" }} className={ styles.messengerIndexRow }>
@@ -127,7 +155,7 @@ const ConversationIndexContainer = ({
             adminConversationState={ adminConversationState } 
             openConversation={ openConversation }
             closeConversation={ closeConversation }
-            deleteConversation={ deleteConversation }
+            deleteConversation={ toggleDeleteConversation }
           />          
         </Grid.Column>
         <Grid.Column largeScreen={10} tablet={8} className={ styles.messagesColumn }>

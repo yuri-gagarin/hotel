@@ -18,6 +18,7 @@ export type AdminConversationData = {|
   conversationId: string;
   conversationName?: string;
   archived: boolean;
+  new: boolean;
   receiverSocketId: string;
   newMessages: Array<MessageData>;
   messages: Array<MessageData>;
@@ -67,6 +68,7 @@ export type OpenAdminConversation = {|
   +type: "OpenAdminConversation";
   +payload: {
     activeConversation: AdminConversationData;
+    updatedAdminConversationsArr: Array<AdminConversationData>;
   }
 |};
 export type CloseAdminConversation = {|

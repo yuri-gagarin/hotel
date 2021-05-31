@@ -20,6 +20,7 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
       return {
         ...state,
         activeConversation: action.payload.activeConversation,
+        loadedAdminConversations: action.payload.updatedAdminConversationsArr,
         error: null
       };
     }

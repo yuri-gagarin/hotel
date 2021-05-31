@@ -14,11 +14,11 @@ import type { MessageData } from "../reducers/conversations/flowTypes";
 // socket io //
 import { socket } from "../../App";
 // non api actions //
-const openAdminConversation = (data: { activeConversation: AdminConversationData }): OpenAdminConversation => {
-  const { activeConversation } = data;
+const openAdminConversation = (data: { activeConversation: AdminConversationData, updatedAdminConversationsArr: Array<AdminConversationData>  }): OpenAdminConversation => {
+  const { activeConversation, updatedAdminConversationsArr } = data;
   return {
     type: "OpenAdminConversation",
-    payload: { activeConversation }
+    payload: { activeConversation, updatedAdminConversationsArr }
   };
 };
 const closeAdminConversation = (data: { activeConversation: AdminConversationData }): CloseAdminConversation => {
@@ -116,7 +116,22 @@ const clearAdminConversationError = (): ClearAdminConversationError => {
 // exported actions to the components //
 export const handleOpenAdminConversation = (dispatch: Dispatch<AdminConversationAction>, conversationId: string, currentAdminConvState: AdminConversationState): void => {
   const conversationToOpen: AdminConversationData = currentAdminConvState.loadedAdminConversations.filter((convData) => convData.conversationId === conversationId)[0];
-  dispatch(openAdminConversation({ activeConversation: { ...conversationToOpen } } ));
+  if (conversationToOpen.new) {
+    const updatedConversation = { ...conversationToOpen, new: false };
+    const updatedAdminConversationsArr: Array<AdminConversationData> = currentAdminConvState.loadedAdminConversations.map((conversation) => {
+      if (conversation.conversationId === conversationId) {
+        return {
+          ...conversation,
+          new: false
+        };
+      } else {
+        return conversation;
+      }
+    });
+    dispatch(openAdminConversation({ activeConversation: updatedConversation, updatedAdminConversationsArr }));
+  } else {
+    dispatch(openAdminConversation({ activeConversation: { ...conversationToOpen }, updatedAdminConversationsArr: [ ...currentAdminConvState.loadedAdminConversations ] }));
+  }
 };
 export const handleCloseAdminConversation = (dispatch: Dispatch<AdminConversationAction>): void => {
   dispatch(closeAdminConversation({ activeConversation: generateEmptyAdminConversationModel() } ));
@@ -191,6 +206,7 @@ export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationActio
   } else {
     const newConversation: AdminConversationData = {
       archived: false,
+      new: true,
       conversationId: newMessageData.conversationId,
       receiverSocketId: "",
       messages: [ newMessageData ],
@@ -199,7 +215,7 @@ export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationActio
     };
     updatedState = {
       ...adminConversationState,
-      loadedAdminConversations: [ ...adminConversationState.loadedAdminConversations, newConversation ]
+      loadedAdminConversations: [ newConversation, ...adminConversationState.loadedAdminConversations ]
     }
   }
   dispatch(newClientMessage({ status: 200, responseMsg: "", activeConversation: updatedState.activeConversation, updatedAdminConversations: updatedState.loadedAdminConversations }));

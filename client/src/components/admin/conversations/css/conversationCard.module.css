@@ -3,11 +3,36 @@
   border: 1px solid green !important;
   cursor: pointer;
 }
+.newNotificationDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 1px solid white;
+  color: white;
+  padding: 0.5em 1em;
+  background: #56CCF2 !important;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #2F80ED, #56CCF2) !important;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #2F80ED, #56CCF2) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */  
+}
+.newNotificationDiv > i {
+  color: orange !important;
+  margin-left: 5px;
+}
+.newConversationCard {
+  background: #EDE574 !important;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #E1F5C4, #EDE574) !important;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #E1F5C4, #EDE574) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 .selectedConversation {
-  background: #76b852;  /* fallback for old browsers */
+  background: #76b852 !important;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to bottom, #8DC26F, #76b852) !important;  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to bottom, #8DC26F, #76b852) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
+
 
 .conversationName {
   border-bottom: 1px solid grey;
