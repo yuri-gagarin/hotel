@@ -11,6 +11,7 @@ const initialState: ConversationState = {
   senderSocketId: "",
   conversationId: "",
   messages: [],
+  newMessages: [],
   error: null,
   errorMessages: null
 };
@@ -81,6 +82,7 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         conversationId: action.payload.conversationId,
         senderSocketId: action.payload.senderSocketId,
         messages: [ ...state.messages, action.payload.message ], 
+        newMessages: ( action.payload.newMessage ? [ ...state.newMessages, action.payload.newMessage] : []),
         error: null
       };
     }

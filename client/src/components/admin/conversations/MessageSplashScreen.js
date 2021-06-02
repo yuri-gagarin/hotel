@@ -7,7 +7,7 @@ export const MessagesSplashScreen = (): React.Node => {
     <div className={ styles.messagesSplashScreenWrapper }>
       <div className="messageArea">
         <div className="messageAreaTitle">
-          <h1>Hotel Instant Messaging</h1>
+          <h1>Instant Messenger</h1>
           <p>Open a message to access a conversation</p>
         </div>
         <ul className="circles">

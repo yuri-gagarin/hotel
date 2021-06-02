@@ -8,6 +8,7 @@ export type ConversationState = {
   senderSocketId: string;
   conversationId: string;
   messages: Array<MessageData>;
+  newMessages: Array<MessageData>;
   error: any;
   errorMessages: Array<string> | null;
 };
@@ -91,6 +92,7 @@ export type ReceiveAdminMessage = {
     conversationId: string;
     senderSocketId: string;
     message: MessageData;
+    newMessage: MessageData | null;
   }
 };
 export type AdminMessengerOfflineResponse = {

@@ -6,6 +6,7 @@ import { Button, Card, Icon } from "semantic-ui-react";
 import { formatDate } from "../../helpers/dateHelpers";
 // types //
 import type { AdminConversationState, AdminConversationData } from "../../../redux/reducers/admin_conversations/flowTypes";
+import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
 // helpers //
 import styles from "./css/conversationCard.module.css";
 
@@ -18,6 +19,7 @@ type Props = {
 }
 export const ConversationCard = ({ adminConversationState, conversation, openConversation, closeConversation, deleteConversation }: Props): React.Node => {
   const [ convoSelected, setConvoSelected ] = React.useState(false);
+  const [ lastMessageContent, setLastMessageContent ] = React.useState<string>("");
 
   React.useEffect(() => {
     if (conversation.conversationId === adminConversationState.activeConversation.conversationId) {
@@ -26,6 +28,16 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
       setConvoSelected(false);
     }
   }, [ adminConversationState, conversation ]);
+
+  React.useEffect(() => {
+    if (conversation.newMessages.length > 0) {
+      setLastMessageContent(conversation.newMessages[conversation.newMessages.length - 1].messageContent);
+    } else if (conversation.messages.length > 0) {
+      setLastMessageContent(conversation.messages[conversation.messages.length - 1].messageContent);
+    } else {
+      setLastMessageContent("No messages...");
+    }
+  }, [ conversation ]);
 
   const selectConversation = (): void => {
     openConversation(conversation.conversationId);
@@ -43,18 +55,34 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
           </span>
         </div>
         <div className={ `${styles.conversationContent} ${convoSelected ? styles.textColorSelected : ""}`}>
-          { conversation.messages.length > 0 ? conversation.messages[conversation.messages.length - 1].messageContent : "No messages"}
+          { lastMessageContent }
         </div>
-        <div className={ `${styles.conversationDate} ${convoSelected ? styles.textColorSelected : ""}` }>
+        <div className={ `${styles.conversationDate}` }>
           Created at: { formatDate(conversation.createdAt, { military: true }) }
         </div>
       </Card.Content>
       {
-        conversation.new ?
-          <div className={ styles.newNotificationDiv }>
-            <span>New</span>
-            <Icon name="exclamation" />
+        conversation.newMessages.length > 0
+        ? 
+          <div className={ styles.newNotificationWrapper} >
+            {
+              conversation.new 
+              ?
+                <div className={ styles.newConversationNotificationDiv }>
+                  <span>Unread</span>
+                  <div>
+                    <i className="fas fa-exclamation"></i>
+                  </div>
+                </div>
+              : 
+                null
+            }
+            <div className={ styles.newMessagesNotificationDiv }>
+              <div>{ conversation.newMessages.length }</div>
+              <span>New Messages</span>
+            </div>
           </div>
+      
         : 
           null
       }

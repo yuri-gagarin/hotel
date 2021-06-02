@@ -32,7 +32,7 @@ const MessengerInput = ({ loading, sendMessage }: Props): React.Node => {
   
   return (
     <div className={ styles.messageInputWrapper } onKeyPress={ handleKeyPress }>
-      <Input loading={ loading } action type="text" placeholder="message..." value={ message }  onChange={handleInputChange}  style={{ width: "100%"}} />
+      <Input loading={ loading } action type="text" placeholder="message..." value={ message }  onChange={handleInputChange}  style={{ width: "100%" }} />
       <Button style={{ margin: 0 }} color="green" onClick={handleMessageSend}>Send</Button>
     </div>
   );

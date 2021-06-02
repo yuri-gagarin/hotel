@@ -41,7 +41,7 @@ export const setClientSocketIOListeners = (socketIOInstance: Socket, dispatch: D
   });
   socketIOInstance.on(LISTENER_CONSTANTS.MESSAGE_DELIVERED, (data: MessageData) => {
     console.log("message delivered");
-    console.log(data);
+    handleSendMessageSuccess(dispatch, data);
   });
   socketIOInstance.on(LISTENER_CONSTANTS.RECEIVE_ADMIN_REPLY, (data: MessageData) => {
     console.log(47);

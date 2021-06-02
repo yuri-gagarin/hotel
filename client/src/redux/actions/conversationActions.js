@@ -1,5 +1,6 @@
 // @flow
 import axios from "axios";
+import store from "../../redux/store";
 // types //
 import type { Dispatch } from "../../redux/reducers/_helpers/createReducer";
 import type { 
@@ -62,11 +63,11 @@ const sendClientMessageSuccess = (messageData: MessageData): SendClientMessageSu
   };
 };
 
-const receiveAdminMessage = (messageData: MessageData): ReceiveAdminMessage => {
+const receiveAdminMessage = ({ messageData, newMessage }: { messageData: MessageData, newMessage: MessageData | null }): ReceiveAdminMessage => {
   const { senderSocketId, receiverSocketId, conversationId } = messageData;
   return {
     type: "ReceiveAdminMessage",
-    payload: { conversationId: conversationId, message: messageData, senderSocketId: "" }
+    payload: { conversationId: conversationId, newMessage: newMessage, message: messageData, senderSocketId: "" }
   };
 };
 
@@ -128,7 +129,13 @@ export const handleSendMessageSuccess = (dispatch: Dispatch<ConversationAction>,
   return Promise.resolve(true);
 };
 export const handleReceiveMessage = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
-  dispatch(receiveAdminMessage(messageData));
+  const conversationState: ConversationState = store.getState().conversationState;
+  console.log(conversationState);
+  if (conversationState.messengerOpen) {
+    dispatch(receiveAdminMessage({ messageData, newMessage: messageData }));
+  } else {
+    dispatch(receiveAdminMessage({ messageData, newMessage: null }));
+  }
   return Promise.resolve(true);
 };
 export const handleAdminMessengerOfflineResponse = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {

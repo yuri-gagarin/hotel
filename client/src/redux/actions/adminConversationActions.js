@@ -116,22 +116,19 @@ const clearAdminConversationError = (): ClearAdminConversationError => {
 // exported actions to the components //
 export const handleOpenAdminConversation = (dispatch: Dispatch<AdminConversationAction>, conversationId: string, currentAdminConvState: AdminConversationState): void => {
   const conversationToOpen: AdminConversationData = currentAdminConvState.loadedAdminConversations.filter((convData) => convData.conversationId === conversationId)[0];
-  if (conversationToOpen.new) {
-    const updatedConversation = { ...conversationToOpen, new: false };
-    const updatedAdminConversationsArr: Array<AdminConversationData> = currentAdminConvState.loadedAdminConversations.map((conversation) => {
-      if (conversation.conversationId === conversationId) {
-        return {
-          ...conversation,
-          new: false
-        };
-      } else {
-        return conversation;
-      }
-    });
-    dispatch(openAdminConversation({ activeConversation: updatedConversation, updatedAdminConversationsArr }));
-  } else {
-    dispatch(openAdminConversation({ activeConversation: { ...conversationToOpen }, updatedAdminConversationsArr: [ ...currentAdminConvState.loadedAdminConversations ] }));
-  }
+  // TODO //
+  // could be optimized ? //
+  // if no new messages no reason to recopy? //
+  const updatedConversation: AdminConversationData = { ...conversationToOpen, new: false, newMessages: [], messages: [ ...conversationToOpen.messages, ...conversationToOpen.newMessages ]};
+  const updatedAdminConversationsArr: Array<AdminConversationData> = currentAdminConvState.loadedAdminConversations.map((conversation) => {
+    if (conversation.conversationId === conversationId) {
+      return { ...updatedConversation };
+    } else {
+      return conversation;
+    }
+  });
+  dispatch(openAdminConversation({ activeConversation: updatedConversation, updatedAdminConversationsArr }));
+
 };
 export const handleCloseAdminConversation = (dispatch: Dispatch<AdminConversationAction>): void => {
   dispatch(closeAdminConversation({ activeConversation: generateEmptyAdminConversationModel() } ));
@@ -157,68 +154,53 @@ export const handleSetOnlineClients = (dispatch: Dispatch<AdminConversationActio
 };
 
 export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationAction>, newMessageData: MessageData): Promise<boolean> => {
-  // check if conversation already exists //
   const adminConversationState: AdminConversationState = store.getState().adminConversationState;
-  const conversationToUpdate = adminConversationState.loadedAdminConversations.filter((convData) => newMessageData.conversationId === convData.conversationId);
-  let updatedState: AdminConversationState;
-  if (conversationToUpdate.length === 1) {
-    // update is on an existing conversation and currently active conversation //
-    const updatedLoadedConversations = adminConversationState.loadedAdminConversations.map((convoData) => {
-      if (convoData.conversationId === newMessageData.conversationId) {
-        return {
-          ...convoData,
-          messages: [ ...convoData.messages, newMessageData ],
-          newMessages: [ ...convoData.newMessages, newMessageData ]
-        }
-      } else {
-        return convoData;
-      }
-    });
-    //
-    // update is on an existing non active conversation? //
-    if (conversationToUpdate[0].conversationId === adminConversationState.activeConversation.conversationId) {
-      updatedState = { 
-        ...adminConversationState, 
-        activeConversation: { 
-          ...adminConversationState.activeConversation, 
-          messages: [ ...adminConversationState.activeConversation.messages, newMessageData ],
-          newMessages: [ ...adminConversationState.activeConversation.newMessages, newMessageData ]
-        },
-        loadedAdminConversations: updatedLoadedConversations
-      };
-    } else {
-      const updatedLoadedConversations = adminConversationState.loadedAdminConversations.map((convoData) => {
+  const conversationToUpdate = adminConversationState.loadedAdminConversations.filter((convData) => newMessageData.conversationId === convData.conversationId)[0];
+  let updatedActiveConversation: ?AdminConversationData;
+  let updatedLoadedConversations: Array<AdminConversationData>;
+  // check if conversation already exists //
+  if (conversationToUpdate) {
+    // update is on an existing conversation and currently active conversation ? //
+    if (conversationToUpdate.conversationId === adminConversationState.activeConversation.conversationId) {
+      updatedLoadedConversations = adminConversationState.loadedAdminConversations.map((convoData) => {
         if (convoData.conversationId === newMessageData.conversationId) {
-          return {
-            ...convoData,
-            messages: [ ...convoData.messages, newMessageData ],
-            newMessages: [ ...convoData.newMessages, newMessageData ]
-          }
+          updatedActiveConversation = { ...convoData, messages: [ ...convoData.messages, newMessageData ]};
+          return { ...convoData, messages: [ ...convoData.messages, newMessageData ] };
         } else {
           return convoData;
         }
       });
-      updatedState = {
-        ...adminConversationState,
-        loadedAdminConversations: updatedLoadedConversations
-      };
+    } else {
+      // update is on an existing non active conversation //
+      updatedActiveConversation = { ...adminConversationState.activeConversation };
+      updatedLoadedConversations = adminConversationState.loadedAdminConversations.map((convoData) => {
+        if (convoData.conversationId === newMessageData.conversationId) {
+          return { ...convoData, newMessages: [ ...convoData.newMessages, newMessageData ] };
+        } else {
+          return convoData;
+        }
+      });
     }
   } else {
+    // create a new conversation in local state //
     const newConversation: AdminConversationData = {
       archived: false,
       new: true,
       conversationId: newMessageData.conversationId,
       receiverSocketId: newMessageData.senderSocketId,
-      messages: [ newMessageData ],
+      messages: [],
       newMessages: [ newMessageData ],
       createdAt: new Date().toISOString()
     };
-    updatedState = {
-      ...adminConversationState,
-      loadedAdminConversations: [ newConversation, ...adminConversationState.loadedAdminConversations ]
-    }
+    updatedLoadedConversations = [ newConversation, ...adminConversationState.loadedAdminConversations ];
+    updatedActiveConversation = { ...adminConversationState.activeConversation };
   }
-  dispatch(newClientMessage({ status: 200, responseMsg: "", activeConversation: updatedState.activeConversation, updatedAdminConversations: updatedState.loadedAdminConversations }));
+  dispatch(newClientMessage({ 
+    status: 200, 
+    responseMsg: "",
+     activeConversation: updatedActiveConversation ? updatedActiveConversation : { ...adminConversationState.activeConversation },
+    updatedAdminConversations: updatedLoadedConversations 
+  }));
   return Promise.resolve(true);
 }
 export const handleFetchAdminConversations = (dispatch: Dispatch<AdminConversationAction>): Promise<boolean> => {
