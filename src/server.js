@@ -128,7 +128,7 @@ app.on("dbReady", () => {
       // set client id with socket id in redis to prevent multiple connections //
       return RedisController.setClientCredentials({ userId, socketId, name, email })
         .then((res) => {
-          if (res && res === 1) {
+          if (res && res === "OK") {
             // new user //
             return RedisController.getVisibleAdmins();
           } else {
@@ -217,7 +217,6 @@ app.on("dbReady", () => {
             socket.emit("adminMessengerOffline", genericResponseMsg);
           } else {
             for (const socketId of visibleAdminSocketIds) {
-              console.log(214)
               io.to(socketId).emit("receiveClientMessage", data);
             }
             return RedisController.setNewMessage(data)
@@ -249,7 +248,7 @@ app.on("dbReady", () => {
       // remove from redis mem //
       return RedisController.removeClientCredentials(socketId)
         .then((res) => {
-          if (res && res === 1) {
+          if (res && res === true) {
             return RedisController.getVisibleAdmins()
               .then(({ visibleAdminSocketIds }) => {
                 if (visibleAdminSocketIds.length > 0) {

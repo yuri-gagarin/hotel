@@ -55,10 +55,11 @@ type Props = {
 const HomeComponent = ({ 
   history, appGeneralState, clientState, roomState, serviceState, diningEntertainmentState,
   _clearAppError, _clearSuccessState, _handleSetGuestClient, _handleFetchRooms, _handleFetchServices }: Props): React.Node => {
+  const [ localState, setLocalState ] = React.useState<{ loaded: boolean }>({ loaded: false });
   const [ successTimeout, setSuccessTimeout ] = React.useState(null);
   const [ errorTimeout, setErrorTimeout ] = React.useState(null);
 
-
+  const prevUserState = React.useRef<ClientState>(clientState);
   /*
   const unloadWindowHandler = (e: any): void => {
     //e.preventDefault();
@@ -79,6 +80,7 @@ const HomeComponent = ({
         _handleFetchRooms({ live: true, limit: 1 })
       })
       .then((success) => {
+        setLocalState({ ...localState, loaded: true });
       })
       .catch((error) => {
         console.log(error);
@@ -122,10 +124,12 @@ const HomeComponent = ({
   }, [ appGeneralState ]);
 
   React.useEffect(() => {
-    if (clientState._id && clientState.name) {
+    if (localState.loaded) {
+      console.log("should emit")
       socket.emit("receiveClientCredentials", clientState);
     }
-  }, [ clientState ]);
+  }, [ localState.loaded ]);
+
    
   return (
     <div style={{ width: "100vw" }}>

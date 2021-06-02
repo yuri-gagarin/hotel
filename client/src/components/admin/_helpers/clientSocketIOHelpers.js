@@ -38,6 +38,8 @@ export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispat
     handleNewClientConnection(dispatch, newConnectedClientData);
   });
   socketIOInstance.on("clientDisconnected", ({ clientSocketId }: { clientSocketId: string }) => {
+    console.log(41);
+    console.log(clientSocketId)
     handleClientDisconnection(dispatch, { clientSocketId });
   });
   socketIOInstance.on("receiveClientMessage", (messageData: MessageData): void => {

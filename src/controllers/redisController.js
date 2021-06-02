@@ -152,10 +152,13 @@ const RedisController = ((redisOpts) => {
       redisInstance.SCARD(visibleAdminsSetKey, (err, num) => {
         if (err) return reject(err);
         if (num === 0) {
+          console.log(155)
           return resolve({ numberOfVisibleAdmins: 0, visibleAdminSocketIds: [] });
         } else {
           redisInstance.SMEMBERS(visibleAdminsSetKey, (err, socketIds) => {
             if (err) return reject(err);
+            console.log(160);
+            console.log(socketIds);
             return resolve({ numberOfVisibleAdmins: num, visibleAdminSocketIds: socketIds });
           })
         }
