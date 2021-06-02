@@ -15,9 +15,10 @@ type Props = {
   openConversation: (conversationId: string) => void;
   closeConversation: () => void;
   deleteConversation: (conversationId: string) => void;
+  updateAdminConversationName: (data: { conversationId: string, newName: string }) => void;
 }
 
-const ConversationComponent = ({ adminConversationState, openConversation, closeConversation, deleteConversation}: Props): React.Node => {
+const ConversationComponent = ({ adminConversationState, openConversation, closeConversation, deleteConversation, updateAdminConversationName }: Props): React.Node => {
   const { loadedAdminConversations } = adminConversationState;
 
 
@@ -37,6 +38,7 @@ const ConversationComponent = ({ adminConversationState, openConversation, close
                   openConversation={openConversation}
                   closeConversation={closeConversation}
                   deleteConversation={deleteConversation}
+                  updateAdminConversationName={ updateAdminConversationName }
                 />
               );
             })

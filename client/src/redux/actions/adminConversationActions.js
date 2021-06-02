@@ -7,7 +7,7 @@ import store from "../../redux/store";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 import type { 
   AdminConversationData, AdminConversationAction, AdminConversationState, ConnectedClientData, NewClientConnection, ClientDisconnection, SetOnlineClients,
-  OpenAdminConversation, CloseAdminConversation, AdminConversationAPIRequest, ToggleAdminMessengerOnlineStatus, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
+  OpenAdminConversation, CloseAdminConversation, UpdateAdminConversationName, AdminConversationAPIRequest, ToggleAdminMessengerOnlineStatus, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
   NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
 } from "../reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../reducers/conversations/flowTypes";
@@ -26,6 +26,13 @@ const closeAdminConversation = (data: { activeConversation: AdminConversationDat
   return {
     type: "CloseAdminConversation",
     payload: { activeConversation }
+  };
+};
+const updateAdminConversationName = (data: { updatedActiveConversation: AdminConversationData, updatedLoadedConversations: Array<AdminConversationData> }): UpdateAdminConversationName => {
+  const { updatedActiveConversation, updatedLoadedConversations } = data;
+  return {
+    type: "UpdateAdminConversationName",
+    payload: { updatedActiveConversation, updatedLoadedConversations }
   };
 };
 // API related actions //
@@ -133,6 +140,38 @@ export const handleOpenAdminConversation = (dispatch: Dispatch<AdminConversation
 export const handleCloseAdminConversation = (dispatch: Dispatch<AdminConversationAction>): void => {
   dispatch(closeAdminConversation({ activeConversation: generateEmptyAdminConversationModel() } ));
 };
+export const handleUpdateAdminConversationName = (dispatch: Dispatch<AdminConversationAction>, newName: string, conversationId: string, currentAdminConvState: AdminConversationState): void => {
+  const conversationToUpdate: AdminConversationData = currentAdminConvState.loadedAdminConversations.filter((convData) => convData.conversationId === conversationId)[0];
+  let updatedActiveConversation: ?AdminConversationData;
+  let updatedLoadedConversations: Array<AdminConversationData>;
+  if (!conversationToUpdate) return;
+  else {
+    if (conversationToUpdate.conversationId === currentAdminConvState.activeConversation.conversationId) {
+      // update current conversation plus loaded conversations //
+      updatedActiveConversation = { ...currentAdminConvState.activeConversation, conversationName: newName };
+      updatedLoadedConversations = currentAdminConvState.loadedAdminConversations.map((convData) => {
+        if (convData.conversationId === conversationToUpdate.conversationId) {
+          return { ...conversationToUpdate, conversationName: newName };
+        } else {
+          return convData;
+        }
+      });
+    } else {
+      // update only loaded conversations //
+      updatedLoadedConversations = currentAdminConvState.loadedAdminConversations.map((convData) => {
+        if (convData.conversationId === conversationToUpdate.conversationId) {
+          return { ...conversationToUpdate, conversationName: newName };
+        } else {
+          return convData;
+        }
+      });
+    }
+    return dispatch(updateAdminConversationName({ 
+      updatedActiveConversation: updatedActiveConversation ? updatedActiveConversation : currentAdminConvState.activeConversation,
+      updatedLoadedConversations: updatedLoadedConversations
+    }));
+  }
+}
 // exported API related actions //
 export const handleToggleAdminMessengerOnlineStatus = (dispatch: Dispatch<AdminConversationAction>, { messengerOnline }: { messengerOnline: boolean }): void => {
   dispatch(adminConversationAPIRequest());
@@ -281,8 +320,6 @@ export const handleNewAdminMessage = (dispatch: Dispatch<AdminConversationAction
       return conversationData;
     }
   })
-  console.log(302)
-  console.log(newMessageData)
   let stateUpdateData: { status: number, responseMsg: string, activeConversation: AdminConversationData, updatedAdminConversations: Array<AdminConversationData> } = {
      status: 200, 
      responseMsg: "", 

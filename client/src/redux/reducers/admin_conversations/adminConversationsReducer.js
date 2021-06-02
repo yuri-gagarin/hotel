@@ -31,6 +31,14 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         error: null
       };
     }
+    case "UpdateAdminConversationName": {
+      return {
+        ...state,
+        activeConversation: action.payload.updatedActiveConversation,
+        loadedAdminConversations: action.payload.updatedLoadedConversations,
+        error: null
+      };
+    }
     case "ToggleAdminMessengerOnlineStatus": {
       return {
         ...state,

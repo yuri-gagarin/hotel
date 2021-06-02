@@ -77,6 +77,13 @@ export type CloseAdminConversation = {|
     activeConversation: AdminConversationData;
   }
 |};
+export type UpdateAdminConversationName = {|
+  +type: "UpdateAdminConversationName";
+  +payload: {
+    updatedActiveConversation: AdminConversationData;
+    updatedLoadedConversations: Array<AdminConversationData>;
+  }
+|};
 //
 export type AdminConversationAPIRequest = {|
   +type: "AdminConversationAPIRequest";
@@ -155,5 +162,5 @@ export type ClearAdminConversationError = {
   }
 };
 
-export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | NewClientConnection | ClientDisconnection | SetOnlineClients | SetAdminConversations | CreateNewAdminConveration |
+export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | UpdateAdminConversationName | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | NewClientConnection | ClientDisconnection | SetOnlineClients | SetAdminConversations | CreateNewAdminConveration |
                                       CreateNewAdminConveration | DeleteAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;

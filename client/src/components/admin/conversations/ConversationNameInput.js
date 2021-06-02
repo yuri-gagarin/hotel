@@ -1,10 +1,13 @@
 // @flow 
 import * as React from "react";
 // 
+import type { AdminConversationData } from "../../../redux/reducers/admin_conversations/flowTypes"; 
+//
 import styles from "./css/conversationNameInput.module.css";
 
 type Props = {
-
+  adminConversationData: AdminConversationData;
+  updateAdminConversationName: (data: { newName: string, conversationId: string }) => void;
 }
 type LocalState = {
   inputSelected: boolean;
@@ -13,9 +16,12 @@ type LocalState = {
   backupString: string;
 };
 
-export const ConversationNameInput = (props: Props): React.Node => {
+export const ConversationNameInput = ({ adminConversationData, updateAdminConversationName }: Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ 
-    inputSelected: false, showUpdateBtn: false, inputValue: "Anonymous", backupString: "Anonymous" 
+    inputSelected: false, 
+    showUpdateBtn: false, 
+    inputValue: adminConversationData.conversationName ? adminConversationData.conversationName : "Anonymous", 
+    backupString: adminConversationData.conversationName ? adminConversationData.conversationName : "Anonymous"
   });
   const componentRef = React.useRef<HTMLDivElement | null>(null);
   // event handlers //
@@ -28,15 +34,17 @@ export const ConversationNameInput = (props: Props): React.Node => {
       }
     }
   } 
-  const selectNameInput = (): void => {
+  const selectNameInput = (e): void => {
+    e.stopPropagation();
     setLocalState({ ...localState, inputSelected: true, showUpdateBtn: true });
   };
   const handleInputChange = (e): void => {
     setLocalState({ ...localState, inputValue: e.target.value });
   };
-  const updateConversationName = (e): void => {
+  const updateName = (e): void => {
     e.stopPropagation();
-    setLocalState({ ...localState, inputSelected: false, showUpdateBtn: false });
+    updateAdminConversationName({ conversationId: adminConversationData.conversationId, newName: localState.inputValue });
+    setLocalState({ ...localState, backupString: localState.inputValue, inputSelected: false, showUpdateBtn: false });
   };
 
   React.useEffect(() => {
@@ -63,7 +71,7 @@ export const ConversationNameInput = (props: Props): React.Node => {
         </input>
       </div>
       
-      <div className={ `${styles.updateConversationNameBtn} ${ localState.showUpdateBtn ? styles.conversationNameBtnShow : ""}` } onClick={ updateConversationName } ref={ componentRef }>
+      <div className={ `${styles.updateConversationNameBtn} ${ localState.showUpdateBtn ? styles.conversationNameBtnShow : ""}` } onClick={ updateName } ref={ componentRef }>
         Update
       </div>
     </div>

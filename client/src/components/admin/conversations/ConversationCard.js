@@ -16,8 +16,9 @@ type Props = {
   openConversation: (conversationId: string) => void;
   closeConversation: () => void;
   deleteConversation: (conversationId: string) => void;
+  updateAdminConversationName: (data: { conversationId: string, newName: string }) => void;
 }
-export const ConversationCard = ({ adminConversationState, conversation, openConversation, closeConversation, deleteConversation }: Props): React.Node => {
+export const ConversationCard = ({ adminConversationState, conversation, openConversation, closeConversation, deleteConversation, updateAdminConversationName }: Props): React.Node => {
   const [ convoSelected, setConvoSelected ] = React.useState(false);
   const [ lastMessageContent, setLastMessageContent ] = React.useState<string>("");
 
@@ -47,7 +48,10 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
     <Card fluid color="green" className={ `${conversation.new ? styles.newConversationCard : ""} ${styles.conversationCard} ${convoSelected ? styles.selectedConversation : ""}` } onClick={ selectConversation }>
       <Card.Content>
         <div className={ `${styles.conversationName}` }>
-          <ConversationNameInput />
+          <ConversationNameInput 
+            adminConversationData={ conversation } 
+            updateAdminConversationName={ updateAdminConversationName }
+          />
         </div>
         <div className={ `${styles.conversationContent} ${convoSelected ? styles.textColorSelected : ""}`}>
           { lastMessageContent }
