@@ -1,0 +1,61 @@
+.conversationNameInputWrapper {
+  display: flex;
+  position: relative;
+  width: 100%;
+  align-items: center;
+  z-index: auto;
+}
+
+.conversationNameDisplay {
+  display: flex;
+  flex: 1;
+  flex-wrap: nowrap;
+  align-items: center;
+  z-index: 2;
+  background-color: white;
+}
+.conversationNameDisplay > span {
+  display: flex;
+  align-items: center;
+  font-style: italic;
+  color: gray;
+  font-size: 0.75em;
+  font-weight: bolder;
+  background-color: white;
+  height: 100%;
+}
+.conversationNameInput {
+  cursor: pointer;
+  border: none;
+  height: 100%;
+}
+.conversationNameInput:active {
+  border: none;
+}
+.conversationNameInput:focus {
+  outline-color: green;
+}
+.updateConversationNameBtn {
+  display: flex;
+  flex: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(74, 74, 221);
+  color: white;
+  z-index: 1;
+  -webkit-touch-callout: none; 
+  -webkit-user-select: none; 
+  -khtml-user-select: none; 
+  -moz-user-select: none; 
+  -ms-user-select: none; 
+  user-select: none; 
+}
+.conversationNameBtnShow {
+  transition: transform 100ms linear;
+  transform: translateY(100%);
+}

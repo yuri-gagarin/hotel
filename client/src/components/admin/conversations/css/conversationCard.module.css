@@ -75,7 +75,13 @@
 
 
 .conversationName {
-  border-bottom: 1px solid grey;
+  display: flex;
+  flex-direction: row;
+}
+.conversationRenameInput {
+  width: 100% !important;
+  border: 5px solid green;
+  padding: 0 !important;
 }
 .conversationName > span:nth-child(1) {
   color: inherit;

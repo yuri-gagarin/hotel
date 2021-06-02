@@ -1,9 +1,9 @@
 // @flow
 import * as  React from "react";
-import PropTypes from "prop-types";
 import { Button, Card, Icon } from "semantic-ui-react";
 // additional dependencies //
 import { formatDate } from "../../helpers/dateHelpers";
+import { ConversationNameInput } from "./ConversationNameInput";
 // types //
 import type { AdminConversationState, AdminConversationData } from "../../../redux/reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
@@ -47,12 +47,7 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
     <Card fluid color="green" className={ `${conversation.new ? styles.newConversationCard : ""} ${styles.conversationCard} ${convoSelected ? styles.selectedConversation : ""}` } onClick={ selectConversation }>
       <Card.Content>
         <div className={ `${styles.conversationName}` }>
-          <span className={ `${convoSelected ? styles.textColorSelected : ""}`}>
-            Conversation with: 
-          </span>
-          <span>
-          { conversation.conversationName ? conversation.conversationName : "Anonymous" }
-          </span>
+          <ConversationNameInput />
         </div>
         <div className={ `${styles.conversationContent} ${convoSelected ? styles.textColorSelected : ""}`}>
           { lastMessageContent }
