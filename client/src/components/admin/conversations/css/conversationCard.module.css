@@ -94,6 +94,9 @@
 }
 .conversationContentWrapper {
   padding: 0.25em 0;
+  border: 1px solid rgb(189, 187, 187);
+  border-radius: 5px;
+  padding: 0.25em 0.5em;
 }
 .lastMessage {
   display: flex;
@@ -120,7 +123,9 @@
   padding: 0.5em 0;
 }
 .conversationDate {
-  color: grey;
+  color: rgb(87, 87, 87);
+  font-size: 0.85em;
+  padding: 0.25em 0.5em;
 }
 .textColorSelected {
   color: green;
@@ -131,7 +136,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(62, 168, 62);
+  background-color: rgb(62, 120, 168);
   color: white;
   cursor: pointer;
 }
