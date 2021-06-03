@@ -41,3 +41,29 @@
   justify-content: center;
   align-items: center;
 }
+.conversationDetailsDiv > span:nth-child(2) {
+  margin-left: 5px;
+  border: 1px solid green;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: green;
+}
+.onlineBlink {
+  animation: onlineBlinker 2s linear infinite;
+}
+
+@keyframes onlineBlinker {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

@@ -10,7 +10,6 @@ import MessagesView from "./MessagesView";
 import { MessageAllModal } from "./MessageAllModal";
 import { MessagesSplashScreen } from "./MessageSplashScreen";
 // styles imports //
-import { closeConvoButton } from "./styles/style";
 import styles from "./css/conversationIndexContainer.module.css";
 // redux imports  //
 import { connect } from "react-redux";

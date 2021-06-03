@@ -9,6 +9,7 @@ import type { AdminConversationState, AdminConversationData } from "../../../red
 import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
 // helpers //
 import styles from "./css/conversationCard.module.css";
+import { trimStringToSpecificLength } from "../../helpers/displayHelpers";
 
 type Props = {
   adminConversationState: AdminConversationState;
@@ -20,7 +21,7 @@ type Props = {
 }
 export const ConversationCard = ({ adminConversationState, conversation, openConversation, closeConversation, deleteConversation, updateAdminConversationName }: Props): React.Node => {
   const [ convoSelected, setConvoSelected ] = React.useState(false);
-  const [ lastMessageContent, setLastMessageContent ] = React.useState<string>("");
+  const [ lastMessageContent, setLastMessageContent ] = React.useState<MessageData | null>(null);
 
   React.useEffect(() => {
     if (conversation.conversationId === adminConversationState.activeConversation.conversationId) {
@@ -32,11 +33,11 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
 
   React.useEffect(() => {
     if (conversation.newMessages.length > 0) {
-      setLastMessageContent(conversation.newMessages[conversation.newMessages.length - 1].messageContent);
+      setLastMessageContent(conversation.newMessages[conversation.newMessages.length - 1]);
     } else if (conversation.messages.length > 0) {
-      setLastMessageContent(conversation.messages[conversation.messages.length - 1].messageContent);
+      setLastMessageContent(conversation.messages[conversation.messages.length - 1]);
     } else {
-      setLastMessageContent("No messages...");
+      setLastMessageContent(null);
     }
   }, [ conversation ]);
 
@@ -45,7 +46,7 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
   }
 
   return (
-    <Card fluid color="green" className={ `${conversation.new ? styles.newConversationCard : ""} ${styles.conversationCard} ${convoSelected ? styles.selectedConversation : ""}` } onClick={ selectConversation }>
+    <Card fluid color="green" className={ `${conversation.new ? styles.newConversationCard : ""} ${styles.conversationCard} ${convoSelected ? styles.selectedConversation : ""}` }>
       <Card.Content>
         <div className={ `${styles.conversationName}` }>
           <ConversationNameInput 
@@ -53,8 +54,19 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
             updateAdminConversationName={ updateAdminConversationName }
           />
         </div>
-        <div className={ `${styles.conversationContent} ${convoSelected ? styles.textColorSelected : ""}`}>
-          { lastMessageContent }
+        <div className={ `${styles.conversationContentWrapper} ${convoSelected ? styles.textColorSelected : ""}`}>
+          {
+            lastMessageContent 
+            ?
+            <div className={ styles.lastMessage }>
+              <div>Sender: <span>{ lastMessageContent.sender }</span><i className="fas fa-user"></i></div>
+              <div>{ trimStringToSpecificLength(lastMessageContent.messageContent, 25)}</div>
+            </div>
+            :
+            <div className={ styles.lastMessage }>
+              {"Nothing yet..."}
+            </div>
+          }
         </div>
         <div className={ `${styles.conversationDate}` }>
           Created at: { formatDate(conversation.createdAt, { military: true }) }
@@ -85,6 +97,20 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
         : 
           null
       }
+      <Card.Content style={{ padding: 0, margin: 0, height: "35px" }}>
+        {
+          adminConversationState.activeConversation.conversationId === conversation.conversationId 
+          ?
+          <div className={ `${styles.conversationOpenControls} ${styles.opened}` }>
+            <i className={`fas fa-chevron-circle-right ${styles.slideRight}`}></i>
+          </div>
+          :
+          <div className={ styles.conversationOpenControls }  onClick={ selectConversation }>
+            Open
+            <i className={`fas fa-comment`}></i>
+          </div>
+        }
+      </Card.Content>
       
     </Card>
   );

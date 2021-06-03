@@ -5,7 +5,6 @@ import ObjectID from "bson-objectid";
 // additional component imports //
 import Message from "./Message";
 // style imports //
-import { conversationTitle } from "./styles/style";
 import styles from "./css/messagesView.module.css";
 // types //
 import type { AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
@@ -106,7 +105,7 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
       <div className={ styles.messagesViewWrapper }>
         <div className={ styles.adminConvHeaderWrapper }>
           <div className={ styles.adminConvHeader }>
-            <p>ConversationWith: { setConversationTitle(activeConversation.messages, adminState) }</p>
+            <p>ConversationWith: {adminConversationState.activeConversation.conversationName}</p>
           </div>
           <div className={ styles.adminConvClose } onClick={ closeConversation }>
             <p>Close Conversation</p>

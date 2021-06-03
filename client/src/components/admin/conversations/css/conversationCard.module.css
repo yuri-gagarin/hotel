@@ -1,7 +1,7 @@
 .conversationCard {
-  cursor: pointer;
   margin-top: 5px !important;
   margin-bottom: 5px !important;
+  padding-bottom: 0 !important;
 }
 /* new message notifications */
 .newNotificationWrapper {
@@ -26,6 +26,7 @@
   align-items: center;
   background-color: orange;
   padding: 0.5em 0;
+  z-index: 4;
 }
 .newConversationNotificationDiv > div {
   border: 2px solid white;
@@ -91,12 +92,54 @@
   font-size: 1.25em;
   font-weight: bold;
 }
-.conversationContent {
-  padding: 1.25em 0;
+.conversationContentWrapper {
+  padding: 0.25em 0;
+}
+.lastMessage {
+  display: flex;
+  flex-direction: column;
+}
+.lastMessage > div:nth-child(1) {
+  font-style: italic;
+  font-size: 0.75em;
+  margin-left: 0.25em;
+}
+.lastMessage > div:nth-child(1) > span {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+.lastMessage > div:nth-child(1) > i {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-left: 5px;
+}
+.lastMessage > div:nth-child(2) {
+  color: green;
+  font-style: normal;
+  margin-left: 0.25em;
+  padding: 0.5em 0;
 }
 .conversationDate {
   color: grey;
 }
 .textColorSelected {
   color: green;
+}
+
+.conversationOpenControls {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(62, 168, 62);
+  color: white;
+  cursor: pointer;
+}
+.conversationOpenControls > i {
+  margin-left: 5px;
+}
+.opened {
+  background-color: white;
+  color: green;
+  font-size: 1.5em;
 }

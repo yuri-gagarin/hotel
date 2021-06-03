@@ -65,7 +65,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
                   content={`${ messengerOnline ? "Your instant messenger is online" : "Your instant messenger is offline"}`}
                   position="top center"
                   trigger={
-                    <div className={ `${styles.conversationOnlineStatus} ${ messengerOnline ? styles.messengerOnline : styles.messengerOffline }` }>
+                    <div className={ `${styles.conversationOnlineStatus} ${ messengerOnline ? styles.messengerOnline : styles.messengerOffline } ${ messengerOnline ? styles.onlineBlink : "" }` }>
 
                     </div>
                   }
@@ -80,11 +80,11 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
         <div className={ styles.conversationDetailsWrapper }>
           <div className={ styles.conversationDetailsDiv }>
             <span>Online clients: </span>
-            <span>0</span>
+            <span>{ adminConversationState.connectedOnlineClients.length }</span>
           </div>
           <div className={ styles.conversationDetailsDiv }>
             <span>Active conversations: </span>
-            <span>0</span>
+            <span>{ adminConversationState.loadedAdminConversations.length }</span>
           </div>
           <div className={ styles.conversationDetailsDiv }>
             <span>Archived conversations: </span>
