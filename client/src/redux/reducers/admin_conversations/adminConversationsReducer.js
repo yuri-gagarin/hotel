@@ -86,6 +86,14 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         error: null
       };
     }
+    case "ArchiveAdminConversation": {
+      return {
+        ...state,
+        activeConversation: action.payload.updatedActiveConversation,
+        loadedAdminConversations: action.payload.updatedLoadedAdminConversations,
+        error: null
+      };
+    }
     case "DeleteAdminConversation": {
       return {
         ...state,

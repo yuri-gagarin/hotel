@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
 import Conversation from "../models/Conversation";
 import Message from "../models/Message";
 
 export default {
+  /*
   createNewConversation: (req, res) => {
     // user should be able to create a new conversation  without a registration //
-    const messageData = req.body;
   },
+  */
   getAllConversations: (req, res) => {
     return Conversation.find({})
       .then((conversations) => {
@@ -26,12 +26,11 @@ export default {
     // user should open a conversation with new messages //
     // any new messages should be marked as read //
     const { convId } = req.params;
-    let conversationModel, unreadMessages, customError, statusCode;
+    let unreadMessages, customError, statusCode;
     return Conversation.findOne({ _id: convId })
       .then((conversation) => {
         if (conversation) {
           // set the conversation model and unread messages to mark as read //
-          conversationModel = conversation;
           unreadMessages = conversation.unreadMessages;
           // update messages in converastion to read //
           return Message.updateOne(
@@ -45,7 +44,7 @@ export default {
           return Promise.reject(customError);
         }
       })
-      .then((response) => {
+      .then(() => {
         return Conversation.findByIdAndUpdate(
           convId,
           { $pull: { "unreadMessages": { $in: unreadMessages } }, 
@@ -67,10 +66,37 @@ export default {
         });
       });
   },
+  archiveConversation: (req, res) => {
+    const conversationData = req.body.conversation;
+    console.log(71);
+    console.log(conversationData);
+    if (!conversationData) {
+      return res.status(400).json({
+        responseMsg: "Invalid data",
+        error: new Error("Invalid data sent from client")
+      });
+    }
+
+    const { conversationId, messages = [], createdAt } = conversationData;
+
+    return Conversation.create({ conversationId, messages, createdAt, archived: true })
+      .then((archivedConversation) => {
+        return res.status(200).json({
+          responseMsg: "Conversation archived",
+          archivedConversation
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        return res.status(500).json({
+          responseMsg: "Error archiving conversation",
+          error
+        });
+      });
+  },
   deleteConversation: (req, res) => {
     // validate user credentials first //
     const conversationId = req.params.convId;
-    const user = req.user;
     let customError, statusCode;
     return Conversation.findOneAndDelete({ _id: conversationId})
       .then((conversation) => {
@@ -82,7 +108,7 @@ export default {
           return Promise.reject(customError);
         }
       })
-      .then((response) => {
+      .then(() => {
         return res.status(200).json({
           responseMsg: "Conversation deleted",
           conversationId: conversationId

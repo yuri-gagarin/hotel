@@ -1,7 +1,7 @@
 import conversationsController from "../controllers/conversationsController";
 import { isLoggedIn } from "./helpers/routeHelpers";
 
-export default function (router) {
+export default function(router) {
   // @route DELETE /api/conversations/:convId //
   // @desc Deletes a Conversation and related Message models //
   // @access PRIVATE //
@@ -22,4 +22,11 @@ export default function (router) {
   router
     .route("/api/conversations/:convId")
     .get(conversationsController.openConversation);
-};
+  
+  // @route POST /api/conversations/archive //
+  // @desc Archives an active Conversation //
+  // @access PRIVATE //
+  router 
+    .route("/api/conversations/archive")
+    .post(conversationsController.archiveConversation);
+}

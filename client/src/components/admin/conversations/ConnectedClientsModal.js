@@ -12,9 +12,10 @@ type Props = {
   toggleModal: () => void;
   handleToggleConversation: (socketId: string) => void;
   onlineClients: Array<ConnectedClientData>;
+  activeConversationIds: Array<string>;
 };
 
-export const ConnectedClientsModal = ({ modalOpen, toggleModal, handleToggleConversation, onlineClients }: Props): React.Node => {
+export const ConnectedClientsModal = ({ modalOpen, toggleModal, handleToggleConversation, onlineClients, activeConversationIds }: Props): React.Node => {
   const description = "a card description here";
 
   return (
@@ -49,7 +50,11 @@ export const ConnectedClientsModal = ({ modalOpen, toggleModal, handleToggleConv
                               </Feed.Summary>
                             </Feed.Content>
                             <Feed.Extra>
-                              <Button basic color="blue" onClick={ () => handleToggleConversation(onlineClientdata.socketId) } content="Message" icon="comment" />
+                              <Button 
+                                basic color="blue" onClick={ () => handleToggleConversation(onlineClientdata.socketId) } 
+                                content={ activeConversationIds.includes(`CONVERSATION_${onlineClientdata.socketId}`) ? "Open Conversation" : "New Conversation" }
+                                icon="comment" 
+                              />
                             </Feed.Extra>
 
                           </Feed.Event>

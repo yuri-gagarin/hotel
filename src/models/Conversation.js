@@ -4,31 +4,27 @@ const Schema = mongoose.Schema;
 const conversationSchema = new Schema({
   participants: [{
     type: Schema.Types.ObjectId,
-    required: true,
     ref: "User"
   }],
-  readMessages: [{
-    type: Schema.Types.ObjectId,
-    ref: "Message"
-  }],
-  unreadMessages: [{
-    type: Schema.Types.ObjectId,
-    ref: "Message"
-  }],
-  lastMessage: {
-    _id: {
-      type: Schema.Types.ObjectId,
-    },
-    sender: {
-      type: String,
-    },
-    content: {
-      type: String,
-    },
-    sentAt: {
-      type: Date,
-    }
+  conversationId: {
+    type: String,
+    required: true
   },
+  archived: {
+    type: Boolean,
+    required: true
+  },
+  messages: [
+    {
+      _id: Schema.Types.ObjectId,
+      conversationId: String,
+      sender: String,
+      receiverSocketId: String,
+      senderSocketId: String,
+      messageContent: String,
+      sentAt: String
+    }
+  ],
   createdAt: {
     type: Date,
     required: true,

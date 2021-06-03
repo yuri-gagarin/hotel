@@ -91,7 +91,14 @@ export type AdminConversationAPIRequest = {|
     loading: boolean;
   }
 |};
- export type SetAdminConversations = {|
+export type ArchiveAdminConversation = {|
+  +type: "ArchiveAdminConversation";
+  +payload: {
+    updatedActiveConversation: AdminConversationData;
+    updatedLoadedAdminConversations: Array<AdminConversationData>;
+  }
+|};
+export type SetAdminConversations = {|
   +type: "SetAdminConversations";
   +payload: {
     status: number;
@@ -163,4 +170,4 @@ export type ClearAdminConversationError = {
 };
 
 export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | UpdateAdminConversationName | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | NewClientConnection | ClientDisconnection | SetOnlineClients | SetAdminConversations | CreateNewAdminConveration |
-                                      CreateNewAdminConveration | DeleteAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;
+                                      CreateNewAdminConveration | DeleteAdminConversation | ArchiveAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;

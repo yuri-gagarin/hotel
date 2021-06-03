@@ -1,18 +1,21 @@
 // @flow 
 import * as React from "react";
 import { Checkbox, Dropdown, Grid, Menu, Popup } from "semantic-ui-react";
-import type { AdminConversationState, MessengerOnlineToggleArgs } from "../../../redux/reducers/admin_conversations/flowTypes";
+import type { AdminConversationState, AdminConversationData, MessengerOnlineToggleArgs } from "../../../redux/reducers/admin_conversations/flowTypes";
 // styles //
 import styles from "./css/conversationControls.module.css";
+// helpers //
+import {  objectValuesEmpty } from "../../helpers/displayHelpers";
 
 type Props = {
   adminConversationState: AdminConversationState;
   handleToggleAdminMessengerOnlineStatus: (data: MessengerOnlineToggleArgs) => void;
   handleToggleDeleteConversation: (conversationId: string) => void;
+  handleArchiveConversation: (conversationData: AdminConversationData, currentAdminConvState: AdminConversationState) => Promise<boolean>;
   openUsersModal: () => void;
   openMessageAllModal: () => void;
 }
-export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, openUsersModal, openMessageAllModal }: Props): React.Node => {
+export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, handleArchiveConversation, openUsersModal, openMessageAllModal }: Props): React.Node => {
   const { messengerOnline } = adminConversationState;
 
   const toggleMessegnerOnlineOffline = () => {
@@ -22,10 +25,15 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
     const { conversationId } = adminConversationState.activeConversation;
     handleToggleDeleteConversation(conversationId);
   };
+  const toggleArchiveAdminConversation = (): void => {
+    const { activeConversation } = adminConversationState;
+    if (objectValuesEmpty(activeConversation)) return;
+    handleArchiveConversation(activeConversation, adminConversationState);
+  };
 
   return (
     <React.Fragment>
-      <Grid.Column largeScreen={4} tablet={8} style={{ padding: 0 }}>
+      <Grid.Column largeScreen={5} style={{ padding: 0, height: "100%" }}>
         <div className={ styles.conversationControlsUpperWrapper }>
           <Menu className={ styles.conversationOptionsMenu }>
             <Menu.Item>
@@ -35,7 +43,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
                     { messengerOnline ? "Disconnect" : "Connect" }
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item>
+                  <Dropdown.Item onClick={ toggleArchiveAdminConversation }>
                     Archive Selected
                   </Dropdown.Item>
                   <Dropdown.Item onClick={ toggleDeleteConversation }>
@@ -76,7 +84,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
           </Menu>
         </div>
       </Grid.Column>
-      <Grid.Column largeScreen={10} tablet={8} style={{ padding: 0 }}>
+      <Grid.Column largeScreen={9} style={{ padding: 0, height: "100%" }}>
         <div className={ styles.conversationDetailsWrapper }>
           <div className={ styles.conversationDetailsDiv }>
             <span>Online clients: </span>

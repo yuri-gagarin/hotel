@@ -8,7 +8,7 @@ import type { Dispatch } from "../reducers/_helpers/createReducer";
 import type { 
   AdminConversationData, AdminConversationAction, AdminConversationState, ConnectedClientData, NewClientConnection, ClientDisconnection, SetOnlineClients,
   OpenAdminConversation, CloseAdminConversation, UpdateAdminConversationName, AdminConversationAPIRequest, ToggleAdminMessengerOnlineStatus, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
-  NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
+  ArchiveAdminConversation, NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
 } from "../reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../reducers/conversations/flowTypes";
 // socket io //
@@ -40,6 +40,13 @@ const adminConversationAPIRequest = (): AdminConversationAPIRequest => {
   return {
     type: "AdminConversationAPIRequest",
     payload: { loading: true }
+  };
+};
+const archiveAdminConversation = (data: { updatedActiveConversation: AdminConversationData, updatedLoadedAdminConversations: Array<AdminConversationData> }): ArchiveAdminConversation => {
+  const { updatedActiveConversation, updatedLoadedAdminConversations } = data;
+  return {
+    type: "ArchiveAdminConversation",
+    payload: { updatedActiveConversation, updatedLoadedAdminConversations }
   };
 };
 const toggleAdminMessengerOnlineStatus = ({ messengerOnline }: { messengerOnline: boolean }): ToggleAdminMessengerOnlineStatus => {
@@ -261,6 +268,30 @@ export const handleFetchAdminConversations = (dispatch: Dispatch<AdminConversati
       return Promise.resolve(false);
     });
 };
+
+export const handleArchiveAdminConversation = (dispatch: Dispatch<AdminConversationAction>, conversationData: AdminConversationData, currentAdminConvState: AdminConversationState): Promise<boolean> => {
+  const axiosOpts = {
+    method: "POST",
+    url: "/api/conversations/archive",
+    data: {
+      conversation: conversationData,
+    }
+  };
+  dispatch(adminConversationAPIRequest());
+  return axios(axiosOpts)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, archivedConversation }: { responseMsg: string, archivedConversation: AdminConversationData } = data;
+      const updatedLoadedAdminConversations = currentAdminConvState.loadedAdminConversations.filter((convData) => convData.conversationId !== archivedConversation.conversationId);
+      const updatedActiveConversation = generateEmptyAdminConversationModel();
+      dispatch(archiveAdminConversation({ updatedActiveConversation, updatedLoadedAdminConversations }));
+      return true;
+    })
+    .catch((error) => {
+      dispatch(setAdminConversationError(error));
+      return false;
+    })
+};
 export const handleCreateNewAdminConversation = (dispatch: Dispatch<AdminConversationAction>, newConversationData: AdminConversationData): Promise<boolean> => {
   const axiosOpts = {
     method: "POST",
@@ -291,7 +322,9 @@ export const handleDeleteAdminConversation = (dispatch: Dispatch<AdminConversati
     method: "DELETE",
     url: "/api/conversations/:conversationId"
   };
-
+  // TODO //
+  // API call later to delete possible archived convo //
+  /*
   return axios(axiosOpts) 
     .then((response) => {
       const { status, data } = response;
@@ -305,6 +338,17 @@ export const handleDeleteAdminConversation = (dispatch: Dispatch<AdminConversati
       dispatch(setAdminConversationError(err));
       return Promise.resolve(false);
     });
+  */
+  const udpdatedLoadedConversations: Array<AdminConversationData> = currentAdminConversationState.loadedAdminConversations.filter((convData) => convData.conversationId !== conversationIdToDelete);
+  dispatch(deleteAdminConversation({ 
+    status: 200, 
+    responseMsg: "Ok", 
+    updatedActiveConversation: generateEmptyAdminConversationModel(),
+    updatedAdminConversations: udpdatedLoadedConversations
+  }));
+  // shoud dispatch delete conversation to redis servers //
+  socket.emit("adminDeletedConversation", conversationIdToDelete);
+  return Promise.resolve(true);
 };
 
 
