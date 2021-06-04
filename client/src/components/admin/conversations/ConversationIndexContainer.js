@@ -15,7 +15,7 @@ import styles from "./css/conversationIndexContainer.module.css";
 import { connect } from "react-redux";
 import { 
   handleOpenAdminConversation, handleCloseAdminConversation, handleUpdateAdminConversationName, handleToggleAdminMessengerOnlineStatus, handleSetAdminMessengerOnlineStatus, 
-  handleFetchAdminConversations, handleArchiveAdminConversation, handleCreateNewAdminConversation, handleDeleteAdminConversation, handleNewAdminMessage, setAdminConversations, handleSetAdminConversationError
+  handleFetchAdminConversations, handleArchiveAdminConversation, handleToggleArchivedAdminConversations, handleCreateNewAdminConversation, handleDeleteAdminConversation, handleNewAdminMessage, setAdminConversations, handleSetAdminConversationError
 } from "../../../redux/actions/adminConversationActions";
 // flow types //
 import type { RouterHistory } from "react-router-dom";
@@ -44,6 +44,7 @@ type Props = {
   _handleUpdateAdminConversationName: (newName: string, conversationId: string, currentAdminConversationState: AdminConversationState) => void;
   _handleFetchAdminConversations: () => Promise<boolean>;
   _handleArchiveAdminConversation: (adminConversation: AdminConversationData, currentAdminConvState: AdminConversationState) => Promise<boolean>;
+  _handleToggleArchivedAdminConversations: (options: { viewActive?: boolean, viewArchived?: boolean }) => Promise<boolean>;
   _handleCreateNewAdminConversation: (adminConversationData: AdminConversationData) => Promise<boolean>;
   _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
   _handleNewAdminMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
@@ -53,7 +54,7 @@ type Props = {
 const ConversationIndexContainer = ({ 
   history, adminState, adminConversationState, _dispatch,
   _handleToggleAdminMessengerOnlineStatus, _handleSetAdminMessengerOnlineStatus, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleUpdateAdminConversationName,
-  _handleFetchAdminConversations, _handleArchiveAdminConversation, _handleCreateNewAdminConversation, _handleDeleteAdminConversation, _handleNewAdminMessage, _setAdminConversationError }: Props): React.Node => {
+  _handleFetchAdminConversations, _handleArchiveAdminConversation, _handleToggleArchivedAdminConversations, _handleCreateNewAdminConversation, _handleDeleteAdminConversation, _handleNewAdminMessage, _setAdminConversationError }: Props): React.Node => {
     // redux state props //
   const [ onlineUsersModalOpen, setOnlineUsersModalOpen ] = React.useState<boolean>(false);
   const [ messageAllModalOpen, setMessageAllModalOpen ] = React.useState<boolean>(false);
@@ -108,7 +109,7 @@ const ConversationIndexContainer = ({
         conversationId: conversationId,
         receiverSocketId: "",
         archived: false,
-        new: false,
+        newConversation: false,
         conversationName: "",
         messages: [],
         newMessages: [],
@@ -147,8 +148,9 @@ const ConversationIndexContainer = ({
       .catch((error) => {
         _setAdminConversationError(error);
         return Promise.resolve(false);
-      })
-  }
+      });
+  };
+
   return (
     <React.Fragment>
       <ConfirmDeleteModal open={ confirmDeleteModalState.open } modelName="conversation" cancelAction={ cancelConversationDelete } confirmAction={ confirmConversationDelete } />
@@ -173,6 +175,7 @@ const ConversationIndexContainer = ({
           openUsersModal={ toggleModal }
           openMessageAllModal={ toggleMessageAllModal }
           handleArchiveConversation={ _handleArchiveAdminConversation }
+          handleToggleArchivedAdminConversations={ _handleToggleArchivedAdminConversations }
         />
       </Grid.Row>
       <Grid.Row centered style={{ height: "80%", padding: 0 }} columns={2} className={ styles.messengerIndexRow }>
@@ -221,6 +224,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AdminConversationAction>) => {
     _handleCloseAdminConversation: () => handleCloseAdminConversation(dispatch),
     _handleUpdateAdminConversationName: (newName: string, conversationId: string, currentAdminConversationState: AdminConversationState) => handleUpdateAdminConversationName(dispatch, newName, conversationId, currentAdminConversationState),
     _handleFetchAdminConversations: () => handleFetchAdminConversations(dispatch),
+    _handleToggleArchivedAdminConversations: (options: { viewArchived?: boolean, viewActive?: boolean }) => handleToggleArchivedAdminConversations(dispatch, options),
     _handleArchiveAdminConversation: (adminConversation: AdminConversationData, currentAdminConvState: AdminConversationState) => handleArchiveAdminConversation(dispatch, adminConversation, currentAdminConvState),
     _handleCreateNewAdminConversation: (conversationData: AdminConversationData) => handleCreateNewAdminConversation(dispatch, conversationData),
     _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => handleDeleteAdminConversation(dispatch, conversationId, currentAdminConversationState),

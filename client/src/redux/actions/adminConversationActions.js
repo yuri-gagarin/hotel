@@ -1,18 +1,21 @@
 // @flow 
 import axios from "axios";
 import { setAxiosError } from "./helpers/errorHelpers";
-import { generateEmptyAdminConversationModel } from "../reducers/_helpers/emptyDataGenerators";
 import store from "../../redux/store";
 // types //
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 import type { 
   AdminConversationData, AdminConversationAction, AdminConversationState, ConnectedClientData, NewClientConnection, ClientDisconnection, SetOnlineClients,
   OpenAdminConversation, CloseAdminConversation, UpdateAdminConversationName, AdminConversationAPIRequest, ToggleAdminMessengerOnlineStatus, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
-  ArchiveAdminConversation, NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
+  ArchiveAdminConversation, ToggleArchivedAdminConversations, NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
 } from "../reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../reducers/conversations/flowTypes";
 // socket io //
 import { socket } from "../../App";
+// helpers //
+import { generateEmptyAdminConversationModel } from "../reducers/_helpers/emptyDataGenerators";
+import { generateMockConversations } from "../../components/helpers/mockData";
+
 // non api actions //
 const openAdminConversation = (data: { activeConversation: AdminConversationData, updatedAdminConversationsArr: Array<AdminConversationData>  }): OpenAdminConversation => {
   const { activeConversation, updatedAdminConversationsArr } = data;
@@ -47,6 +50,13 @@ const archiveAdminConversation = (data: { updatedActiveConversation: AdminConver
   return {
     type: "ArchiveAdminConversation",
     payload: { updatedActiveConversation, updatedLoadedAdminConversations }
+  };
+};
+const toggleArchivedAdminConversations = (data: { viewingArchived: boolean, updatedActiveConversation: AdminConversationData, updatedLoadedAdminConversations: Array<AdminConversationData> }): ToggleArchivedAdminConversations => {
+  const { viewingArchived, updatedActiveConversation, updatedLoadedAdminConversations } = data;
+  return {
+    type: "ToggleArchivedAdminConversations",
+    payload: { viewingArchived, updatedActiveConversation, updatedLoadedAdminConversations }
   };
 };
 const toggleAdminMessengerOnlineStatus = ({ messengerOnline }: { messengerOnline: boolean }): ToggleAdminMessengerOnlineStatus => {
@@ -133,7 +143,7 @@ export const handleOpenAdminConversation = (dispatch: Dispatch<AdminConversation
   // TODO //
   // could be optimized ? //
   // if no new messages no reason to recopy? //
-  const updatedConversation: AdminConversationData = { ...conversationToOpen, new: false, newMessages: [], messages: [ ...conversationToOpen.messages, ...conversationToOpen.newMessages ]};
+  const updatedConversation: AdminConversationData = { ...conversationToOpen, newConversation: false, newMessages: [], messages: [ ...conversationToOpen.messages, ...conversationToOpen.newMessages ]};
   const updatedAdminConversationsArr: Array<AdminConversationData> = currentAdminConvState.loadedAdminConversations.map((conversation) => {
     if (conversation.conversationId === conversationId) {
       return { ...updatedConversation };
@@ -231,7 +241,7 @@ export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationActio
     // create a new conversation in local state //
     const newConversation: AdminConversationData = {
       archived: false,
-      new: true,
+      newConversation: true,
       conversationId: newMessageData.conversationId,
       receiverSocketId: newMessageData.senderSocketId,
       messages: [],
@@ -290,8 +300,38 @@ export const handleArchiveAdminConversation = (dispatch: Dispatch<AdminConversat
     .catch((error) => {
       dispatch(setAdminConversationError(error));
       return false;
-    })
+    });
 };
+
+export const handleToggleArchivedAdminConversations = (dispatch: Dispatch<AdminConversationAction>, options: { viewArchived?: boolean, viewActive?: boolean }): Promise<boolean> => {
+  const { viewArchived, viewActive } = options;
+  if (viewArchived) {
+    // fetch archived conversations from the DB //
+    const axiosOpts = {
+      method: "GET",
+      url: "/api/conversations"
+    };
+    return axios(axiosOpts)
+      .then((response) => {
+        const { status, data } = response;
+        const { responseMsg, adminConversations }: { responseMsg: string, adminConversations: Array<AdminConversationData> } = data;
+        dispatch(toggleArchivedAdminConversations({ 
+          viewingArchived: true, 
+          updatedActiveConversation: generateEmptyAdminConversationModel(),
+          updatedLoadedAdminConversations: adminConversations
+        }));
+        return Promise.resolve(true);
+      })
+      .catch((error) => {
+        dispatch(setAdminConversationError(error));
+        return Promise.resolve(false);
+      });
+  } else {
+    // return the active conversations from redis?? //
+    return Promise.resolve(true);
+  }
+};
+
 export const handleCreateNewAdminConversation = (dispatch: Dispatch<AdminConversationAction>, newConversationData: AdminConversationData): Promise<boolean> => {
   const axiosOpts = {
     method: "POST",

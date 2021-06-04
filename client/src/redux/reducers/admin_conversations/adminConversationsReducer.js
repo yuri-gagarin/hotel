@@ -6,6 +6,7 @@ const initialState: AdminConversationState = {
   responseMsg: "",
   loading: false,
   messengerOnline: false,
+  viewingArchived: false,
   activeConversation: generateEmptyAdminConversationModel(),
   loadedAdminConversations: [],
   numberOfConversations: 0,
@@ -89,6 +90,15 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
     case "ArchiveAdminConversation": {
       return {
         ...state,
+        activeConversation: action.payload.updatedActiveConversation,
+        loadedAdminConversations: action.payload.updatedLoadedAdminConversations,
+        error: null
+      };
+    }
+    case "ToggleArchivedAdminConversations": {
+      return {
+        ...state,
+        viewingArchived: action.payload.viewingArchived,
         activeConversation: action.payload.updatedActiveConversation,
         loadedAdminConversations: action.payload.updatedLoadedAdminConversations,
         error: null

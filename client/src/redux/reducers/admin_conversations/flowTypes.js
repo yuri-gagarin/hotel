@@ -6,6 +6,7 @@ export type AdminConversationState = {|
   loading: boolean;
   responseMsg: string;
   messengerOnline: boolean;
+  viewingArchived: boolean;
   activeConversation: AdminConversationData;
   loadedAdminConversations: Array<AdminConversationData>;
   numberOfConversations: number;
@@ -18,7 +19,7 @@ export type AdminConversationData = {|
   conversationId: string;
   conversationName?: string;
   archived: boolean;
-  new: boolean;
+  newConversation: boolean;
   receiverSocketId: string;
   newMessages: Array<MessageData>;
   messages: Array<MessageData>;
@@ -98,6 +99,14 @@ export type ArchiveAdminConversation = {|
     updatedLoadedAdminConversations: Array<AdminConversationData>;
   }
 |};
+export type ToggleArchivedAdminConversations = {|
+  +type: "ToggleArchivedAdminConversations";
+  +payload: {
+    viewingArchived: boolean;
+    updatedActiveConversation: AdminConversationData;
+    updatedLoadedAdminConversations: Array<AdminConversationData>;
+  }
+|};
 export type SetAdminConversations = {|
   +type: "SetAdminConversations";
   +payload: {
@@ -170,4 +179,4 @@ export type ClearAdminConversationError = {
 };
 
 export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | UpdateAdminConversationName | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | NewClientConnection | ClientDisconnection | SetOnlineClients | SetAdminConversations | CreateNewAdminConveration |
-                                      CreateNewAdminConveration | DeleteAdminConversation | ArchiveAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;
+                                      ToggleArchivedAdminConversations | CreateNewAdminConveration | DeleteAdminConversation | ArchiveAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;

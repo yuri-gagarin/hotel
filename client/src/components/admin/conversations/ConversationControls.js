@@ -12,10 +12,11 @@ type Props = {
   handleToggleAdminMessengerOnlineStatus: (data: MessengerOnlineToggleArgs) => void;
   handleToggleDeleteConversation: (conversationId: string) => void;
   handleArchiveConversation: (conversationData: AdminConversationData, currentAdminConvState: AdminConversationState) => Promise<boolean>;
+  handleToggleArchivedAdminConversations: (data: { viewArchived?: boolean, viewActive?: boolean }) => Promise<boolean>;
   openUsersModal: () => void;
   openMessageAllModal: () => void;
 }
-export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, handleArchiveConversation, openUsersModal, openMessageAllModal }: Props): React.Node => {
+export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, handleArchiveConversation, handleToggleArchivedAdminConversations, openUsersModal, openMessageAllModal }: Props): React.Node => {
   const { messengerOnline } = adminConversationState;
 
   const toggleMessegnerOnlineOffline = () => {
@@ -29,6 +30,16 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
     const { activeConversation } = adminConversationState;
     if (objectValuesEmpty(activeConversation)) return;
     handleArchiveConversation(activeConversation, adminConversationState);
+  };
+  const toggleArchivedAdminConversations = (): void => {
+    const { viewingArchived } = adminConversationState;
+    if (viewingArchived) {
+      // toggle active conversations //
+      handleToggleArchivedAdminConversations({ viewActive: true });
+    } else {
+      // fetch and toggle archived conversations //
+      handleToggleArchivedAdminConversations({ viewArchived: true });
+    }
   };
 
   return (
@@ -54,8 +65,8 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
                     Archive All
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item>
-                    View Archived
+                  <Dropdown.Item onClick={ toggleArchivedAdminConversations }>
+                    { adminConversationState.viewingArchived ? "View Active" : "View Archived" }
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={ openUsersModal }>

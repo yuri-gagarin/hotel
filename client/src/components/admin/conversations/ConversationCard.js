@@ -32,9 +32,9 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
   }, [ adminConversationState, conversation ]);
 
   React.useEffect(() => {
-    if (conversation.newMessages.length > 0) {
+    if (conversation.newMessages && conversation.newMessages.length > 0) {
       setLastMessageContent(conversation.newMessages[conversation.newMessages.length - 1]);
-    } else if (conversation.messages.length > 0) {
+    } else if (conversation.messages && conversation.messages.length > 0) {
       setLastMessageContent(conversation.messages[conversation.messages.length - 1]);
     } else {
       setLastMessageContent(null);
@@ -46,7 +46,7 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
   }
 
   return (
-    <Card fluid color="green" className={ `${conversation.new ? styles.newConversationCard : ""} ${styles.conversationCard} ${convoSelected ? styles.selectedConversation : ""}` }>
+    <Card fluid color="green" className={ `${conversation.newConversation ? styles.newConversationCard : ""} ${styles.conversationCard} ${convoSelected ? styles.selectedConversation : ""}` }>
       <Card.Content>
         <div className={ `${styles.conversationName}` }>
           <ConversationNameInput 
@@ -73,11 +73,11 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
         </div>
       </Card.Content>
       {
-        conversation.newMessages.length > 0
+        (conversation.newMessages && conversation.newMessages.length) > 0
         ? 
           <div className={ styles.newNotificationWrapper} >
             {
-              conversation.new 
+              conversation.newConversation
               ?
                 <div className={ styles.newConversationNotificationDiv }>
                   <span>Unread</span>

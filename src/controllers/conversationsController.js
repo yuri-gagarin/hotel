@@ -9,11 +9,8 @@ export default {
   */
   getAllConversations: (req, res) => {
     return Conversation.find({})
-      .then((conversations) => {
-        return res.json({
-          responseMsg: "success",
-          conversations: conversations
-        });
+      .then((adminConversations) => {
+        return res.json({ responseMsg: "success", adminConversations });
       })
       .catch((error) => {
         return res.status(500).json({
@@ -68,8 +65,6 @@ export default {
   },
   archiveConversation: (req, res) => {
     const conversationData = req.body.conversation;
-    console.log(71);
-    console.log(conversationData);
     if (!conversationData) {
       return res.status(400).json({
         responseMsg: "Invalid data",
@@ -77,9 +72,9 @@ export default {
       });
     }
 
-    const { conversationId, messages = [], createdAt } = conversationData;
-
-    return Conversation.create({ conversationId, messages, createdAt, archived: true })
+    const { conversationId, conversationName, messages = [], newConversation, createdAt } = conversationData;
+ 
+    return Conversation.create({ conversationId, conversationName, newConversation, messages, newMessages: [], createdAt, archived: true })
       .then((archivedConversation) => {
         return res.status(200).json({
           responseMsg: "Conversation archived",

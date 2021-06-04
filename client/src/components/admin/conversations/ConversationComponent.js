@@ -21,7 +21,6 @@ type Props = {
 const ConversationComponent = ({ adminConversationState, openConversation, closeConversation, deleteConversation, updateAdminConversationName }: Props): React.Node => {
   const { loadedAdminConversations } = adminConversationState;
 
-
   return (
     <div className={ styles.conversationComponentWrapper }>
       {

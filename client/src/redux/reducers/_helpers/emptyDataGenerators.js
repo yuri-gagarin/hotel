@@ -104,7 +104,7 @@ export const generateEmptyAdminConversationModel = (): AdminConversationData => 
     receiverSocketId: "",
     newMessages: [],
     messages: [],
-    new: false,
+    newConversation: false,
     createdAt: ""
   };
   return emptyAdminConversationData;

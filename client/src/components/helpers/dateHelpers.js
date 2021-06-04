@@ -4,7 +4,7 @@ function addZero(number) {
     number = "0" + number;
   }
   return number;
-};
+}
 function formatAMPM(options) {
   let minutes = addZero(options.minutes);
   let hour = options.hour;
@@ -25,7 +25,7 @@ function formatAMPM(options) {
       return `${hour}:${minutes} PM`;
     }
   }
-};
+}
 
 /**
  * Converts an ISO date string into a readable format.
