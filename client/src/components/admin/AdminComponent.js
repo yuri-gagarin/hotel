@@ -122,7 +122,7 @@ const AdminComponent = ({
 
   return (
     <Grid stackable style={{ height: "100vh" }}>
-      <Grid.Row style={{ height: "10%" }}>
+      <Grid.Row style={{ display: "flex", flex: "1" }}>
         <AdminNavComponent logoutUser={logoutUser} />
       </Grid.Row>
       <Route path="/admin/services">

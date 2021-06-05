@@ -103,17 +103,7 @@ const MessagesView = ({ adminState, adminConversationState, sendAdminMessage, cl
   return (
     <React.Fragment>
       <div className={ styles.messagesViewWrapper }>
-        <div className={ styles.adminConvHeaderWrapper }>
-          <div className={ styles.adminConvHeader }>
-            <p>ConversationWith: {adminConversationState.activeConversation.conversationName}</p>
-          </div>
-          <div className={ styles.adminConvClose } onClick={ closeConversation }>
-            <p>Close Conversation</p>
-          </div>
-        </div>
-        <div className={ styles.messagesViewMessageDiv} id="messagesView">
-          
-         
+        <div className={ styles.messagesViewMessageDiv} id="messagesView">s
           {
             activeConversation.messages.map((message) => {
               return <Message key={message._id} messageData={message} adminState={adminState} />

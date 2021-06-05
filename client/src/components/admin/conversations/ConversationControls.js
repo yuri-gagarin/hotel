@@ -17,22 +17,20 @@ type Props = {
   openMessageAllModal: () => void;
 }
 export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, handleArchiveConversation, handleToggleArchivedAdminConversations, openUsersModal, openMessageAllModal }: Props): React.Node => {
-  const { messengerOnline } = adminConversationState;
+  const { messengerOnline, viewingArchived, connectedOnlineClients, activeConversation, loadedAdminConversations } = adminConversationState;
+  const { archived, conversationName, conversationId } = activeConversation;
 
   const toggleMessegnerOnlineOffline = () => {
     handleToggleAdminMessengerOnlineStatus({ messengerOnline: !messengerOnline });
   };
   const toggleDeleteConversation = (): void => {
-    const { conversationId } = adminConversationState.activeConversation;
     handleToggleDeleteConversation(conversationId);
   };
   const toggleArchiveAdminConversation = (): void => {
-    const { activeConversation } = adminConversationState;
     if (objectValuesEmpty(activeConversation)) return;
     handleArchiveConversation(activeConversation, adminConversationState);
   };
   const toggleArchivedAdminConversations = (): void => {
-    const { viewingArchived } = adminConversationState;
     if (viewingArchived) {
       // toggle active conversations //
       handleToggleArchivedAdminConversations({ viewActive: true });
@@ -66,7 +64,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={ toggleArchivedAdminConversations }>
-                    { adminConversationState.viewingArchived ? "View Active" : "View Archived" }
+                    { viewingArchived ? "View Active" : "View Archived" }
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={ openUsersModal }>
@@ -85,7 +83,6 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
                   position="top center"
                   trigger={
                     <div className={ `${styles.conversationOnlineStatus} ${ messengerOnline ? styles.messengerOnline : styles.messengerOffline } ${ messengerOnline ? styles.onlineBlink : "" }` }>
-
                     </div>
                   }
                 />
@@ -94,20 +91,40 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
             </Menu.Menu>
           </Menu>
         </div>
+        <div className={ styles.conversationControlsLowerWrapper }>
+          <div>{ viewingArchived ? "Archived Conversations" : "Active Conversations"}</div>
+        </div>
       </Grid.Column>
       <Grid.Column largeScreen={9} style={{ padding: 0, height: "100%" }}>
         <div className={ styles.conversationDetailsWrapper }>
-          <div className={ styles.conversationDetailsDiv }>
-            <span>Online clients: </span>
-            <span>{ adminConversationState.connectedOnlineClients.length }</span>
+          <div className={ styles.conversationDetailsUpper}>
+            <div className={ styles.conversationDetailsDiv }>
+              <span>Online clients: </span>
+              <span>{ connectedOnlineClients.length }</span>
+            </div>
+            <div className={ styles.conversationDetailsDiv }>
+              <span>Active conversations: </span>
+              <span>{ loadedAdminConversations.length }</span>
+            </div>
+            <div className={ styles.conversationDetailsDiv }>
+              <span>Archived conversations: </span>
+              <span>0</span>
+            </div>
           </div>
-          <div className={ styles.conversationDetailsDiv }>
-            <span>Active conversations: </span>
-            <span>{ adminConversationState.loadedAdminConversations.length }</span>
-          </div>
-          <div className={ styles.conversationDetailsDiv }>
-            <span>Archived conversations: </span>
-            <span>0</span>
+          <div className={ styles.conversationDetailsLower }>
+            <div className={ `${styles.activeConversationControls}` }>
+              <div className={ `${styles.conversationDetail} ${styles.activeConversationName}` }>
+                <span>Conversation name:</span><span>{ conversationName ? conversationName : "Anonymous" }</span>
+              </div>
+              <div className={ `${styles.conversationDetail} ${styles.activeConversationArchiveControls}` }>
+                <span>{ archived ? "Conversation is Archived" : "Conversation is Active" }</span>
+                <button>Archive</button>
+                <button>Delete</button>
+              </div>
+              <div className={ `${styles.conversationDetail} ${styles.activeConversationCloseControls}` }>
+                <button>Close</button>
+              </div>
+            </div>
           </div>
         </div>
       </Grid.Column>

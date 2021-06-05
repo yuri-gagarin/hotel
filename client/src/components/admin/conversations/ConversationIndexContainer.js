@@ -167,7 +167,7 @@ const ConversationIndexContainer = ({
         handleSendGroupMessage= { handleSendGroupMessage }
         onlineClients={ adminConversationState.connectedOnlineClients }
       />
-      <Grid.Row centered style={{ height: "10%", padding: 0 }} columns={2}>
+      <Grid.Row centered style={{ padding: 0 }} columns={2}>
         <ConversationControls 
           adminConversationState={ adminConversationState } 
           handleToggleAdminMessengerOnlineStatus={ _handleToggleAdminMessengerOnlineStatus }
@@ -178,7 +178,7 @@ const ConversationIndexContainer = ({
           handleToggleArchivedAdminConversations={ _handleToggleArchivedAdminConversations }
         />
       </Grid.Row>
-      <Grid.Row centered style={{ height: "80%", padding: 0 }} columns={2} className={ styles.messengerIndexRow }>
+      <Grid.Row stretched centered style={{ padding: 0, height: "80%" }} columns={2} className={ styles.messengerIndexRow }>
         <Grid.Column largeScreen={5} className={ styles.conversationsColumn }>
           <ConversationComponent 
             adminConversationState={ adminConversationState } 
