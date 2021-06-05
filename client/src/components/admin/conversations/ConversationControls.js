@@ -97,7 +97,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
       </Grid.Column>
       <Grid.Column largeScreen={9} style={{ padding: 0, height: "100%" }}>
         <div className={ styles.conversationDetailsWrapper }>
-          <div className={ styles.conversationDetailsUpper}>
+          <div className={ `${styles.conversationDetailsUpper} `}>
             <div className={ styles.conversationDetailsDiv }>
               <span>Online clients: </span>
               <span>{ connectedOnlineClients.length }</span>
@@ -111,7 +111,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
               <span>0</span>
             </div>
           </div>
-          <div className={ styles.conversationDetailsLower }>
+          <div className={ `${styles.conversationDetailsLower} ${!objectValuesEmpty(activeConversation) ? styles.conversationDetailsLowerActive : ""}` }>
             <div className={ `${styles.activeConversationControls}` }>
               <div className={ `${styles.conversationDetail} ${styles.activeConversationName}` }>
                 <span>Conversation name:</span><span>{ conversationName ? conversationName : "Anonymous" }</span>
