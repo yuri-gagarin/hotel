@@ -13,10 +13,12 @@ type Props = {
   handleToggleDeleteConversation: (conversationId: string) => void;
   handleArchiveConversation: (conversationData: AdminConversationData, currentAdminConvState: AdminConversationState) => Promise<boolean>;
   handleToggleArchivedAdminConversations: (data: { viewArchived?: boolean, viewActive?: boolean }) => Promise<boolean>;
+  handleToggleDeleteAdminConversation: (conversationId: string) => void;
+  closeAdminConversation: () => void;
   openUsersModal: () => void;
   openMessageAllModal: () => void;
 }
-export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, handleArchiveConversation, handleToggleArchivedAdminConversations, openUsersModal, openMessageAllModal }: Props): React.Node => {
+export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, handleArchiveConversation, handleToggleArchivedAdminConversations, closeAdminConversation, openUsersModal, openMessageAllModal, handleToggleDeleteAdminConversation }: Props): React.Node => {
   const { messengerOnline, viewingArchived, connectedOnlineClients, activeConversation, loadedAdminConversations } = adminConversationState;
   const { archived, conversationName, conversationId } = activeConversation;
 
@@ -38,6 +40,9 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
       // fetch and toggle archived conversations //
       handleToggleArchivedAdminConversations({ viewArchived: true });
     }
+  };
+  const toggleDeleteAdminConversation = (): void => {
+    handleToggleDeleteAdminConversation(conversationId);
   };
 
   return (
@@ -118,11 +123,11 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
               </div>
               <div className={ `${styles.conversationDetail} ${styles.activeConversationArchiveControls}` }>
                 <span>{ archived ? "Conversation is Archived" : "Conversation is Active" }</span>
-                <button>Archive</button>
-                <button>Delete</button>
+                <button onClick={ toggleArchiveAdminConversation }>Archive</button>
+                <button onClick={ toggleDeleteAdminConversation }>Delete</button>
               </div>
               <div className={ `${styles.conversationDetail} ${styles.activeConversationCloseControls}` }>
-                <button>Close</button>
+                <button onClick={ closeAdminConversation }>Close</button>
               </div>
             </div>
           </div>

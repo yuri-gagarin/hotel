@@ -12,7 +12,7 @@ export const generateMockConversation = (numOfmessages?: number): AdminConversat
   const newConversation: AdminConversationData = {
     conversationId: conversationId,
     archived: false,
-    newConversation: false,
+    newConversation: true,
     conversationName: faker.lorem.word(),
     receiverSocketId: "",
     messages: [],
@@ -29,7 +29,7 @@ export const generateMockConversation = (numOfmessages?: number): AdminConversat
       sender: (i % 2 === 0 ? "admin" : "client"),
       sentAt: new Date().toISOString()
     };
-    newConversation.messages.push(newMessage);
+    newConversation.newMessages.push(newMessage);
   }
   return newConversation;   
 };

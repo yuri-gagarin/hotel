@@ -239,8 +239,40 @@ app.on("dbReady", () => {
     socket.on("newAdminMessageSent", (data) => {
       const { receiverSocketId } = data;
       if (receiverSocketId) {
-        io.to(receiverSocketId).emit("receiveAdminReply", data);
+        return RedisController.setNewMessage(data)
+          .then(() => {
+            io.to(receiverSocketId).emit("receiveAdminReply", data);
+          })
+          .catch((error) => {
+            console.log(`server.js 250:`, error);
+          });
       }
+    });
+
+    socket.on("conversationArchived", (data) => {
+      const { conversationId, receiverSocketId } = data;
+      // TODO //
+      // handle an error with incorrect input //
+      if (!conversationId || !receiverSocketId) return;
+      console.log(257);
+      console.log(data);
+      return RedisController.removeConversationData(conversationId)
+        .then(() => {
+          const archivedConversationMessage = {
+            _id: mongoose.Types.ObjectId(),
+            conversationId: conversationId,
+            senderSocketId: "",
+            receiverSocketId: "",
+            sender: "admin",
+            messageContent: "Our admins have marked this conversation as resolved. If you would like to continue the conversation please click on the button below...",
+            sentAt: new Date().toISOString()
+          };
+          io.to(receiverSocketId).emit("receiveAdminConversationArchived", archivedConversationMessage);
+        })
+        .catch((error) => {
+          console.log(`server.js: 265`);
+          console.log(error);
+        });
     });
     // end admin response 
     socket.once("disconnect", () => {

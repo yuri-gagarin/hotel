@@ -280,6 +280,7 @@ export const handleFetchAdminConversations = (dispatch: Dispatch<AdminConversati
 };
 
 export const handleArchiveAdminConversation = (dispatch: Dispatch<AdminConversationAction>, conversationData: AdminConversationData, currentAdminConvState: AdminConversationState): Promise<boolean> => {
+  const { conversationId } = conversationData;
   const axiosOpts = {
     method: "POST",
     url: "/api/conversations/archive",
@@ -295,6 +296,9 @@ export const handleArchiveAdminConversation = (dispatch: Dispatch<AdminConversat
       const updatedLoadedAdminConversations = currentAdminConvState.loadedAdminConversations.filter((convData) => convData.conversationId !== archivedConversation.conversationId);
       const updatedActiveConversation = generateEmptyAdminConversationModel();
       dispatch(archiveAdminConversation({ updatedActiveConversation, updatedLoadedAdminConversations }));
+      // 
+      const receiverSocketId = conversationId.split("_")[1];
+      socket.emit("conversationArchived", { conversationId, receiverSocketId });
       return true;
     })
     .catch((error) => {

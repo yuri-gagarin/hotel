@@ -192,20 +192,18 @@ const RedisController = ((redisOpts) => {
    * @returns {Promise<string>}
    */
   const setNewMessage = (messageData) => {
-    let conversationKey;
-    const { senderSocketId, messageContent } = messageData;
+    const { messageContent, conversationId } = messageData;
 
-    if (!senderSocketId || !messageContent) {
+    if (!messageContent) {
       return Promise.reject(new Error("Invalid data"));
     }
 
-    conversationKey = `CONVERSATION_${senderSocketId}`;
 
     return new Promise((resolve, reject) => {
       try {
         const stringifiedMsgData = JSON.stringify(messageData);
 
-        redisInstance.LPUSH(conversationKey, stringifiedMsgData, (err, num) => {
+        redisInstance.RPUSH(conversationId, stringifiedMsgData, (err, num) => {
           if (err) reject(err);
           resolve(num);
         });
@@ -214,9 +212,23 @@ const RedisController = ((redisOpts) => {
         reject(error);
       }
     });
-  }
+  };
 
-  return { setClientCredentials, removeClientCredentials, setAdminCredentials, setNewMessage, setNewVisibleAdmin, removeVisibleAdmin, getVisibleAdmins, getConnectedClients };
+  /**
+   * 
+   * @param {string} conversationId - conversationId string for Redis client LIST key
+   * @returns {Promise<number>}
+   */
+  const removeConversationData = (conversationId) => {
+    return new Promise((resolve, reject) => {
+      redisInstance.DEL(conversationId, (err, number) => {
+        if (err) return reject(err);
+        return resolve(number);
+      });
+    });
+  };
+
+  return { setClientCredentials, removeClientCredentials, setAdminCredentials, setNewMessage, setNewVisibleAdmin, removeVisibleAdmin, getVisibleAdmins, getConnectedClients, removeConversationData };
 
 })();
 

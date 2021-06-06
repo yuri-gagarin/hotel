@@ -11,10 +11,10 @@
   position: absolute;
   top: 0px;
   right: 0px;
-  bottom: 0px;
   left: 0px;
+  height: 50%;
   color: white;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 .newConversationNotificationDiv {
   position: absolute;
@@ -25,7 +25,7 @@
   justify-content: center;
   align-items: center;
   background-color: orange;
-  padding: 0.5em 0;
+  padding: 0.75em 0;
   z-index: 4;
 }
 .newConversationNotificationDiv > div {
@@ -45,7 +45,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  justify-self: flex-end;
+  z-index: 5;
 }
 .newMessagesNotificationDiv > div {
   display: flex;
@@ -61,6 +61,7 @@
 }
 .newMessagesNotificationDiv > span {
   color: green;
+  font-weight: bold;
 }
 .newConversationCard {
   background: #E0EAFC !important;  /* fallback for old browsers */

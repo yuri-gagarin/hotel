@@ -174,8 +174,10 @@ const ConversationIndexContainer = ({
           handleToggleDeleteConversation={ toggleDeleteConversation }
           openUsersModal={ toggleModal }
           openMessageAllModal={ toggleMessageAllModal }
+          closeAdminConversation={ closeConversation }
           handleArchiveConversation={ _handleArchiveAdminConversation }
           handleToggleArchivedAdminConversations={ _handleToggleArchivedAdminConversations }
+          handleToggleDeleteAdminConversation={ toggleDeleteConversation }
         />
       </Grid.Row>
       <Grid.Row stretched centered style={{ padding: 0, height: "80%" }} columns={2} className={ styles.messengerIndexRow }>

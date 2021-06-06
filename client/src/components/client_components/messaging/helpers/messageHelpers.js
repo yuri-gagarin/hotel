@@ -36,17 +36,16 @@ export const sendMessage = ({ firstName, email, userId }, { messageData, convers
 */
 export const setClientSocketIOListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>): void => {
   socketIOInstance.on(LISTENER_CONSTANTS.AMDIN_MESSENGER_OFFLINE, (messageData: MessageData) => {
-    console.log("messenger offline");
     handleAdminMessengerOfflineResponse(dispatch, messageData);
   });
   socketIOInstance.on(LISTENER_CONSTANTS.MESSAGE_DELIVERED, (data: MessageData) => {
-    console.log("message delivered");
     handleSendMessageSuccess(dispatch, data);
   });
   socketIOInstance.on(LISTENER_CONSTANTS.RECEIVE_ADMIN_REPLY, (data: MessageData) => {
-    console.log(47);
-    console.log(data)
     handleReceiveMessage(dispatch, data);
+  });
+  socketIOInstance.on("receiveAdminConversationArchived", (data: MessageData) => {
+    console.log(data);
   });
   // errors responses //
   socketIOInstance.on(LISTENER_CONSTANTS.GENERAL_SOCKET_IO_ERR, (data: any) => {
