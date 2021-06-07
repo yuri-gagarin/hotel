@@ -5,6 +5,7 @@ export type ConversationState = {
   loading: boolean;
   messageSending: boolean;
   messengerOpen: boolean;
+  conversationActive: boolean;
   senderSocketId: string;
   conversationId: string;
   messages: Array<MessageData>;
@@ -48,6 +49,13 @@ export type CloseClientConversation = {
     messengerOpen: boolean;
   }
 };
+export type ClientConversationArchived = {|
+  +type: "ClientConversationArchived";
+  +payload: {
+    conversationActive: boolean;
+    newMessage: MessageData;
+  }
+|};
 export type UpdateClientConversation = {
   +type: "UpdateClientConversation";
   payload: {
@@ -116,5 +124,5 @@ export type SetClientConversationError = {
 };
 
 
-export type ConversationAction =  ClientConversationAPIRequest | OpenClientConversation | CloseClientConversation | UpdateClientConversation | DeleteClientConversation |
-                                 SendClientMessage | SendClientMessageSuccess | ReceiveAdminMessage | AdminMessengerOfflineResponse | SetClientConversationError;
+export type ConversationAction = ClientConversationAPIRequest | OpenClientConversation | CloseClientConversation | UpdateClientConversation | DeleteClientConversation |
+                                 ClientConversationArchived | SendClientMessage | SendClientMessageSuccess | ReceiveAdminMessage | AdminMessengerOfflineResponse | SetClientConversationError;

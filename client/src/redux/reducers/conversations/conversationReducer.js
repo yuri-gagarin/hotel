@@ -7,6 +7,7 @@ const initialState: ConversationState = {
   loading: false,
   messageSending: false,
   messengerOpen: false,
+  conversationActive: false,
   receiverSocketId: "",
   senderSocketId: "",
   conversationId: "",
@@ -64,6 +65,7 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         ...state,
         loading: action.payload.loading,
         messageSending: action.payload.messageSending,
+        conversationActive: true,
         messages: [ ...state.messages, action.payload.newMessage ],
         error: null
       };
@@ -72,6 +74,7 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
       return {
         ...state,
         loading: action.payload.loading,
+        conversationActive: true,
         messageSending: action.payload.messageSending,
         error: null
       }
@@ -81,6 +84,7 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         ...state,
         conversationId: action.payload.conversationId,
         senderSocketId: action.payload.senderSocketId,
+        conversationActive: true,
         messages: [ ...state.messages, action.payload.message ], 
         newMessages: ( action.payload.newMessage ? [ ...state.newMessages, action.payload.newMessage] : []),
         error: null

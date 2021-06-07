@@ -58,7 +58,7 @@ const MessengerContainer = ({
     <React.Fragment>
       <MessengerClosedComponent handleFormOpen={ handleClientMessengerOpen } />
       <MessageForm 
-        open={ conversationState.messengerOpen }
+        open={ true }
         clientState={ clientState }
         conversationState={ conversationState }
         handleConversationClose={ _handleConversationClose }

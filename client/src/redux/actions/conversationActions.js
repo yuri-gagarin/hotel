@@ -5,7 +5,7 @@ import store from "../../redux/store";
 import type { Dispatch } from "../../redux/reducers/_helpers/createReducer";
 import type { 
   ConversationState, MessageData, ConversationAction, ClientConversationAPIRequest, OpenClientConversation, CloseClientConversation, DeleteClientConversation, UpdateClientConversation, 
-  SendClientMessage, SendClientMessageSuccess, ReceiveAdminMessage, AdminMessengerOfflineResponse, SetClientConversationError 
+  ClientConversationArchived,SendClientMessage, SendClientMessageSuccess, ReceiveAdminMessage, AdminMessengerOfflineResponse, SetClientConversationError 
 } from "../reducers/conversations/flowTypes";
 import { socket } from "../../App";
 // helpers //
@@ -38,6 +38,13 @@ const closeClientConversation = (): CloseClientConversation => {
   return {
     type: "CloseClientConversation",
     payload: { messengerOpen: false }
+  };
+};
+const clientConversationArchived = (data: { conversationActive: boolean, newMessage: MessageData }): ClientConversationArchived => {
+  const { conversationActive, newMessage } = data;
+  return { 
+    type: "ClientConversationArchived",
+    payload: { conversationActive, newMessage }
   };
 };
 
@@ -143,7 +150,13 @@ export const handleAdminMessengerOfflineResponse = (dispatch: Dispatch<Conversat
     dispatch(adminMessengerOfflineResponse({ newMessage: messageData }));
     res(true);
   });
-};  
+};
+export const handleClientConversationArchived = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
+  return new Promise((res) => {
+    dispatch(clientConversationArchived({ conversationActive: false, newMessage: messageData }));
+    res(true);
+  });
+};
 
 /* non API related actions to components */
 export const handleConversationOpen = (dispatch: Dispatch<ConversationAction>, currentState: ConversationState): void => {

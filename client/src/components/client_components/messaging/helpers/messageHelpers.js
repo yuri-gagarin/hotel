@@ -1,7 +1,7 @@
 // @flow
 import axios from "axios";
 // state changing redux actions //
-import { handleSendMessageSuccess, handleAdminMessengerOfflineResponse, handleReceiveMessage } from "../../../../redux/actions/conversationActions";
+import { handleSendMessageSuccess, handleAdminMessengerOfflineResponse, handleReceiveMessage, handleClientConversationArchived } from "../../../../redux/actions/conversationActions";
 // type imports //
 import type { Socket } from "socket.io-client";
 import type { Dispatch } from "../../../../redux/reducers/_helpers/createReducer";
@@ -45,7 +45,7 @@ export const setClientSocketIOListeners = (socketIOInstance: Socket, dispatch: D
     handleReceiveMessage(dispatch, data);
   });
   socketIOInstance.on("receiveAdminConversationArchived", (data: MessageData) => {
-    console.log(data);
+    handleClientConversationArchived(dispatch, data);
   });
   // errors responses //
   socketIOInstance.on(LISTENER_CONSTANTS.GENERAL_SOCKET_IO_ERR, (data: any) => {

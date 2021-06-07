@@ -108,14 +108,19 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
         </div>
       </div>
       <div className={ styles.messengerContentView } ref={messagesContentRef}>
-          { 
-            messages.map((message) => {
-              return (
-                <Message key={ message._id } messageData={ message } />
-              )
-            })
-          }
+        { 
+          messages.map((message) => {
+            return (
+              <Message key={ message._id } messageData={ message } />
+            )
+          })
+        }
+        <div className={ styles.messengerContinueConversationDiv }>
+          <span>Admin has marked this conversation as resolved</span>
+          <div>Click to continue conversation</div>
+        </div>
       </div>
+     
       <div className={ styles.messengerInputDiv }>
         <MessengerInput
           loading={ conversationState.messageSending }

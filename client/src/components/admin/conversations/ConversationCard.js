@@ -46,7 +46,7 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
   }
 
   return (
-    <Card fluid color="green" className={ `${conversation.newConversation ? styles.newConversationCard : ""} ${styles.conversationCard} ${convoSelected ? styles.selectedConversation : ""}` }>
+    <Card fluid color="green" className={ `${styles.conversationCard} ${convoSelected ? styles.selectedConversation : ""}` }>
       <Card.Content>
         <div className={ `${styles.conversationName}` }>
           <ConversationNameInput 
