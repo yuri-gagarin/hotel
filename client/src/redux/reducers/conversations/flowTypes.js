@@ -32,6 +32,8 @@ export type ClientConversationAPIRequest = {
     error: null;
   }
 };
+// TODO //
+// data could be trimmed down ? //
 export type OpenClientConversation = {
   +type: "OpenClientConversation";
   payload: {
@@ -40,6 +42,7 @@ export type OpenClientConversation = {
     messengerOpen: boolean;
     conversationId: string;
     senderSocketId: string;
+    newMessages: Array<MessageData>;
     messages: Array<MessageData>;
   }
 };
@@ -110,9 +113,8 @@ export type ReceiveAdminMessage = {
   +type: "ReceiveAdminMessage";
   payload: {
     conversationId: string;
-    senderSocketId: string;
-    message: MessageData;
-    newMessage: MessageData | null;
+    newMessages: Array<MessageData>;
+    messages: Array<MessageData>;
   }
 };
 export type AdminMessengerOfflineResponse = {

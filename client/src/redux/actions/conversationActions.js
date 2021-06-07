@@ -26,11 +26,11 @@ const setClientConversationError = (err: any): SetClientConversationError => {
   };
 };
 
-const openClientConversation = (data: { status: number, conversationId: string, senderSocketId: string, messages: Array<MessageData> }): OpenClientConversation => {
-  const { status, conversationId, senderSocketId, messages } = data;
+const openClientConversation = (data: { status: number, conversationId: string, senderSocketId: string, newMessages: Array<MessageData>; messages: Array<MessageData> }): OpenClientConversation => {
+  const { status, conversationId, senderSocketId, newMessages, messages } = data;
   return {
     type: "OpenClientConversation",
-    payload: { loading: false, messengerOpen: true, status, conversationId, senderSocketId, messages }
+    payload: { loading: false, messengerOpen: true, status, conversationId, senderSocketId, newMessages, messages }
   };
 };
 
@@ -83,11 +83,10 @@ const sendClientMessageSuccess = (messageData: MessageData): SendClientMessageSu
   };
 };
 
-const receiveAdminMessage = ({ messageData, newMessage }: { messageData: MessageData, newMessage: MessageData | null }): ReceiveAdminMessage => {
-  const { senderSocketId, receiverSocketId, conversationId } = messageData;
+const receiveAdminMessage = ({ conversationId, newMessages, messages }: { conversationId: string, newMessages: Array<MessageData>, messages: Array<MessageData> }): ReceiveAdminMessage => {
   return {
     type: "ReceiveAdminMessage",
-    payload: { conversationId: conversationId, newMessage: newMessage, message: messageData, senderSocketId: "" }
+    payload: { conversationId, newMessages, messages }
   };
 };
 
@@ -121,7 +120,7 @@ export const handleFetchConversation = (dispatch: Dispatch<ConversationAction>, 
       });
 
       const allMessages = [ ...readMessages, ...unreadMessages ];
-      const stateData = { status, responseMsg, conversationId, senderSocketId:"", receiverSocketId: "", messages: allMessages };
+      const stateData = { status, responseMsg, conversationId, senderSocketId:"", receiverSocketId: "", newMessages: [], messages: allMessages };
       dispatch(openClientConversation(stateData));
       return Promise.resolve(true);
     })
@@ -150,11 +149,14 @@ export const handleSendMessageSuccess = (dispatch: Dispatch<ConversationAction>,
 };
 export const handleReceiveMessage = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
   const conversationState: ConversationState = store.getState().conversationState;
-  console.log(conversationState);
+  const { messengerOpen, newMessages, messages } = conversationState;
+  const { conversationId } = messageData;
   if (conversationState.messengerOpen) {
-    dispatch(receiveAdminMessage({ messageData, newMessage: messageData }));
+    // messenger is open, no new messages //
+    dispatch(receiveAdminMessage({ conversationId: conversationId, newMessages: [], messages: [ ...messages, messageData ] }));
   } else {
-    dispatch(receiveAdminMessage({ messageData, newMessage: null }));
+    // messenger is closed, send to new messages //
+    dispatch(receiveAdminMessage({ conversationId, newMessages: [ ...newMessages, messageData ], messages }));
   }
   return Promise.resolve(true);
 };
@@ -182,8 +184,8 @@ export const handleContinueConversationSuccess = (dispatch: Dispatch<Conversatio
 
 /* non API related actions to components */
 export const handleConversationOpen = (dispatch: Dispatch<ConversationAction>, currentState: ConversationState): void => {
-  const { status, conversationId, senderSocketId, messages } = currentState;
-  return dispatch(openClientConversation({ status, conversationId, senderSocketId, messages }));
+  const { status, conversationId, senderSocketId, newMessages, messages } = currentState;
+  return dispatch(openClientConversation({ status, conversationId, senderSocketId, newMessages: [], messages: [ ...messages, ...newMessages ] }));
 };
 export const handleConversationClose = (dispatch: Dispatch<ConversationAction>): void => {
   return dispatch(closeClientConversation());

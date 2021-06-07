@@ -107,7 +107,7 @@ const ConversationIndexContainer = ({
       // create a new conversation push to top and open //
       const newConversation: AdminConversationData = {
         conversationId: conversationId,
-        receiverSocketId: "",
+        receiverSocketId: socketId,
         archived: false,
         newConversation: false,
         conversationName: "",

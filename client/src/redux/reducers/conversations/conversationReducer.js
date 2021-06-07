@@ -28,7 +28,8 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         messengerOpen: action.payload.messengerOpen,
         conversationId: action.payload.conversationId,
         senderSocketId: action.payload.senderSocketId,
-        messages: [ ...action.payload.messages ],
+        newMessages: action.payload.newMessages,
+        messages: action.payload.messages,
         error: null
       };
     }
@@ -82,10 +83,8 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
       return {
         ...state,
         conversationId: action.payload.conversationId,
-        senderSocketId: action.payload.senderSocketId,
-        conversationActive: true,
-        messages: [ ...state.messages, action.payload.message ], 
-        newMessages: ( action.payload.newMessage ? [ ...state.newMessages, action.payload.newMessage] : []),
+        newMessages: action.payload.newMessages,
+        messages: action.payload.messages,
         error: null
       };
     }

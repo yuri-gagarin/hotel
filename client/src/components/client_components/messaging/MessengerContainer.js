@@ -57,7 +57,10 @@ const MessengerContainer = ({
 
   return (
     <React.Fragment>
-      <MessengerClosedComponent handleFormOpen={ handleClientMessengerOpen } />
+      <MessengerClosedComponent 
+        handleFormOpen={ handleClientMessengerOpen } 
+        newMessagesNumber={ conversationState.newMessages.length }
+      />
       <MessageForm 
         open={ conversationState.messengerOpen }
         clientState={ clientState }
