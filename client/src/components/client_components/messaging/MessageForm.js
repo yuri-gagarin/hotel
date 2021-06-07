@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import ObjectID from "bson-objectid";
+import { Loader } from "semantic-ui-react";
 // styles  and images //
 import styles from "./css/messageForm.module.css";
 // additional compononets //
@@ -19,6 +20,7 @@ type Props = {
   // redux actions //
   // client //
   handleConversationClose: () => void;
+  handleContinueConversation: (conversationId: string) => void;
   // messaging //
   handleSendMessage: (messageDate: MessageData) => Promise<boolean>;
   handleSendMessageSuccess: (messageData: MessageData) => Promise<boolean>;
@@ -30,14 +32,14 @@ type SoundState = {
 };
 
 
-const MessageForm = ({ open, clientState, conversationState, handleSendMessage, handleSendMessageSuccess, handleConversationClose }: Props): React.Node => {
+const MessageForm = ({ open, clientState, conversationState, handleSendMessage, handleSendMessageSuccess, handleConversationClose, handleContinueConversation }: Props): React.Node => {
   const [ messageSounds, setMessageSounds ] = React.useState<SoundState>({ sendMessageSound: null, receiveMessageSound: null }); 
   const messageFormRef = React.useRef<HTMLDivElement | null>(null);
   const messagesContentRef = React.useRef<HTMLDivElement | null>(null);
   // redux state objects //
   // additional functions //
   const { _id: clientId } = clientState;
-  const { loading, messengerOpen, conversationId, messageSending, messages } = conversationState;
+  const { loading, conversationActive, messengerOpen, conversationId, messageSending, messages } = conversationState;
 
   React.useEffect(() => {
     const messageInput = document.getElementById("lastMessageSpacer");
@@ -88,7 +90,6 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
       })
   };
 
-
   const closeMessageForm = (e) => {
     setTimeout(() => {
       handleConversationClose();
@@ -98,6 +99,10 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
     }
     
     // maybe animate later //
+  };
+
+  const continueConversation = (): void => {
+    handleContinueConversation(conversationId);
   };
 
   return (
@@ -115,10 +120,26 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
             )
           })
         }
-        <div className={ styles.messengerContinueConversationDiv }>
-          <span>Admin has marked this conversation as resolved</span>
-          <div>Click to continue conversation</div>
-        </div>
+        {
+          !conversationActive
+          ?
+          <div className={ styles.messengerContinueConversationDiv }>
+            {
+              !loading
+              ?
+              <div className={ styles.messengerContinueMessage }>
+                <div onClick={ continueConversation }>Click to continue conversation</div>
+              </div>
+              :
+              <div className={ styles.messengerContinueLoaderWrapper }>
+                <Loader active={true} className={ styles.messengerContinueLoader } />
+              </div>
+            }
+          </div>
+          :
+          null
+        }
+        
       </div>
      
       <div className={ styles.messengerInputDiv }>

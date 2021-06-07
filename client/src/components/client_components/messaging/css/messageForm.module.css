@@ -63,14 +63,19 @@
 .messengerContinueConversationDiv {
   max-width: 75%;
   display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  padding: 1em;
   background-color: #33cc33;
   color: white;
+  padding: 1px;
   border-radius: 5px 5px 5px 0;
 }
-.messengerContinueConversationDiv > div:nth-child(2) {
+.messengerContinueMessage {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid white;
+  border-radius: 5px 5px 5px 0;
+  padding: 1em;
+}
+.messengerContinueMessage > div:nth-child(2) {
   font-weight: bolder;
   border: 1px solid white;
   border-radius: 5px;
@@ -79,11 +84,22 @@
   align-items: center;
   text-align: center;
   margin-top: 1em;
+  cursor: pointer;
 }
+.messengerContinueMessage > div:nth-child(2):hover {
+  background-color: #4fd14f;
+}
+.messengerContinueLoaderWrapper {
+  width: 100%;
+  height: 100px;
+  position: relative;
+}
+
 .messengerInputDiv {
   display: flex;
   flex: 1;
 }
+
 
 @keyframes animateMessageFormOpen {
   0% { transform: translateX(100%); }

@@ -5,7 +5,7 @@ import store from "../../redux/store";
 import type { Dispatch } from "../../redux/reducers/_helpers/createReducer";
 import type { 
   ConversationState, MessageData, ConversationAction, ClientConversationAPIRequest, OpenClientConversation, CloseClientConversation, DeleteClientConversation, UpdateClientConversation, 
-  ClientConversationArchived,SendClientMessage, SendClientMessageSuccess, ReceiveAdminMessage, AdminMessengerOfflineResponse, SetClientConversationError 
+  ClientConversationArchived, ContinueClientConversationRequest, ContinueClientConversationSuccess, SendClientMessage, SendClientMessageSuccess, ReceiveAdminMessage, AdminMessengerOfflineResponse, SetClientConversationError 
 } from "../reducers/conversations/flowTypes";
 import { socket } from "../../App";
 // helpers //
@@ -47,7 +47,20 @@ const clientConversationArchived = (data: { conversationActive: boolean, newMess
     payload: { conversationActive, newMessage }
   };
 };
-
+const continueClientConversationRequest = (data: { loading: boolean }): ContinueClientConversationRequest => {
+  const { loading } = data;
+  return {
+    type: "ContinueClientConversationRequest",
+    payload: { loading }
+  };
+};
+const continueClientConversationSuccess = (data: { conversationActive: boolean, updatedMessages: Array<MessageData> }): ContinueClientConversationSuccess => {
+  const { conversationActive, updatedMessages } = data;
+  return {
+    type: "ContinueClientConversationSuccess",
+    payload: { loading: false, conversationActive, updatedMessages }
+  };
+};
 const updateClientConversation = (data: { status: number,  conversationId: string, receiverSocketId: string, senderSocketId: string, messages: Array<MessageData> }): UpdateClientConversation => {
   const { status, conversationId, receiverSocketId, senderSocketId, messages } = data;
   return {
@@ -157,6 +170,15 @@ export const handleClientConversationArchived = (dispatch: Dispatch<Conversation
     res(true);
   });
 };
+export const handleContinueConversation = (dispatch: Dispatch<ConversationAction>, conversationId: string): void => {
+  dispatch(continueClientConversationRequest({ loading: true }));
+  socket.emit("continueClientConversationRequest", { conversationId });
+};
+export const handleContinueConversationSuccess = (dispatch: Dispatch<ConversationAction>): void => {
+  const conversationState: ConversationState = store.getState().conversationState;
+  const updatedMessages = conversationState.messages.filter((message, i) => i < conversationState.messages.length - 1);
+  dispatch(continueClientConversationSuccess({ conversationActive: true, updatedMessages }));
+}
 
 /* non API related actions to components */
 export const handleConversationOpen = (dispatch: Dispatch<ConversationAction>, currentState: ConversationState): void => {

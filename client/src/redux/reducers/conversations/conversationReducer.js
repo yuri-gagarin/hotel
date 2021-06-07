@@ -7,7 +7,7 @@ const initialState: ConversationState = {
   loading: false,
   messageSending: false,
   messengerOpen: false,
-  conversationActive: false,
+  conversationActive: true,
   receiverSocketId: "",
   senderSocketId: "",
   conversationId: "",
@@ -65,7 +65,6 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         ...state,
         loading: action.payload.loading,
         messageSending: action.payload.messageSending,
-        conversationActive: true,
         messages: [ ...state.messages, action.payload.newMessage ],
         error: null
       };
@@ -74,7 +73,7 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
       return {
         ...state,
         loading: action.payload.loading,
-        conversationActive: true,
+        conversationId: action.payload.message.conversationId ? action.payload.message.conversationId : state.conversationId,
         messageSending: action.payload.messageSending,
         error: null
       }
@@ -87,6 +86,30 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         conversationActive: true,
         messages: [ ...state.messages, action.payload.message ], 
         newMessages: ( action.payload.newMessage ? [ ...state.newMessages, action.payload.newMessage] : []),
+        error: null
+      };
+    }
+    case "ClientConversationArchived": {
+      return {
+        ...state,
+        conversationActive: action.payload.conversationActive,
+        messages: [ ...state.messages, action.payload.newMessage ],
+        error: null
+      };
+    }
+    case "ContinueClientConversationRequest": {
+      return {
+        ...state,
+        loading: action.payload.loading,
+        error: null
+      };
+    }
+    case "ContinueClientConversationSuccess": {
+      return {
+        ...state,
+        loading: action.payload.loading,
+        conversationActive: action.payload.conversationActive,
+        messages: action.payload.updatedMessages,
         error: null
       };
     }

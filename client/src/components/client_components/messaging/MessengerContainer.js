@@ -3,7 +3,7 @@ import * as React from "react";
 import { Button, Form } from "semantic-ui-react";
 // redux imports and actions  //
 import { connect } from "react-redux";
-import { handleConversationOpen, handleConversationClose, handleFetchConversation, handleSendMessage, handleSendMessageSuccess } from "../../../redux/actions/conversationActions";
+import { handleConversationOpen, handleConversationClose, handleContinueConversation, handleFetchConversation, handleSendMessage, handleSendMessageSuccess } from "../../../redux/actions/conversationActions";
 // additional components //
 import MessageForm from "./MessageForm";
 import MessengerClosedComponent from "./MessengerClosedComp";
@@ -28,6 +28,7 @@ type Props = {
   // non API calling redux actions //
   _handleConversationOpen: (currentConversationState: ConversationState) => void;
   _handleConversationClose: () => void;
+  _handleContinueConversation: (conversationId: string) => void;
   // API call reliant redux actions //
   _handleFetchConversation: (conversationId: string) => Promise<boolean>;
   _handleSendMessage: (messageData: MessageData) => Promise<boolean>;
@@ -37,7 +38,7 @@ type Props = {
 };
 
 const MessengerContainer = ({ 
-    clientState, conversationState, _handleConversationOpen, _handleConversationClose,
+    clientState, conversationState, _handleConversationOpen, _handleConversationClose, _handleContinueConversation,
    _handleFetchConversation, _handleSendMessage, _handleSendMessageSuccess, _dispatch }: Props): React.Node => {
  
   const handleClientMessengerOpen = () => {
@@ -58,10 +59,11 @@ const MessengerContainer = ({
     <React.Fragment>
       <MessengerClosedComponent handleFormOpen={ handleClientMessengerOpen } />
       <MessageForm 
-        open={ true }
+        open={ conversationState.messengerOpen }
         clientState={ clientState }
         conversationState={ conversationState }
         handleConversationClose={ _handleConversationClose }
+        handleContinueConversation={ _handleContinueConversation }
         handleSendMessage={ _handleSendMessage }
         handleSendMessageSuccess={ _handleSendMessageSuccess }
       />
@@ -78,6 +80,7 @@ const mapDispatchToProps = (dispatch: Dispatch<ConversationAction>) => {
   return {
     _handleConversationOpen: (conversationState: ConversationState) => handleConversationOpen(dispatch, conversationState),
     _handleConversationClose: () => handleConversationClose(dispatch),
+    _handleContinueConversation: (conversationId: string) => handleContinueConversation(dispatch, conversationId),
     _handleFetchConversation: (conversationId: string) => handleFetchConversation(dispatch, conversationId),
     _handleSendMessage: (messageData: MessageData) => handleSendMessage(dispatch, messageData),
     _handleSendMessageSuccess: (messageData: MessageData) => handleSendMessageSuccess(dispatch, messageData), 

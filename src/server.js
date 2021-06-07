@@ -12,6 +12,7 @@ import passportSrategy from "./controllers/helpers/authHelper";
 import combineRoutes from "./routes/combineRoutes";
 import cors from "cors";
 import RedisController from "./controllers/redisController";
+import Conversation from "./models/Conversation";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
@@ -238,6 +239,8 @@ app.on("dbReady", () => {
 
     socket.on("newAdminMessageSent", (data) => {
       const { receiverSocketId } = data;
+      console.log(242);
+      console.log(data);
       if (receiverSocketId) {
         return RedisController.setNewMessage(data)
           .then(() => {
@@ -273,6 +276,24 @@ app.on("dbReady", () => {
           console.log(`server.js: 265`);
           console.log(error);
         });
+    });
+    socket.on("continueClientConversationRequest", (data) => {
+      // CLIENT WANTS TO CONTINUE CONVERSTION WHICH ADMIN ARCHIVED //
+      const { conversationId } = data;
+      if (!conversationId) {
+        io.to(socket.id).emit("generalSocketIOError", (new Error("Couldn't resolve archived conversation")));
+      } else {
+        Conversation.findOne({ conversationId }).exec()
+          .then((conversation) => {
+            console.log(conversation);
+            const { conversationId } = conversation;
+            io.to(socket.id).emit("continueClientConversationSuccess", { conversationId });
+          })
+          .catch((error) => {
+            console.log(error);
+            io.to(socket.id).emit("generalSocketIOError");
+          });
+      }
     });
     // end admin response 
     socket.once("disconnect", () => {

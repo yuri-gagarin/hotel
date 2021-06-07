@@ -47,14 +47,26 @@ export type CloseClientConversation = {
   +type: "CloseClientConversation";
   payload: {
     messengerOpen: boolean;
-  }
+  };
 };
 export type ClientConversationArchived = {|
   +type: "ClientConversationArchived";
   +payload: {
     conversationActive: boolean;
     newMessage: MessageData;
-  }
+  };
+|};
+export type ContinueClientConversationRequest = {|
+  +type: "ContinueClientConversationRequest";
+  +payload: { loading: boolean };
+|};
+export type ContinueClientConversationSuccess = {|
+  +type: "ContinueClientConversationSuccess";
+  +payload: {
+    loading: boolean;
+    conversationActive: boolean;
+    updatedMessages: Array<MessageData>;
+  };
 |};
 export type UpdateClientConversation = {
   +type: "UpdateClientConversation";
@@ -125,4 +137,4 @@ export type SetClientConversationError = {
 
 
 export type ConversationAction = ClientConversationAPIRequest | OpenClientConversation | CloseClientConversation | UpdateClientConversation | DeleteClientConversation |
-                                 ClientConversationArchived | SendClientMessage | SendClientMessageSuccess | ReceiveAdminMessage | AdminMessengerOfflineResponse | SetClientConversationError;
+                                 ClientConversationArchived | ContinueClientConversationRequest | ContinueClientConversationSuccess | SendClientMessage | SendClientMessageSuccess | ReceiveAdminMessage | AdminMessengerOfflineResponse | SetClientConversationError;

@@ -21,7 +21,7 @@ const diningModelAPIRequest = (): DiningEntModelAPIRequest => {
     }
   };
 };
-const diningModelError = ({ responseMsg, error } : { responseMsg: string, error: any }): DiningEntModelError => {
+const diningModelError = ({ responseMsg, error }: { responseMsg: string, error: any }): DiningEntModelError => {
   return {
     type: "DiningEntModelError",
     payload: {
@@ -123,7 +123,7 @@ const setPreviewImages = (diningEntImages: Array<DiningImgData>): SetDiningEntMo
     payload: { diningEntImages }
   };
 };
-const clearDiningModelData = (stateData : { diningEntImages: Array<DiningImgData>, menuImages: Array<MenuImageData>, diningEntModelData: DiningEntModelData }): ClearDiningEntModelData => {
+const clearDiningModelData = (stateData: { diningEntImages: Array<DiningImgData>, menuImages: Array<MenuImageData>, diningEntModelData: DiningEntModelData }): ClearDiningEntModelData => {
   return {
     type: "ClearDiningEntModelData",
     payload: { ...stateData }
@@ -167,7 +167,7 @@ export const handleUploadDiningModelImage = (dispatch: Dispatch<DiningEntModelAc
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newImage, updatedDiningEntModel } : { responseMsg: string, newImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
+      const { responseMsg, newImage, updatedDiningEntModel }: { responseMsg: string, newImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
       
       // updated images for preview //
       let updatedDiningEntModelsArr;
@@ -211,7 +211,7 @@ export const handleDeleteDiningModelImage = (dispatch: Dispatch<DiningEntModelAc
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedImage, updatedDiningEntModel } : { responseMsg: string, deletedImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
+      const { responseMsg, deletedImage, updatedDiningEntModel }: { responseMsg: string, deletedImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
 
       const updatedDiningEntImages = diningEntImages.filter((imgData) => imgData._id !== deletedImage._id);
       let updatedDiningEntModelsArr;
@@ -257,7 +257,7 @@ export const handleUploadMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newImage, updatedDiningEntModel } : { responseMsg: string, newImage: MenuImageData, updatedDiningEntModel: DiningEntModelData } = data;
+      const { responseMsg, newImage, updatedDiningEntModel }: { responseMsg: string, newImage: MenuImageData, updatedDiningEntModel: DiningEntModelData } = data;
       
       // updated images for preview //
       let updatedDiningEntModelsArr;
@@ -301,7 +301,7 @@ export const handleDeleteMenuImage = (dispatch: Dispatch<DiningEntModelAction>, 
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedImage, updatedDiningEntModel } : { responseMsg: string, deletedImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
+      const { responseMsg, deletedImage, updatedDiningEntModel }: { responseMsg: string, deletedImage: DiningImgData, updatedDiningEntModel: DiningEntModelData } = data;
       
       let updatedDiningEntModelsArr;
       const updatedMenuImages = menuImages.filter((imgData) => imgData._id !== deletedImage._id);
@@ -345,7 +345,7 @@ export const handleCreateDiningModel = (dispatch: Dispatch<DiningEntModelAction>
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newDiningEntModel } : { responseMsg: string, newDiningEntModel: DiningEntModelData } = data;
+      const { responseMsg, newDiningEntModel }: { responseMsg: string, newDiningEntModel: DiningEntModelData } = data;
       const stateData = { status, responseMsg, newDiningEntModelData: newDiningEntModel };
       
       dispatch(diningModelCreated(stateData));
@@ -371,7 +371,7 @@ export const handleFetchDiningModels = (dispatch: Dispatch<DiningEntModelAction>
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, diningEntModels } : { responseMsg: string, diningEntModels: Array<DiningEntModelData> } = data;
+      const { responseMsg, diningEntModels }: { responseMsg: string, diningEntModels: Array<DiningEntModelData> } = data;
       const stateData = { status, responseMsg, createdDiningEntModels: diningEntModels };
 
       dispatch(setDiningModels(stateData));
@@ -402,7 +402,7 @@ export const handleUpdateDiningModel = (dispatch: Dispatch<DiningEntModelAction>
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedDiningEntModel } : { responseMsg: string, updatedDiningEntModel: DiningEntModelData }= data;
+      const { responseMsg, updatedDiningEntModel }: { responseMsg: string, updatedDiningEntModel: DiningEntModelData }= data;
       const updatedDiningEntModelsArr = createdDiningEntModels.map((model) => {
         if (model._id == updatedDiningEntModel._id) {
           return {
@@ -435,7 +435,7 @@ export const handleDeleteDiningModel = (dispatch: Dispatch<DiningEntModelAction>
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedDiningEntModel } : { responseMsg: string, deletedDiningEntModel: DiningEntModelData } = data;
+      const { responseMsg, deletedDiningEntModel }: { responseMsg: string, deletedDiningEntModel: DiningEntModelData } = data;
       const updatedDiningEntModelsArr = createdDiningEntModels.filter((model) => model._id !== deletedDiningEntModel._id);
       const updatedStateData = { status, responseMsg, updatedDiningEntModelsArr };
 
@@ -464,7 +464,7 @@ export const handleDeleteAllImages = (dispatch: Dispatch<DiningEntModelAction>, 
   return axios(requestOtps)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg } : { responseMsg: string } = data;
+      const { responseMsg }: { responseMsg: string } = data;
 
       const newStateData = { status, responseMsg, menuImages: [], diningEntImages: [] };
       dispatch(allImgDeleteSuccess(newStateData));
@@ -492,7 +492,7 @@ export const handleToggleModelOnlineOfflineStatus = (dispatch: Dispatch<DiningEn
   return axios(axiosReqOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedDiningEntModel } : { responseMsg: string, updatedDiningEntModel: DiningEntModelData } = data;
+      const { responseMsg, updatedDiningEntModel }: { responseMsg: string, updatedDiningEntModel: DiningEntModelData } = data;
 
       const updatedDiningEntModelsArr = createdDiningEntModels.map((modelData) => {
         if (modelData._id === modelId) {
@@ -515,7 +515,7 @@ export const handleToggleModelOnlineOfflineStatus = (dispatch: Dispatch<DiningEn
 };
 
 // toggle all online or offline //
-export const handleToggleAllOnlineOffline = (dispatch: Dispatch<DiningEntModelAction>, { onlineStatus } : { onlineStatus: boolean }): Promise<boolean> => {
+export const handleToggleAllOnlineOffline = (dispatch: Dispatch<DiningEntModelAction>, { onlineStatus }: { onlineStatus: boolean }): Promise<boolean> => {
   const axiosReqOptions = {
     method: "patch",
     url: "/api/dining_models/",
@@ -526,7 +526,7 @@ export const handleToggleAllOnlineOffline = (dispatch: Dispatch<DiningEntModelAc
   return axios(axiosReqOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedDiningEntModels } : { responseMsg: string, updatedDiningEntModels: Array<DiningEntModelData> } = data;
+      const { responseMsg, updatedDiningEntModels }: { responseMsg: string, updatedDiningEntModels: Array<DiningEntModelData> } = data;
 
       const updatedState = { status, responseMsg, updatedDiningEntModelsArr: updatedDiningEntModels };
       dispatch(toggleAllOnlineOffline(updatedState));
