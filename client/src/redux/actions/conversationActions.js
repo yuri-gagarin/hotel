@@ -5,7 +5,7 @@ import store from "../../redux/store";
 import type { Dispatch } from "../../redux/reducers/_helpers/createReducer";
 import type { 
   ConversationState, MessageData, ConversationAction, ClientConversationAPIRequest, OpenClientConversation, CloseClientConversation, DeleteClientConversation, UpdateClientConversation, 
-  ClientConversationArchived, ContinueClientConversationRequest, ContinueClientConversationSuccess, SendClientMessage, SendClientMessageSuccess, ReceiveAdminMessage, AdminMessengerOfflineResponse, SetClientConversationError 
+  ClientConversationArchived, ContinueClientConversationRequest, ContinueClientConversationSuccess, SendClientMessage, SendClientMessageSuccess, ReceiveAdminMessage, AdminMessengerOnlineOfflineResponse, SetClientConversationError 
 } from "../reducers/conversations/flowTypes";
 import { socket } from "../../App";
 // helpers //
@@ -90,11 +90,11 @@ const receiveAdminMessage = ({ conversationId, newMessages, messages }: { conver
   };
 };
 
-const adminMessengerOfflineResponse = (data: { newMessage: MessageData }): AdminMessengerOfflineResponse => {
-  const { newMessage } = data;
+const adminMessengerOnlineOfflineResponse = (data: { adminMessengerOnline: boolean, newMessages: Array<MessageData>, messages: Array<MessageData> }): AdminMessengerOnlineOfflineResponse => {
+  const { adminMessengerOnline, newMessages, messages } = data;
   return {
-    type: "AdminMessengerOfflineResponse",
-    payload: { loading: false, newMessage }
+    type: "AdminMessengerOnlineOfflineResponse",
+    payload: { loading: false, adminMessengerOnline, newMessages, messages }
   };
 };
 
@@ -160,11 +160,38 @@ export const handleReceiveMessage = (dispatch: Dispatch<ConversationAction>, mes
   }
   return Promise.resolve(true);
 };
-export const handleAdminMessengerOfflineResponse = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
-  return new Promise((res) => {
-    dispatch(adminMessengerOfflineResponse({ newMessage: messageData }));
-    res(true);
-  });
+export const handleAdminMessengerOfflineResponse = (dispatch: Dispatch<ConversationAction>, data: { adminOnlineStatus: ("online" | "offline"),  messageData?: MessageData }): void => {
+  const conversationState: ConversationState = store.getState().conversationState;
+  const { messengerOpen, adminMessengerOnline, newMessages, messages } = conversationState;
+  const { adminOnlineStatus, messageData } = data;
+  let messengerStateUpdate: { adminMessengerOnline: boolean, newMessages: Array<MessageData>, messages: Array<MessageData> };
+  if (adminOnlineStatus === "online") {
+    // set messenger online - display default message if applicable //
+    if (messageData) {
+      if (messengerOpen) {
+        messengerStateUpdate = { adminMessengerOnline: true, newMessages: [], messages: [ ...messages, messageData ] };
+      } else {
+        messengerStateUpdate = { adminMessengerOnline: true, newMessages: [ ...newMessages, messageData ], messages };
+      }
+    } else {
+      messengerStateUpdate = { adminMessengerOnline: true, newMessages, messages };
+    }
+    dispatch(adminMessengerOnlineOfflineResponse(messengerStateUpdate));
+  } else if (adminOnlineStatus === "offline") {
+    // set messenger offline - display offline message if applicable //
+    if (messageData) {
+      if (messengerOpen) {
+        messengerStateUpdate = { adminMessengerOnline: false, newMessages: [], messages: [ ...messages, messageData ]};
+      } else {
+        messengerStateUpdate = { adminMessengerOnline: false, newMessages: [ ...newMessages, messageData ], messages };
+      }
+    } else {
+      messengerStateUpdate = { adminMessengerOnline: false, newMessages, messages };
+    }
+    dispatch(adminMessengerOnlineOfflineResponse(messengerStateUpdate));
+  } else {
+    return;
+  }
 };
 export const handleClientConversationArchived = (dispatch: Dispatch<ConversationAction>, messageData: MessageData): Promise<boolean> => {
   return new Promise((res) => {

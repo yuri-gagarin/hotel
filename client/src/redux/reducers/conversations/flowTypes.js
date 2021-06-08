@@ -6,6 +6,7 @@ export type ConversationState = {
   messageSending: boolean;
   messengerOpen: boolean;
   conversationActive: boolean;
+  adminMessengerOnline: boolean;
   senderSocketId: string;
   conversationId: string;
   messages: Array<MessageData>;
@@ -117,11 +118,13 @@ export type ReceiveAdminMessage = {
     messages: Array<MessageData>;
   }
 };
-export type AdminMessengerOfflineResponse = {
-  +type: "AdminMessengerOfflineResponse";
+export type AdminMessengerOnlineOfflineResponse = {
+  +type: "AdminMessengerOnlineOfflineResponse";
   payload: {
     loading: boolean;
-    newMessage: MessageData;
+    adminMessengerOnline: boolean;
+    newMessages: Array<MessageData>;
+    messages: Array<MessageData>;
   }
 };
 // error handling //
@@ -139,4 +142,4 @@ export type SetClientConversationError = {
 
 
 export type ConversationAction = ClientConversationAPIRequest | OpenClientConversation | CloseClientConversation | UpdateClientConversation | DeleteClientConversation |
-                                 ClientConversationArchived | ContinueClientConversationRequest | ContinueClientConversationSuccess | SendClientMessage | SendClientMessageSuccess | ReceiveAdminMessage | AdminMessengerOfflineResponse | SetClientConversationError;
+                                 ClientConversationArchived | ContinueClientConversationRequest | ContinueClientConversationSuccess | SendClientMessage | SendClientMessageSuccess | ReceiveAdminMessage | AdminMessengerOnlineOfflineResponse | SetClientConversationError;

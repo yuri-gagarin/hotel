@@ -154,7 +154,6 @@ app.on("dbReady", () => {
 
     // listen for an administrator to connect //
     socket.on("adminConnected", (admin) => {
-      console.log("adminConnected")
       RedisController.setAdminCredentials(admin)
         .then(() => {
           socket.emit("adminCredentialsReceived");
@@ -167,7 +166,6 @@ app.on("dbReady", () => {
     socket.on("toggleAdminOnlineStatus", (data) => {
       const { messengerOnline } = data;
       const { id : socketId } = socket;
-      console.log("Status: " + messengerOnline);
       if (messengerOnline) {
         // take admin messenger online //
         return Promise.all( [
@@ -177,6 +175,7 @@ app.on("dbReady", () => {
         .then(([ _, connectedClientsRes ]) => {
           const { numberOfConnectedClients, visibleClientSocketIds, clientsDataArr } = connectedClientsRes;
           io.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: true, numberOfConnectedClients, visibleClientSocketIds, clientsDataArr });
+          io.emit("adminConnected", { adminSocketId: socketId });
         })
         .catch((error) => {
           io.to(socketId).emit("generalSocketIOError", error);
@@ -186,6 +185,12 @@ app.on("dbReady", () => {
         return RedisController.removeVisibleAdmin(socketId)
           .then(() => {
             io.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: false });
+            return RedisController.getVisibleAdmins();
+          })
+          .then(({ numberOfVisibleAdmins }) => {
+            if (numberOfVisibleAdmins === 0) {
+              io.emit("adminMessengerOffline");
+            }
           })
           .catch((error) => {
             console.log(error);
@@ -299,9 +304,10 @@ app.on("dbReady", () => {
     socket.once("disconnect", () => {
       const { id : socketId } = socket;
       // remove from redis mem //
+      console.log("disconnected");
       return RedisController.removeClientCredentials(socketId)
-        .then((res) => {
-          if (res && res === true) {
+        .then(({ numOfClientHashesRemoved, numOfClientSocketIdsRemoved }) => {
+          if (numOfClientHashesRemoved > 0 || numOfClientSocketIdsRemoved > 0) {
             return RedisController.getVisibleAdmins()
               .then(({ visibleAdminSocketIds }) => {
                 if (visibleAdminSocketIds.length > 0) {
@@ -312,16 +318,30 @@ app.on("dbReady", () => {
                 return Promise.resolve()
               })
           } else {
-            return RedisController.removeVisibleAdmin(socketId);
+            return RedisController.removeVisibleAdmin(socketId)
+              .then(({ numberRemoved }) => {
+                if (numberRemoved > 0) {
+                  return RedisController.getVisibleAdmins();
+                } else {
+                  return Promise.resolve({ numberOfVisibleAdmins: 0 });
+                }
+              })
+              .then(({ numberOfVisibleAdmins }) => {
+                if (numberOfVisibleAdmins === 0) {
+                  io.emit("adminMessengerOffline")
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           }
         })
       .then(() => {
       })
       .catch((err) => {
         console.error(err);
-      })
-    })
-    socket.emit("hello", "hello there");
+      });
+    });
 
   });
 });

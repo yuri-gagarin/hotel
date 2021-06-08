@@ -60,6 +60,7 @@ const MessengerContainer = ({
       <MessengerClosedComponent 
         handleFormOpen={ handleClientMessengerOpen } 
         newMessagesNumber={ conversationState.newMessages.length }
+        adminMessengerOnline={ conversationState.adminMessengerOnline }
       />
       <MessageForm 
         open={ conversationState.messengerOpen }

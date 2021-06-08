@@ -6,9 +6,10 @@ import styles from "./css/messengerClosedComponent.module.css";
 type Props = {
   handleFormOpen: () => void;
   newMessagesNumber: number;
+  adminMessengerOnline: boolean;
 };
 
-const MessengerClosedComponent = ({ handleFormOpen, newMessagesNumber }: Props): React.Node => {
+const MessengerClosedComponent = ({ handleFormOpen, newMessagesNumber, adminMessengerOnline }: Props): React.Node => {
  
   return (
     <div className={ styles.componentWrapper }> 
@@ -24,9 +25,10 @@ const MessengerClosedComponent = ({ handleFormOpen, newMessagesNumber }: Props):
         :
         null
       }
-      <div className={ styles.onlineIndicator }>
+      <div className={ `${styles.onlineIndicator} ${adminMessengerOnline ? styles.online : styles.offline}` }>
       </div>
-      <div className={ styles.statusText }>Online</div>
+
+      <div className={ styles.statusText }>{ adminMessengerOnline ? "Online" : "Offline"}</div>
       <div className={ styles.openMessengerBtn } onClick={ handleFormOpen }>
         <span>Message Us</span>
         <i className="fas fa-comments"></i>

@@ -25,6 +25,11 @@ import redis from "redis";
  * @property {Array<string>} clientsDataArr -Visible clients data
  */
 /**
+ * @typedef {Object} RemoveClientResponse
+ * @property {number} numOfClientHashesRemoved - number of client hashes removed
+ * @property {number} numOfClientSocketIdsRemoved - number of client socket ids removed
+ */
+/**
  * @typedef {Object} AdminMessengerStatus
  * @property {boolean} online - Messenger online status
  * @property {string} socketId - Admin user socket id
@@ -85,17 +90,17 @@ const RedisController = ((redisOpts) => {
   /**
    * 
    * @param {string} socketId - Socket Id string
-   * @returns {Promise<boolean>}
+   * @returns {Promise< RemoveClientResponse>}
    */
   const removeClientCredentials = (socketId) => {
   
     return new Promise((resolve, reject) => {
-      redisInstance.SREM(clientsSetKey, socketId, (err) => {
+      redisInstance.SREM(clientsSetKey, socketId, (err, numSocketRem) => {
         if (err) return reject(err);
-        redisInstance.HDEL(clientsHashMapKey, socketId, (err) => {
+        redisInstance.HDEL(clientsHashMapKey, socketId, (err, numHashRem) => {
           if (err) return reject(err);
-          return resolve(true);
-        })
+          return resolve({ numOfClientSocketIdsRemoved: numSocketRem, numOfClientHashesRemoved: numHashRem });
+        });
       });
     });
   };
@@ -152,13 +157,10 @@ const RedisController = ((redisOpts) => {
       redisInstance.SCARD(visibleAdminsSetKey, (err, num) => {
         if (err) return reject(err);
         if (num === 0) {
-          console.log(155)
           return resolve({ numberOfVisibleAdmins: 0, visibleAdminSocketIds: [] });
         } else {
           redisInstance.SMEMBERS(visibleAdminsSetKey, (err, socketIds) => {
             if (err) return reject(err);
-            console.log(160);
-            console.log(socketIds);
             return resolve({ numberOfVisibleAdmins: num, visibleAdminSocketIds: socketIds });
           })
         }

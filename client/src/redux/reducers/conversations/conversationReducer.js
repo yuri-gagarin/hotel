@@ -8,6 +8,7 @@ const initialState: ConversationState = {
   messageSending: false,
   messengerOpen: false,
   conversationActive: true,
+  adminMessengerOnline: false,
   receiverSocketId: "",
   senderSocketId: "",
   conversationId: "",
@@ -112,14 +113,17 @@ const conversationReducer = (state: ConversationState = initialState, action: Co
         error: null
       };
     }
-    case "AdminMessengerOfflineResponse": {
+    case "AdminMessengerOnlineOfflineResponse": {
       return {
         ...state,
         loading: action.payload.loading,
-        messages: [ ...state.messages, action.payload.newMessage ],
+        adminMessengerOnline: action.payload.adminMessengerOnline,
+        newMessages: action.payload.newMessages,
+        messages: action.payload.messages,
         error: null
       };
     }
+    
     case "SetClientConversationError": {
       return {
         ...state,
