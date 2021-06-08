@@ -133,17 +133,30 @@ app.on("dbReady", () => {
             // new user //
             return RedisController.getVisibleAdmins();
           } else {
-            return Promise.resolve({ visibleAdminSocketIds: [] });
+            return Promise.resolve({ visibleAdminSocketIds: [], numberOfVisibleAdmins: 0 });
           }
           // emit new connection to admin? //
         })
-        .then(({ visibleAdminSocketIds }) => {
+        .then(({ visibleAdminSocketIds, numberOfVisibleAdmins }) => {
           if (visibleAdminSocketIds.length > 0) {
             for (const adminSocketId of visibleAdminSocketIds) {
               io.to(adminSocketId).emit("newClientConnected", { ...userState, socketId: socketId });
             }
           }
-          socket.emit("clientCredentialsReceived");
+          if (numberOfVisibleAdmins > 0) {
+            const messageData = {
+              _id: mongoose.Types.ObjectId(),
+              conversationId: `CONVERSATION_${socket.id}`,
+              receiverSocketId: socket.id,
+              sender: "admin",
+              senderSocketId: "",
+              messageContent: "Hello and welcome. We are online. Feel free to message us with any questions",
+              sentAt: new Date().toDateString()
+            };
+            socket.emit("clientCredentialsReceived", { numberOfVisibleAdmins, messageData });
+          } else {
+            socket.emit("clientCredentialsReceived", { numberOfVisibleAdmins });
+          }
         })
         .catch((err) => {
           console.log(err)

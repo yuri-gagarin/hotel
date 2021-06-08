@@ -31,8 +31,13 @@
 .onlineIndicator {
   height: 30px;
   width: 30px;
-  background-color: green;
   border-radius: 50%;
+}
+.online {
+  background-color: green;
+}
+.offline {
+  background-color: red;
 }
 
 .statusText {

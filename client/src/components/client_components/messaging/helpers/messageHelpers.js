@@ -35,6 +35,11 @@ export const sendMessage = ({ firstName, email, userId }, { messageData, convers
 };
 */
 export const setClientSocketIOListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>): void => {
+  socketIOInstance.on("clientCredentialsReceived", ({ numberOfVisibleAdmins, messageData }: { numberOfVisibleAdmins: number, messageData?: MessageData }) => {
+    if (typeof numberOfVisibleAdmins === "number" && numberOfVisibleAdmins > 0) {
+      handleAdminMessengerOfflineResponse(dispatch, { adminOnlineStatus: "online", messageData });
+    }
+  })
   socketIOInstance.on(LISTENER_CONSTANTS.AMDIN_MESSENGER_OFFLINE, (messageData?: MessageData) => {
     handleAdminMessengerOfflineResponse(dispatch, { adminOnlineStatus: "offline", messageData});
   });
