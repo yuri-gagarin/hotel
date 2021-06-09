@@ -6,6 +6,7 @@ import { ConnectedClientsModal } from "./ConnectedClientsModal";
 import ConversationComponent from "./ConversationComponent";
 import { ConversationControls } from "./ConversationControls";
 import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
+import { DefaultMessagesModal } from "./DefaultMessagesModal";
 import MessagesView from "./MessagesView";
 import { MessageAllModal } from "./MessageAllModal";
 import { MessagesSplashScreen } from "./MessageSplashScreen";
@@ -59,6 +60,8 @@ const ConversationIndexContainer = ({
   const [ onlineUsersModalOpen, setOnlineUsersModalOpen ] = React.useState<boolean>(false);
   const [ messageAllModalOpen, setMessageAllModalOpen ] = React.useState<boolean>(false);
   const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<{ open: boolean, conversationId: string }>({ open: false, conversationId: "" });
+  const [ defaultMessgesModalState, setDefaultMessagesModalState ] = React.useState<{ open: boolean }>({ open: false });
+
   React.useEffect(() => {
     let mounted = true;
 
@@ -150,7 +153,10 @@ const ConversationIndexContainer = ({
         return Promise.resolve(false);
       });
   };
-
+  // default messages modal //
+  const toggleDefaultMessagesModal = (): void => {
+    setDefaultMessagesModalState({ ...defaultMessgesModalState, open: !defaultMessgesModalState.open });
+  }
   return (
     <React.Fragment>
       <ConfirmDeleteModal open={ confirmDeleteModalState.open } modelName="conversation" cancelAction={ cancelConversationDelete } confirmAction={ confirmConversationDelete } />
@@ -166,6 +172,10 @@ const ConversationIndexContainer = ({
         toggleModal={ toggleMessageAllModal }
         handleSendGroupMessage= { handleSendGroupMessage }
         onlineClients={ adminConversationState.connectedOnlineClients }
+      />
+      <DefaultMessagesModal 
+        modalOpen={ defaultMessgesModalState.open }
+        toggleDefaultMessagesModal={ toggleDefaultMessagesModal }
       />
       <Grid.Row centered style={{ padding: 0 }} columns={2}>
         <ConversationControls 

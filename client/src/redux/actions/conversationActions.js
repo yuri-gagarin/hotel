@@ -165,6 +165,10 @@ export const handleAdminMessengerOfflineResponse = (dispatch: Dispatch<Conversat
   const { messengerOpen, adminMessengerOnline, newMessages, messages } = conversationState;
   const { adminOnlineStatus, messageData } = data;
   let messengerStateUpdate: { adminMessengerOnline: boolean, newMessages: Array<MessageData>, messages: Array<MessageData> };
+  // to avoid needless statements //
+  // return if client is aware of at least 1 admin connected //
+  if (adminMessengerOnline && adminOnlineStatus === "online") return;
+
   if (adminOnlineStatus === "online") {
     // set messenger online - display default message if applicable //
     if (messageData) {
