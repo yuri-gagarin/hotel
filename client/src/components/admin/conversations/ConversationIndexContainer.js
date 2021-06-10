@@ -16,7 +16,9 @@ import styles from "./css/conversationIndexContainer.module.css";
 import { connect } from "react-redux";
 import { 
   handleOpenAdminConversation, handleCloseAdminConversation, handleUpdateAdminConversationName, handleToggleAdminMessengerOnlineStatus, handleSetAdminMessengerOnlineStatus, 
-  handleFetchAdminConversations, handleArchiveAdminConversation, handleToggleArchivedAdminConversations, handleCreateNewAdminConversation, handleDeleteAdminConversation, handleNewAdminMessage, setAdminConversations, handleSetAdminConversationError
+  handleFetchAdminConversations, handleArchiveAdminConversation, handleToggleArchivedAdminConversations, handleCreateNewAdminConversation, handleDeleteAdminConversation, handleNewAdminMessage, 
+  handleFetchDefaultMessages, handleCreateDefaultMessage, handleUpdateDefaultMessage, handleDeleteDefaultMessage,
+  setAdminConversations, handleSetAdminConversationError
 } from "../../../redux/actions/adminConversationActions";
 // flow types //
 import type { RouterHistory } from "react-router-dom";
@@ -49,12 +51,19 @@ type Props = {
   _handleCreateNewAdminConversation: (adminConversationData: AdminConversationData) => Promise<boolean>;
   _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
   _handleNewAdminMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => Promise<boolean>;
+  // messages defaults actions //
+  _handleFetchDefaultMessages: () => Promise<boolean>;
+  _handleCreateDefaultMessage: (messageData: MessageData) => Promise<boolean>;
+  _handleUpdateDefaultMessage: (messageData: MessageData, adminConvState: AdminConversationState) => Promise<boolean>;
+  _handleDeleteDefaultMessage: (messageId: string, adminConvState: AdminConversationState) => Promise<boolean>;
+  // error handling and extrass// 
   _setAdminConversationError: (error: any) => Promise<boolean>;
   _dispatch: Dispatch<AdminConversationAction>;
 };
 const ConversationIndexContainer = ({ 
   history, adminState, adminConversationState, _dispatch,
   _handleToggleAdminMessengerOnlineStatus, _handleSetAdminMessengerOnlineStatus, _handleOpenAdminConversation, _handleCloseAdminConversation, _handleUpdateAdminConversationName,
+  _handleFetchDefaultMessages, _handleCreateDefaultMessage, _handleUpdateDefaultMessage, _handleDeleteDefaultMessage, 
   _handleFetchAdminConversations, _handleArchiveAdminConversation, _handleToggleArchivedAdminConversations, _handleCreateNewAdminConversation, _handleDeleteAdminConversation, _handleNewAdminMessage, _setAdminConversationError }: Props): React.Node => {
     // redux state props //
   const [ onlineUsersModalOpen, setOnlineUsersModalOpen ] = React.useState<boolean>(false);
@@ -175,7 +184,12 @@ const ConversationIndexContainer = ({
       />
       <DefaultMessagesModal 
         modalOpen={ defaultMessgesModalState.open }
+        adminConversationState={ adminConversationState }
         toggleDefaultMessagesModal={ toggleDefaultMessagesModal }
+        handleFetchDefaultMessages={ _handleFetchDefaultMessages }
+        handleCreateDefaultMessage={ _handleCreateDefaultMessage }
+        handleUpdateDefaultMessage={ _handleUpdateDefaultMessage }
+        handleDeleteDefaultMessage={ _handleDeleteDefaultMessage } 
       />
       <Grid.Row centered style={{ padding: 0 }} columns={2}>
         <ConversationControls 
@@ -242,6 +256,12 @@ const mapDispatchToProps = (dispatch: Dispatch<AdminConversationAction>) => {
     _handleCreateNewAdminConversation: (conversationData: AdminConversationData) => handleCreateNewAdminConversation(dispatch, conversationData),
     _handleDeleteAdminConversation: (conversationId: string, currentAdminConversationState: AdminConversationState) => handleDeleteAdminConversation(dispatch, conversationId, currentAdminConversationState),
     _handleNewAdminMessage: (messageData: MessageData, currentAdminConversationState: AdminConversationState) => handleNewAdminMessage(dispatch, messageData, currentAdminConversationState),
+    // default message dispatches //
+    _handleFetchDefaultMessages: () => handleFetchDefaultMessages(dispatch),
+    _handleCreateDefaultMessage: (messageData: MessageData) => handleCreateDefaultMessage(dispatch, messageData),
+    _handleUpdateDefaultMessage: (messageData: MessageData, currentAdminConvState: AdminConversationState) => handleUpdateDefaultMessage(dispatch, messageData, currentAdminConvState),
+    _handleDeleteDefaultMessage: (messageId: string, currentAdminConvState: AdminConversationState) => handleDeleteDefaultMessage(dispatch, messageId, currentAdminConvState),
+    // error handling, extras //
     _setAdminConversationError: (error: any) => handleSetAdminConversationError(dispatch, error),
     _dispatch: dispatch
   };

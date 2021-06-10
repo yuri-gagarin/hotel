@@ -247,6 +247,7 @@ export default {
   },
   createMessage: (req, res) => {
     const { messageData } = req.body;
+    console.log(250)
     if (!messageData || !messageData.messageContent) {
       return res.status(400).json({
         responseMsg: "Invalid data",

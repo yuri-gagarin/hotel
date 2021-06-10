@@ -452,7 +452,7 @@ export const handleSetAdminConversationError = (dispatch: Dispatch<AdminConversa
   dispatch(setAdminConversationError(error));
 };
 
-export const handleFetchDefaultMessges = (dispatch: Dispatch<AdminConversationAction>): Promise<boolean> => {
+export const handleFetchDefaultMessages = (dispatch: Dispatch<AdminConversationAction>): Promise<boolean> => {
   const axiosReqOpts = {
     method: "GET",
     url: "/api/messages"
@@ -471,13 +471,15 @@ export const handleFetchDefaultMessges = (dispatch: Dispatch<AdminConversationAc
       return false;
     });
 };
-export const handleCreateDefaultMessage = (dispatch: Dispatch<AdminConversationAction>, messageData: MessageData): Promise<boolean> => {
+export const handleCreateDefaultMessage = (dispatch: Dispatch<AdminConversationAction>, message: MessageData): Promise<boolean> => {
+  console.log(message);
   const axiosReqOpts = {
     method: "POST",
     url: "/api/messages/create",
-    data: { messageData }
+    data: { 
+      messageData: message
+    }
   };
-
   dispatch(adminConversationAPIRequest());
   return axios(axiosReqOpts)
     .then((response) => {
@@ -487,6 +489,7 @@ export const handleCreateDefaultMessage = (dispatch: Dispatch<AdminConversationA
       return true;
     })
     .catch((error) => {
+      console.log(error);
       dispatch(setAdminConversationError(error));
       return false;
     });
