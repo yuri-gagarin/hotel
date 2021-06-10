@@ -3,6 +3,7 @@ import * as React from "react";
 import { Button, Card, Dropdown, Form, Icon, Input, Modal, TextArea } from "semantic-ui-react";
 import ObjectID from "bson-objectid";
 // additional components //
+import { DefaultMessageMenu } from "./DefaultMessageMenu";
 import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 // types //
 import type { AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
@@ -22,10 +23,12 @@ type Props = {
   handleCreateDefaultMessage: (messageData: MessageData) => Promise<boolean>;
   handleUpdateDefaultMessage: (messageData: MessageData, adminConversationState: AdminConversationState) => Promise<boolean>;
   handleDeleteDefaultMessage: (messageId: string, AdminConversationState: AdminConversationState) => Promise<boolean>;
+  // defai
 }
 type LocalState = {
   formOpen: boolean;
   settingsOpen: boolean;
+  messageDescription: string;
   messageContent: string;
 };
 type DropdownOptions = {
@@ -33,9 +36,12 @@ type DropdownOptions = {
   text: string;
   value: string;
 };
+type DefaultsState = {
+
+}
 
 export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggleDefaultMessagesModal, handleFetchDefaultMessages, handleCreateDefaultMessage, handleUpdateDefaultMessage, handleDeleteDefaultMessage }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: false, messageContent: "" });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: false, messageDescription: "", messageContent: "" });
   const [ dropdownState, setDropdownState ] = React.useState<Array<DropdownOptions>>([]);
   //
   const { conversationMessageDefaults } = adminConversationState;
@@ -47,13 +53,19 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
     setLocalState({ ...localState, formOpen: false, settingsOpen: !localState.settingsOpen });
   };
 
+  const handleNewDefaultMessageDescriptionChange = (e: SyntheticEvent<HTMLInputElement>) => {
+    setLocalState({ ...localState, messageDescription: e.currentTarget.value });
+  }
   const handleNewDefaultMessageContentChange = (e: SyntheticEvent<HTMLTextAreaElement>) => {
     setLocalState({ ...localState, messageContent: e.currentTarget.value });
   };
   // CRUD redux actions //
   const createNewDefaultMessage = (): void => {
+    if (!localState.messageDescription || !localState.messageContent) return;
+
     const newMessageData: MessageData = {
       _id: ObjectID().toHexString(),
+      messageDescription: localState.messageDescription,
       conversationId: "",
       receiverSocketId: "",
       senderSocketId: "",
@@ -67,19 +79,26 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
       });
   };
   const updatedDefaultMessage = (): void => {
+    if (!localState.messageDescription || !localState.messageContent) return;
 
   };
 
   const handleDropdownChange = (e: any, data: any): void => {
     console.log(data.value);
-  }
+  };
+
+  // messaging defaults value setter //
+  const handleSetDefaultMessage = (messageData: MessageData): void => {
+    handleUpdateDefaultMessage(messageData, adminConversationState);
+  };
+
   React.useEffect(() => {
     handleFetchDefaultMessages();
   }, []);
   React.useEffect(() => {
     if (conversationMessageDefaults.length > 0) {
       const dropDownOptions: Array<DropdownOptions> = conversationMessageDefaults.map((messageData) => {
-        return { key: messageData._id, text: messageData.description ? messageData.description : "No value", value: messageData._id }
+        return { key: messageData._id, text: messageData.messageDescription ? messageData.messageDescription : "No value", value: messageData._id }
       });
       setDropdownState(dropDownOptions);
     }
@@ -105,6 +124,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               control={Input}
               label='Message Description'
               placeholder='a short description to separate from other defaults'
+              onChange={ handleNewDefaultMessageContentChange }
             />
             <Form.Field 
               className={ styles.defaultMessageTextArea } 
@@ -126,7 +146,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
           ?
             <Card.Group>
               <Card fluid>
-                <Dropdown selection clearable options={ dropdownState } onChange={ handleDropdownChange } />
+                <Dropdown selection clearable placeholder="ok" options={ dropdownState } onChange={ handleDropdownChange } />
                 <Card.Content>
                   Default 'Welcome' message
                 </Card.Content>
@@ -180,6 +200,10 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
                 return (
                   <Card fluid key={ messageData._id }>
                     <Card.Content>
+                      <DefaultMessageMenu 
+                        messageData={ messageData }
+                        handleSetDefaultMessage={ handleSetDefaultMessage }
+                      />
                       { "Message description here" }
                     </Card.Content>
                     <Card.Content>

@@ -1,0 +1,10 @@
+.defaultMessageMenu {
+  position: relative;
+}
+.menuItem {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+.menuSubItemSpan {
+  font-weight: bold;
+}

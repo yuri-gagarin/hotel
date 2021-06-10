@@ -12,6 +12,11 @@ const messageSchema = new Schema({
     enum: [ "admin", "client" ],
     required: false
   },
+  messageType: {
+    type: String,
+    enum: [ "DefaultGreeting" | "DefaultOffline" | "DefaultResolved" ],
+    required: false
+  },
   receiverSocketId: {
     type: String,
     required: false

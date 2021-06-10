@@ -247,7 +247,6 @@ export default {
   },
   createMessage: (req, res) => {
     const { messageData } = req.body;
-    console.log(250)
     if (!messageData || !messageData.messageContent) {
       return res.status(400).json({
         responseMsg: "Invalid data",
@@ -275,10 +274,33 @@ export default {
   updateMessage: (req, res) => {
     const { messageId } = req.params;
     const { messageData } = req.body;
+
     if (!messageId || !messageData || !messageData.messageContent) {
       return res.status(400).json({
         responseMsg: "Invalid data",
         error: new Error("Invalid Data")
+      });
+    }
+
+    if (messageData.messageType) {
+      return Message.findOneAndUpdate(
+        { _id: messageId },
+        { $set: { messageType: messageData.messageType } },
+        { new: true }
+      )
+      .exec()
+      .then((updatedMessage) => {
+        if (updatedMessage) {
+          return res.status(200).json({
+            responseMsg: `Set new ${messageData.messageType}`,
+            updatedMessage: messageData
+          });
+        } else {
+          return res.status(404).json({
+            responseMsg: "Not Found Error",
+            erorr: new Error("Could not fing a Message model to update")
+          });
+        }
       });
     }
 
