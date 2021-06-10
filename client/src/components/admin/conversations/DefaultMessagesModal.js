@@ -1,12 +1,14 @@
 // @flow
 import * as React from "react";
-import { Button, Card, Dropdown, Form, Icon, Modal } from "semantic-ui-react";
+import { Button, Card, Dropdown, Form, Icon, Input, Modal, TextArea } from "semantic-ui-react";
 import ObjectID from "bson-objectid";
 // additional components //
 import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 // types //
 import type { AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
+// helpers //
+import { formatDate } from "../../helpers/dateHelpers";
 
 // styles and css //
 import styles from "./css/defaultMessagesModal.module.css";
@@ -26,15 +28,23 @@ type LocalState = {
   settingsOpen: boolean;
   messageContent: string;
 };
+type DropdownOptions = {
+  key: string;
+  text: string;
+  value: string;
+};
+
 export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggleDefaultMessagesModal, handleFetchDefaultMessages, handleCreateDefaultMessage, handleUpdateDefaultMessage, handleDeleteDefaultMessage }: Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: false, messageContent: "" });
+  const [ dropdownState, setDropdownState ] = React.useState<Array<DropdownOptions>>([]);
+  //
   const { conversationMessageDefaults } = adminConversationState;
 
   const setFormOpen = (): void => {
     setLocalState({ ...localState, formOpen: !localState.formOpen });
   };
   const toggleSettings = (): void => {
-    setLocalState({ ...localState, settingsOpen: !localState.settingsOpen });
+    setLocalState({ ...localState, formOpen: false, settingsOpen: !localState.settingsOpen });
   };
 
   const handleNewDefaultMessageContentChange = (e: SyntheticEvent<HTMLTextAreaElement>) => {
@@ -51,12 +61,29 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
       messageContent: localState.messageContent,
       sentAt: new Date(Date.now()).toISOString()
     };
-    handleCreateDefaultMessage(newMessageData);
+    handleCreateDefaultMessage(newMessageData)
+      .then((success) => {
+        if (success) setLocalState({ ...localState, formOpen: false, messageContent: "" });
+      });
+  };
+  const updatedDefaultMessage = (): void => {
+
   };
 
+  const handleDropdownChange = (e: any, data: any): void => {
+    console.log(data.value);
+  }
   React.useEffect(() => {
     handleFetchDefaultMessages();
   }, []);
+  React.useEffect(() => {
+    if (conversationMessageDefaults.length > 0) {
+      const dropDownOptions: Array<DropdownOptions> = conversationMessageDefaults.map((messageData) => {
+        return { key: messageData._id, text: messageData.description ? messageData.description : "No value", value: messageData._id }
+      });
+      setDropdownState(dropDownOptions);
+    }
+  }, [ conversationMessageDefaults ]);
 
   return (
     <Modal className={ styles.modal } open={ true } >
@@ -74,17 +101,22 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
         {
           localState.formOpen ?
           <Form className={ styles.newDefaultMessageForm }>
-            <Form.Group>
-              <Form.TextArea className={ styles.defaultMessageTextArea } onChange={ handleNewDefaultMessageContentChange }>
-
-              </Form.TextArea>
-            </Form.Group>
-            <Form.Group>
-              <Button.Group className={ styles.defaultMessageFormControlButtons }>
-                <Button basic color="orange" content="Cancel" />
-                <Button basic color="green" content="Save"  onClick={ createNewDefaultMessage }/>
-              </Button.Group>
-            </Form.Group>
+            <Form.Field
+              control={Input}
+              label='Message Description'
+              placeholder='a short description to separate from other defaults'
+            />
+            <Form.Field 
+              className={ styles.defaultMessageTextArea } 
+              onChange={ handleNewDefaultMessageContentChange }
+              control={TextArea}
+              label="Message Content"
+              placeholder="the content of the message which you want to be automatically sent"
+            />
+            <Button.Group className={ styles.defaultMessageFormControlButtons }>
+              <Button basic color="orange" content="Cancel" onClick={ setFormOpen } />
+              <Button basic color="green" content="Save"  onClick={ createNewDefaultMessage }/>
+            </Button.Group>
           </Form>
           :
           null
@@ -94,7 +126,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
           ?
             <Card.Group>
               <Card fluid>
-                <Dropdown />
+                <Dropdown selection clearable options={ dropdownState } onChange={ handleDropdownChange } />
                 <Card.Content>
                   Default 'Welcome' message
                 </Card.Content>
@@ -143,12 +175,27 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
             conversationMessageDefaults.length > 0
             ?
             <Card.Group>
-              <Card fluid>
-                <Card.Content>
-                  <Button color="blue" content="Edit" />
-                  <Button color="red" content="Delete" />
-                </Card.Content>
-              </Card>
+            { 
+              conversationMessageDefaults.map((messageData) => {
+                return (
+                  <Card fluid key={ messageData._id }>
+                    <Card.Content>
+                      { "Message description here" }
+                    </Card.Content>
+                    <Card.Content>
+                      { messageData.messageContent }
+                    </Card.Content>
+                    <Card.Content>
+                      { formatDate(messageData.sentAt, { military: false }) }
+                    </Card.Content>
+                    <Card.Content>
+                      <Button color="blue" content="Edit" />
+                      <Button color="red" content="Delete" />
+                    </Card.Content>
+                  </Card>
+                )
+              })
+            }
             </Card.Group>
             :
             <GeneralNoModelsSegment 

@@ -17,6 +17,7 @@ export type ConversationState = {
 
 export type MessageData = {
   _id: string;
+  description?: string;  // this is for admin message defaults //
   conversationId: string;
   receiverSocketId: string | Array<string>;
   sender: "client" | "admin";

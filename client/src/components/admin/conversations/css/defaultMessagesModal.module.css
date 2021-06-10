@@ -16,16 +16,13 @@
 .newDefaultMessageForm {
   border: 1px solid grey;
   border-radius: 5px;
+  padding: 1em !important;
 }
 .defaultMessageTextArea {
-  height: 200px;
   width: 100%;
 }
 .defaultMessageTextArea > textarea {
   width: 100%; 
-  height: 100%;
+  height: 200px;
   resize: none !important;
-}
-.defaultMessageFormControlButtons {
-  margin-left: 20px !important;
 }
