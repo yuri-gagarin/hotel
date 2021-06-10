@@ -230,6 +230,21 @@ export default {
 
   }
   */
+  fetchDefaultMessages: (req, res) => {
+    return Message.find({}).exec()
+      .then((defaultMessages) => {
+        return res.status(200).json({
+          responseMsg: "Fetched default messages",
+          defaultMessages
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          responseMsg: "Server Error",
+          error
+        });
+      });
+  },
   createMessage: (req, res) => {
     const { messageData } = req.body;
     if (!messageData || !messageData.messageContent) {
@@ -243,10 +258,10 @@ export default {
       sender: "admin",
       messageContent: messageData.messageContent
     })
-    .then((newMessage) => {
+    .then((createdMessage) => {
       return res.status(200).json({
         responseMsg: "New default message created",
-        newMessage
+        createdMessage
       });
     })
     .catch((error) => {
@@ -254,6 +269,36 @@ export default {
         reponseMsg: "General error",
         error: error
       });
+    });
+  },
+  updateMessage: (req, res) => {
+    const { messageId } = req.params;
+    const { messageData } = req.body;
+    if (!messageId || !messageData || !messageData.messageContent) {
+      return res.status(400).json({
+        responseMsg: "Invalid data",
+        error: new Error("Invalid Data")
+      });
+    }
+
+    return Message.findOneAndUpdate(
+      { _id: messageId },
+      { $set: { messageContent: messageData.messageContent, sentAt: new Date(Date.now()) }},
+      { new: true }
+    )
+    .exec()
+    .then((updatedMessage) => {
+      if (updatedMessage) {
+        return res.status(200).json({
+          responseMsg: "Default message updated",
+          updatedMessage
+        });
+      } else {
+        return res.status(404).json({
+          responseMsg: "Not Found Error",
+          erorr: new Error("Could not fing a Message model to update")
+        });
+      }
     });
   },
   deleteMessage: (req, res) => {
