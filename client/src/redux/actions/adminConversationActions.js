@@ -7,6 +7,7 @@ import type { Dispatch } from "../reducers/_helpers/createReducer";
 import type { 
   AdminConversationData, AdminConversationAction, AdminConversationState, ConnectedClientData, NewClientConnection, ClientDisconnection, SetOnlineClients,
   OpenAdminConversation, CloseAdminConversation, UpdateAdminConversationName, AdminConversationAPIRequest, ToggleAdminMessengerOnlineStatus, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
+  FetchDefaultMessages, CreateDefaultMessage, UpdateDefaultMessage, DeleteDefaultMessage,
   ArchiveAdminConversation, ToggleArchivedAdminConversations, NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
 } from "../reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../reducers/conversations/flowTypes";
@@ -103,6 +104,35 @@ const deleteAdminConversation = (data: { status: number, responseMsg: string, up
   return {
     type: "DeleteAdminConversation",
     payload: { loading: false, status, responseMsg, updatedActiveConversation, updatedAdminConversations, numberOfConversations: updatedAdminConversations.length }
+  };
+};
+// message defaaults //
+const fetchDefaultMessages = (data: { status: number, responseMsg: string, defaultMessages: Array<MessageData> }): FetchDefaultMessages => {
+  const { status, responseMsg, defaultMessages } = data;
+  return {
+    type: "FetchDefaultMessages",
+    payload: { loading: false, status, responseMsg, defaultMessages }
+  };
+};
+const createDefaultMessage = (data: { status: number, responseMsg: string, createdMessage: MessageData }): CreateDefaultMessage => {
+  const { status, responseMsg, createdMessage } = data;
+  return {
+    type: "CreateDefaultMessage",
+    payload: { loading: false, status, responseMsg, createdMessage }
+  };
+};
+const updateDefaultMessage = (data: { status: number, responseMsg: string, updatedDefaultMessages: Array<MessageData> }): UpdateDefaultMessage => {
+  const { status, responseMsg, updatedDefaultMessages } = data;
+  return {
+    type: "UpdateDefaultMessage",
+    payload: { loading: false, status, responseMsg, updatedDefaultMessages }
+  };
+};
+const deleteDefaultMessages = (data: { status: number, responseMsg: string, updatedDefaultMessages: Array<MessageData> }): DeleteDefaultMessage => {
+  const { status, responseMsg, updatedDefaultMessages } = data;
+  return {
+    type: "DeleteDefaultMessage",
+    payload: { loading: false, status, responseMsg, updatedDefaultMessages }
   };
 };
 // messaging //
@@ -420,4 +450,96 @@ export const handleNewAdminMessage = (dispatch: Dispatch<AdminConversationAction
 };
 export const handleSetAdminConversationError = (dispatch: Dispatch<AdminConversationAction>, error: any): void => {
   dispatch(setAdminConversationError(error));
+};
+
+export const handleFetchDefaultMessges = (dispatch: Dispatch<AdminConversationAction>): Promise<boolean> => {
+  const axiosReqOpts = {
+    method: "GET",
+    url: "/api/messages"
+  };
+
+  dispatch(adminConversationAPIRequest());
+  return axios(axiosReqOpts)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, defaultMessages }: { responseMsg: string, defaultMessages: Array<MessageData> } = data;
+      dispatch(fetchDefaultMessages({ status, responseMsg, defaultMessages }));
+      return true;
+    })
+    .catch((error) => {
+      dispatch(setAdminConversationError(error));
+      return false;
+    });
+};
+export const handleCreateDefaultMessage = (dispatch: Dispatch<AdminConversationAction>, messageData: MessageData): Promise<boolean> => {
+  const axiosReqOpts = {
+    method: "POST",
+    url: "/api/messages/create",
+    data: { messageData }
+  };
+
+  dispatch(adminConversationAPIRequest());
+  return axios(axiosReqOpts)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, createdMessage }: { responseMsg: string, createdMessage: MessageData } = data;
+      dispatch(createDefaultMessage({ status, responseMsg, createdMessage }));
+      return true;
+    })
+    .catch((error) => {
+      dispatch(setAdminConversationError(error));
+      return false;
+    });
+};
+export const handleUpdateDefaultMessage = (dispatch: Dispatch<AdminConversationAction>, messageData: MessageData, currentAdminConvState: AdminConversationState): Promise<boolean> => {
+  const { _id: messageId } = messageData;
+  if (!messageId) {
+    dispatch(setAdminConversationError(new Error("Couldn't resolve message data")));
+    return Promise.resolve(false);
+  }
+  const axiosReqOpts = {
+    method: "PATCH",
+    url: `/api/messages/update/${messageId}`,
+    data: { messageData }
+  };
+
+  dispatch(adminConversationAPIRequest());
+  return axios(axiosReqOpts)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedMessage }: { responseMsg: string, updatedMessage: MessageData } = data;
+      const updatedDefaultMessages = currentAdminConvState.conversationMessageDefaults.map((message) => {
+        if (message._id === updatedMessage._id) {
+          return updatedMessage;
+        } else {
+          return message;
+        }
+      });
+      dispatch(updateDefaultMessage({ status, responseMsg, updatedDefaultMessages }));
+      return true;
+    })
+    .catch((error) => {
+      dispatch(setAdminConversationError(error));
+      return false;
+    });
+};
+export const handleDeleteDefaultMessage = (dispatch: Dispatch<AdminConversationAction>, messageId: string, currentAdminConvState: AdminConversationState): Promise<boolean> => {
+  const axiosReqOpts = {
+    method: "DELETE",
+    url: `/api/messages/delete/${messageId}`,
+  };
+
+  dispatch(adminConversationAPIRequest());
+  return axios(axiosReqOpts)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, deletedMessage } = data;
+      const updatedDefaultMessages = currentAdminConvState.conversationMessageDefaults.filter((message) => message._id !== deletedMessage._id);
+      dispatch(deleteDefaultMessages({ status, responseMsg, updatedDefaultMessages }));
+      return true;
+    })
+    .catch((error) => {
+      dispatch(setAdminConversationError(error));
+      return false;
+    });
 };
