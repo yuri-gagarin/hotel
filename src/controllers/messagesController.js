@@ -1,11 +1,9 @@
-import mongoose, { Mongoose, isValidObjectId } from "mongoose";
-import Conversation from "../models/Conversation";
 import Message from "../models/Message";
-import io from "../server";
-import { validateMessage } from "./helpers/validationHelpers";
 // instant messaging between client and admin //
 // maybe later we can implement these in redis rather than Mongo if needed //
 export default {
+  /*
+  // this is handled through redis now //
   sendClientMessage: (req, res) => {
     const { messageContent, user } = req.body;
     const userId = user._id;
@@ -134,9 +132,10 @@ export default {
       });
     }
   },
-
+  */
   // separate controller action for admin message // 
   // admin will be able to send pictures, invoices etc //
+  /*
   sendAdminMessage: (req, res) => {
     const user = req.user;
     const { messageData } = req.body;
@@ -229,6 +228,63 @@ export default {
   markMessageRead: (req, res) => {
     const conversationId = req.body.conversationId;
 
+  }
+  */
+  createMessage: (req, res) => {
+    const { messageData } = req.body;
+    if (!messageData || !messageData.messageContent) {
+      return res.status(400).json({
+        responseMsg: "Invalid data",
+        error: new Error("Invalid Data")
+      });
+    }
+
+    return Message.create({
+      sender: "admin",
+      messageContent: messageData.messageContent
+    })
+    .then((newMessage) => {
+      return res.status(200).json({
+        responseMsg: "New default message created",
+        newMessage
+      });
+    })
+    .catch((error) => {
+      return res.status(500).json({
+        reponseMsg: "General error",
+        error: error
+      });
+    });
+  },
+  deleteMessage: (req, res) => {
+    const { messageId } = req.params;
+    if (!messageId ) {
+      return res.status(400).json({
+        responseMsg: "Invalid Data",
+        error: new Error("Could not resolve message id")
+      });
+    }
+
+    return Message.findOneAndDelete({ _id: messageId }).exec()
+      .then((deletedMessage) => {
+        if (deletedMessage) {
+          return res.status(200).json({
+            responseMsg: "Message default deleted",
+            deletedMessage
+          });
+        } else {
+          return res.status(404).json({
+            responseMsg: "Not Found Error",
+            error: new Error("Could not find message to delete")
+          });
+        }
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          responseMsg: "General Error",
+          error
+        });
+      });
   }
 };
 

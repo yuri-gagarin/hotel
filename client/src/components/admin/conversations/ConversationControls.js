@@ -17,8 +17,9 @@ type Props = {
   closeAdminConversation: () => void;
   openUsersModal: () => void;
   openMessageAllModal: () => void;
+  toggleDefaultMesagesModal: () => void;
 }
-export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, handleArchiveConversation, handleToggleArchivedAdminConversations, closeAdminConversation, openUsersModal, openMessageAllModal, handleToggleDeleteAdminConversation }: Props): React.Node => {
+export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, handleArchiveConversation, handleToggleArchivedAdminConversations, closeAdminConversation, openUsersModal, openMessageAllModal, handleToggleDeleteAdminConversation, toggleDefaultMesagesModal }: Props): React.Node => {
   const { messengerOnline, viewingArchived, connectedOnlineClients, activeConversation, loadedAdminConversations } = adminConversationState;
   const { archived, conversationName, conversationId } = activeConversation;
 
@@ -62,6 +63,10 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
                   </Dropdown.Item>
                   <Dropdown.Item onClick={ toggleDeleteConversation }>
                     Delete Selected
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={ toggleDefaultMesagesModal }>
+                    Configure defaults
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item>

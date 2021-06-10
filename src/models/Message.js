@@ -1,34 +1,35 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
+// message defaults set by admin in admin messenger //
 
 const messageSchema = new Schema({
   conversationId: {
-    type: Schema.Types.ObjectId,
-    ref: "Conversation",
-    required: true
+    type: String,
+    required: false
   },
   sender: {
     type: String,
-    required: true,
+    enum: [ "admin", "client" ],
+    required: false
   },
-  content: {
-    type: String,
-    required: true
-  },
-  senderIp: {
+  receiverSocketId: {
     type: String,
     required: false
+  },
+  senderSocketId: {
+    type: String,
+    required: false,
+  },
+  messageContent: {
+    type: String,
+    required: true
   },
   sentAt: {
     type: Date,
     required: true,
-    default: Date.now
+    default: new Date(Date.now())
   }, 
-  read: {
-    type: Boolean,
-    required: true,
-    default: false
-  }
+  
 });
 
 export default mongoose.model("Message", messageSchema);
