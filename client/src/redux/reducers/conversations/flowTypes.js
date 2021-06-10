@@ -18,7 +18,7 @@ export type ConversationState = {
 export type MessageData = {
   _id: string;
   messageDescription?: string;  // this is for admin message defaults //
-  messageType?: "DefaultGreeting" | "DefaultOffline" | "DefaultResolved";
+  messageType?: "DefaultGreeting" | "DefaultOffline" | "DefaultResolved" | null;
   conversationId: string;
   receiverSocketId: string | Array<string>;
   sender: "client" | "admin";

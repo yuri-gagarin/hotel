@@ -42,10 +42,10 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage }: Pro
                   <Dropdown.Item onClick={ setDefaultGreetingMessage }>
                     Set as default <span className={ styles.menuSubItemSpan }>'greeting'</span> message
                   </Dropdown.Item>
-                  <Dropdown.Item>
+                  <Dropdown.Item onClick={ setDefaultOfflineMessage }>
                     Set as default <span className={ styles.menuSubItemSpan }>'offline'</span> message
                   </Dropdown.Item>
-                  <Dropdown.Item>
+                  <Dropdown.Item onClick={ setDefaultResolvedMessage }>
                     Set as default <span className={ styles.menuSubItemSpan }>'resolved'</span> message
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -54,6 +54,21 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage }: Pro
           </Dropdown.Menu>
         </Dropdown>
       </Menu.Item>
+      <Menu.Item className={ styles.defaultMessageDescription }>
+        <span>Description:</span>
+        <span>{ messageData.messageDescription ? messageData.messageDescription : "No description" }</span>
+      </Menu.Item>
+      {
+        messageData.messageType 
+        ?
+          <Menu.Item className={ styles.defaultMessageTypeDisplay } position="right">
+            <span>Set as:</span>
+            <span>{ messageData.messageType }</span>
+          </Menu.Item>
+        :
+          null
+      }
+     
     </Menu>
   );
 }

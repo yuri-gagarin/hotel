@@ -5,6 +5,12 @@
   display: flex !important;
   justify-content: space-between !important;
 }
+.defaultMessageDescription > span:nth-child(1) {
+  color: green;
+}
+.defaultMessageDescription > span:nth-child(2) {
+  margin-left: 5px;
+}
 .menuSubItemSpan {
   font-weight: bold;
 }

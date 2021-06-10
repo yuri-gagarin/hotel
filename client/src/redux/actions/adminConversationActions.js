@@ -514,6 +514,8 @@ export const handleUpdateDefaultMessage = (dispatch: Dispatch<AdminConversationA
       const updatedDefaultMessages = currentAdminConvState.conversationMessageDefaults.map((message) => {
         if (message._id === updatedMessage._id) {
           return updatedMessage;
+        } else if (message.messageType && message.messageType === updatedMessage.messageType) { 
+          return { ...message, messageType: null };
         } else {
           return message;
         }

@@ -30,6 +30,8 @@ type LocalState = {
   settingsOpen: boolean;
   messageDescription: string;
   messageContent: string;
+  messageDescriptionError: string;
+  messageContentError: string;
 };
 type DropdownOptions = {
   key: string;
@@ -41,7 +43,7 @@ type DefaultsState = {
 }
 
 export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggleDefaultMessagesModal, handleFetchDefaultMessages, handleCreateDefaultMessage, handleUpdateDefaultMessage, handleDeleteDefaultMessage }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: false, messageDescription: "", messageContent: "" });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: false, messageDescription: "", messageContent: "", messageDescriptionError: "", messageContentError: "" });
   const [ dropdownState, setDropdownState ] = React.useState<Array<DropdownOptions>>([]);
   //
   const { conversationMessageDefaults } = adminConversationState;
@@ -54,10 +56,18 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
   };
 
   const handleNewDefaultMessageDescriptionChange = (e: SyntheticEvent<HTMLInputElement>) => {
-    setLocalState({ ...localState, messageDescription: e.currentTarget.value });
+    if (e.currentTarget.value.length === 0) {
+      setLocalState({ ...localState, messageDescription: e.currentTarget.value, messageDescriptionError: "Provide a short description to differentiate between messages"});
+    } else {
+      setLocalState({ ...localState, messageDescription: e.currentTarget.value, messageDescriptionError: "" });
+    }
   }
   const handleNewDefaultMessageContentChange = (e: SyntheticEvent<HTMLTextAreaElement>) => {
-    setLocalState({ ...localState, messageContent: e.currentTarget.value });
+    if (e.currentTarget.value.length === 0) {
+      setLocalState({ ...localState, messageContent: e.currentTarget.value, messageContentError: "Please type the default message content to display" });
+    } else {
+      setLocalState({ ...localState, messageContent: e.currentTarget.value, messageContentError: "" });
+    }
   };
   // CRUD redux actions //
   const createNewDefaultMessage = (): void => {
@@ -105,7 +115,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
   }, [ conversationMessageDefaults ]);
 
   return (
-    <Modal className={ styles.modal } open={ true } >
+    <Modal className={ styles.modal } open={ modalOpen } >
       <Modal.Header className={ styles.modalHeader }>
         Messenger Defaults
         <Button.Group className={ styles.settingsButtons }>
@@ -124,7 +134,8 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               control={Input}
               label='Message Description'
               placeholder='a short description to separate from other defaults'
-              onChange={ handleNewDefaultMessageContentChange }
+              onChange={ handleNewDefaultMessageDescriptionChange }
+              error={ localState.messageDescriptionError ? { content: localState.messageDescriptionError } : null }
             />
             <Form.Field 
               className={ styles.defaultMessageTextArea } 
@@ -145,7 +156,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
           localState.settingsOpen 
           ?
             <Card.Group>
-              <Card fluid>
+              <Card fluid color="green">
                 <Dropdown selection clearable placeholder="ok" options={ dropdownState } onChange={ handleDropdownChange } />
                 <Card.Content>
                   Default 'Welcome' message
@@ -198,23 +209,20 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
             { 
               conversationMessageDefaults.map((messageData) => {
                 return (
-                  <Card fluid key={ messageData._id }>
+                  <Card fluid key={ messageData._id } color="green">
                     <Card.Content>
                       <DefaultMessageMenu 
                         messageData={ messageData }
                         handleSetDefaultMessage={ handleSetDefaultMessage }
                       />
-                      { "Message description here" }
                     </Card.Content>
-                    <Card.Content>
-                      { messageData.messageContent }
+                    <Card.Content className={ styles.messageCardContent }>
+                      <span>Message content: </span>
+                      <div>{messageData.messageContent}</div>
                     </Card.Content>
-                    <Card.Content>
-                      { formatDate(messageData.sentAt, { military: false }) }
-                    </Card.Content>
-                    <Card.Content>
-                      <Button color="blue" content="Edit" />
-                      <Button color="red" content="Delete" />
+                    <Card.Content className={ styles.messageCardDate }>
+                      <span>Created at:</span>
+                      <span>{formatDate(messageData.sentAt, { military: false })}</span>
                     </Card.Content>
                   </Card>
                 )

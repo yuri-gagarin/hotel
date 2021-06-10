@@ -284,11 +284,16 @@ export default {
 
     if (messageData.messageType) {
       return Message.findOneAndUpdate(
-        { _id: messageId },
-        { $set: { messageType: messageData.messageType } },
-        { new: true }
+        { messageType: messageData.messageType },
+        { $set: { messageType: null }}
       )
-      .exec()
+      .then(() => {
+        return Message.findOneAndUpdate(
+          { _id: messageId },
+          { $set: { messageType: messageData.messageType } },
+          { new: true }
+        );
+      })
       .then((updatedMessage) => {
         if (updatedMessage) {
           return res.status(200).json({
