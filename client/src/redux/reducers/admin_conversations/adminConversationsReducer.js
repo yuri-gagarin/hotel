@@ -11,6 +11,7 @@ const initialState: AdminConversationState = {
   loadedAdminConversations: [],
   numberOfConversations: 0,
   connectedOnlineClients: [],
+  conversationMessageDefaults: [],
   error: null,
   errorMessages: []
 };
@@ -115,6 +116,46 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         numberOfConversations: action.payload.numberOfConversations,
         error: null
       }
+    }
+    case "FetchDefaultMessages": {
+      return {
+        ...state,
+        status: action.payload.status,
+        responseMsg: action.payload.responseMsg,
+        loading: action.payload.loading,
+        conversationMessageDefaults: action.payload.defaultMessages,
+        error: null
+      };
+    }
+    case "CreateDefaultMessage": {
+      return {
+        ...state,
+        status: action.payload.status,
+        responseMsg: action.payload.responseMsg,
+        loading: action.payload.loading,
+        conversationMessageDefaults: [ ...state.conversationMessageDefaults, action.payload.createdMessage ],
+        error: null
+      };
+    }
+    case "UpdateDefaultMessage": {
+      return {
+        ...state,
+        status: action.payload.status,
+        responseMsg: action.payload.responseMsg,
+        loading: action.payload.loading,
+        conversationMessageDefaults: action.payload.updatedDefaultMessages,
+        error: null
+      };
+    }
+    case "DeleteDefaultMessage": {
+      return {
+        ...state,
+        status: action.payload.status,
+        responseMsg: action.payload.responseMsg,
+        loading: action.payload.loading,
+        conversationMessageDefaults: action.payload.updatedDefaultMessages,
+        error: null
+      };
     }
     case "NewClientMessage": {
       return {

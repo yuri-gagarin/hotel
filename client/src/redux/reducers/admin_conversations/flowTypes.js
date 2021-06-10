@@ -11,6 +11,7 @@ export type AdminConversationState = {|
   loadedAdminConversations: Array<AdminConversationData>;
   numberOfConversations: number;
   connectedOnlineClients: Array<ConnectedClientData>;
+  conversationMessageDefaults: Array<MessageData>; // these are default responses, greetings set by admin //
   error: any | null;
   errorMessages: Array<string>;
 |};
@@ -136,6 +137,44 @@ export type DeleteAdminConversation = {
     numberOfConversations: number;
   }
 };
+// message defaults //
+// messages defaults //
+export type FetchDefaultMessages = {|
+  +type: "FetchDefaultMessages";
+  +payload: {
+    status: number;
+    loading: boolean;
+    responseMsg: string;
+    defaultMessages: Array<MessageData>;
+  }
+|};
+export type CreateDefaultMessage = {|
+  +type: "CreateDefaultMessage";
+  +payload: {
+    status: number;
+    loading: boolean;
+    responseMsg: string;
+    createdMessage: MessageData;
+  }
+|};
+export type UpdateDefaultMessage = {|
+  +type: "UpdateDefaultMessage";
+  +payload: {
+    status: number;
+    loading: boolean;
+    responseMsg: string;
+    updatedDefaultMessages: Array<MessageData>;
+  }
+|};
+export type DeleteDefaultMessage = {|
+  +type: "DeleteDefaultMessage";
+  +payload: {
+    status: number;
+    loading: boolean;
+    responseMsg: string;
+    updatedDefaultMessages: Array<MessageData>;
+  }
+|};
 
 export type NewClientMessage = {
   +type: "NewClientMessage";
@@ -179,4 +218,5 @@ export type ClearAdminConversationError = {
 };
 
 export type AdminConversationAction = OpenAdminConversation | CloseAdminConversation | UpdateAdminConversationName | AdminConversationAPIRequest | ToggleAdminMessengerOnlineStatus | NewClientConnection | ClientDisconnection | SetOnlineClients | SetAdminConversations | CreateNewAdminConveration |
+                                      FetchDefaultMessages | CreateDefaultMessage | UpdateDefaultMessage | DeleteDefaultMessage |
                                       ToggleArchivedAdminConversations | CreateNewAdminConveration | DeleteAdminConversation | ArchiveAdminConversation | NewClientMessage | SendAdminMessage | SetAdminConversationError | ClearAdminConversationError;
