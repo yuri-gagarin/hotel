@@ -1,7 +1,7 @@
 .modal {
   left: 50%;
   transform: translateX(-50%);
-  height: auto;
+  height: 90vh;
 }
 .modalHeader {
   position: relative;
@@ -43,4 +43,16 @@
 }
 .messageCardDate > span:nth-child(2) {
   margin-left: 5px;
+}
+
+.setDefaultsCardHeader {
+  padding-left: 14px;
+}
+.setDefaultsCardHeader > span:nth-child(1) {
+  font-size: 1.25em;
+  color: black;
+}
+.setDefaultsCardHeader > span:nth-child(1) > span {
+  font-weight: bold;
+  color: rgb(30, 160, 30);
 }

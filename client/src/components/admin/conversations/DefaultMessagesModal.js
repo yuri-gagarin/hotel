@@ -43,7 +43,7 @@ type DefaultsState = {
 }
 
 export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggleDefaultMessagesModal, handleFetchDefaultMessages, handleCreateDefaultMessage, handleUpdateDefaultMessage, handleDeleteDefaultMessage }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: false, messageDescription: "", messageContent: "", messageDescriptionError: "", messageContentError: "" });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: true, messageDescription: "", messageContent: "", messageDescriptionError: "", messageContentError: "" });
   const [ dropdownState, setDropdownState ] = React.useState<Array<DropdownOptions>>([]);
   //
   const { conversationMessageDefaults } = adminConversationState;
@@ -71,7 +71,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
   };
   // CRUD redux actions //
   const createNewDefaultMessage = (): void => {
-    if (!localState.messageDescription || !localState.messageContent) return;
+    if (localState.messageDescriptionError || localState.messageContentError || !localState.messageDescription || !localState.messageContent) return;
 
     const newMessageData: MessageData = {
       _id: ObjectID().toHexString(),
@@ -102,6 +102,32 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
     handleUpdateDefaultMessage(messageData, adminConversationState);
   };
 
+  // message defaults value getters //
+  const getDefaultWelcomeMessage = (): string => {
+    const defaultWelcomeMessage: MessageData = adminConversationState.conversationMessageDefaults.filter((data) => data.messageType === "DefaultGreeting")[0];
+    if (defaultWelcomeMessage) { 
+      return defaultWelcomeMessage.messageContent;
+    } else {
+      return "No default welcome message set yet...";
+    }
+  };
+  const getDefaultResolvedMessage = (): string => {
+    const defaultResolvedMessage: MessageData = adminConversationState.conversationMessageDefaults.filter((data) => data.messageType === "DefaultResolved")[0];
+    if (defaultResolvedMessage) {
+      return defaultResolvedMessage.messageContent;
+    } else {
+      return "No default conversation resolved message set yet...";
+    }
+  };
+  const getDefaultOfflineMessage = (): string => {
+    const defaultOfflineMessage: MessageData = adminConversationState.conversationMessageDefaults.filter((data) => data.messageType === "DefaultOffline")[0];
+    if (defaultOfflineMessage) {
+      return defaultOfflineMessage.messageContent;
+    } else {
+      return "No default messenger offline message set yet...";
+    }
+  };
+
   React.useEffect(() => {
     handleFetchDefaultMessages();
   }, []);
@@ -115,18 +141,24 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
   }, [ conversationMessageDefaults ]);
 
   return (
-    <Modal className={ styles.modal } open={ modalOpen } >
+    <Modal className={ styles.modal } open={ true } >
       <Modal.Header className={ styles.modalHeader }>
         Messenger Defaults
         <Button.Group className={ styles.settingsButtons }>
-          <Button basic color="green" content="New" onClick={ setFormOpen }/>
-          <Button basic color="grey" content={ localState.settingsOpen ? "View Defaults" : "Settings" } onClick={ toggleSettings } />
+          <Button basic color="green" onClick={ setFormOpen }>
+            New
+            <Icon style={{ marginLeft: "5px" }} name="file" />
+          </Button>
+          <Button basic color="grey"  onClick={ toggleSettings }>
+            {localState.settingsOpen ? "View All Messages" : "View Set Defaults"}
+            <Icon style={{ marginLeft: "5px" }} name="settings" />
+          </Button>
           <Button basic color="red" onClick={ toggleDefaultMessagesModal }>
-            <Icon name="close" color="red" />
+            <Icon style={{ margin: "0 auto" }}name="close" color="red" />
           </Button>
         </Button.Group>
       </Modal.Header>
-      <Modal.Content scrolling>
+      <Modal.Content scrolling style={{ height: "calc(90vh - 60px)", maxHeight: "none" }}>
         {
           localState.formOpen ?
           <Form className={ styles.newDefaultMessageForm }>
@@ -143,6 +175,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               control={TextArea}
               label="Message Content"
               placeholder="the content of the message which you want to be automatically sent"
+              error={ localState.messageContentError ? { content: localState.messageContentError } : null }
             />
             <Button.Group className={ styles.defaultMessageFormControlButtons }>
               <Button basic color="orange" content="Cancel" onClick={ setFormOpen } />
@@ -156,48 +189,51 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
           localState.settingsOpen 
           ?
             <Card.Group>
-              <Card fluid color="green">
-                <Dropdown selection clearable placeholder="ok" options={ dropdownState } onChange={ handleDropdownChange } />
+              <Card fluid>
+                <Card.Header className={ styles.setDefaultsCardHeader}>
+                  <span>Default <span>'Welcome'</span>  message</span> 
+                </Card.Header>
+                <Card.Meta style={{ paddingLeft: "14px", paddingRight: "14px" }}> 
+                  This is the message which is automaticaly sent when client initially enters your site:
+                </Card.Meta>
                 <Card.Content>
-                  Default 'Welcome' message
-                </Card.Content>
-                <Card.Content>
-                  Something of a content here
+                  {getDefaultWelcomeMessage()}
                 </Card.Content>
                 <Card.Content>
                   <Button.Group>
-                    <Button basic color="orange" content="Reset" />
-                    <Button basic color="green" content="Update" />
+                    <Button basic color="orange" content="Clear" />
                   </Button.Group>
                 </Card.Content>
               </Card>
               <Card fluid>
-                <Dropdown />
+                <Card.Header className={ styles.setDefaultsCardHeader}>
+                  <span>Default <span>'Resolved'</span>  message</span> 
+                </Card.Header>
+                <Card.Meta style={{ paddingLeft: "14px", paddingRight: "14px" }}> 
+                  This is the message which is automatically sent when you archive a conversation:
+                </Card.Meta>
                 <Card.Content>
-                  Default 'Arhived' message
-                </Card.Content>
-                <Card.Content>
-                  Something of a content here
+                  {getDefaultResolvedMessage()}
                 </Card.Content>
                 <Card.Content>
                   <Button.Group>
-                    <Button basic color="orange" content="Reset" />
-                    <Button basic color="green" content="Update" />
+                    <Button basic color="orange" content="Clear" />
                   </Button.Group>
                 </Card.Content>
               </Card>
               <Card fluid>
-                <Dropdown />
+                <Card.Header className={ styles.setDefaultsCardHeader}>
+                  <span>Default <span>'Offline'</span>  message</span> 
+                </Card.Header>
+                <Card.Meta style={{ paddingLeft: "14px", paddingRight: "14px" }}> 
+                  This is the message which is automatically sent when a client sends a message and there are no admins online:
+                </Card.Meta>
                 <Card.Content>
-                  Default 'offline' message
-                </Card.Content>
-                <Card.Content>
-                  Something of a content here
+                  {getDefaultOfflineMessage()}
                 </Card.Content>
                 <Card.Content>
                   <Button.Group>
-                    <Button basic color="orange" content="Reset" />
-                    <Button basic color="green" content="Update" />
+                    <Button basic color="orange" content="Clear" />
                   </Button.Group>
                 </Card.Content>
               </Card>
