@@ -3,6 +3,8 @@ import RedisController from "./redisController";
 // models //
 import Conversation from "../models/Conversation";
 import Message from "../models/Message";
+// helpers //
+import { emitDefaultWelcomeMessage } from  "./helpers/defaultMessageEmitters";
 
 export default function (socketIOinstance) {
 
@@ -38,37 +40,16 @@ export default function (socketIOinstance) {
           if (numberOfVisibleAdmins > 0) {
             // check if there is a default greeting set //
             // if not send default fallback message //
-            return Message.findOne({ messageType: "DefaultMessage" }).exec()
-              .then((message) => {
-                let messageData = {};
-                const conversationId = `CONVERSATION_${socket.id}`;
-                const receiverSocketId = socket.id;
-                if (message) {
-                  messageData = { ...message, conversationId, receiverSocketId };
-                } else {
-                  messageData = {
-                    _id: mongoose.Types.ObjectId(),
-                    conversationId,
-                    receiverSocketId,
-                    senderSocketId: "",
-                    sender: "admin",
-                    messageContent: "Hello and welcome. Feel free to message us with any questions",
-                    sentAt: new Date().toDateString()
-                  };
-                }
-                socket.emit("clientCredentialsReceived", { numberOfVisibleAdmins, messageData });
-              })
-              .catch((error) => {
-                console.error(error);
-              })
+            return emitDefaultWelcomeMessage({ socket, numberOfVisibleAdmins });
           } else {
             socket.emit("clientCredentialsReceived", { numberOfVisibleAdmins });
+            return Promise.resolve(null)
           }
         })
         .catch((err) => {
           console.log(err)
           socket.emit("socketConnectionError", { message: "Messenger connection error" });
-        })
+        });
     });
 
 
@@ -164,8 +145,6 @@ export default function (socketIOinstance) {
 
     socket.on("newAdminMessageSent", (data) => {
       const { receiverSocketId } = data;
-      console.log(242);
-      console.log(data);
       if (receiverSocketId) {
         return RedisController.setNewMessage(data)
           .then(() => {
@@ -182,26 +161,39 @@ export default function (socketIOinstance) {
       // TODO //
       // handle an error with incorrect input //
       if (!conversationId || !receiverSocketId) return;
-      console.log(257);
-      console.log(data);
+
       return RedisController.removeConversationData(conversationId)
         .then(() => {
-          const archivedConversationMessage = {
-            _id: mongoose.Types.ObjectId(),
-            conversationId: conversationId,
-            senderSocketId: "",
-            receiverSocketId: "",
-            sender: "admin",
-            messageContent: "Our admins have marked this conversation as resolved. If you would like to continue the conversation please click on the button below...",
-            sentAt: new Date().toISOString()
-          };
-          socketIOinstance.to(receiverSocketId).emit("receiveAdminConversationArchived", archivedConversationMessage);
+          // check if an archived conversation message has been set //
+          return Message.findOne({ messageType: "DefaultResolved" })
+        })
+        .then((message) => {
+          let messageData = {}
+          if (message) {
+            messageData = { ...message, conversationId, receiverSocketId }
+          } else {
+            messageData = {
+              _id: mongoose.Types.ObjectId(),
+              conversationId: conversationId,
+              senderSocketId: "",
+              receiverSocketId: "",
+              sender: "admin",
+              messageContent: "Our admins have marked this conversation as resolved. If you would like to continue the conversation please click on the button below...",
+              sentAt: new Date().toISOString()
+            }
+          }
+          return Promise.resolve(messageData);
+        })
+        .then((messageData) => {
+          socketIOinstance.to(receiverSocketId).emit("receiveAdminConversationArchived", messageData);
         })
         .catch((error) => {
-          console.log(`server.js: 265`);
-          console.log(error);
+          console.error(error);
+          // TODO //
+          // add an error emitter her //
         });
     });
+
     socket.on("continueClientConversationRequest", (data) => {
       // CLIENT WANTS TO CONTINUE CONVERSTION WHICH ADMIN ARCHIVED //
       const { conversationId } = data;
