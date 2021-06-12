@@ -57,21 +57,19 @@ export const emitDefaultOfflineMessage = ({ socket }) => {
     });
 };
 
-export const emitDefaultConversationArchived = ({ socket, socketIOInstance }) => {
+export const emitDefaultConversationArchived = ({ socketIOInstance, conversationId, receiverSocketId }) => {
   let messageData = {}
-  const conversationId = `CONVERSATION_${socket.id}`;
-  const receiverSocketId = socket.id;
 
   return Message.findOne({ messageType: "DefaultResolved" }).exec()
     .then((message) => {
       if (message) {
-        messageData = { ...message, conversationId, receiverSocketId }
+        messageData = { ...message.toObject(), conversationId, receiverSocketId }
       } else {
         messageData = {
           _id: mongoose.Types.ObjectId(),
           conversationId: conversationId,
           senderSocketId: "",
-          receiverSocketId: "",
+          receiverSocketId: receiverSocketId,
           sender: "admin",
           messageContent: "Our admins have marked this conversation as resolved. If you would like to continue the conversation please click on the button below...",
           sentAt: new Date().toISOString()

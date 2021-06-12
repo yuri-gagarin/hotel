@@ -151,32 +151,46 @@ export default function (socketIOInstance) {
       return RedisController.removeConversationData(conversationId)
         .then(() => {
           // check if an archived conversation message has been set //
-          return emitDefaultConversationArchived({ socketIOInstance, socket });
+          return emitDefaultConversationArchived({ socketIOInstance, conversationId, receiverSocketId });
         })
         .catch((error) => {
           console.error(error);
           // TODO //
-          // add an error emitter her //
+          socketIOInstance.to(socket.id).emit("generalSocketIOError", error);
         });
     });
 
     socket.on("continueClientConversationRequest", (data) => {
       // CLIENT WANTS TO CONTINUE CONVERSTION WHICH ADMIN ARCHIVED //
       const { conversationId } = data;
-      if (!conversationId) {
-        socketIOInstance.to(socket.id).emit("generalSocketIOError", (new Error("Couldn't resolve archived conversation")));
-      } else {
-        Conversation.findOne({ conversationId }).exec()
-          .then((conversation) => {
-            console.log(conversation);
-            const { conversationId } = conversation;
-            socketIOInstance.to(socket.id).emit("continueClientConversationSuccess", { conversationId });
-          })
-          .catch((error) => {
-            console.log(error);
-            socketIOInstance.to(socket.id).emit("generalSocketIOError");
-          });
-      }
+      return new Promise((resolve, reject) => {
+        if (!conversationId) {
+          return reject(new Error("Couldn't resolve archived conversation"));
+        } else {
+          return resolve(Conversation.findOne({ conversationId }).exec())
+        }
+      })
+      .then((conversation) => {
+        if (conversation) {
+          const { messages } = conversation;
+          const promises = [];
+          // convert messages objects to JSON //
+          for (const messageData of messages) {
+            promises.push(RedisController.setNewMessage(messageData));
+          }
+          return Promise.all(promises);
+        } else {
+          return Promise.resolve([])
+        }
+      })
+      .then(() => {
+        socketIOInstance.to(socket.id).emit("continueClientConversationSuccess", { conversationId });
+      })
+      .catch((error) => {
+        console.log(error);
+        socketIOInstance.to(socket.id).emit("generalSocketIOError", error);
+      });
+     
     });
     // end admin response 
     socket.once("disconnect", () => {
