@@ -1,14 +1,12 @@
-import mongoose from "mongoose";
 import RedisController from "./redisController";
 // models //
 import Conversation from "../models/Conversation";
-import Message from "../models/Message";
 // helpers //
-import { emitDefaultWelcomeMessage, emitDefaultOfflineMessage } from  "./helpers/defaultMessageEmitters";
+import { emitDefaultWelcomeMessage, emitDefaultOfflineMessage, emitDefaultConversationArchived } from  "./helpers/defaultMessageEmitters";
 
-export default function (socketIOinstance) {
+export default function (socketIOInstance) {
 
-  socketIOinstance.on("connection", (socket) => {
+  socketIOInstance.on("connection", (socket) => {
     console.log("connection");
 
     // listen for connected clients credentials //
@@ -33,7 +31,7 @@ export default function (socketIOinstance) {
         .then(({ visibleAdminSocketIds, numberOfVisibleAdmins }) => {
           if (visibleAdminSocketIds.length > 0) {
             for (const adminSocketId of visibleAdminSocketIds) {
-              socketIOinstance.to(adminSocketId).emit("newClientConnected", { ...userState, socketId: socketId });
+              socketIOInstance.to(adminSocketId).emit("newClientConnected", { ...userState, socketId: socketId });
             }
           }
 
@@ -75,27 +73,27 @@ export default function (socketIOinstance) {
         ])
         .then(([ _, connectedClientsRes ]) => {
           const { numberOfConnectedClients, visibleClientSocketIds, clientsDataArr } = connectedClientsRes;
-          socketIOinstance.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: true, numberOfConnectedClients, visibleClientSocketIds, clientsDataArr });
-          socketIOinstance.emit("adminConnected", { adminSocketId: socketId });
+          socketIOInstance.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: true, numberOfConnectedClients, visibleClientSocketIds, clientsDataArr });
+          socketIOInstance.emit("adminConnected", { adminSocketId: socketId });
         })
         .catch((error) => {
-          socketIOinstance.to(socketId).emit("generalSocketIOError", error);
+          socketIOInstance.to(socketId).emit("generalSocketIOError", error);
         });
       } else {
         // take admin messenger offline //
         return RedisController.removeVisibleAdmin(socketId)
           .then(() => {
-            socketIOinstance.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: false });
+            socketIOInstance.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: false });
             return RedisController.getVisibleAdmins();
           })
           .then(({ numberOfVisibleAdmins }) => {
             if (numberOfVisibleAdmins === 0) {
-              socketIOinstance.emit("adminMessengerOffline");
+              socketIOInstance.emit("adminMessengerOffline");
             }
           })
           .catch((error) => {
             console.log(error);
-            socketIOinstance.to(socketId).emit("generalSocketIOError", error);
+            socketIOInstance.to(socketId).emit("generalSocketIOError", error);
           })
       }
     })
@@ -115,14 +113,14 @@ export default function (socketIOinstance) {
             return emitDefaultOfflineMessage({ socket });
           } else {
             for (const socketId of visibleAdminSocketIds) {
-              socketIOinstance.to(socketId).emit("receiveClientMessage", data);
+              socketIOInstance.to(socketId).emit("receiveClientMessage", data);
             }
             return RedisController.setNewMessage(data);
           }
         })
         .then(() => {
           // do something with it //
-          socketIOinstance.to(socket.id).emit("messageDelivered", data);
+          socketIOInstance.to(socket.id).emit("messageDelivered", data);
         })
         .catch((error) => {
           console.log(error);
@@ -136,7 +134,7 @@ export default function (socketIOinstance) {
       if (receiverSocketId) {
         return RedisController.setNewMessage(data)
           .then(() => {
-            socketIOinstance.to(receiverSocketId).emit("receiveAdminReply", data);
+            socketIOInstance.to(receiverSocketId).emit("receiveAdminReply", data);
           })
           .catch((error) => {
             console.error(error);
@@ -153,27 +151,7 @@ export default function (socketIOinstance) {
       return RedisController.removeConversationData(conversationId)
         .then(() => {
           // check if an archived conversation message has been set //
-          return Message.findOne({ messageType: "DefaultResolved" })
-        })
-        .then((message) => {
-          let messageData = {}
-          if (message) {
-            messageData = { ...message, conversationId, receiverSocketId }
-          } else {
-            messageData = {
-              _id: mongoose.Types.ObjectId(),
-              conversationId: conversationId,
-              senderSocketId: "",
-              receiverSocketId: "",
-              sender: "admin",
-              messageContent: "Our admins have marked this conversation as resolved. If you would like to continue the conversation please click on the button below...",
-              sentAt: new Date().toISOString()
-            }
-          }
-          return Promise.resolve(messageData);
-        })
-        .then((messageData) => {
-          socketIOinstance.to(receiverSocketId).emit("receiveAdminConversationArchived", messageData);
+          return emitDefaultConversationArchived({ socketIOInstance, socket });
         })
         .catch((error) => {
           console.error(error);
@@ -186,17 +164,17 @@ export default function (socketIOinstance) {
       // CLIENT WANTS TO CONTINUE CONVERSTION WHICH ADMIN ARCHIVED //
       const { conversationId } = data;
       if (!conversationId) {
-        socketIOinstance.to(socket.id).emit("generalSocketIOError", (new Error("Couldn't resolve archived conversation")));
+        socketIOInstance.to(socket.id).emit("generalSocketIOError", (new Error("Couldn't resolve archived conversation")));
       } else {
         Conversation.findOne({ conversationId }).exec()
           .then((conversation) => {
             console.log(conversation);
             const { conversationId } = conversation;
-            socketIOinstance.to(socket.id).emit("continueClientConversationSuccess", { conversationId });
+            socketIOInstance.to(socket.id).emit("continueClientConversationSuccess", { conversationId });
           })
           .catch((error) => {
             console.log(error);
-            socketIOinstance.to(socket.id).emit("generalSocketIOError");
+            socketIOInstance.to(socket.id).emit("generalSocketIOError");
           });
       }
     });
@@ -212,7 +190,7 @@ export default function (socketIOinstance) {
               .then(({ visibleAdminSocketIds }) => {
                 if (visibleAdminSocketIds.length > 0) {
                   for (const adminSocketId of visibleAdminSocketIds) {
-                    socketIOinstance.to(adminSocketId).emit("clientDisconnected", { clientSocketId: socketId });
+                    socketIOInstance.to(adminSocketId).emit("clientDisconnected", { clientSocketId: socketId });
                   }
                 }
                 return Promise.resolve()
@@ -228,7 +206,7 @@ export default function (socketIOinstance) {
               })
               .then(({ numberOfVisibleAdmins }) => {
                 if (numberOfVisibleAdmins === 0) {
-                  socketIOinstance.emit("adminMessengerOffline")
+                  socketIOInstance.emit("adminMessengerOffline")
                 }
               })
               .catch((error) => {
