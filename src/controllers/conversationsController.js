@@ -94,6 +94,7 @@ export default {
       });
     });
   },
+  
   deleteConversation: (req, res) => {
     // validate user credentials first //
     const conversationId = req.params.convId;
