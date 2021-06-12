@@ -73,21 +73,26 @@ export default {
     }
 
     const { conversationId, conversationName, messages = [], newConversation, createdAt } = conversationData;
- 
-    return Conversation.create({ conversationId, conversationName, newConversation, messages, newMessages: [], createdAt, archived: true })
-      .then((archivedConversation) => {
-        return res.status(200).json({
-          responseMsg: "Conversation archived",
-          archivedConversation
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        return res.status(500).json({
-          responseMsg: "Error archiving conversation",
-          error
-        });
+    // firts check if the conversation with this <conversationId> already exists to avoid duplicate data //
+    return Conversation.findOneAndUpdate(
+      { conversationId },
+      { $push: { messages: { $each: messages } }, $set: { conversationName, newConversation, createdAt } },
+      { upsert: true, new: true }
+    )
+    .exec()
+    .then((archivedConversation) => {
+      return res.status(200).json({
+        responseMsg: "Conversation archived",
+        archivedConversation
       });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(500).json({
+        responseMsg: "Error archiving conversation",
+        error
+      });
+    });
   },
   deleteConversation: (req, res) => {
     // validate user credentials first //
