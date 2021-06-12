@@ -143,6 +143,11 @@ const ConversationIndexContainer = ({
   const cancelConversationDelete = (): void => {
     setConfirmDeleteModalState({ open: false, conversationId: "" });
   };
+
+  const toggleDeleteDefaultMessageModel = (messageId: string): void => {
+    if (!messageId) return;
+    setConfirmDeleteModalState({ open: true, conversationId: messageId });
+  }
   const confirmConversationDelete = (): Promise<boolean> => {
     if (!confirmDeleteModalState.open || !confirmDeleteModalState.conversationId) {
       return Promise.resolve(false);
@@ -189,7 +194,7 @@ const ConversationIndexContainer = ({
         handleFetchDefaultMessages={ _handleFetchDefaultMessages }
         handleCreateDefaultMessage={ _handleCreateDefaultMessage }
         handleUpdateDefaultMessage={ _handleUpdateDefaultMessage }
-        handleDeleteDefaultMessage={ _handleDeleteDefaultMessage } 
+        triggerMessageModelDelete={ toggleDeleteDefaultMessageModel }
       />
       <Grid.Row centered style={{ padding: 0 }} columns={2}>
         <ConversationControls 

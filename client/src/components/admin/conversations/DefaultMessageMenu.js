@@ -9,8 +9,9 @@ import styles from "./css/defaultMessageMenu.module.css";
 type Props = {
   messageData: MessageData;
   handleSetDefaultMessage: (messageData: MessageData) => void;
+  triggerMessageModelDelete: (messageId: string) => void;
 };
-export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage }: Props): React.Node => {
+export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, triggerMessageModelDelete }: Props): React.Node => {
 
   const setDefaultGreetingMessage = (): void => {
     handleSetDefaultMessage({ ...messageData, messageType: "DefaultGreeting" });
@@ -31,7 +32,7 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage }: Pro
               <Icon color="blue" name="edit" />
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item className={ styles.menuItem }>
+            <Dropdown.Item className={ styles.menuItem } onClick={ triggerMessageModelDelete }>
               Delete
               <Icon color="red" name="trash" />
             </Dropdown.Item>

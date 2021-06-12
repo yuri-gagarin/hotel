@@ -23,7 +23,11 @@ const messageSchema = new Schema({
   },
   senderSocketId: {
     type: String,
-    required: false,
+    required: false
+  },
+  messageDescription: {
+    type: String,
+    required: false
   },
   messageContent: {
     type: String,

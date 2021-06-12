@@ -247,7 +247,7 @@ export default {
   },
   createMessage: (req, res) => {
     const { messageData } = req.body;
-    if (!messageData || !messageData.messageContent) {
+    if (!messageData || !messageData.messageContent || !messageData.messageDescription) {
       return res.status(400).json({
         responseMsg: "Invalid data",
         error: new Error("Invalid Data")
@@ -256,6 +256,7 @@ export default {
 
     return Message.create({
       sender: "admin",
+      messageDescription: messageData.messageDescription,
       messageContent: messageData.messageContent
     })
     .then((createdMessage) => {
