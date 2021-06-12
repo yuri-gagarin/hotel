@@ -8,7 +8,7 @@ import type {
   AdminConversationData, AdminConversationAction, AdminConversationState, ConnectedClientData, NewClientConnection, ClientDisconnection, SetOnlineClients,
   OpenAdminConversation, CloseAdminConversation, UpdateAdminConversationName, AdminConversationAPIRequest, ToggleAdminMessengerOnlineStatus, SetAdminConversations, CreateNewAdminConveration, DeleteAdminConversation, 
   FetchDefaultMessages, CreateDefaultMessage, UpdateDefaultMessage, DeleteDefaultMessage,
-  ArchiveAdminConversation, ToggleArchivedAdminConversations, NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
+  ArchiveAdminConversation, ContinueAdminConversation, ToggleArchivedAdminConversations, NewClientMessage, SendAdminMessage, SetAdminConversationError, ClearAdminConversationError
 } from "../reducers/admin_conversations/flowTypes";
 import type { MessageData } from "../reducers/conversations/flowTypes";
 // socket io //
@@ -51,6 +51,13 @@ const archiveAdminConversation = (data: { updatedActiveConversation: AdminConver
   return {
     type: "ArchiveAdminConversation",
     payload: { updatedActiveConversation, updatedLoadedAdminConversations }
+  };
+};
+const continueAdminConversation = (data: { updatedLoadedAdminConversations: Array<AdminConversationData> }): ContinueAdminConversation => {
+  const { updatedLoadedAdminConversations } = data;
+  return {
+    type: "ContinueAdminConversation",
+    payload: { updatedLoadedAdminConversations }
   };
 };
 const toggleArchivedAdminConversations = (data: { viewingArchived: boolean, updatedActiveConversation: AdminConversationData, updatedLoadedAdminConversations: Array<AdminConversationData> }): ToggleArchivedAdminConversations => {
@@ -335,6 +342,11 @@ export const handleArchiveAdminConversation = (dispatch: Dispatch<AdminConversat
       dispatch(setAdminConversationError(error));
       return false;
     });
+};
+export const handleContinueAdminConversation = (dispatch: Dispatch<AdminConversationAction>, conversationData: AdminConversationData): void => {
+  const currentAdminConvState: AdminConversationState = store.getState().adminConversationState;
+  const updatedLoadedAdminConversations = [ { ...conversationData, newConversation: true }, ...currentAdminConvState.loadedAdminConversations ];
+  dispatch(continueAdminConversation({ updatedLoadedAdminConversations }));
 };
 
 export const handleToggleArchivedAdminConversations = (dispatch: Dispatch<AdminConversationAction>, options: { viewArchived?: boolean, viewActive?: boolean }): Promise<boolean> => {

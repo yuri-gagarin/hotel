@@ -96,6 +96,13 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         error: null
       };
     }
+    case "ContinueAdminConversation": {
+      return {
+        ...state,
+        loadedAdminConversations: action.payload.updatedLoadedAdminConversations,
+        error: null
+      };
+    }
     case "ToggleArchivedAdminConversations": {
       return {
         ...state,

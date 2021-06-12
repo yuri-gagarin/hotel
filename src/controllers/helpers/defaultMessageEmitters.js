@@ -59,6 +59,8 @@ export const emitDefaultOfflineMessage = ({ socket }) => {
 
 export const emitDefaultConversationArchived = ({ socketIOInstance, conversationId, receiverSocketId }) => {
   let messageData = {}
+  console.log(62)
+  console.log(receiverSocketId);
 
   return Message.findOne({ messageType: "DefaultResolved" }).exec()
     .then((message) => {

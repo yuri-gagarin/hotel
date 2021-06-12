@@ -163,6 +163,8 @@ export default function (socketIOInstance) {
     socket.on("continueClientConversationRequest", (data) => {
       // CLIENT WANTS TO CONTINUE CONVERSTION WHICH ADMIN ARCHIVED //
       const { conversationId } = data;
+      let continuedConversation;
+
       return new Promise((resolve, reject) => {
         if (!conversationId) {
           return reject(new Error("Couldn't resolve archived conversation"));
@@ -172,6 +174,7 @@ export default function (socketIOInstance) {
       })
       .then((conversation) => {
         if (conversation) {
+          continuedConversation = conversation;
           const { messages } = conversation;
           const promises = [];
           // convert messages objects to JSON //
@@ -184,7 +187,24 @@ export default function (socketIOInstance) {
         }
       })
       .then(() => {
-        socketIOInstance.to(socket.id).emit("continueClientConversationSuccess", { conversationId });
+        return RedisController.getVisibleAdmins();
+      })
+      .then(({ numberOfVisibleAdmins, visibleAdminSocketIds }) => {
+        if (numberOfVisibleAdmins > 0 && visibleAdminSocketIds) {
+          for (const adminSocketId of visibleAdminSocketIds) {
+            socketIOInstance.to(adminSocketId).emit("receiveClientConversationContinue", continuedConversation);
+          }
+          return Promise.resolve(true);
+        } else {
+          return Promise.resolve(false);
+        }
+      })
+      .then((success) => {
+        if (success) {
+          socketIOInstance.to(socket.id).emit("continueClientConversationSuccess", { conversationId });
+        } else {
+          return emitDefaultOfflineMessage({ socket });
+        }
       })
       .catch((error) => {
         console.log(error);

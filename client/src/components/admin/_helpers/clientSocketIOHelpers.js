@@ -2,9 +2,10 @@
 import type { Socket } from "socket.io-client";
 import type { Dispatch, AppAction } from "../../../redux/reducers/_helpers/createReducer";
 import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
+import type { AdminConversationData } from "../../../redux/reducers/admin_conversations/flowTypes";
 import type { MessengerOnlineToggleArgs, AdminConversationState, ConnectedClientData } from "../../../redux/reducers/admin_conversations/flowTypes";
 // redux state update actions //
-import { handleSetAdminMessengerOnlineStatus, handleSetOnlineClients, handleNewClientConnection, handleClientDisconnection, handleSetAdminConversationError, handleNewClientMessage } from "../../../redux/actions/adminConversationActions";
+import { handleSetAdminMessengerOnlineStatus, handleSetOnlineClients, handleNewClientConnection, handleClientDisconnection, handleSetAdminConversationError, handleNewClientMessage, handleContinueAdminConversation } from "../../../redux/actions/adminConversationActions";
 
 export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispatch: Dispatch<any>): void => {
   // error listeners //
@@ -38,13 +39,14 @@ export const setClientSocketIOEventListeners = (socketIOInstance: Socket, dispat
     handleNewClientConnection(dispatch, newConnectedClientData);
   });
   socketIOInstance.on("clientDisconnected", ({ clientSocketId }: { clientSocketId: string }) => {
-    console.log(41);
-    console.log(clientSocketId)
     handleClientDisconnection(dispatch, { clientSocketId });
   });
   socketIOInstance.on("receiveClientMessage", (messageData: MessageData): void => {
     // new client message functionality //
     handleNewClientMessage(dispatch, messageData);
+  });
+  socketIOInstance.on("receiveClientConversationContinue", (conversationData: AdminConversationData) => {
+    handleContinueAdminConversation(dispatch, conversationData);
   });
   socketIOInstance.on("generalSocketIOError", (error: any) => {
     handleSetAdminConversationError(dispatch, error);

@@ -54,6 +54,7 @@ export const setClientSocketIOListeners = (socketIOInstance: Socket, dispatch: D
   });
   socketIOInstance.on("receiveAdminConversationArchived", (data: MessageData) => {
     console.log(56);
+    console.log(data);
     handleClientConversationArchived(dispatch, data);
   });
   socketIOInstance.on("continueClientConversationSuccess", ({ conversationId }: { conversationId: string }) => {
