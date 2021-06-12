@@ -28,3 +28,31 @@ export const emitDefaultWelcomeMessage = ({ socket, numberOfVisibleAdmins }) => 
     throw(error);
   });
 };
+
+export const emitDefaultOfflineMessage = ({ socket }) => {
+  let messageData = {};
+  const conversationId = `CONVERSATION_${socket.id}`;
+  const receiverSocketId = socket.id;
+
+  return Message.findOne({ messageType: "DefaultOffline" }).exec()
+    .then((message) => {
+      if (message) {
+        messageData = { ...message.toObject(), conversationId, receiverSocketId };
+      } else {
+        messageData = {
+          _id: mongoose.Types.ObjectId(),
+          conversationId,
+          receiverSocketId,
+          senderSocketId: "",
+          sender: "admin",
+          messageContent: "We are offline",
+          sentAt: new Date().toDateString()
+        };
+      }
+      socket.emit("adminMessengerOffline", messageData);
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      throw error;
+    });
+};

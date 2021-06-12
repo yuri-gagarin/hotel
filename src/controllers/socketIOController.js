@@ -4,7 +4,7 @@ import RedisController from "./redisController";
 import Conversation from "../models/Conversation";
 import Message from "../models/Message";
 // helpers //
-import { emitDefaultWelcomeMessage } from  "./helpers/defaultMessageEmitters";
+import { emitDefaultWelcomeMessage, emitDefaultOfflineMessage } from  "./helpers/defaultMessageEmitters";
 
 export default function (socketIOinstance) {
 
@@ -112,29 +112,17 @@ export default function (socketIOinstance) {
           if (numberOfVisibleAdmins === 0) {
             // emit a messenger offline message //
             // save message to the database ? //
-            const genericResponseMsg = {
-              _id: mongoose.Types.ObjectId(),
-              conversationId: `CONVERSATION_${socket.id}`,
-              receiverSocketId: socket.id,
-              sender: "admin",
-              senderSocketId: "",
-              messageContent: "We are offline but your message has been sent to our servers",
-              sentAt: new Date().toDateString()
-            }
-            socket.emit("adminMessengerOffline", genericResponseMsg);
+            return emitDefaultOfflineMessage({ socket });
           } else {
             for (const socketId of visibleAdminSocketIds) {
               socketIOinstance.to(socketId).emit("receiveClientMessage", data);
             }
-            return RedisController.setNewMessage(data)
-              .then(() => {
-                // do something with it //
-                socketIOinstance.to(socket.id).emit("messageDelivered", data);
-              })
-              .catch((error) => {
-                console.error(error);
-              });
+            return RedisController.setNewMessage(data);
           }
+        })
+        .then(() => {
+          // do something with it //
+          socketIOinstance.to(socket.id).emit("messageDelivered", data);
         })
         .catch((error) => {
           console.log(error);
