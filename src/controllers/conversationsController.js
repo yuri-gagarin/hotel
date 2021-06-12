@@ -72,11 +72,11 @@ export default {
       });
     }
 
-    const { conversationId, conversationName, messages = [], newConversation, createdAt } = conversationData;
+    const { conversationId, receiverSocketId, conversationName, messages = [], newConversation, createdAt } = conversationData;
     // firts check if the conversation with this <conversationId> already exists to avoid duplicate data //
     return Conversation.findOneAndUpdate(
       { conversationId },
-      { $push: { messages: { $each: messages } }, $set: { conversationName, newConversation, createdAt } },
+      { $set: { conversationName, receiverSocketId, newConversation, createdAt, messages } },
       { upsert: true, new: true }
     )
     .exec()

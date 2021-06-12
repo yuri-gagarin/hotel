@@ -61,29 +61,27 @@
   display: none;
 }
 .messengerContinueConversationDiv {
-  max-width: 75%;
+  width: auto;
   display: flex;
-  background-color: #33cc33;
   color: white;
   padding: 1px;
   border-radius: 5px 5px 5px 0;
 }
 .messengerContinueMessage {
   display: flex;
-  flex-direction: column;
-  border: 1px solid white;
+  background-color: #33cc33;
   border-radius: 5px 5px 5px 0;
-  padding: 1em;
+  cursor: pointer;
+  padding: 1px;
 }
-.messengerContinueMessage > div:nth-child(2) {
+.messengerContinueMessage > div:nth-child(1) {
+  display: flex;
   font-weight: bolder;
   border: 1px solid white;
   border-radius: 5px;
-  display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  margin-top: 1em;
+  padding: 1em;
   cursor: pointer;
 }
 .messengerContinueMessage > div:nth-child(2):hover {
