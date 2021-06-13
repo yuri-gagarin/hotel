@@ -29,6 +29,24 @@
   width: 100%;
   height: 40px;
 }
+.dropdownItem {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+.dropdownIcon {
+  margin-left: 5px;
+}
+/* dropdown menu connection icon */
+.globeConnect {
+  color: green;
+}
+.globeDisconnect {
+  color: red;
+}
+.dropdownTrashIcon {
+  color: red;
+}
+
 .conversationControlsLowerWrapper {
   display: flex;
   border: 1px solid rgba(34,36,38,.15);

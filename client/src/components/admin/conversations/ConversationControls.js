@@ -70,35 +70,33 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
             <Menu.Item>
               <Dropdown text="Messenger Options" icon="caret down" pointing>
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={ toggleMessegnerOnlineOffline }>
-                    { messengerOnline ? "Disconnect" : "Connect" }
+                  <Dropdown.Item onClick={ toggleMessegnerOnlineOffline } className={ styles.dropdownItem }>
+                    { messengerOnline ? "Disconnect" : "Connect" }<i className={`fas fa-globe ${styles.dropdownIcon} ${messengerOnline ? styles.globeDisconnect: styles.globeConnect }`}></i>
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item onClick={ toggleArchiveAdminConversation }>
-                    Archive Selected
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={ toggleDeleteConversation }>
-                    Delete Selected
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={ toggleArchiveAdminConversation } className={ styles.dropdownItem }>Archive Selected<i className={`fas fa-archive ${styles.dropdownIcon}`}></i></Dropdown.Item>
+                  <Dropdown.Item onClick={ toggleDeleteConversation } className={ styles.dropdownItem }>Delete Selected <i className={`fas fa-trash ${styles.dropdownIcon} ${styles.dropdownTrashIcon}`}></i></Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item onClick={ toggleDefaultMesagesModal }>
-                    Configure defaults
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={ toggleDefaultMesagesModal } className={ styles.dropdownItem }>Configure defaults<i className={`fas fa-cogs ${styles.dropdownIcon}`}></i></Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item>
-                    Archive All
-                  </Dropdown.Item>
+                  {
+                    viewingArchived 
+                    ?
+                    <Dropdown.Item className={ styles.dropdownItem }>Unarchive All<i className={`fas fa-trash-restore ${styles.dropdownIcon}`}></i></Dropdown.Item>
+                    :
+                    <Dropdown.Item className={ styles.dropdownItem }>Archive All<i className={`fas fa-folder ${styles.dropdownIcon}`}></i></Dropdown.Item>
+                  }          
                   <Dropdown.Divider />
-                  <Dropdown.Item onClick={ toggleArchivedAdminConversations }>
-                    { viewingArchived ? "View Active" : "View Archived" }
-                  </Dropdown.Item>
+                  {
+                    viewingArchived
+                    ?
+                    <Dropdown.Item onClick={ toggleArchivedAdminConversations } className={ styles.dropdownItem }>View Active<i className={`fas fa-inbox ${styles.dropdownIcon}`}></i></Dropdown.Item>
+                    :
+                    <Dropdown.Item onClick={ toggleArchivedAdminConversations } className={ styles.dropdownItem }>View Archived<i className={`fas fa-inbox ${styles.dropdownIcon}`}></i></Dropdown.Item>
+                  }
                   <Dropdown.Divider />
-                  <Dropdown.Item onClick={ openUsersModal }>
-                    View All Users
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={ openMessageAllModal }>
-                    Message All Users
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={ openUsersModal } className={ styles.dropdownItem }>View All Users<i className={`fas fa-users ${styles.dropdownIcon}`}></i></Dropdown.Item>
+                  <Dropdown.Item onClick={ openMessageAllModal } className={ styles.dropdownItem }>Message All Users<i className={`fas fa-comment-dots ${styles.dropdownIcon}`}></i></Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Menu.Item>
