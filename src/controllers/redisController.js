@@ -61,6 +61,7 @@ const RedisController = ((redisOpts) => {
   let redisInstance;
   const clientsSetKey = `CONNECTED_CLIENTS_SET`;
   const clientsHashMapKey = `CLIENT_DATA_HASH`;
+  const CONVERSATION_DETAILS_HASH_MAP_KEY = `CONVERSATION_HASH`;
   const visibleAdminsSetKey = `VISIBLE_ADMINS_SET`;
 
   (() => {
@@ -190,6 +191,32 @@ const RedisController = ((redisOpts) => {
     });
   };
   /**
+   * @description Sets new conversation data if needed
+   * @param {NewMessage} messageData 
+   * @returns {Promise}
+   */
+  const setConversationData = (conversationData) => {
+    const { conversationId, receiverSocketId, conversationName = "Anonymous", archived, createdAt } = conversationData;
+    const hashkey = `${CONVERSATION_DETAILS_HASH_MAP_KEY}_${conversationId}`;
+
+    return new Promise((resolve, reject) => {
+      redisInstance.EXISTS(hashkey, (err, res) => {
+        if (err) return reject(err);
+        if (res === 0) {
+          // create a new conversation info hash //
+          const hashData = [ "conversationId", conversationId, "receiverSocketId", receiverSocketId, "conversationName", conversationName, "archived", archived, "createdAt", createdAt ];
+          redisInstance.HMSET(hashkey, ...hashData, (err, res) => {
+            if(err) return reject(err);
+            return resolve(res);
+          })
+        } else {
+          return resolve("OK");
+        }
+      });
+    });
+  };
+
+  /**
    * @param {NewMessage} messageData - message data coming from client socketIO connection
    * @returns {Promise<string>}
    */
@@ -230,7 +257,25 @@ const RedisController = ((redisOpts) => {
     });
   };
 
-  return { setClientCredentials, removeClientCredentials, setAdminCredentials, setNewMessage, setNewVisibleAdmin, removeVisibleAdmin, getVisibleAdmins, getConnectedClients, removeConversationData };
+  /**
+   * @param {string} keyBeginning - the beginning strikg of 'key' to match 
+   * @returns {Promise<Array<string>>}
+   */
+  const getAllConversations = (keyBeginning) => {
+    const keyPattern = keyBeginning.toUpperCase() + "_*";
+    return new Promise((resolve, reject) => {
+      redisInstance.KEYS(keyPattern, (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      });
+    });
+  }
+  return { 
+    setClientCredentials, removeClientCredentials, setAdminCredentials, 
+    setConversationData, setNewMessage, 
+    setNewVisibleAdmin, removeVisibleAdmin, getVisibleAdmins, 
+    getConnectedClients, removeConversationData, getAllConversations 
+  };
 
 })();
 

@@ -72,7 +72,9 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
         status: action.payload.status,
         responseMsg: action.payload.responseMsg,
         loading: action.payload.loading,
-        loadedAdminConversations: action.payload.adminConversations,
+        viewingArchived: action.payload.viewingArchived,
+        activeConversation: action.payload.updatedActiveConversation,
+        loadedAdminConversations: action.payload.updatedLoadedAdminConversations,
         error: null
       };
     }
@@ -99,15 +101,6 @@ const adminConverstionsReducer = (state: AdminConversationState = initialState, 
     case "ContinueAdminConversation": {
       return {
         ...state,
-        loadedAdminConversations: action.payload.updatedLoadedAdminConversations,
-        error: null
-      };
-    }
-    case "ToggleArchivedAdminConversations": {
-      return {
-        ...state,
-        viewingArchived: action.payload.viewingArchived,
-        activeConversation: action.payload.updatedActiveConversation,
         loadedAdminConversations: action.payload.updatedLoadedAdminConversations,
         error: null
       };

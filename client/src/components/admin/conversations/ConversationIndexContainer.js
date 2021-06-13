@@ -31,6 +31,7 @@ import { socket } from "./../../../App";
 import { objectValuesEmpty } from "../../helpers/displayHelpers";
 import { setClientSocketIOEventListeners, removeClientSocketIOEventListeners } from "../_helpers/clientSocketIOHelpers";
 import { generateMockConversations } from "../../helpers/mockData";
+import { generateEmptyAdminConversationModel } from "../../../redux/reducers/_helpers/emptyDataGenerators";
 
 
 type WrapperProps = {|
@@ -77,8 +78,8 @@ const ConversationIndexContainer = ({
     if (mounted) {
       setClientSocketIOEventListeners(socket, _dispatch);
       //_handleFetchAdminConversations();
-      const mockConversations = generateMockConversations(12);
-      _dispatch(setAdminConversations({ status: 200, responseMsg: "ok", adminConversations: mockConversations }));
+      const mockConversations = generateMockConversations(5);
+      _dispatch(setAdminConversations({ status: 200, loading: false, viewingArchived: false, responseMsg: "ok", updatedActiveConversation: generateEmptyAdminConversationModel(), updatedLoadedAdminConversations: mockConversations }));
     }
     return () => { 
       mounted = false;

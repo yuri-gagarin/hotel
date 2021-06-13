@@ -59,9 +59,6 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
     handleToggleDeleteAdminConversation(conversationId);
   };
 
-
-  console.log(63);
-  console.log(conversationActive)
   return (
     <React.Fragment>
       <Grid.Column largeScreen={5} style={{ padding: 0, height: "100%" }}>

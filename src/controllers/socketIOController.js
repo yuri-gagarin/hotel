@@ -129,16 +129,19 @@ export default function (socketIOInstance) {
     });
     // end client messaging //
 
-    socket.on("newAdminMessageSent", (data) => {
-      const { receiverSocketId } = data;
+    socket.on("newAdminMessageSent", ({ messageData, conversationData }) => {
+      const { receiverSocketId } = conversationData;
       if (receiverSocketId) {
-        return RedisController.setNewMessage(data)
-          .then(() => {
-            socketIOInstance.to(receiverSocketId).emit("receiveAdminReply", data);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        return Promise.all([
+          RedisController.setConversationData(conversationData),
+          RedisController.setNewMessage(messageData)
+        ])
+        .then(() => {
+          socketIOInstance.to(receiverSocketId).emit("receiveAdminReply", messageData);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       }
     });
 

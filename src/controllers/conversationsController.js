@@ -1,5 +1,7 @@
 import Conversation from "../models/Conversation";
 import Message from "../models/Message";
+// Redis controller for Redis queries //
+import RedisController from "./redisController";
 
 export default {
   /*
@@ -8,16 +10,32 @@ export default {
   },
   */
   getAllConversations: (req, res) => {
-    return Conversation.find({})
-      .then((adminConversations) => {
-        return res.json({ responseMsg: "success", adminConversations });
-      })
-      .catch((error) => {
-        return res.status(500).json({
-          messge: "An error occured",
-          error: error
+    console.log(req.query);
+    const { viewActive, viewArchived } = req.query;
+    if (viewArchived && viewArchived === "true") { 
+      return Conversation.find({})
+        .then((adminConversations) => {
+          return res.json({ responseMsg: "success", adminConversations });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            messge: "An error occured",
+            error: error
+          });
         });
-      });
+    } else if (viewActive && viewActive === "true") {
+      RedisController.getAllConversations("CONVERSATION")
+        .then((res) => {
+          console.log(29);
+          console.log(res);
+          return res.status(200).json({ responseMsg: "Active conversations", adminConversations: [] });
+        })
+        .catch((error) => {
+          return res.status(500).json({ messge: "An error occured", error: error });
+        })
+    } else {
+      return res.status(400).json({ responseMsg: "Input Error", error: new Error("Could not resolve user input") });
+    }
   },  
   openConversation: (req, res) => {
     // user should open a conversation with new messages //
