@@ -1,14 +1,7 @@
 import conversationsController from "../controllers/conversationsController";
-import { isLoggedIn } from "./helpers/routeHelpers";
+//import { isLoggedIn } from "./helpers/routeHelpers";
 
 export default function(router) {
-  // @route DELETE /api/conversations/:convId //
-  // @desc Deletes a Conversation and related Message models //
-  // @access PRIVATE //
-  router
-    .route("/api/conversations/:convId")
-    .delete(isLoggedIn, conversationsController.deleteConversation);
-  
   // @route GET /api/conversations //
   // @desc Gets all the converstions in database //
   // @access PRIVATE //
@@ -29,4 +22,11 @@ export default function(router) {
   router 
     .route("/api/conversations/archive")
     .post(conversationsController.archiveConversation);
+
+  // @route DELETE /api/conversations/:conversationId //
+  // @desc Deletes a Conversation and related Message models //
+  // @access PRIVATE //
+  router
+  .route("/api/conversations/:conversationId")
+  .delete(conversationsController.deleteConversation);
 }

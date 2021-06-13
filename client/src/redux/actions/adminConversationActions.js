@@ -405,35 +405,27 @@ export const handleDeleteAdminConversation = (dispatch: Dispatch<AdminConversati
   const { activeConversation, loadedAdminConversations, numberOfConversations } = currentAdminConversationState;
   const axiosOpts = {
     method: "DELETE",
-    url: "/api/conversations/:conversationId"
+    url: `/api/conversations/${conversationIdToDelete}`
   };
   // TODO //
   // API call later to delete possible archived convo //
-  /*
+  
   return axios(axiosOpts) 
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedAdminConversation }: { responseMsg: string, deletedAdminConversation: AdminConversationData } = data;
-      const updatedAdminConversations = loadedAdminConversations.filter((convData) => convData.conversationId !== deletedAdminConversation.conversationId);
-      const updatedActiveConversation = deletedAdminConversation.conversationId === activeConversation.conversationId ? generateEmptyAdminConversationModel() : { ...activeConversation };
+      const { responseMsg  }: { responseMsg: string  } = data;
+      const updatedAdminConversations = loadedAdminConversations.filter((convData) => convData.conversationId !== conversationIdToDelete);
+      const updatedActiveConversation = generateEmptyAdminConversationModel();
       dispatch(deleteAdminConversation({ status, responseMsg, updatedActiveConversation, updatedAdminConversations }));
+      // shoud dispatch delete conversation to redis servers //
+      // socket.emit("adminDeletedConversation", conversationIdToDelete);
       return Promise.resolve(true);
     })
     .catch((err) => {
       dispatch(setAdminConversationError(err));
       return Promise.resolve(false);
     });
-  */
-  const udpdatedLoadedConversations: Array<AdminConversationData> = currentAdminConversationState.loadedAdminConversations.filter((convData) => convData.conversationId !== conversationIdToDelete);
-  dispatch(deleteAdminConversation({ 
-    status: 200, 
-    responseMsg: "Ok", 
-    updatedActiveConversation: generateEmptyAdminConversationModel(),
-    updatedAdminConversations: udpdatedLoadedConversations
-  }));
-  // shoud dispatch delete conversation to redis servers //
-  socket.emit("adminDeletedConversation", conversationIdToDelete);
-  return Promise.resolve(true);
+
 };
 
 

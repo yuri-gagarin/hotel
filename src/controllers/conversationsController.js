@@ -97,18 +97,11 @@ export default {
   
   deleteConversation: (req, res) => {
     // validate user credentials first //
-    const conversationId = req.params.convId;
-    let customError, statusCode;
-    return Conversation.findOneAndDelete({ _id: conversationId})
-      .then((conversation) => {
-        if (conversation) {
-          return Message.deleteMany({ conversationId: conversation._id });
-        } else {
-          customError = new Error("Conversation can't be found or is deleted...");
-          statusCode = 400;
-          return Promise.reject(customError);
-        }
-      })
+    const { conversationId } = req.params;
+    let statusCode;
+    console.log(102)
+
+    return Conversation.findOneAndDelete({ conversationId: conversationId }).exec()
       .then(() => {
         return res.status(200).json({
           responseMsg: "Conversation deleted",
