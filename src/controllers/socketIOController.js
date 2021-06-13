@@ -145,6 +145,24 @@ export default function (socketIOInstance) {
       }
     });
 
+    socket.on("createNewAdminConversationData", (conversationData) => {
+      return RedisController.setConversationData(conversationData)
+        .then(() => {
+          return RedisController.getVisibleAdmins();
+        })
+        .then(({ numberOfVisibleAdmins, visibleAdminSocketIds }) => {
+          if (numberOfVisibleAdmins > 0 && visibleAdminSocketIds.length > 0) {
+            for (const adminSocketId of visibleAdminSocketIds) {
+              socketIOInstance.to(adminSocketId).emit("newlyCreatedAdminConversationData", conversationData);
+            }
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          socketIOInstance.to(socket.id).emit("generalSocketIOError", error);
+        });
+    });
+
     socket.on("conversationArchived", (data) => {
       const { conversationId, receiverSocketId } = data;
       // TODO //

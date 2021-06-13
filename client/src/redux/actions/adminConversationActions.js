@@ -280,6 +280,8 @@ export const handleNewClientMessage = (dispatch: Dispatch<AdminConversationActio
     };
     updatedLoadedConversations = [ newConversation, ...adminConversationState.loadedAdminConversations ];
     updatedActiveConversation = { ...adminConversationState.activeConversation };
+    // emit a new conversation created  //
+    socket.emit("createNewAdminConversationData", newConversation);
   }
   dispatch(newClientMessage({ 
     status: 200, 
