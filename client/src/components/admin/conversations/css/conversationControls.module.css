@@ -26,18 +26,24 @@
 }
 .conversationOptionsMenu {
   align-items: center;
-  height: 100%;
   width: 100%;
+  height: 40px;
 }
 .conversationControlsLowerWrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
   border: 1px solid rgba(34,36,38,.15);
   border-radius: 5px;
-  padding: 0.5em 0;
+  /*
   -webkit-box-shadow: 1px 1px 1px 1px #B7B7B7; 
   box-shadow: 1px 1px 1px 1px #B7B7B7;
+  */
+}
+.conversationControlsLowerWrapper > div {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .conversationDetailsWrapper {
   display: flex;
@@ -46,12 +52,13 @@
   height: 100%;
   overflow: hidden;
   border: 1px solid rgba(34,36,38,.15);
+  border-radius: 5px 5px 0 0;
 }
 
 .conversationDetailsUpper {
   display: flex;
   flex-direction: row;
-  height: 50%;
+  height: 40px;
   z-index: 2;
   background-color: white;
 }
@@ -79,53 +86,58 @@
 
 .conversationDetailsLower {
   display: flex;
-  height: 50%;
-  border-top: 1px solid grey;
-  transform: translateY(-100%);
+  transform: translateY(0);
   z-index: 1;
 }
 .conversationDetailsLowerActive {
   transform: translateY(0%);
   transition: all 100ms linear;
 }
+
 .activeConversationControls {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   flex: 1;
 }
-.conversationDetail {
+
+.conversationControlsDiv {
+  height: 40px;
   display: flex;
   align-items: center;
 }
-.activeConversationName {
-  padding: 0 1em;
-  background-color: #66cc66;
-  font-weight: bold;
-  color: white;
-}
-.activeConversationName > span:nth-child(1) {
-  font-style: italic;
-  font-weight: 400;
-}
-.activeConversationName > span:nth-child(2) {
-  margin-left: 5px;
-  font-weight: bold;
-}
 .activeConversationArchiveControls {
-  display: flex;
   justify-content: flex-end;
   flex: 1 1 auto;
 }
+
 .activeConversationArchiveControls > span {
-  margin: 0 auto;
+  display: flex;
+  align-items: center;
   color: #2d862d;
-  font-size: 1.5em;
+  font-size: 1em;
+  margin-right: 0 auto;
+  padding: 0 0.5em;
+}
+.conversationActiveBlinker {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+.active {
+  background-color: green;
+}
+.inactive {
+  background-color: red;
 }
 /* control buttons */
 .activeConversationArchiveControls > button, .activeConversationCloseControls > button {
-  height: 100%;
+  height: 90%;
   border: none;
   border-radius: 5px;
   padding: 0 1em;
+  margin-right: 1px;
   color: white;
   font-weight: bold;
 }

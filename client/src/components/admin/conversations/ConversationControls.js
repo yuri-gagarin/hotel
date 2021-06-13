@@ -7,6 +7,18 @@ import styles from "./css/conversationControls.module.css";
 // helpers //
 import {  objectValuesEmpty } from "../../helpers/displayHelpers";
 
+const conversationClientActive = (adminConversationState: AdminConversationState): boolean => {
+  const [ clientOnline, setClientOnline ] = React.useState<boolean>(false);
+  const { activeConversation, connectedOnlineClients } = adminConversationState;
+  React.useEffect(() => {
+    const { receiverSocketId } = activeConversation;
+    const clientOnline: boolean = connectedOnlineClients.map((data) => data.socketId).includes(receiverSocketId);
+    // 
+    setClientOnline(clientOnline);
+  }, [ activeConversation, connectedOnlineClients ]);
+  return clientOnline;
+};  
+
 type Props = {
   adminConversationState: AdminConversationState;
   handleToggleAdminMessengerOnlineStatus: (data: MessengerOnlineToggleArgs) => void;
@@ -22,6 +34,7 @@ type Props = {
 export const ConversationControls = ({ adminConversationState, handleToggleAdminMessengerOnlineStatus, handleToggleDeleteConversation, handleArchiveConversation, handleToggleArchivedAdminConversations, closeAdminConversation, openUsersModal, openMessageAllModal, handleToggleDeleteAdminConversation, toggleDefaultMesagesModal }: Props): React.Node => {
   const { messengerOnline, viewingArchived, connectedOnlineClients, activeConversation, loadedAdminConversations } = adminConversationState;
   const { archived, conversationName, conversationId } = activeConversation;
+  const conversationActive = conversationClientActive(adminConversationState);
 
   const toggleMessegnerOnlineOffline = () => {
     handleToggleAdminMessengerOnlineStatus({ messengerOnline: !messengerOnline });
@@ -46,6 +59,9 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
     handleToggleDeleteAdminConversation(conversationId);
   };
 
+
+  console.log(63);
+  console.log(conversationActive)
   return (
     <React.Fragment>
       <Grid.Column largeScreen={5} style={{ padding: 0, height: "100%" }}>
@@ -123,16 +139,15 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
           </div>
           <div className={ `${styles.conversationDetailsLower} ${!objectValuesEmpty(activeConversation) ? styles.conversationDetailsLowerActive : ""}` }>
             <div className={ `${styles.activeConversationControls}` }>
-              <div className={ `${styles.conversationDetail} ${styles.activeConversationName}` }>
-                <span>Conversation name:</span><span>{ conversationName ? conversationName : "Anonymous" }</span>
+              <div className={ `${styles.conversationControlsDiv} ${styles.activeConversationArchiveControls}` }>
+                <span>{ conversationActive ? "Conversation is Active" : "Conversation is Inactive"  }
+                  <div className={ `${styles.conversationActiveBlinker} ${conversationActive ? styles.active : styles.inactive}` }></div>
+                </span>
+                <button onClick={ toggleArchiveAdminConversation }>Archive <i className="fas fa-archive"></i></button>
+                <button onClick={ toggleDeleteAdminConversation }>Delete <i className="fas fa-trash-alt"></i></button>
               </div>
-              <div className={ `${styles.conversationDetail} ${styles.activeConversationArchiveControls}` }>
-                <span>{ archived ? "Conversation is Archived" : "Conversation is Active" }</span>
-                <button onClick={ toggleArchiveAdminConversation }>Archive</button>
-                <button onClick={ toggleDeleteAdminConversation }>Delete</button>
-              </div>
-              <div className={ `${styles.conversationDetail} ${styles.activeConversationCloseControls}` }>
-                <button onClick={ closeAdminConversation }>Close</button>
+              <div className={ `${styles.conversationControlsDiv} ${styles.activeConversationCloseControls}` }>
+                <button onClick={ closeAdminConversation }>Close <i className="fas fa-times"></i></button>
               </div>
             </div>
           </div>
