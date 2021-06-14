@@ -44,7 +44,7 @@ type DefaultsState = {
 }
 
 export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggleDefaultMessagesModal, handleFetchDefaultMessages, handleCreateDefaultMessage, handleUpdateDefaultMessage, triggerMessageModelDelete }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: true, messageDescription: "", messageContent: "", messageDescriptionError: "", messageContentError: "" });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: false, messageDescription: "", messageContent: "", messageDescriptionError: "", messageContentError: "" });
   const [ dropdownState, setDropdownState ] = React.useState<Array<DropdownOptions>>([]);
   //
   const { conversationMessageDefaults } = adminConversationState;
@@ -142,7 +142,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
   }, [ conversationMessageDefaults ]);
 
   return (
-    <Modal className={ styles.modal } open={ modalOpen } >
+    <Modal className={ styles.modal } open={ true } >
       <Modal.Header className={ styles.modalHeader }>
         Messenger default responses settings:
         <Button.Group className={ styles.settingsButtons }>
@@ -251,6 +251,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               conversationMessageDefaults.map((messageData) => {
                 return (
                   <DefaultMessageCard 
+                    key={ messageData._id }
                     messageData={ messageData }
                     handleSetDefaultMessage={ handleSetDefaultMessage }
                     triggerMessageModelDelete={ triggerMessageModelDelete }

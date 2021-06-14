@@ -1,0 +1,60 @@
+.messageCardContentWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.messageContentDiv {
+  padding: 0.25em;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.defaultMessageChangeDiv {
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+  width: 100%;
+  border: 3px solid rgb(48, 201, 68);
+  border-radius: 5px;
+}
+.defaultMessageChangeDiv > textarea {
+  height: 100%;
+  width: 100%;
+  padding: 0.25em;
+  border: none;
+  border-radius: 5px;
+  resize: none;
+  outline: none;
+}
+.defaultMessageUpdateBtn {
+  height: 30px;
+  width: 75px;
+  margin-left: 3px;
+  margin-bottom: 3px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(48, 201, 68);
+  color: white;
+  font-weight: bold;
+}
+.defaultMessageUpdateBtn:hover {
+  background-color: rgb(51, 233, 75);
+}
+
+.messageCardContent > span {
+  font-style: italic;
+  color: grey;
+  font-size: 0.85em;
+}
+.messageCardContent > div {
+  margin-top: 5px;
+}
+
+.messageCardDate > span:nth-child(1) {
+  font-style: italic;
+  color: grey;
+  font-size: 0.85em;
+}
+.messageCardDate > span:nth-child(2) {
+  margin-left: 5px;
+}
