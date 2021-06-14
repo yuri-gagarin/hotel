@@ -24,12 +24,36 @@ export default {
           });
         });
     } else if (viewActive && viewActive === "true") {
-      RedisController.getAllConversations("CONVERSATION")
-        .then((res) => {
-          console.log(29);
-          console.log(res);
-          return res.status(200).json({ responseMsg: "Active conversations", adminConversations: [] });
+      let conversations; 
+      RedisController.getKeys("CONVERSATION_HASH")
+        .then((data) => {
+          return RedisController.getConversationHashes(data);
         })
+        .then((convDataArr) => {
+          conversations = convDataArr;
+          if (convDataArr.length > 0) {
+            const promises = [];
+            for (const convData of convDataArr) {
+              promises.push(RedisController.getConversationMessages(convData.conversationId));
+            }
+            return Promise.all(promises);
+          } else {
+            return Promise.resolve([]);
+          }
+        })
+        .then((data) => {
+          //console.log(conversations);
+          //console.log(data);
+          const convos  = conversations.map((conversation) => {
+            const messages = data
+              .filter((msgData) => msgData.conversationId === conversation.conversationId)[0].messages
+              .map((messageString) => JSON.parse(messageString));
+            console.log(messages);
+            return { ...conversation, newMessages: [], messages: messages };
+          });
+          return res.status(200).json({ responseMsg: "Ok", adminConversations: convos });
+        })
+  
         .catch((error) => {
           return res.status(500).json({ messge: "An error occured", error: error });
         })

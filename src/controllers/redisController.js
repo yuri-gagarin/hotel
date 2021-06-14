@@ -261,20 +261,53 @@ const RedisController = ((redisOpts) => {
    * @param {string} keyBeginning - the beginning strikg of 'key' to match 
    * @returns {Promise<Array<string>>}
    */
-  const getAllConversations = (keyBeginning) => {
+  const getKeys = (keyBeginning) => {
     const keyPattern = keyBeginning.toUpperCase() + "_*";
     return new Promise((resolve, reject) => {
-      redisInstance.KEYS(keyPattern, (err, res) => {
+      redisInstance.KEYS(keyPattern, (err, vals) => {
         if (err) return reject(err);
-        return resolve(res);
+        return resolve(vals);
+      });
+       
+    });
+  };
+
+  /**
+   * 
+   * @param {Array<string>} keys Array of Redis HASHMAP keys to access
+   * @returns {Array<Promise<Object>>}
+   */
+  const getConversationHashes = (keys) => {
+    if (Array.isArray(keys) && keys.length > 0) {
+      const dataPromises = [];
+      for (const key of keys) {
+        dataPromises.push(new Promise((resolve, reject) => {
+          redisInstance.HGETALL(key,(error, data) => {
+            if (error) return reject(error);
+            return resolve(data);
+          })
+        }))
+      }
+      return Promise.all(dataPromises);
+    } else {
+      return Promise.resolve([]);
+    }
+  };
+
+  const getConversationMessages = (conversationId) => {
+    return new Promise((resolve, reject) => {
+      redisInstance.LRANGE(conversationId, 0, -1, (err, data) => {
+        if (err) return reject(err);
+        return resolve({ conversationId, messages: data });
       });
     });
-  }
+  };
+
   return { 
     setClientCredentials, removeClientCredentials, setAdminCredentials, 
     setConversationData, setNewMessage, 
     setNewVisibleAdmin, removeVisibleAdmin, getVisibleAdmins, 
-    getConnectedClients, removeConversationData, getAllConversations 
+    getConnectedClients, removeConversationData, getKeys, getConversationHashes, getConversationMessages
   };
 
 })();

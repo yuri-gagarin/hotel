@@ -78,8 +78,9 @@ const ConversationIndexContainer = ({
     if (mounted) {
       setClientSocketIOEventListeners(socket, _dispatch);
       //_handleFetchAdminConversations();
-      const mockConversations = generateMockConversations(5);
-      _dispatch(setAdminConversations({ status: 200, loading: false, viewingArchived: false, responseMsg: "ok", updatedActiveConversation: generateEmptyAdminConversationModel(), updatedLoadedAdminConversations: mockConversations }));
+      //const mockConversations = generateMockConversations(5);
+      //_dispatch(setAdminConversations({ status: 200, loading: false, viewingArchived: false, responseMsg: "ok", updatedActiveConversation: generateEmptyAdminConversationModel(), updatedLoadedAdminConversations: mockConversations }));
+      _handleToggleArchivedAdminConversations({ viewActive: true });
     }
     return () => { 
       mounted = false;
