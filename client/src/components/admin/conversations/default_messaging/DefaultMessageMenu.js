@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Dropdown, Icon, Menu } from "semantic-ui-react";
 // types //
-import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
+import type { MessageData } from "../../../../redux/reducers/conversations/flowTypes";
 // css //
 import styles from "./css/defaultMessageMenu.module.css";
 

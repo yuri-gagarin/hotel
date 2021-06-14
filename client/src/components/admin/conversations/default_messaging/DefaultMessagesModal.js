@@ -3,13 +3,14 @@ import * as React from "react";
 import { Button, Card, Dropdown, Form, Icon, Input, Modal, TextArea } from "semantic-ui-react";
 import ObjectID from "bson-objectid";
 // additional components //
+import { DefaultMessageCard } from "./DefaultMessageCard";
 import { DefaultMessageMenu } from "./DefaultMessageMenu";
-import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
+import { GeneralNoModelsSegment } from "../../shared/GeneralNoModelsSegment";
 // types //
-import type { AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
-import type { MessageData } from "../../../redux/reducers/conversations/flowTypes";
+import type { AdminConversationState } from "../../../../redux/reducers/admin_conversations/flowTypes";
+import type { MessageData } from "../../../../redux/reducers/conversations/flowTypes";
 // helpers //
-import { formatDate } from "../../helpers/dateHelpers";
+import { formatDate } from "../../../helpers/dateHelpers";
 
 // styles and css //
 import styles from "./css/defaultMessagesModal.module.css";
@@ -249,23 +250,11 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
             { 
               conversationMessageDefaults.map((messageData) => {
                 return (
-                  <Card fluid key={ messageData._id } color="green">
-                    <Card.Content>
-                      <DefaultMessageMenu 
-                        messageData={ messageData }
-                        handleSetDefaultMessage={ handleSetDefaultMessage }
-                        triggerMessageModelDelete={ triggerMessageModelDelete }
-                      />
-                    </Card.Content>
-                    <Card.Content className={ styles.messageCardContent }>
-                      <span>Message content: </span>
-                      <div>{messageData.messageContent}</div>
-                    </Card.Content>
-                    <Card.Content className={ styles.messageCardDate }>
-                      <span>Created at:</span>
-                      <span>{formatDate(messageData.sentAt, { military: false })}</span>
-                    </Card.Content>
-                  </Card>
+                  <DefaultMessageCard 
+                    messageData={ messageData }
+                    handleSetDefaultMessage={ handleSetDefaultMessage }
+                    triggerMessageModelDelete={ triggerMessageModelDelete }
+                  />
                 )
               })
             }

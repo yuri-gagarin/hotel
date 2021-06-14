@@ -6,7 +6,7 @@ import { ConnectedClientsModal } from "./ConnectedClientsModal";
 import ConversationComponent from "./ConversationComponent";
 import { ConversationControls } from "./ConversationControls";
 import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
-import { DefaultMessagesModal } from "./DefaultMessagesModal";
+import { DefaultMessagesModal } from "./default_messaging/DefaultMessagesModal";
 import MessagesView from "./MessagesView";
 import { MessageAllModal } from "./MessageAllModal";
 import { MessagesSplashScreen } from "./MessageSplashScreen";
