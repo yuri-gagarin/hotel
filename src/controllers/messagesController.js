@@ -332,6 +332,8 @@ export default {
   },
   deleteMessage: (req, res) => {
     const { messageId } = req.params;
+    console.log(335)
+    console.log(req.params)
     if (!messageId ) {
       return res.status(400).json({
         responseMsg: "Invalid Data",

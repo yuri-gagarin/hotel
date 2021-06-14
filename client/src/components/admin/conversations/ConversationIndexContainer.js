@@ -69,7 +69,7 @@ const ConversationIndexContainer = ({
     // redux state props //
   const [ onlineUsersModalOpen, setOnlineUsersModalOpen ] = React.useState<boolean>(false);
   const [ messageAllModalOpen, setMessageAllModalOpen ] = React.useState<boolean>(false);
-  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<{ open: boolean, conversationId: string }>({ open: false, conversationId: "" });
+  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<{ open: boolean, modelToDelete: "message" | "conversation" | "", modelId: string }>({ open: false, modelToDelete: "", modelId: "" });
   const [ defaultMessgesModalState, setDefaultMessagesModalState ] = React.useState<{ open: boolean }>({ open: false });
 
   React.useEffect(() => {
@@ -140,34 +140,49 @@ const ConversationIndexContainer = ({
   // add a confirmation modal //
   const toggleDeleteConversation = (conversationId: string): void => {
     if (!conversationId) return;
-    setConfirmDeleteModalState({ open: true, conversationId: conversationId });
+    setConfirmDeleteModalState({ open: true, modelToDelete: "conversation", modelId: conversationId });
   };
   const cancelConversationDelete = (): void => {
-    setConfirmDeleteModalState({ open: false, conversationId: "" });
+    setConfirmDeleteModalState({ open: false, modelToDelete: "", modelId: "" });
   };
 
   const toggleDeleteDefaultMessageModel = (messageId: string): void => {
     if (!messageId) return;
-    setConfirmDeleteModalState({ open: true, conversationId: messageId });
+    setConfirmDeleteModalState({ open: true, modelToDelete: "message", modelId: messageId  });
   }
-  const confirmConversationDelete = (): Promise<boolean> => {
-    if (!confirmDeleteModalState.open || !confirmDeleteModalState.conversationId) {
+  const confirmModelDelete = (): Promise<boolean> => {
+    const { open, modelToDelete, modelId } = confirmDeleteModalState;
+    if (!open || !modelToDelete || !modelId) {
       return Promise.resolve(false);
     } 
-    return _handleDeleteAdminConversation(confirmDeleteModalState.conversationId, adminConversationState)
-      .then((success) => {
-        if (success) {
-          setConfirmDeleteModalState({ open: false, conversationId: "" });
-          return Promise.resolve(true);
-        } else {
-          // handle an error //
+    if (modelToDelete === "conversation") {
+      return _handleDeleteAdminConversation(modelId, adminConversationState)
+        .then((success) => {
+          if (success) {
+            setConfirmDeleteModalState({ open: false, modelToDelete: "", modelId: "" });
+            return Promise.resolve(true);
+          } else {
+            // handle an error //
+            return Promise.resolve(false);
+          }
+        })
+        .catch((error) => {
+          _setAdminConversationError(error);
           return Promise.resolve(false);
-        }
-      })
-      .catch((error) => {
-        _setAdminConversationError(error);
-        return Promise.resolve(false);
-      });
+        });
+    } else if (modelToDelete === "message") {
+      return _handleDeleteDefaultMessage(modelId, adminConversationState)
+        .then((success) => {
+          setConfirmDeleteModalState({ open: false, modelToDelete: "", modelId: "" });
+          return Promise.resolve(true);
+        })
+        .catch((error) => {
+          _setAdminConversationError(error);
+          return Promise.resolve(false);
+        });
+    } else {
+      return Promise.resolve(false);
+    }
   };
   // default messages modal //
   const toggleDefaultMessagesModal = (): void => {
@@ -175,7 +190,7 @@ const ConversationIndexContainer = ({
   }
   return (
     <React.Fragment>
-      <ConfirmDeleteModal open={ confirmDeleteModalState.open } modelName="conversation" cancelAction={ cancelConversationDelete } confirmAction={ confirmConversationDelete } />
+      <ConfirmDeleteModal open={ confirmDeleteModalState.open } modelName="conversation" cancelAction={ cancelConversationDelete } confirmAction={ confirmModelDelete } />
       <ConnectedClientsModal 
         modalOpen={ onlineUsersModalOpen }
         toggleModal={ toggleModal }

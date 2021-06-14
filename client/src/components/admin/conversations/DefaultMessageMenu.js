@@ -22,6 +22,10 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, trigg
   const setDefaultResolvedMessage = (): void => {
     handleSetDefaultMessage({ ...messageData, messageType: "DefaultResolved" });
   };
+  // delete trigger //
+  const triggerDelete = () => {
+    triggerMessageModelDelete(messageData._id);
+  }
   return (
     <Menu className={ styles.defaultMessageMenu }>
       <Menu.Item>
@@ -32,7 +36,7 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, trigg
               <Icon color="blue" name="edit" />
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item className={ styles.menuItem } onClick={ triggerMessageModelDelete }>
+            <Dropdown.Item className={ styles.menuItem } onClick={ triggerDelete }>
               Delete
               <Icon color="red" name="trash" />
             </Dropdown.Item>

@@ -47,8 +47,8 @@ export default {
           const convos  = conversations.map((conversation) => {
             const messages = data
               .filter((msgData) => msgData.conversationId === conversation.conversationId)[0].messages
-              .map((messageString) => JSON.parse(messageString));
-            console.log(messages);
+              .map((messageString) => JSON.parse(messageString))
+              .sort((first, second) => first.createdAt > second.createdAt);
             return { ...conversation, newMessages: [], messages: messages };
           });
           return res.status(200).json({ responseMsg: "Ok", adminConversations: convos });
