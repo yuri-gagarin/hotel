@@ -99,8 +99,8 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
   };
 
   // messaging defaults value setter //
-  const handleSetDefaultMessage = (messageData: MessageData): void => {
-    handleUpdateDefaultMessage(messageData, adminConversationState);
+  const updateMessage = (messageData: MessageData): Promise<boolean> => {
+    return handleUpdateDefaultMessage(messageData, adminConversationState);
   };
 
   // message defaults value getters //
@@ -143,26 +143,30 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
 
   return (
     <Modal className={ styles.modal } open={ true } >
-      <Modal.Header className={ styles.modalHeader }>
-        Messenger default responses settings:
-        <Button.Group className={ styles.settingsButtons }>
-          <Button basic color="green" onClick={ setFormOpen }>
-            New
-            <Icon style={{ marginLeft: "5px" }} name="file" />
-          </Button>
-          <Button basic color="grey"  onClick={ toggleSettings }>
-            {localState.settingsOpen ? "View All Messages" : "View Set Defaults"}
-            <Icon style={{ marginLeft: "5px" }} name="settings" />
-          </Button>
-          <Button basic color="grey" onClick={ handleFetchDefaultMessages } >
-            Reload
-            <Icon style={{ marginLeft: "5px" }} name="refresh" />
-          </Button>
-          <Button basic color="red" onClick={ toggleDefaultMessagesModal }>
-            <Icon style={{ margin: "0 auto" }}name="close" color="red" />
-          </Button>
-        </Button.Group>
-      </Modal.Header>
+      <Modal.Content>
+        <div className={ styles.modalHeaderDiv }>
+          <div>Messenger default responses settings:</div>
+          <div>
+          <Button.Group className={ styles.settingsButtons }>
+            <Button basic color="green" onClick={ setFormOpen }>
+              New
+              <Icon style={{ marginLeft: "5px" }} name="file" />
+            </Button>
+            <Button basic color="grey"  onClick={ toggleSettings }>
+              {localState.settingsOpen ? "View All Messages" : "View Set Defaults"}
+              <Icon style={{ marginLeft: "5px" }} name="settings" />
+            </Button>
+            <Button basic color="grey" onClick={ handleFetchDefaultMessages } >
+              Reload
+              <Icon style={{ marginLeft: "5px" }} name="refresh" />
+            </Button>
+            <Button basic color="red" onClick={ toggleDefaultMessagesModal }>
+              <Icon style={{ margin: "0 auto" }}name="close" color="red" />
+            </Button>
+          </Button.Group>
+          </div>
+        </div>
+      </Modal.Content>
       <Modal.Content scrolling style={{ height: "calc(90vh - 60px)", maxHeight: "none" }}>
         {
           localState.formOpen ?
@@ -253,7 +257,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
                   <DefaultMessageCard 
                     key={ messageData._id }
                     messageData={ messageData }
-                    handleSetDefaultMessage={ handleSetDefaultMessage }
+                    updateMessage={ updateMessage }
                     triggerMessageModelDelete={ triggerMessageModelDelete }
                   />
                 )

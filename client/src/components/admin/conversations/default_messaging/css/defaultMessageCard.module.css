@@ -4,21 +4,22 @@
   flex-direction: column;
 }
 .messageContentDiv {
-  padding: 0.25em;
+  padding: 0.5em 1em;
   border: 1px solid grey;
   border-radius: 5px;
 }
 
 .defaultMessageChangeDiv {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   height: 250px;
   width: 100%;
   border: 3px solid rgb(48, 201, 68);
   border-radius: 5px;
 }
 .defaultMessageChangeDiv > textarea {
-  height: 100%;
+  height: calc(100% - 30px);
   width: 100%;
   padding: 0.25em;
   border: none;
@@ -26,16 +27,26 @@
   resize: none;
   outline: none;
 }
-.defaultMessageUpdateBtn {
+
+.messageTextAreaBtn {
   height: 30px;
   width: 75px;
   margin-left: 3px;
   margin-bottom: 3px;
   border: none;
   border-radius: 5px;
-  background-color: rgb(48, 201, 68);
   color: white;
   font-weight: bold;
+}
+.defaultMessageCancelBtn {
+  background-color: #ff9900;
+}
+.defaultMessageCancelBtn:hover {
+  background-color: #ffad33;
+}
+
+.defaultMessageUpdateBtn {
+  background-color: rgb(48, 201, 68);
 }
 .defaultMessageUpdateBtn:hover {
   background-color: rgb(51, 233, 75);

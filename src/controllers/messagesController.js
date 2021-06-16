@@ -276,43 +276,20 @@ export default {
     const { messageId } = req.params;
     const { messageData } = req.body;
 
-    if (!messageId || !messageData || !messageData.messageContent) {
+     if (!messageId || !messageData || !messageData.messageContent) {
       return res.status(400).json({
         responseMsg: "Invalid data",
         error: new Error("Invalid Data")
       });
     }
 
-    if (messageData.messageType) {
-      return Message.findOneAndUpdate(
-        { messageType: messageData.messageType },
-        { $set: { messageType: null }}
-      )
-      .then(() => {
-        return Message.findOneAndUpdate(
-          { _id: messageId },
-          { $set: { messageType: messageData.messageType } },
-          { new: true }
-        );
-      })
-      .then((updatedMessage) => {
-        if (updatedMessage) {
-          return res.status(200).json({
-            responseMsg: `Set new ${messageData.messageType}`,
-            updatedMessage: messageData
-          });
-        } else {
-          return res.status(404).json({
-            responseMsg: "Not Found Error",
-            erorr: new Error("Could not fing a Message model to update")
-          });
-        }
-      });
-    }
-
     return Message.findOneAndUpdate(
       { _id: messageId },
-      { $set: { messageContent: messageData.messageContent, sentAt: new Date(Date.now()) }},
+      { $set: { 
+        messageContent: messageData.messageContent, 
+        messageType: messageData.messageType ? messageData.messageType : null,
+        sentAt: new Date(Date.now()) 
+      }},
       { new: true }
     )
     .exec()

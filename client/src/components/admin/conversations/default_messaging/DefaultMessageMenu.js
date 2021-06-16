@@ -8,10 +8,11 @@ import styles from "./css/defaultMessageMenu.module.css";
 
 type Props = {
   messageData: MessageData;
-  handleSetDefaultMessage: (messageData: MessageData) => void;
+  handleSetDefaultMessage: (messageData: MessageData) => Promise<boolean>;
+  toggleMessageEdit: () => void;
   triggerMessageModelDelete: (messageId: string) => void;
 };
-export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, triggerMessageModelDelete }: Props): React.Node => {
+export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, toggleMessageEdit, triggerMessageModelDelete }: Props): React.Node => {
 
   const setDefaultGreetingMessage = (): void => {
     handleSetDefaultMessage({ ...messageData, messageType: "DefaultGreeting" });
@@ -31,7 +32,7 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, trigg
       <Menu.Item>
         <Dropdown pointing text="Edit" className={ styles.editDropdown }>
           <Dropdown.Menu>
-            <Dropdown.Item className={ styles.menuItem }>
+            <Dropdown.Item className={ styles.menuItem } onClick={ toggleMessageEdit }>
               Edit
               <Icon color="blue" name="edit" />
             </Dropdown.Item>

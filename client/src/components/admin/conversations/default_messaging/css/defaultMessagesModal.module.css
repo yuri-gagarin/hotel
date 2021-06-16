@@ -3,8 +3,14 @@
   transform: translateX(-50%);
   height: 90vh;
 }
-.modalHeader {
+.modalHeaderDiv {
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+}
+.modalHeaderDiv > div {
+  position: relative;
+  flex: 1;
 }
 .settingsButtons {
   position: absolute;

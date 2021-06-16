@@ -9,15 +9,17 @@ import type { MessageData } from "../../../../redux/reducers/conversations/flowT
 import styles from "./css/defaultMessageCard.module.css";
 // helpers //
 import { formatDate } from "../../../helpers/dateHelpers";
+import { setStringTranslation } from "../../../helpers/displayHelpers";
 
 type Props = {
   messageData: MessageData;
-  handleSetDefaultMessage: (messageData: MessageData) => void;
+  updateMessage: (messageData: MessageData) => Promise<boolean>;
   triggerMessageModelDelete: (messageId: string) => void;
 }
-export const DefaultMessageCard = ({ messageData, handleSetDefaultMessage, triggerMessageModelDelete }: Props): React.Node => {
+export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageModelDelete }: Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<{ inputToggled: boolean, inputValue: string }>({ inputToggled: false, inputValue: messageData.messageContent });
   const textAreaWrapperRef = React.useRef<HTMLDivElement | null>(null);
+  const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
   const handleClickOutside = (e): void => { 
     if (textAreaWrapperRef.current) {
@@ -39,6 +41,12 @@ export const DefaultMessageCard = ({ messageData, handleSetDefaultMessage, trigg
     // move cursor to the end of the text //
     e.target.selectionStart = e.target.value.length;
   };
+  const updateDefaultMessageContent = (): void => {
+    const updatedMessage: MessageData = { ...messageData, messageContent: localState.inputValue };
+    updateMessage(updatedMessage)
+      .then((success) => { if (success) setLocalState({ ...localState, inputToggled: false }); })
+      .catch((error) => console.log(error));
+  };
 
   React.useEffect(() => {
     if (textAreaWrapperRef.current) {
@@ -48,13 +56,20 @@ export const DefaultMessageCard = ({ messageData, handleSetDefaultMessage, trigg
       window.removeEventListener("mousedown", handleClickOutside) 
     };
   }, [ textAreaWrapperRef.current ]);
+
+  React.useEffect(() => {
+    if (localState.inputToggled && textAreaRef.current) {
+      textAreaRef.current.selectionStart = textAreaRef.current.value.length;
+    }
+  }, [ localState.inputToggled, textAreaRef.current ]);
  
   return (
     <Card fluid key={ messageData._id } color="green">
       <Card.Content>
         <DefaultMessageMenu 
           messageData={ messageData }
-          handleSetDefaultMessage={ handleSetDefaultMessage }
+          handleSetDefaultMessage={ updateMessage }
+          toggleMessageEdit={ toggleEditInput }
           triggerMessageModelDelete={ triggerMessageModelDelete }
         />
       </Card.Content>
@@ -65,11 +80,12 @@ export const DefaultMessageCard = ({ messageData, handleSetDefaultMessage, trigg
           localState.inputToggled 
           ?
           <div className={ styles.defaultMessageChangeDiv }> 
-            <textarea autoFocus onSelect={ handleSelect } value={ localState.inputValue } onChange={ handleDefaultMessageChange }></textarea>
-            <button className={ styles.defaultMessageUpdateBtn }>Update</button>
+            <textarea autoFocus value={ localState.inputValue } onChange={ handleDefaultMessageChange } ref={ textAreaRef }></textarea>
+            <button className={ `${styles.messageTextAreaBtn } ${styles.defaultMessageUpdateBtn}` } onClick={ updateDefaultMessageContent }>Update</button>
+            <button className={ `${styles.messageTextAreaBtn } ${styles.defaultMessageCancelBtn}` } onClick={ toggleEditInput }>Cancel</button>
           </div>
           :
-          <div className={ styles.messageContentDiv } onClick={ toggleEditInput }>{messageData.messageContent}</div>
+          <div className={ styles.messageContentDiv } onClick={ toggleEditInput }>{ setStringTranslation(messageData.messageContent, "en")}</div>
         }
         </div>
       </Card.Content>
