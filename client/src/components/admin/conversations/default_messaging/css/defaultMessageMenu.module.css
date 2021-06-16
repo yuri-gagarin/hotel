@@ -5,6 +5,10 @@
   display: flex !important;
   justify-content: space-between !important;
 }
+.menuItemFlag {
+  position: relative !important;
+  left: 20px !important;
+}
 
 .defaultMessageDescription > span:nth-child(1) {
   color: green;

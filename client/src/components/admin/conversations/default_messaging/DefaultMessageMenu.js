@@ -1,6 +1,6 @@
 // @flow //
 import * as React from "react";
-import { Dropdown, Icon, Menu } from "semantic-ui-react";
+import { Dropdown, Flag, Icon, Menu } from "semantic-ui-react";
 // types //
 import type { MessageData } from "../../../../redux/reducers/conversations/flowTypes";
 // css //
@@ -9,10 +9,11 @@ import styles from "./css/defaultMessageMenu.module.css";
 type Props = {
   messageData: MessageData;
   handleSetDefaultMessage: (messageData: MessageData) => Promise<boolean>;
+  handleSetDefaultMessageLanguage: (messageLangauge: ("en" | "uk" | "ru")) => void;
   toggleMessageEdit: () => void;
   triggerMessageModelDelete: (messageId: string) => void;
 };
-export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, toggleMessageEdit, triggerMessageModelDelete }: Props): React.Node => {
+export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, handleSetDefaultMessageLanguage, toggleMessageEdit, triggerMessageModelDelete }: Props): React.Node => {
 
   const setDefaultGreetingMessage = (): void => {
     handleSetDefaultMessage({ ...messageData, messageType: "DefaultGreeting" });
@@ -56,6 +57,21 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, toggl
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Menu.Item>
+      <Menu.Item>
+        <Dropdown pointing text="Language">
+          <Dropdown.Menu>
+            <Dropdown.Item className={ styles.menuItem } onClick={ () => handleSetDefaultMessageLanguage("en") }>
+              EN<Flag name="gb" className={ styles.menuItemFlag } />
+            </Dropdown.Item>
+            <Dropdown.Item className={ styles.menuItem } onClick={ () => handleSetDefaultMessageLanguage("uk") }>
+              UA<Flag name="ua" className={ styles.menuItemFlag } />
+            </Dropdown.Item>
+            <Dropdown.Item className={ styles.menuItem } onClick={ () => handleSetDefaultMessageLanguage("ru") }>
+              RU<Flag name="ru" className={ styles.menuItemFlag } />
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

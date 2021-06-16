@@ -17,7 +17,7 @@ type Props = {
   triggerMessageModelDelete: (messageId: string) => void;
 }
 export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageModelDelete }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<{ inputToggled: boolean, inputValue: string }>({ inputToggled: false, inputValue: messageData.messageContent });
+  const [ localState, setLocalState ] = React.useState<{ inputToggled: boolean, messageLanguage: ("en" | "uk" | "ru"), inputValue: string }>({ inputToggled: false, messageLanguage: "en", inputValue: messageData.messageContent });
   const textAreaWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
@@ -37,10 +37,11 @@ export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageM
   const toggleEditInput = (): void => {
     localState.inputToggled ? setLocalState({ ...localState, inputToggled: false }) : setLocalState({ ...localState, inputToggled: true });
   };
-  const handleSelect = (e: any): void => {
-    // move cursor to the end of the text //
-    e.target.selectionStart = e.target.value.length;
+
+  const handleSetDefaultMessageLanguage = (messageLanguage: ("en" | "uk" | "ru")): void => {
+    setLocalState({ ...localState, messageLanguage });
   };
+
   const updateDefaultMessageContent = (): void => {
     const updatedMessage: MessageData = { ...messageData, messageContent: localState.inputValue };
     updateMessage(updatedMessage)
@@ -69,6 +70,7 @@ export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageM
         <DefaultMessageMenu 
           messageData={ messageData }
           handleSetDefaultMessage={ updateMessage }
+          handleSetDefaultMessageLanguage={ handleSetDefaultMessageLanguage }
           toggleMessageEdit={ toggleEditInput }
           triggerMessageModelDelete={ triggerMessageModelDelete }
         />
@@ -85,7 +87,7 @@ export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageM
             <button className={ `${styles.messageTextAreaBtn } ${styles.defaultMessageCancelBtn}` } onClick={ toggleEditInput }>Cancel</button>
           </div>
           :
-          <div className={ styles.messageContentDiv } onClick={ toggleEditInput }>{ setStringTranslation(messageData.messageContent, "en")}</div>
+          <div className={ styles.messageContentDiv } onClick={ toggleEditInput }>{ setStringTranslation(messageData.messageContent, localState.messageLanguage)}</div>
         }
         </div>
       </Card.Content>
