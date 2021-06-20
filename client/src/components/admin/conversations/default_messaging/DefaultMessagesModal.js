@@ -12,6 +12,7 @@ import type { MessageData } from "../../../../redux/reducers/conversations/flowT
 // helpers //
 import { formatDate } from "../../../helpers/dateHelpers";
 import { setStringTranslation } from "../../../helpers/displayHelpers";
+import { generateEmptyMessageModel } from "../../../../redux/reducers/_helpers/emptyDataGenerators";
 // styles and css //
 import styles from "./css/defaultMessagesModal.module.css";
 
@@ -36,14 +37,14 @@ type LocalState = {
   messageContentError: string;
 };
 type DefaultsState = {|
-  defaultGreetingMessage: MessageData | null;
-  defaultOfflineMessage: MessageData | null;
-  defaultResolvedMessage: MessageData | null;
+  defaultGreetingMessage: { _id: string, messageContent: string };
+  defaultOfflineMessage: { _id: string, messageContent: string };
+  defaultResolvedMessage: { _id: string, messageContent: string };
 |};
 
 export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggleDefaultMessagesModal, handleFetchDefaultMessages, handleCreateDefaultMessage, handleUpdateDefaultMessage, triggerMessageModelDelete }: Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: false, messageDescription: "", messageContent: "", messageContentLanguage: "en", messageDescriptionError: "", messageContentError: "" });
-  const [ defaultsState, setDefaultsState ] = React.useState<DefaultsState>({ defaultGreetingMessage: null, defaultOfflineMessage: null, defaultResolvedMessage: null });
+  const [ defaultsState, setDefaultsState ] = React.useState<DefaultsState>({ defaultGreetingMessage: generateEmptyMessageModel(), defaultOfflineMessage: generateEmptyMessageModel(), defaultResolvedMessage: generateEmptyMessageModel() });
   //
   const { conversationMessageDefaults } = adminConversationState;
 
@@ -105,9 +106,18 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
     setLocalState({ ...localState, messageContentLanguage });
   };
 
-  const handleClearDefaultMessage = (messageId: string) => {
-    const messageToUpdate = adminConversationState.conversationMessageDefaults.filter((messageData) => messageData._id === messageId)[0];
-    if (messageToUpdate) handleUpdateDefaultMessage({ ...messageToUpdate, messageType: null }, adminConversationState);
+  const handleClearDefaultMessage = (e: any) => {
+    const messageId: string = (e.target.getAttribute("data-messageid"));
+    if (!messageId) return;
+
+    const defaultMessageToUpdate: MessageData = adminConversationState.conversationMessageDefaults
+      .filter((messageData) => messageData._id === messageId)
+      .map(messageData => ({ ...messageData, messageType: null }))[0];
+    if (!defaultMessageToUpdate) return;
+
+    handleUpdateDefaultMessage(defaultMessageToUpdate, adminConversationState);
+    //const messageToUpdate = adminConversationState.conversationMessageDefaults.filter((messageData) => messageData._id === messageId)[0];
+    //if (messageToUpdate) handleUpdateDefaultMessage({ ...messageToUpdate, messageType: null }, adminConversationState);
   };
 
   React.useEffect(() => {
@@ -115,18 +125,24 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
   }, []);
   React.useEffect(() => {
     const { conversationMessageDefaults } = adminConversationState;
+    const defaultsState: DefaultsState = {
+      defaultGreetingMessage: { _id: "", messageContent: "No default greeting message set. Create one by clicking 'New' button above..." },
+      defaultOfflineMessage: { _id: "", messageContent: "No default offline message set. Create one by clikcing 'New' button above..." },
+      defaultResolvedMessage: { _id: "", messageContent: "No default resolved message set. Craete one by clicking 'New' button above...." } 
+    }
     if (conversationMessageDefaults.length > 0) {
       for (const messageData of conversationMessageDefaults) {
         if (messageData.messageType && messageData.messageType === "DefaultGreeting") {
-          setDefaultsState({ ...defaultsState, defaultGreetingMessage: { ...messageData } });
+          defaultsState.defaultGreetingMessage = { _id: messageData._id, messageContent: messageData.messageContent };
         } else if (messageData.messageType && messageData.messageType === "DefaultOffline") {
-          setDefaultsState({ ...defaultsState, defaultOfflineMessage: { ...messageData } });
+          defaultsState.defaultOfflineMessage = { _id: messageData._id, messageContent: messageData.messageContent };
         } else if (messageData.messageType && messageData.messageType === "DefaultResolved") {
-          setDefaultsState({ ...defaultsState, defaultResolvedMessage: { ...messageData } });
+          defaultsState.defaultResolvedMessage = { _id: messageData._id, messageContent: messageData.messageContent };
         } else {
           continue;
         }
       }
+      setDefaultsState(defaultsState);
     }
   }, [ adminConversationState.conversationMessageDefaults ]);
   React.useEffect(() => {
@@ -199,11 +215,11 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
                   This is the message which is automaticaly sent when client initially enters your site:
                 </Card.Meta>
                 <Card.Content>
-                  { setStringTranslation((defaultsState.defaultGreetingMessage ? defaultsState.defaultGreetingMessage.messageContent : "No greeting default set..."), localState.messageContentLanguage )}
+                  { setStringTranslation((defaultsState.defaultGreetingMessage.messageContent), localState.messageContentLanguage )}
                 </Card.Content>
                 <Card.Content>
                   <Button.Group>
-                    <Button basic color="orange" content="Clear" onClick={ handleClearDefaultMessage } />
+                    <Button basic color="orange" content="Clear" data-messageid={ defaultsState.defaultGreetingMessage._id } onClick={ handleClearDefaultMessage } />
                   </Button.Group>
                 </Card.Content>
               </Card>
@@ -215,11 +231,11 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
                   This is the message which is automatically sent when you archive a conversation:
                 </Card.Meta>
                 <Card.Content>
-                  { setStringTranslation((defaultsState.defaultOfflineMessage ? defaultsState.defaultOfflineMessage.messageContent : "No offline message set..."), localState.messageContentLanguage )}
+                  { setStringTranslation(defaultsState.defaultResolvedMessage.messageContent, localState.messageContentLanguage )}
                 </Card.Content>
                 <Card.Content>
                   <Button.Group>
-                    <Button basic color="orange" content="Clear" onClick={ handleClearDefaultMessage } />
+                    <Button basic color="orange" content="Clear" data-messageid={ defaultsState.defaultResolvedMessage._id } onClick={ handleClearDefaultMessage } />
                   </Button.Group>
                 </Card.Content>
               </Card>
@@ -231,11 +247,11 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
                   This is the message which is automatically sent when a client sends a message and there are no admins online:
                 </Card.Meta>
                 <Card.Content>
-                  { setStringTranslation((defaultsState.defaultResolvedMessage ? defaultsState.defaultResolvedMessage.messageContent : "No defaults resolved message set.."), localState.messageContentLanguage )}
+                  { setStringTranslation((defaultsState.defaultOfflineMessage.messageContent), localState.messageContentLanguage )}
                 </Card.Content>
                 <Card.Content>
                   <Button.Group>
-                    <Button basic color="orange" content="Clear" onClick={ handleClearDefaultMessage } />
+                    <Button basic color="orange" content="Clear" data-messageid={ defaultsState.defaultOfflineMessage._id } onClick={ handleClearDefaultMessage } />
                   </Button.Group>
                 </Card.Content>
               </Card>

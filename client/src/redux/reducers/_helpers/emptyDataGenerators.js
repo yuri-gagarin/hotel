@@ -3,6 +3,7 @@ import type { ServiceData } from "../service/flowTypes";
 import type { ContactPostData } from "../contact_posts/flowTypes";
 import type { DiningEntModelData } from "../dining_entertainment/flowTypes";
 import type { RoomData } from "../rooms/flowTypes";
+import type { MessageData } from "../conversations/flowTypes";
 import type { AdminConversationData } from "../admin_conversations/flowTypes";
 
 export const generateEmptyService = (): ServiceData => {
@@ -108,4 +109,17 @@ export const generateEmptyAdminConversationModel = (): AdminConversationData => 
     createdAt: ""
   };
   return emptyAdminConversationData;
+};
+
+export const generateEmptyMessageModel = (): MessageData => {
+  return {
+    _id: "",
+    conversationId: "",
+    receiverSocketId: "",
+    senderSocketId: "",
+    sender: "admin",
+    messageType: null,
+    messageContent: "",
+    sentAt: ""
+  };
 };
