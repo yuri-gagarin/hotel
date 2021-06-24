@@ -1,0 +1,74 @@
+.configuredDefaultWrapper {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px 0 0 0;
+}
+.configuredDefaultHeader {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  border: 2px solid green;
+  border-radius: 10px 0 0 0;
+  background-color: #006600;
+  color: white;
+  user-select: none;
+  padding-left: 0.5em;
+}
+.configuredDefaultHeader > span > span:nth-child(1) {
+  padding: 0 1em;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-left: 5px;
+  margin-right: 5px;
+  background-color: #1a8a1a;
+}
+
+.configuredDefaultContent {
+  display: flex;
+  border-left: 2px solid green;
+  border-right: 2px solid green;
+  padding: 1em 0.5em;
+}
+.configuredDefaultMsg {
+  background-color: #66a3ff;
+  padding: 1em;
+  color: white;
+  font-weight: bolder;
+  border-radius: 7px 7px 7px 0;
+  -webkit-box-shadow: 0px 0px 1px 1px #66a3ff; 
+  box-shadow: 0px 0px 1px 1px #66a3ff;
+}
+
+.configuredDefaultControls {
+  display: flex;
+  border-left: 2px solid green;
+  border-bottom: 2px solid green;
+  border-right: 2px solid green;
+  padding: 1em 0.5em;
+}
+.clearMessageStatusDiv {
+  border: 1px solid #ff8533;
+  padding: 1px;
+  border-radius: 6px;
+}
+.clearMessageStatusDiv > button {
+  border: none;
+  background-color: white;
+  width: 60px;
+  height: 30px;
+  border-radius: 6px;
+  color: #ff8533;
+  font-weight: bold;
+}
+.clearMessageStatusDiv > button:hover {
+  color: white;
+  background-color: #ff8533;
+}
+.clearMessageStatusDiv > button:focus {
+  outline: none;
+  -webkit-user-select: none;
+  user-select: none
+}
+.clearMessageStatusDiv > button:active {
+  background-color: #ff6600;
+}

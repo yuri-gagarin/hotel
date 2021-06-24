@@ -3,6 +3,7 @@ import * as React from "react";
 import { Button, Card, Dropdown, Form, Icon, Input, Modal, TextArea } from "semantic-ui-react";
 import ObjectID from "bson-objectid";
 // additional components //
+import { ConfiguredDefaultCard } from "./ConfiguredDefaultCard";
 import { DefaultMessageCard } from "./DefaultMessageCard";
 import { DefaultMessageMenu } from "./DefaultMessageMenu";
 import { GeneralNoModelsSegment } from "../../shared/GeneralNoModelsSegment";
@@ -145,13 +146,9 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
       setDefaultsState(defaultsState);
     }
   }, [ adminConversationState.conversationMessageDefaults ]);
-  React.useEffect(() => {
-    console.log(147);
-    console.log(defaultsState);
-  }, [ defaultsState ]);
 
   return (
-    <Modal className={ styles.modal } open={ true } >
+    <Modal className={ styles.modal } open={true } >
       <Modal.Content>
         <div className={ styles.modalHeaderDiv }>
           <div>Messenger default responses settings:</div>
@@ -206,78 +203,34 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
         {
           localState.settingsOpen 
           ?
-            <Card.Group>
-              <Card fluid>
-                <Card.Header className={ styles.setDefaultsCardHeader}>
-                  <span>Default <span>'Welcome'</span>  message</span> 
-                </Card.Header>
-                <Card.Meta style={{ paddingLeft: "14px", paddingRight: "14px" }}> 
-                  This is the message which is automaticaly sent when client initially enters your site:
-                </Card.Meta>
-                <Card.Content>
-                  { setStringTranslation((defaultsState.defaultGreetingMessage.messageContent), localState.messageContentLanguage )}
-                </Card.Content>
-                <Card.Content>
-                  <Button.Group>
-                    <Button basic color="orange" content="Clear" data-messageid={ defaultsState.defaultGreetingMessage._id } onClick={ handleClearDefaultMessage } />
-                  </Button.Group>
-                </Card.Content>
-              </Card>
-              <Card fluid>
-                <Card.Header className={ styles.setDefaultsCardHeader}>
-                  <span>Default <span>'Resolved'</span>  message</span> 
-                </Card.Header>
-                <Card.Meta style={{ paddingLeft: "14px", paddingRight: "14px" }}> 
-                  This is the message which is automatically sent when you archive a conversation:
-                </Card.Meta>
-                <Card.Content>
-                  { setStringTranslation(defaultsState.defaultResolvedMessage.messageContent, localState.messageContentLanguage )}
-                </Card.Content>
-                <Card.Content>
-                  <Button.Group>
-                    <Button basic color="orange" content="Clear" data-messageid={ defaultsState.defaultResolvedMessage._id } onClick={ handleClearDefaultMessage } />
-                  </Button.Group>
-                </Card.Content>
-              </Card>
-              <Card fluid>
-                <Card.Header className={ styles.setDefaultsCardHeader}>
-                  <span>Default <span>'Offline'</span>  message</span> 
-                </Card.Header>
-                <Card.Meta style={{ paddingLeft: "14px", paddingRight: "14px" }}> 
-                  This is the message which is automatically sent when a client sends a message and there are no admins online:
-                </Card.Meta>
-                <Card.Content>
-                  { setStringTranslation((defaultsState.defaultOfflineMessage.messageContent), localState.messageContentLanguage )}
-                </Card.Content>
-                <Card.Content>
-                  <Button.Group>
-                    <Button basic color="orange" content="Clear" data-messageid={ defaultsState.defaultOfflineMessage._id } onClick={ handleClearDefaultMessage } />
-                  </Button.Group>
-                </Card.Content>
-              </Card>
-            </Card.Group>
-          :
             conversationMessageDefaults.length > 0
-            ?
-            <Card.Group>
-            { 
-              conversationMessageDefaults.map((messageData) => {
-                return (
-                  <DefaultMessageCard 
-                    key={ messageData._id }
-                    messageData={ messageData }
-                    updateMessage={ updateMessage }
-                    triggerMessageModelDelete={ triggerMessageModelDelete }
-                  />
-                )
-              })
-            }
-            </Card.Group>
-            :
-            <GeneralNoModelsSegment 
-              customHeaderMessage={ "No Defaults Set" } 
-              customContentMessage={ "Create default messages for automated response by clicking 'New' button" }
-            />
+              ?
+              <Card.Group>
+              { 
+                conversationMessageDefaults.map((messageData) => {
+                  return (
+                    <DefaultMessageCard 
+                      key={ messageData._id }
+                      messageData={ messageData }
+                      updateMessage={ updateMessage }
+                      triggerMessageModelDelete={ triggerMessageModelDelete }
+                    />
+                  )
+                })
+              }
+              </Card.Group>
+              :
+              <GeneralNoModelsSegment 
+                customHeaderMessage={ "No Defaults Set" } 
+                customContentMessage={ "Create default messages for automated response by clicking 'New' button" }
+              />
+          :
+          <ConfiguredDefaultCard 
+            messageHeaderLabel="Online"
+            handleClearMessageStatus={ handleClearDefaultMessage }
+            messageId={ defaultsState.defaultGreetingMessage._id }
+            messageContent={ defaultsState.defaultGreetingMessage.messageContent }
+          />
         }
       </Modal.Content>
     </Modal>
