@@ -31,4 +31,4 @@ export function usePrevious<S>(value: S) {
     ref.current = value;
   })
   return ref.current;
-};
+}

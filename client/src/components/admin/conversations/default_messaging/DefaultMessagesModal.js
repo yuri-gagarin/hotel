@@ -230,6 +230,8 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
             handleClearMessageStatus={ handleClearDefaultMessage }
             messageId={ defaultsState.defaultGreetingMessage._id }
             messageContent={ defaultsState.defaultGreetingMessage.messageContent }
+            messageContentLanguage={ localState.messageContentLanguage }
+            setDefaultMessageLanguage={ setDefaultMessageLanguage }
           />
         }
       </Modal.Content>
