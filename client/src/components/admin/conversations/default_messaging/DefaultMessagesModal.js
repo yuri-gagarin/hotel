@@ -107,8 +107,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
     setLocalState({ ...localState, messageContentLanguage });
   };
 
-  const handleClearDefaultMessage = (e: any) => {
-    const messageId: string = (e.target.getAttribute("data-messageid"));
+  const handleClearDefaultMessage = (messageId: string): void => {
     if (!messageId) return;
 
     const defaultMessageToUpdate: MessageData = adminConversationState.conversationMessageDefaults
@@ -124,6 +123,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
   React.useEffect(() => {
     handleFetchDefaultMessages();
   }, []);
+
   React.useEffect(() => {
     const { conversationMessageDefaults } = adminConversationState;
     const defaultsState: DefaultsState = {
@@ -151,9 +151,9 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
     <Modal className={ styles.modal } open={true } >
       <Modal.Content>
         <div className={ styles.modalHeaderDiv }>
-          <div>Messenger default responses settings:</div>
+          <div className={ styles.modalHeaderTitle }><span>Client Messenger</span><span>- default responses settings:</span></div>
           <div>
-          <Button.Group className={ styles.settingsButtons }>
+          <Button.Group attached="right" className={ styles.settingsButtons }>
             <Button basic color="green" onClick={ setFormOpen }>
               New
               <Icon style={{ marginLeft: "5px" }} name="file" />
@@ -225,14 +225,35 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
                 customContentMessage={ "Create default messages for automated response by clicking 'New' button" }
               />
           :
-          <ConfiguredDefaultCard 
-            messageHeaderLabel="Online"
-            handleClearMessageStatus={ handleClearDefaultMessage }
-            messageId={ defaultsState.defaultGreetingMessage._id }
-            messageContent={ defaultsState.defaultGreetingMessage.messageContent }
-            messageContentLanguage={ localState.messageContentLanguage }
-            setDefaultMessageLanguage={ setDefaultMessageLanguage }
-          />
+          <React.Fragment>
+             <ConfiguredDefaultCard 
+              key="online"
+              messageHeaderLabel="Online"
+              handleClearDefaultMessage={ handleClearDefaultMessage }
+              messageId={ defaultsState.defaultGreetingMessage._id }
+              messageContent={ defaultsState.defaultGreetingMessage.messageContent }
+              messageContentLanguage={ localState.messageContentLanguage }
+              setDefaultMessageLanguage={ setDefaultMessageLanguage }
+            />
+            <ConfiguredDefaultCard
+              key="offline"
+              messageHeaderLabel={"Offline"}
+              handleClearDefaultMessage={ handleClearDefaultMessage }
+              messageId={ defaultsState.defaultOfflineMessage._id }
+              messageContent={ defaultsState.defaultOfflineMessage.messageContent }
+              messageContentLanguage={ localState.messageContentLanguage }
+              setDefaultMessageLanguage={ setDefaultMessageLanguage }
+            />
+            <ConfiguredDefaultCard
+              key="resolved"
+              messageHeaderLabel={"Resolved"}
+              handleClearDefaultMessage={ handleClearDefaultMessage }
+              messageId={ defaultsState.defaultResolvedMessage._id }
+              messageContent={ defaultsState.defaultResolvedMessage.messageContent }
+              messageContentLanguage={ localState.messageContentLanguage }
+              setDefaultMessageLanguage={ setDefaultMessageLanguage }
+            />
+          </React.Fragment>
         }
       </Modal.Content>
     </Modal>

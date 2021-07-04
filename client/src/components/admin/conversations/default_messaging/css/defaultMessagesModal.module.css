@@ -8,15 +8,21 @@
   display: flex;
   flex-wrap: wrap;
 }
-.modalHeaderDiv > div {
+.modalHeaderTitle {
   position: relative;
+  display: flex;
   flex: 1;
+  align-items: center;
+  padding-left: 5px;
+  border-left: 1px solid grey;
+  border-bottom: 1px solid grey;
 }
-.settingsButtons {
-  position: absolute;
-  right: 25px;
-  top: 50%;
-  transform: translateY(-50%);
+.modalHeaderTitle > span:nth-child(1) {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+.modalHeaderTitle > span:nth-child(2) {
+  margin-left: 3px;
 }
 
 .newDefaultMessageForm {
