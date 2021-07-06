@@ -1,9 +1,14 @@
 .defaultMessageMenu {
   position: relative;
 }
-.menuItem {
-  display: flex !important;
-  justify-content: space-between !important;
+.editDropdown > i {
+  margin-left: 5px;
+  color: green;
+}
+.optionsIcon {
+  color: black !important;
+  position: absolute;
+  right: 0px;
 }
 .menuItemFlag {
   position: relative !important;
@@ -18,6 +23,7 @@
 }
 .menuSubItemSpan {
   font-weight: bold;
+  font-style: italic;
 }
 .defaultMessageTypeDisplay > span:nth-child(1) {
   color: green;

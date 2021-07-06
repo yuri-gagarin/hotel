@@ -11,18 +11,34 @@ type Props = {
   messageHeaderLabel: "Online" | "Offline" | "Resolved";
   messageId: string;
   messageContent: string;
-  messageContentLanguage: "en" | "uk" | "ru";
   handleClearDefaultMessage: (messageId: string) => void;
 };
 type DefaultCardState = {
+  languageDisplay: "English" | "Русский" | "Українська";
   messageLanguage: "en" | "uk" | "ru";
   defaultCardDescription: string;
 }
 export const ConfiguredDefaultCard = ({ messageHeaderLabel, messageId, messageContent, handleClearDefaultMessage }: Props): React.Node => {
-  const [ defaultCardState, setDefaultCardState ] = React.useState<DefaultCardState>({ messageLanguage: "en", defaultCardDescription: "" });
+  const [ defaultCardState, setDefaultCardState ] = React.useState<DefaultCardState>({ languageDisplay: "English", messageLanguage: "en", defaultCardDescription: "" });
 
   const setDefaultMessageLanguage = (messageLanguage: "en" | "uk" | "ru") => {
-    setDefaultCardState({ ...defaultCardState, messageLanguage });
+    switch (messageLanguage) {
+      case "en": {
+        setDefaultCardState({ ...defaultCardState, languageDisplay: "English", messageLanguage });
+        break;
+      }
+      case "ru": {
+        setDefaultCardState({ ...defaultCardState, languageDisplay: "Русский", messageLanguage });
+        break;
+      }
+      case "uk": {
+        setDefaultCardState({ ...defaultCardState, languageDisplay: "Українська", messageLanguage });
+        break;
+      }
+      default: {
+        setDefaultCardState({ ...defaultCardState, languageDisplay: "English", messageLanguage });
+      }
+    }
   };
 
   React.useEffect(() => {
@@ -41,7 +57,7 @@ export const ConfiguredDefaultCard = ({ messageHeaderLabel, messageId, messageCo
     <div className={ styles.configuredDefaultWrapper }>
       <div className={ styles.configuredDefaultHeader }>
         <div>Default<span>{ messageHeaderLabel }</span>message response</div>
-        <Dropdown className={ styles.msgLanguageDropdown } text="Select Language" inline pointing>
+        <Dropdown className={ styles.msgLanguageDropdown } text={ defaultCardState.languageDisplay } inline pointing>
           <Dropdown.Menu>
             <Dropdown.Item onClick={ () => setDefaultMessageLanguage("en") }>EN <Flag name="uk" /></Dropdown.Item>
             <Dropdown.Item onClick={ () => setDefaultMessageLanguage("uk") }>UA <Flag name="ua" /></Dropdown.Item>

@@ -5,8 +5,9 @@
 }
 .messageContentDiv {
   padding: 0.5em 1em;
-  border: 1px solid grey;
-  border-radius: 5px;
+  border-radius: 5px 5px 5px 0px;
+  background-color: #66a3ff;
+  color: white;
 }
 
 .defaultMessageChangeDiv {

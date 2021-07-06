@@ -17,11 +17,13 @@ type Props = {
   triggerMessageModelDelete: (messageId: string) => void;
 }
 export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageModelDelete }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<{ inputToggled: boolean, messageLanguage: ("en" | "uk" | "ru"), inputValue: string }>({ inputToggled: false, messageLanguage: "en", inputValue: messageData.messageContent });
+  const [ localState, setLocalState ] = React.useState<{ inputToggled: boolean, messageLanguage: "en" | "uk" | "ru", inputValue: string }>({ inputToggled: false, messageLanguage: "en", inputValue: messageData.messageContent });
   const textAreaWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
   const handleClickOutside = (e): void => { 
+    console.log(25)
+    console.log(localState.messageLanguage)
     if (textAreaWrapperRef.current) {
       if (textAreaWrapperRef.current.contains(e.target) && !localState.inputToggled) {
         return;
@@ -38,7 +40,8 @@ export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageM
     localState.inputToggled ? setLocalState({ ...localState, inputToggled: false }) : setLocalState({ ...localState, inputToggled: true });
   };
 
-  const handleSetDefaultMessageLanguage = (messageLanguage: ("en" | "uk" | "ru")): void => {
+  const handleSetDefaultMessageLanguage = (e: any, messageLanguage: "en" | "uk" | "ru"): void => {
+    console.log("clicked")
     setLocalState({ ...localState, messageLanguage });
   };
 
@@ -49,6 +52,7 @@ export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageM
       .catch((error) => console.log(error));
   };
 
+  /*
   React.useEffect(() => {
     if (textAreaWrapperRef.current) {
       window.addEventListener("mousedown", handleClickOutside);
@@ -57,7 +61,7 @@ export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageM
       window.removeEventListener("mousedown", handleClickOutside) 
     };
   }, [ textAreaWrapperRef.current ]);
-
+  */
   React.useEffect(() => {
     if (localState.inputToggled && textAreaRef.current) {
       textAreaRef.current.selectionStart = textAreaRef.current.value.length;
@@ -65,7 +69,7 @@ export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageM
   }, [ localState.inputToggled, textAreaRef.current ]);
  
   return (
-    <Card fluid key={ messageData._id } color="green">
+    <Card fluid key={ messageData._id } style={{ border: "2px solid green" }}>
       <Card.Content>
         <DefaultMessageMenu 
           messageData={ messageData }

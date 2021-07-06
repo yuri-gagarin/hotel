@@ -30,10 +30,9 @@ type Props = {
 }
 type LocalState = {
   formOpen: boolean;
-  settingsOpen: boolean;
+  messagesOpen: boolean;
   messageDescription: string;
   messageContent: string;
-  messageContentLanguage: ("en" | "uk" | "ru");
   messageDescriptionError: string;
   messageContentError: string;
 };
@@ -44,16 +43,16 @@ type DefaultsState = {|
 |};
 
 export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggleDefaultMessagesModal, handleFetchDefaultMessages, handleCreateDefaultMessage, handleUpdateDefaultMessage, triggerMessageModelDelete }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, settingsOpen: false, messageDescription: "", messageContent: "", messageContentLanguage: "en", messageDescriptionError: "", messageContentError: "" });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ formOpen: false, messagesOpen: false, messageDescription: "", messageContent: "", messageDescriptionError: "", messageContentError: "" });
   const [ defaultsState, setDefaultsState ] = React.useState<DefaultsState>({ defaultGreetingMessage: generateEmptyMessageModel(), defaultOfflineMessage: generateEmptyMessageModel(), defaultResolvedMessage: generateEmptyMessageModel() });
   //
   const { conversationMessageDefaults } = adminConversationState;
 
   const setFormOpen = (): void => {
-    setLocalState({ ...localState, formOpen: !localState.formOpen });
+    setLocalState({ ...localState, messagesOpen: true, formOpen: !localState.formOpen });
   };
-  const toggleSettings = (): void => {
-    setLocalState({ ...localState, formOpen: false, settingsOpen: !localState.settingsOpen });
+  const toggleAllMessages = (): void => {
+    setLocalState({ ...localState, formOpen: false, messagesOpen: !localState.messagesOpen });
   };
 
   const handleNewDefaultMessageDescriptionChange = (e: SyntheticEvent<HTMLInputElement>) => {
@@ -158,8 +157,8 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               New
               <Icon style={{ marginLeft: "5px" }} name="file" />
             </Button>
-            <Button basic color="grey"  onClick={ toggleSettings }>
-              {localState.settingsOpen ? "View All Messages" : "View Set Defaults"}
+            <Button basic color="grey"  onClick={ toggleAllMessages }>
+              {localState.messagesOpen ? "View Set Defaults" : "View All Saved Messages"}
               <Icon style={{ marginLeft: "5px" }} name="settings" />
             </Button>
             <Button basic color="grey" onClick={ handleFetchDefaultMessages } >
@@ -201,7 +200,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
           null
         }
         {
-          localState.settingsOpen 
+          localState.messagesOpen
           ?
             conversationMessageDefaults.length > 0
               ?
@@ -232,7 +231,6 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               handleClearDefaultMessage={ handleClearDefaultMessage }
               messageId={ defaultsState.defaultGreetingMessage._id }
               messageContent={ defaultsState.defaultGreetingMessage.messageContent }
-              messageContentLanguage={ localState.messageContentLanguage }
               setDefaultMessageLanguage={ setDefaultMessageLanguage }
             />
             <ConfiguredDefaultCard
@@ -241,7 +239,6 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               handleClearDefaultMessage={ handleClearDefaultMessage }
               messageId={ defaultsState.defaultOfflineMessage._id }
               messageContent={ defaultsState.defaultOfflineMessage.messageContent }
-              messageContentLanguage={ localState.messageContentLanguage }
               setDefaultMessageLanguage={ setDefaultMessageLanguage }
             />
             <ConfiguredDefaultCard
@@ -250,7 +247,6 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               handleClearDefaultMessage={ handleClearDefaultMessage }
               messageId={ defaultsState.defaultResolvedMessage._id }
               messageContent={ defaultsState.defaultResolvedMessage.messageContent }
-              messageContentLanguage={ localState.messageContentLanguage }
               setDefaultMessageLanguage={ setDefaultMessageLanguage }
             />
           </React.Fragment>

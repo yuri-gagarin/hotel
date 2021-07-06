@@ -9,7 +9,7 @@ import styles from "./css/defaultMessageMenu.module.css";
 type Props = {
   messageData: MessageData;
   handleSetDefaultMessage: (messageData: MessageData) => Promise<boolean>;
-  handleSetDefaultMessageLanguage: (messageLangauge: ("en" | "uk" | "ru")) => void;
+  handleSetDefaultMessageLanguage: (e: any, messageLangauge: ("en" | "uk" | "ru")) => void;
   toggleMessageEdit: () => void;
   triggerMessageModelDelete: (messageId: string) => void;
 };
@@ -31,16 +31,16 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, handl
   return (
     <Menu className={ styles.defaultMessageMenu }>
       <Menu.Item>
-        <Dropdown pointing text="Edit" className={ styles.editDropdown }>
+        <Dropdown pointing text="Options" icon="options" className={ styles.editDropdown }>
           <Dropdown.Menu>
-            <Dropdown.Item className={ styles.menuItem } onClick={ toggleMessageEdit }>
+            <Dropdown.Item style={{ padding: 0, border: "2px solid blue" }} className={ styles.menuItem } onClick={ toggleMessageEdit } >
               Edit
-              <Icon color="blue" name="edit" />
+              <Icon className={ styles.optionsIcon } color="blue" name="edit" />
             </Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item className={ styles.menuItem } onClick={ triggerDelete }>
               Delete
-              <Icon color="red" name="trash" />
+              <Icon className={ styles.optionsIcon } color="red" name="trash" />
             </Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item  className={ styles.menuItem }>
@@ -62,15 +62,15 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, handl
         </Dropdown>
       </Menu.Item>
       <Menu.Item>
-        <Dropdown pointing text="Language">
+        <Dropdown pointing text="Language" icon="flag">
           <Dropdown.Menu>
-            <Dropdown.Item className={ styles.menuItem } onClick={ () => handleSetDefaultMessageLanguage("en") }>
+            <Dropdown.Item className={ styles.menuItem } onClick={ (e) => handleSetDefaultMessageLanguage(e, "en") }>
               EN<Flag name="gb" className={ styles.menuItemFlag } />
             </Dropdown.Item>
-            <Dropdown.Item className={ styles.menuItem } onClick={ () => handleSetDefaultMessageLanguage("uk") }>
+            <Dropdown.Item className={ styles.menuItem } onClick={ (e) => handleSetDefaultMessageLanguage(e, "uk") }>
               UA<Flag name="ua" className={ styles.menuItemFlag } />
             </Dropdown.Item>
-            <Dropdown.Item className={ styles.menuItem } onClick={ () => handleSetDefaultMessageLanguage("ru") }>
+            <Dropdown.Item className={ styles.menuItem } onClick={ (e) => handleSetDefaultMessageLanguage(e, "ru") }>
               RU<Flag name="ru" className={ styles.menuItemFlag } />
             </Dropdown.Item>
           </Dropdown.Menu>
