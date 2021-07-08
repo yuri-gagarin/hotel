@@ -6,10 +6,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0.5em;
+  border-radius: 25% 5px 5px 5px;
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,0.5648460067620799) 100%, rgba(0,212,255,1) 100%); 
+  z-index: 997;
 }
 
 .newMessagesIndicator {
-  border: 3px solid red;
   display: flex;
   flex-direction: column;
   color: white;

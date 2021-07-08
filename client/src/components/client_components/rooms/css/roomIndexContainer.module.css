@@ -53,7 +53,7 @@
   left: 0;
   top: 65px;
   height: 200px;
-  z-index: 999;
+  z-index: 998;
   transition: height 1s linear, background-color 1s linear;
 }
 

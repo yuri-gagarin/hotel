@@ -35,7 +35,6 @@ const DiningIndexContainer = ({ history, diningEntertainmentState, _handleFetchD
   const [ headerRowState, setHeaderRowState ] = React.useState<LocalState>({ headerFixed: false, headerTop: "" });
 
   React.useEffect(() => {
-    console.log(history)
     window.scrollTo({ x: 0, y: 0 });
     _handleFetchDiningEntModels({ live: true });
   }, []);
