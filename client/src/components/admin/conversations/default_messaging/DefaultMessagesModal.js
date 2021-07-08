@@ -147,7 +147,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
   }, [ adminConversationState.conversationMessageDefaults ]);
 
   return (
-    <Modal className={ styles.modal } open={true } >
+    <Modal className={ styles.modal } open={ modalOpen } >
       <Modal.Content>
         <div className={ styles.modalHeaderDiv }>
           <div className={ styles.modalHeaderTitle }><span>Client Messenger</span><span> default responses settings:</span></div>

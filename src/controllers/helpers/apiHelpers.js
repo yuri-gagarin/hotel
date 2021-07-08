@@ -5,7 +5,7 @@ export const deleteFile = (filePath, data = null) => {
     fs.stat(filePath, (error) => {
       if (error) {
         if(error.code === "ENOENT") {
-          reject(new Error("File not found"));
+          resolve({ success: true, responseMsg: "Nothing to delete", data: null });
         }
         else {
           reject(error);

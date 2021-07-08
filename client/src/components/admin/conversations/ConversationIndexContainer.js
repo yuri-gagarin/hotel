@@ -195,6 +195,7 @@ const ConversationIndexContainer = ({
         modalOpen={ onlineUsersModalOpen }
         toggleModal={ toggleModal }
         handleToggleConversation={ toggleConversation }
+        messengerOnline= { adminConversationState.messengerOnline }
         onlineClients={ adminConversationState.connectedOnlineClients }
         activeConversationIds={ adminConversationState.loadedAdminConversations.map((data) => data.conversationId) }
       />

@@ -1,6 +1,6 @@
 // @flow 
 import * as React from "react";
-import { Checkbox, Dropdown, Grid, Menu, Popup } from "semantic-ui-react";
+import { Checkbox, Dropdown, Grid, Icon, Menu, Popup } from "semantic-ui-react";
 import type { AdminConversationState, AdminConversationData, MessengerOnlineToggleArgs } from "../../../redux/reducers/admin_conversations/flowTypes";
 // styles //
 import styles from "./css/conversationControls.module.css";
@@ -65,7 +65,8 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
         <div className={ styles.conversationControlsUpperWrapper }>
           <Menu className={ styles.conversationOptionsMenu }>
             <Menu.Item>
-              <Dropdown text="Messenger Options" icon="caret down" pointing>
+              <Icon name="options" />
+              <Dropdown text="Options" icon="caret down" pointing>
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={ toggleMessegnerOnlineOffline } className={ styles.dropdownItem }>
                     { messengerOnline ? "Disconnect" : "Connect" }<i className={`fas fa-globe ${styles.dropdownIcon} ${messengerOnline ? styles.globeDisconnect: styles.globeConnect }`}></i>

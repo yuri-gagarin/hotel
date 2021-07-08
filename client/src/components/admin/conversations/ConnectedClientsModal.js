@@ -11,11 +11,12 @@ type Props = {
   modalOpen: boolean;
   toggleModal: () => void;
   handleToggleConversation: (socketId: string) => void;
+  messengerOnline: boolean;
   onlineClients: Array<ConnectedClientData>;
   activeConversationIds: Array<string>;
 };
 
-export const ConnectedClientsModal = ({ modalOpen, toggleModal, handleToggleConversation, onlineClients, activeConversationIds }: Props): React.Node => {
+export const ConnectedClientsModal = ({ modalOpen, toggleModal, handleToggleConversation, messengerOnline, onlineClients, activeConversationIds }: Props): React.Node => {
   const description = "a card description here";
 
   return (
@@ -29,9 +30,10 @@ export const ConnectedClientsModal = ({ modalOpen, toggleModal, handleToggleConv
       >
         <Modal.Header>Currently online clients</Modal.Header>
         <Modal.Content scrolling style={{ padding: 0 }}>
-        
           <Modal.Description>
-            { onlineClients.length > 0 ?
+            { messengerOnline 
+              ?
+              ( onlineClients.length > 0 ?
               <Card.Group itemsPerRow={1} style={{ padding: 0 }}>
                 <Card>
                   <Card.Content>
@@ -69,6 +71,12 @@ export const ConnectedClientsModal = ({ modalOpen, toggleModal, handleToggleConv
               <GeneralNoModelsSegment 
                 customHeaderMessage={ "No Online Clients" }
                 customContentMessage={ "Any current visitors to your homepage will be show here" }
+              />
+              )
+              :
+              <GeneralNoModelsSegment 
+                customHeaderMessage={ "Messenger not Online"}
+                customContentMessage={ "Take instant messenger online to see any currently connected clients" }
               />
             }
            
