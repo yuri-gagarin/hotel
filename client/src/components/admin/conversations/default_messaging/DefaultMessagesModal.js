@@ -158,7 +158,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               <Icon style={{ marginLeft: "5px" }} name="file" />
             </Button>
             <Button basic color="grey"  onClick={ toggleAllMessages }>
-              {localState.messagesOpen ? "View Set Defaults" : "View All Saved Messages"}
+              {localState.messagesOpen ? "View Set Defaults" : "View All Default Messages"}
               <Icon style={{ marginLeft: "5px" }} name="settings" />
             </Button>
             <Button basic color="grey" onClick={ handleFetchDefaultMessages } >

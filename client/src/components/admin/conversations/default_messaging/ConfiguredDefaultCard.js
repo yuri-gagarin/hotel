@@ -57,7 +57,7 @@ export const ConfiguredDefaultCard = ({ messageHeaderLabel, messageId, messageCo
     <div className={ styles.configuredDefaultWrapper }>
       <div className={ styles.configuredDefaultHeader }>
         <div>Default<span>{ messageHeaderLabel }</span>message response</div>
-        <Dropdown className={ styles.msgLanguageDropdown } text={ defaultCardState.languageDisplay } inline pointing>
+        <Dropdown className={ styles.msgLanguageDropdown } disabled={ messageId ? false : true } text={ defaultCardState.languageDisplay } inline pointing>
           <Dropdown.Menu>
             <Dropdown.Item onClick={ () => setDefaultMessageLanguage("en") }>EN <Flag name="uk" /></Dropdown.Item>
             <Dropdown.Item onClick={ () => setDefaultMessageLanguage("uk") }>UA <Flag name="ua" /></Dropdown.Item>

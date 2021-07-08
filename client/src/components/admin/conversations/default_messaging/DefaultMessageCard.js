@@ -22,8 +22,6 @@ export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageM
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
   const handleClickOutside = (e): void => { 
-    console.log(25)
-    console.log(localState.messageLanguage)
     if (textAreaWrapperRef.current) {
       if (textAreaWrapperRef.current.contains(e.target) && !localState.inputToggled) {
         return;
@@ -40,8 +38,7 @@ export const DefaultMessageCard = ({ messageData, updateMessage, triggerMessageM
     localState.inputToggled ? setLocalState({ ...localState, inputToggled: false }) : setLocalState({ ...localState, inputToggled: true });
   };
 
-  const handleSetDefaultMessageLanguage = (e: any, messageLanguage: "en" | "uk" | "ru"): void => {
-    console.log("clicked")
+  const handleSetDefaultMessageLanguage = (messageLanguage: "en" | "uk" | "ru"): void => {
     setLocalState({ ...localState, messageLanguage });
   };
 

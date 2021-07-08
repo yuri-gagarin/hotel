@@ -5,16 +5,25 @@ import { Dropdown, Flag, Icon, Menu } from "semantic-ui-react";
 import type { MessageData } from "../../../../redux/reducers/conversations/flowTypes";
 // css //
 import styles from "./css/defaultMessageMenu.module.css";
+// helpers //
+import { getMenuLanguageWithFlag } from "../../_helpers/generalComponentHelpers";
 
 type Props = {
   messageData: MessageData;
   handleSetDefaultMessage: (messageData: MessageData) => Promise<boolean>;
-  handleSetDefaultMessageLanguage: (e: any, messageLangauge: ("en" | "uk" | "ru")) => void;
   toggleMessageEdit: () => void;
+  handleSetDefaultMessageLanguage: (lang: "en" | "ru" | "uk") => void;
   triggerMessageModelDelete: (messageId: string) => void;
 };
-export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, handleSetDefaultMessageLanguage, toggleMessageEdit, triggerMessageModelDelete }: Props): React.Node => {
 
+type LocalState = {
+  i18nLnaguage: "en" | "ru" | "uk";
+  flagType: "uk" | "ru" | "ua";
+  messageLanguage: "English" | "Русский" | "Українська";
+}
+
+export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, toggleMessageEdit, handleSetDefaultMessageLanguage, triggerMessageModelDelete }: Props): React.Node => {
+  const [ localState, setLocalState ] = React.useState<LocalState>({ i18nLnaguage: "en", flagType: "uk", messageLanguage: "English" });
   const setDefaultGreetingMessage = (): void => {
     handleSetDefaultMessage({ ...messageData, messageType: "DefaultGreeting" });
   };
@@ -24,16 +33,25 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, handl
   const setDefaultResolvedMessage = (): void => {
     handleSetDefaultMessage({ ...messageData, messageType: "DefaultResolved" });
   };
+
+  const handleSetMessageLanguage = (i18nLnaguage: "en" | "uk" | "ru"): void => {
+    const { flagType, messageLanguage } = getMenuLanguageWithFlag(i18nLnaguage);
+    setLocalState({ i18nLnaguage, flagType, messageLanguage });
+  }
   // delete trigger //
   const triggerDelete = () => {
     triggerMessageModelDelete(messageData._id);
-  }
+  };
+
+  React.useEffect(() => {
+    handleSetDefaultMessageLanguage(localState.i18nLnaguage);
+  }, [ localState.i18nLnaguage ]);
   return (
     <Menu className={ styles.defaultMessageMenu }>
       <Menu.Item>
         <Dropdown pointing text="Options" icon="options" className={ styles.editDropdown }>
           <Dropdown.Menu>
-            <Dropdown.Item style={{ padding: 0, border: "2px solid blue" }} className={ styles.menuItem } onClick={ toggleMessageEdit } >
+            <Dropdown.Item className={ styles.menuItem } onClick={ toggleMessageEdit } >
               Edit
               <Icon className={ styles.optionsIcon } color="blue" name="edit" />
             </Dropdown.Item>
@@ -47,13 +65,13 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, handl
               <Dropdown pointing="left" text="Set as...">
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={ setDefaultGreetingMessage }>
-                    Set as default <span className={ styles.menuSubItemSpan }>'greeting'</span> message
+                    Set as default <div className={ styles.menuSubItemSpan }>Greeting <i className="fas fa-bell"></i></div> message
                   </Dropdown.Item>
                   <Dropdown.Item onClick={ setDefaultOfflineMessage }>
-                    Set as default <span className={ styles.menuSubItemSpan }>'offline'</span> message
+                    Set as default <div className={ styles.menuSubItemSpan }>Offline <i className="fas fa-globe"></i></div> message
                   </Dropdown.Item>
                   <Dropdown.Item onClick={ setDefaultResolvedMessage }>
-                    Set as default <span className={ styles.menuSubItemSpan }>'resolved'</span> message
+                    Set as default <div className={ styles.menuSubItemSpan }>Resolved <i className="fas fa-check-circle"></i></div> message
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -62,19 +80,20 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, handl
         </Dropdown>
       </Menu.Item>
       <Menu.Item>
-        <Dropdown pointing text="Language" icon="flag">
+        <Dropdown pointing text={ localState.messageLanguage }>
           <Dropdown.Menu>
-            <Dropdown.Item className={ styles.menuItem } onClick={ (e) => handleSetDefaultMessageLanguage(e, "en") }>
+            <Dropdown.Item className={ styles.menuItem } onClick={ () => handleSetMessageLanguage("en") }>
               EN<Flag name="gb" className={ styles.menuItemFlag } />
             </Dropdown.Item>
-            <Dropdown.Item className={ styles.menuItem } onClick={ (e) => handleSetDefaultMessageLanguage(e, "uk") }>
+            <Dropdown.Item className={ styles.menuItem } onClick={ () => handleSetMessageLanguage("uk") }>
               UA<Flag name="ua" className={ styles.menuItemFlag } />
             </Dropdown.Item>
-            <Dropdown.Item className={ styles.menuItem } onClick={ (e) => handleSetDefaultMessageLanguage(e, "ru") }>
+            <Dropdown.Item className={ styles.menuItem } onClick={ (e) => handleSetMessageLanguage("ru") }>
               RU<Flag name="ru" className={ styles.menuItemFlag } />
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+        <Flag className={ styles.messageLanguageFlag } name={ localState.flagType } />
       </Menu.Item>
       <Menu.Item className={ styles.defaultMessageDescription }>
         <span>Description:</span>

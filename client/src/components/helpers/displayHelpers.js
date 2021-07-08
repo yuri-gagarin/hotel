@@ -44,7 +44,7 @@ export const capitalizeString = (string: string): string => {
 
 export const setStringTranslation = (stringToTranslate: string, i18nLanguage: string): string => {
   let descriptionText: string;
-  if (stringToTranslate.length === 0) {
+  if (!stringToTranslate || stringToTranslate.length === 0) {
     return "Nothing to translate...";
   }
 
@@ -61,7 +61,7 @@ export const setStringTranslation = (stringToTranslate: string, i18nLanguage: st
   } else if (i18nLanguage === "uk" && translations.indexOf("<uk>") !== -1) {
     descriptionText = translations[translations.indexOf("<uk>") + 1];
   } else {
-    descriptionText = "Couldn't resolve translation";
+    descriptionText = "No translation in set language";
   }
   return descriptionText;
 };

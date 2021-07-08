@@ -15,6 +15,10 @@
   left: 20px !important;
 }
 
+.messageLanguageFlag {
+  margin-left: 5px !important;
+}
+
 .defaultMessageDescription > span:nth-child(1) {
   color: green;
 }
@@ -24,7 +28,15 @@
 .menuSubItemSpan {
   font-weight: bold;
   font-style: italic;
+  font-size: 1.1em;
+  padding: 5px 0px;
+  display: flex;
+  justify-content: space-between;
 }
+.menuSubItemSpan > i {
+  color: green;
+}
+
 .defaultMessageTypeDisplay > span:nth-child(1) {
   color: green;
 }
