@@ -7,6 +7,7 @@ import type { MessageData } from "../../../../redux/reducers/conversations/flowT
 import styles from "./css/defaultMessageMenu.module.css";
 // helpers //
 import { getMenuLanguageWithFlag } from "../../_helpers/generalComponentHelpers";
+import { splitStringByUppercase } from "../../../helpers/componentHelpers";
 
 type Props = {
   messageData: MessageData;
@@ -104,7 +105,7 @@ export const DefaultMessageMenu = ({ messageData, handleSetDefaultMessage, toggl
         ?
           <Menu.Item className={ styles.defaultMessageTypeDisplay } position="right">
             <span>Set as:</span>
-            <span>{ messageData.messageType }</span>
+            <span>{ `${splitStringByUppercase(messageData.messageType)} Response` }</span>
           </Menu.Item>
         :
           null

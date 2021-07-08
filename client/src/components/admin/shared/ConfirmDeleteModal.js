@@ -8,7 +8,7 @@ import { capitalizeString } from "../../helpers/displayHelpers";
 
 type Props = {
   open: boolean,
-  modelName: "room" | "service" | "dining" | "extra" | "image" | "contact" | "conversation",
+  modelName: "room" | "service" | "dining" | "extra" | "image" | "contact" | "conversation" | "message" | "",
   confirmAction: () => Promise<void | boolean>,
   cancelAction: () => void,
   customHeader?: string,
@@ -25,7 +25,7 @@ export const ConfirmDeleteModal = ({ open, modelName, customHeader, customConten
             {
               customContent 
               ? customContent
-              : `This will delete the selected ${capitalizeString(modelName)} all of its data and images. This action is permanent`
+              : `This will delete the selected ${ modelName ? capitalizeString(modelName) : "Model"} data all of its additional images if any. This action is permanent`
             }
           </span>
         </Modal.Content>

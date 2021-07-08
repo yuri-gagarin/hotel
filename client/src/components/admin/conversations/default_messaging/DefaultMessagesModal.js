@@ -150,11 +150,11 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
     <Modal className={ styles.modal } open={true } >
       <Modal.Content>
         <div className={ styles.modalHeaderDiv }>
-          <div className={ styles.modalHeaderTitle }><span>Client Messenger</span><span>- default responses settings:</span></div>
+          <div className={ styles.modalHeaderTitle }><span>Client Messenger</span><span> default responses settings:</span></div>
           <div>
           <Button.Group attached="right" className={ styles.settingsButtons }>
             <Button basic color="green" onClick={ setFormOpen }>
-              New
+              Create New
               <Icon style={{ marginLeft: "5px" }} name="file" />
             </Button>
             <Button basic color="grey"  onClick={ toggleAllMessages }>
@@ -162,7 +162,7 @@ export const DefaultMessagesModal = ({ modalOpen, adminConversationState, toggle
               <Icon style={{ marginLeft: "5px" }} name="settings" />
             </Button>
             <Button basic color="grey" onClick={ handleFetchDefaultMessages } >
-              Reload
+              Reload All
               <Icon style={{ marginLeft: "5px" }} name="refresh" />
             </Button>
             <Button basic color="red" onClick={ toggleDefaultMessagesModal }>

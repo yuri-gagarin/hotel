@@ -190,7 +190,7 @@ const ConversationIndexContainer = ({
   }
   return (
     <React.Fragment>
-      <ConfirmDeleteModal open={ confirmDeleteModalState.open } modelName="conversation" cancelAction={ cancelConversationDelete } confirmAction={ confirmModelDelete } />
+      <ConfirmDeleteModal open={ confirmDeleteModalState.open } modelName={ confirmDeleteModalState.modelToDelete } cancelAction={ cancelConversationDelete } confirmAction={ confirmModelDelete } />
       <ConnectedClientsModal 
         modalOpen={ onlineUsersModalOpen }
         toggleModal={ toggleModal }

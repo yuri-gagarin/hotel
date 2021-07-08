@@ -8,21 +8,32 @@
   display: flex;
   flex-wrap: wrap;
 }
+.modalHeaderDiv > div:nth-child(2) {
+  border-bottom: 1px solid grey;
+}
+
 .modalHeaderTitle {
   position: relative;
   display: flex;
   flex: 1;
   align-items: center;
-  padding-left: 5px;
   border-left: 1px solid grey;
   border-bottom: 1px solid grey;
 }
 .modalHeaderTitle > span:nth-child(1) {
+  height: 100%;
+  display: flex;
+  align-items: center;
   font-size: 1.1em;
   font-weight: bold;
+  padding: 0 10px;
+  border-radius: 0 10px 0 0;
+  background-color: rgb(30, 160, 30);
+  color: white;
 }
 .modalHeaderTitle > span:nth-child(2) {
-  margin-left: 3px;
+  margin-left: 10px;
+  font-style: italic;
 }
 
 .newDefaultMessageForm {
