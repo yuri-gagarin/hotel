@@ -61,7 +61,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
 
   return (
     <React.Fragment>
-      <Grid.Column largeScreen={5} style={{ padding: 0, height: "100%" }}>
+      <Grid.Column className={ styles.messengerControlsCol } largeScreen={5} style={{ padding: 0, height: "100%" }}>
         <div className={ styles.conversationControlsUpperWrapper }>
           <Menu className={ styles.conversationOptionsMenu }>
             <Menu.Item>
@@ -117,7 +117,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
           <div>{ viewingArchived ? "Archived Conversations" : "Active Conversations"}</div>
         </div>
       </Grid.Column>
-      <Grid.Column largeScreen={9} style={{ padding: 0, height: "100%" }}>
+      <Grid.Column className={ styles.messengerDetailsCol } largeScreen={9} style={{ padding: 0, height: "100%" }}>
         <div className={ styles.conversationDetailsWrapper }>
           <div className={ `${styles.conversationDetailsUpper} `}>
             <div className={ styles.conversationDetailsDiv }>
