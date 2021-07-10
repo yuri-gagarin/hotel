@@ -179,3 +179,12 @@
 .exploreBtn:hover .buttonVertical {
   transform: scaleY(0);
 }
+
+@media only screen and (max-width: 500px) {
+  .secondSvg {
+    width: 100px;
+  }
+  .plainSpacer {
+    height: 0px;
+  }
+}

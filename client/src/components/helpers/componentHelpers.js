@@ -1,5 +1,6 @@
 // @flow 
 import { useEffect, useRef } from "react";
+import $ from "jquery";
 
 export const navbarCollapseListener = () => {
   // Navbar collapse implementation // 
@@ -31,8 +32,7 @@ export function usePrevious<S>(value: S): any {
     ref.current = value;
   })
   return ref.current;
-};
-
+}
 export const splitStringByUppercase = (stringToSplit: string): string => {
   if (!stringToSplit || typeof stringToSplit !== "string") {
     return "No string to split";
@@ -43,4 +43,4 @@ export const splitStringByUppercase = (stringToSplit: string): string => {
   } else {
     return stringToSplit;
   }
-};
+}

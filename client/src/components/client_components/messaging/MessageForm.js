@@ -111,6 +111,7 @@ const MessageForm = ({ open, clientState, conversationState, handleSendMessage, 
         <div className={ styles.messageFormControlsWrapper }>
           <i className={ `far fa-times-circle ${ styles.messageFormCloseIcon }` }></i>
         </div>
+        <div className={ styles.messageFormTitle }>Messenger</div>
       </div>
       <div className={ styles.messengerContentView } ref={messagesContentRef}>
         { 
