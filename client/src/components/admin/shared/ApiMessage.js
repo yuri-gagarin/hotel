@@ -3,13 +3,14 @@ import * as React from "react";
 // semantic react imports //
 import { Icon, Message } from "semantic-ui-react";
 // 
+import type { AdminConversationState } from "../../../redux/reducers/admin_conversations/flowTypes";
 import type { ServiceState } from "../../../redux/reducers/service/flowTypes";
 import type { ContactPostState } from "../../../redux/reducers/contact_posts/flowTypes";
 import type { RoomState } from "../../../redux/reducers/rooms/flowTypes";
 // styles and css //
 import styles from "./css/apiMessage.module.css";
 
-type LocalState = ServiceState | ContactPostState | RoomState;
+type LocalState = AdminConversationState | ServiceState | ContactPostState | RoomState;
 
 const APIMessage = ({ currentLocalState } : { currentLocalState: LocalState }): React.Node => {
   const [ messageVisible, setMessageVisible ] = React.useState(true);

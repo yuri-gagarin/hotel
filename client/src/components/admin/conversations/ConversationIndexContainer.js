@@ -2,6 +2,7 @@
 import * as React from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
 // additional components //
+import ApiMessage from "../shared/ApiMessage";
 import { ConnectedClientsModal } from "./ConnectedClientsModal";
 import ConversationComponent from "./ConversationComponent";
 import { ConversationControls } from "./ConversationControls";
@@ -190,6 +191,7 @@ const ConversationIndexContainer = ({
   }
   return (
     <React.Fragment>
+      <ApiMessage currentLocalState={ adminConversationState } />
       <ConfirmDeleteModal open={ confirmDeleteModalState.open } modelName={ confirmDeleteModalState.modelToDelete } cancelAction={ cancelConversationDelete } confirmAction={ confirmModelDelete } />
       <ConnectedClientsModal 
         modalOpen={ onlineUsersModalOpen }
