@@ -18,7 +18,12 @@
 }
 
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
+  .conversationControlRow {
+    padding: 0 !important;
+    position: relative;
+    height: 75px !important;
+  }
   .messengerIndexRow {
     border: 3px solid green;
     display: flex !important;
@@ -36,14 +41,5 @@
   .messagesColumn {
     position: absolute !important;
     z-index: 1;
-  }
-}
-
-@media only screen and (max-width: 500px) {
-  .conversationControlRow {
-    border: 3px solid blue;
-    padding: 0 !important;
-    position: relative;
-    height: 50px !important;
   }
 }

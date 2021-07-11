@@ -199,25 +199,32 @@
   }
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
   .messengerControlsCol {
     display: flex !important;
     height: auto !important;
     position: absolute !important;
     height: 100px;
-    transform: translateX(-50%);
   }
   .messengerDetailsCol {
     display: flex !important;
     position: absolute !important;
     height: 100px;
+    transform: translateX(100%);
+  }
+  .messengerDetailsColMobileOpen {
+    transform: translateX(0%);
+    background-color: white;
   }
   .conversationControlsLowerWrapper {
     display: none;
   }
   .conversationDetailsWrapper {
-    border: 3px solid green;
-    height: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
   }
   .conversationDetailsUpper {
     display: none;

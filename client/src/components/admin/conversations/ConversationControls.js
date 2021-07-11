@@ -117,7 +117,7 @@ export const ConversationControls = ({ adminConversationState, handleToggleAdmin
           <div>{ viewingArchived ? "Archived Conversations" : "Active Conversations"}</div>
         </div>
       </Grid.Column>
-      <Grid.Column className={ styles.messengerDetailsCol } largeScreen={9} style={{ padding: 0, height: "100%" }}>
+      <Grid.Column className={ `${styles.messengerDetailsCol} ${!objectValuesEmpty(activeConversation) ? styles.messengerDetailsColMobileOpen : ""}` } largeScreen={9} style={{ padding: 0, height: "100%" }}>
         <div className={ styles.conversationDetailsWrapper }>
           <div className={ `${styles.conversationDetailsUpper} `}>
             <div className={ styles.conversationDetailsDiv }>
