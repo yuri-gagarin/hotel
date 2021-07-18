@@ -11,8 +11,10 @@ import session from "express-session";
 import passportSrategy from "./controllers/helpers/authHelper";
 import combineRoutes from "./routes/combineRoutes";
 import cors from "cors";
+// redis and socketio for messenger functionality //
 import SocketIOController from "./controllers/socketIOController";
-
+import RedisController from "./controllers/redisController";
+// dotenv config //
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 const app = express();
@@ -108,12 +110,16 @@ app.use(router);
 // app config //
 app.on("dbReady", () => {
   const server = http.createServer(app);
+  const redisPassword = process.env.NODE_ENV === "production" ? process.env.REDIS_PASS : null;
+  const redisControllerInstance = RedisController({ password: redisPassword });
+
   server.listen(PORT, () => {
     console.info(`App listening at Port: ${PORT}`);
   });
   // socketio settings //
+  // spocketio listeners and emitters //
   io.attach(server, { cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] } });
-  SocketIOController(io);
+  SocketIOController(io, redisControllerInstance);
 
 });
 // variable exports //

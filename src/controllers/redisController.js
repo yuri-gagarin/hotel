@@ -65,7 +65,8 @@ const RedisController = ((redisOpts) => {
   const visibleAdminsSetKey = `VISIBLE_ADMINS_SET`;
 
   (() => {
-    redisInstance = redis.createClient({ ...redisOpts});
+    const password = (redisOpts.password && typeof redisOpts.password === "string") ? redisOpts.password : "nopassword";
+    redisInstance = redis.createClient({ ...redisOpts, password });
   })();
 
   /**
@@ -310,6 +311,6 @@ const RedisController = ((redisOpts) => {
     getConnectedClients, removeConversationData, getKeys, getConversationHashes, getConversationMessages
   };
 
-})();
+});
 
 export default RedisController;

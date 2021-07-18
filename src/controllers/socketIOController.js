@@ -1,10 +1,14 @@
-import RedisController from "./redisController";
 // models //
 import Conversation from "../models/Conversation";
 // helpers //
 import { emitDefaultWelcomeMessage, emitDefaultOfflineMessage, emitDefaultConversationArchived } from  "./helpers/defaultMessageEmitters";
 
-export default function (socketIOInstance) {
+/**
+ * 
+ * @param {Object} socketIOInstance - Created SocketIO instance
+ * @param {Object} redisControllerInstance - created redisControllerInstance instance
+ */
+export default function (socketIOInstance, redisControllerInstance) {
 
   socketIOInstance.on("connection", (socket) => {
     console.log("connection");
@@ -19,11 +23,11 @@ export default function (socketIOInstance) {
         return;
       }
       // set client id with socket id in redis to prevent multiple connections //
-      return RedisController.setClientCredentials({ userId, socketId, name, email })
+      return redisControllerInstance.setClientCredentials({ userId, socketId, name, email })
         .then((res) => {
           if (res && res === "OK") {
             // new user //
-            return RedisController.getVisibleAdmins();
+            return redisControllerInstance.getVisibleAdmins();
           } else {
             return Promise.resolve({ visibleAdminSocketIds: [], numberOfVisibleAdmins: 0 });
           }
@@ -53,7 +57,7 @@ export default function (socketIOInstance) {
 
     // listen for an administrator to connect //
     socket.on("adminConnected", (admin) => {
-      RedisController.setAdminCredentials(admin)
+      redisControllerInstance.setAdminCredentials(admin)
         .then(() => {
           socket.emit("adminCredentialsReceived");
         })
@@ -68,8 +72,8 @@ export default function (socketIOInstance) {
       if (messengerOnline) {
         // take admin messenger online //
         return Promise.all( [
-          RedisController.setNewVisibleAdmin(socketId),
-          RedisController.getConnectedClients(),
+          redisControllerInstance.setNewVisibleAdmin(socketId),
+          redisControllerInstance.getConnectedClients(),
         ])
         .then(([ _, connectedClientsRes ]) => {
           const { numberOfConnectedClients, visibleClientSocketIds, clientsDataArr } = connectedClientsRes;
@@ -81,10 +85,10 @@ export default function (socketIOInstance) {
         });
       } else {
         // take admin messenger offline //
-        return RedisController.removeVisibleAdmin(socketId)
+        return redisControllerInstance.removeVisibleAdmin(socketId)
           .then(() => {
             socketIOInstance.to(socketId).emit("setAdminMessengerOnlineStatus", { messengerOnline: false });
-            return RedisController.getVisibleAdmins();
+            return redisControllerInstance.getVisibleAdmins();
           })
           .then(({ numberOfVisibleAdmins }) => {
             if (numberOfVisibleAdmins === 0) {
@@ -105,7 +109,7 @@ export default function (socketIOInstance) {
     // client is messaging //
     socket.on("newClientMessageSent", (data) => {
       // emits a an event to notify admin of a new message //
-      return RedisController.getVisibleAdmins()
+      return redisControllerInstance.getVisibleAdmins()
         .then(({ numberOfVisibleAdmins, visibleAdminSocketIds }) => {
           if (numberOfVisibleAdmins === 0) {
             // emit a messenger offline message //
@@ -115,7 +119,7 @@ export default function (socketIOInstance) {
             for (const socketId of visibleAdminSocketIds) {
               socketIOInstance.to(socketId).emit("receiveClientMessage", data);
             }
-            return RedisController.setNewMessage(data);
+            return redisControllerInstance.setNewMessage(data);
           }
         })
         .then(() => {
@@ -133,8 +137,8 @@ export default function (socketIOInstance) {
       const { receiverSocketId } = conversationData;
       if (receiverSocketId) {
         return Promise.all([
-          RedisController.setConversationData(conversationData),
-          RedisController.setNewMessage(messageData)
+          redisControllerInstance.setConversationData(conversationData),
+          redisControllerInstance.setNewMessage(messageData)
         ])
         .then(() => {
           socketIOInstance.to(receiverSocketId).emit("receiveAdminReply", messageData);
@@ -146,9 +150,9 @@ export default function (socketIOInstance) {
     });
 
     socket.on("createNewAdminConversationData", (conversationData) => {
-      return RedisController.setConversationData(conversationData)
+      return redisControllerInstance.setConversationData(conversationData)
         .then(() => {
-          return RedisController.getVisibleAdmins();
+          return redisControllerInstance.getVisibleAdmins();
         })
         .then(({ numberOfVisibleAdmins, visibleAdminSocketIds }) => {
           if (numberOfVisibleAdmins > 0 && visibleAdminSocketIds.length > 0) {
@@ -169,7 +173,7 @@ export default function (socketIOInstance) {
       // handle an error with incorrect input //
       if (!conversationId || !receiverSocketId) return;
 
-      return RedisController.removeConversationData(conversationId)
+      return redisControllerInstance.removeConversationData(conversationId)
         .then(() => {
           // check if an archived conversation message has been set //
           return emitDefaultConversationArchived({ socketIOInstance, conversationId, receiverSocketId });
@@ -200,7 +204,7 @@ export default function (socketIOInstance) {
           const promises = [];
           // convert messages objects to JSON //
           for (const messageData of messages) {
-            promises.push(RedisController.setNewMessage(messageData));
+            promises.push(redisControllerInstance.setNewMessage(messageData));
           }
           return Promise.all(promises);
         } else {
@@ -208,7 +212,7 @@ export default function (socketIOInstance) {
         }
       })
       .then(() => {
-        return RedisController.getVisibleAdmins();
+        return redisControllerInstance.getVisibleAdmins();
       })
       .then(({ numberOfVisibleAdmins, visibleAdminSocketIds }) => {
         if (numberOfVisibleAdmins > 0 && visibleAdminSocketIds) {
@@ -238,10 +242,10 @@ export default function (socketIOInstance) {
       const { id : socketId } = socket;
       // remove from redis mem //
       console.log("disconnected");
-      return RedisController.removeClientCredentials(socketId)
+      return redisControllerInstance.removeClientCredentials(socketId)
         .then(({ numOfClientHashesRemoved, numOfClientSocketIdsRemoved }) => {
           if (numOfClientHashesRemoved > 0 || numOfClientSocketIdsRemoved > 0) {
-            return RedisController.getVisibleAdmins()
+            return redisControllerInstance.getVisibleAdmins()
               .then(({ visibleAdminSocketIds }) => {
                 if (visibleAdminSocketIds.length > 0) {
                   for (const adminSocketId of visibleAdminSocketIds) {
@@ -251,10 +255,10 @@ export default function (socketIOInstance) {
                 return Promise.resolve()
               })
           } else {
-            return RedisController.removeVisibleAdmin(socketId)
+            return redisControllerInstance.removeVisibleAdmin(socketId)
               .then(({ numberRemoved }) => {
                 if (numberRemoved > 0) {
-                  return RedisController.getVisibleAdmins();
+                  return redisControllerInstance.getVisibleAdmins();
                 } else {
                   return Promise.resolve({ numberOfVisibleAdmins: 0 });
                 }
