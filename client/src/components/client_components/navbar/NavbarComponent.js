@@ -19,7 +19,7 @@ type Props = {
 }
 type ReactObjRef = {| current: ( HTMLDivElement | null ) |};
 
-const scrolltoElement = ({ elementId } : { elementId : string }): void => {
+const scrolltoElement = ({ elementId }: { elementId: string }): void => {
   const el = document.getElementById(elementId);
   console.log(document.body ? document.body.scrollHeight : 0)
   if (el) {
@@ -35,7 +35,7 @@ const closeMobileMenus = (refs: Array<ReactObjRef>): void => {
   }
 }
 
-const NavbarComponent = ({ history, hidden } : Props): React.Node => {
+const NavbarComponent = ({ history, hidden }: Props): React.Node => {
   const [ t, i18n ] = useTranslation();
   const [ navState, setNavState ] = React.useState<{ useHomeScreenNav: boolean, height: string }>({ useHomeScreenNav: false, height: "auto" });
   // refs //
@@ -44,9 +44,11 @@ const NavbarComponent = ({ history, hidden } : Props): React.Node => {
   // lifecycle hooks //
   const scrollListener = () => {
     const el = document.getElementById("booking");
+    /*
     if (document.body && el) {
 
     }
+    */
   }
   React.useEffect(() => {
     const currentPath = history.location.pathname;
@@ -69,17 +71,17 @@ const NavbarComponent = ({ history, hidden } : Props): React.Node => {
         i18n.changeLanguage("en");
         closeMobileMenus([ mainMenuRef, languageMenuRef ]);
         break;
-      };
+      }
       case "uk": {
         i18n.changeLanguage("uk");
         closeMobileMenus([ mainMenuRef, languageMenuRef ]);
         break;
-      };
+      }
       case "ru": {
         i18n.changeLanguage("ru");
         closeMobileMenus([ mainMenuRef, languageMenuRef ]);
         break;
-      };
+      }
     }
   };
 
@@ -120,6 +122,11 @@ const NavbarComponent = ({ history, hidden } : Props): React.Node => {
         scrolltoElement({ elementId: "contact" });
       }, 100);
     }
+  };
+
+  // to close mobile menu on click //
+  const handleMobileMenusClose = (): void => {
+    closeMobileMenus([ mainMenuRef, languageMenuRef ]);
   };
   // hotel news route //
   const goToNews = () => {
@@ -168,6 +175,7 @@ const NavbarComponent = ({ history, hidden } : Props): React.Node => {
         : <NonHomeScreenNav 
             customRef={ mainMenuRef }
             history={ history }
+            handleMobileMenusClose={ handleMobileMenusClose }
             goToBooking={ goToBooking }
             goToContactForm={ goToContactForm }
             goToNews={ goToNews }

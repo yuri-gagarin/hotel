@@ -9,23 +9,27 @@ import type { RouterHistory } from "react-router-dom";
 type Props = {
   customRef: any | null,
   history: RouterHistory,
+  handleMobileMenusClose: () => void;
   goToBooking: () => void,
   goToContactForm: () => void,
   goToNews: () => void,
   goToAbout: () => void
 };
 
-export const NonHomeScreenNav = ({ customRef, history, goToBooking, goToContactForm, goToNews, goToAbout }: Props): React.Node => {
+export const NonHomeScreenNav = ({ customRef, history, handleMobileMenusClose, goToBooking, goToContactForm, goToNews, goToAbout }: Props): React.Node => {
   const [t] = useTranslation();
 
   
   const goToRooms = () => {
+    handleMobileMenusClose();
     history.push("/rooms");
   };
   const goToDiningEntertainment = () => {
+    handleMobileMenusClose();
     history.push("/dining");
   };
   const goToServices = () => {
+    handleMobileMenusClose();
     history.push("/services");
   };
 

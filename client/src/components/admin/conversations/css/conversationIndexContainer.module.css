@@ -7,6 +7,7 @@
   flex-direction: column;
   padding: 0 !important;
   height: 100%;
+  border: 3px solid red !important;
 }
 .messagesColumn  {
   position: relative;
@@ -16,3 +17,29 @@
   height: 100%;
 }
 
+
+@media only screen and (max-width: 600px) {
+  .conversationControlRow {
+    padding: 0 !important;
+    position: relative;
+    height: 75px !important;
+  }
+  .messengerIndexRow {
+    border: 3px solid green;
+    display: flex !important;
+    position: relative;
+  }
+  .conversationsColumn {
+    position: absolute !important;
+    z-index: 2;
+    background-color: white !important;
+  }
+  .conversationsColumnSlideLeft {
+    transform: translateX(-100%);
+    transition: all 200ms linear;
+  }
+  .messagesColumn {
+    position: absolute !important;
+    z-index: 1;
+  }
+}

@@ -216,7 +216,7 @@ const ConversationIndexContainer = ({
         handleUpdateDefaultMessage={ _handleUpdateDefaultMessage }
         triggerMessageModelDelete={ toggleDeleteDefaultMessageModel }
       />
-      <Grid.Row centered style={{ padding: 0 }} columns={2}>
+      <Grid.Row className={ styles.conversationControlRow } centered style={{ padding: 0 }} columns={2}>
         <ConversationControls 
           adminConversationState={ adminConversationState } 
           handleToggleAdminMessengerOnlineStatus={ _handleToggleAdminMessengerOnlineStatus }
@@ -231,7 +231,7 @@ const ConversationIndexContainer = ({
         />
       </Grid.Row>
       <Grid.Row stretched centered style={{ padding: 0, height: "80%" }} columns={2} className={ styles.messengerIndexRow }>
-        <Grid.Column largeScreen={5} className={ styles.conversationsColumn }>
+        <Grid.Column largeScreen={5} className={ `${styles.conversationsColumn} ${ !objectValuesEmpty(adminConversationState.activeConversation) ? styles.conversationsColumnSlideLeft : ""}` }>
           <ConversationComponent 
             adminConversationState={ adminConversationState } 
             openConversation={ openConversation }
