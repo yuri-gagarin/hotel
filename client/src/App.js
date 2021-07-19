@@ -1,6 +1,5 @@
-/* global jQuery, define */
-import React, { useEffect, useState }from 'react';
-import PropTypes from "prop-types";
+// @flow 
+import * as React from 'react';
 import {
   BrowserRouter as Router,
   Switch, Route, useLocation
@@ -11,6 +10,7 @@ import { handleSetAdmin } from "./redux/actions/apiActions";
 import store from "./redux/store";
 // socketio //
 import io from "socket.io-client";
+import type { Socket } from "socket.io-client";
 // axios //
 import "./assets/theme/vendor/jquery/jquery";
 import "./assets/theme/vendor/bootstrap/css/bootstrap.min.css";
@@ -31,8 +31,11 @@ import AdminComponent from './components/admin/AdminComponent';
 import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
 import { ClientNotFoundComponent } from "./components/client_components/shared/ClientNotFoundComponent";
 //
-export const socket = io.connect("http://localhost:8080");
 
+interface SocketIO extends Socket {
+  connected?: boolean;
+}
+export const socket: SocketIO = io("http://localhost:8080");
 
 const AuthorizedRoute = ({ loggedIn, component, path, history }) => {
   if (loggedIn) {
@@ -53,9 +56,9 @@ const AuthorizedRoute = ({ loggedIn, component, path, history }) => {
   }
  };
 
-export const ScrollToTop = () => {
+export const ScrollToTop = (): null => {
   const { pathname } = useLocation();
-  useEffect(() => {
+  React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
   return null;
@@ -63,7 +66,7 @@ export const ScrollToTop = () => {
 
 const AppRoutes = (props) => {
 
-  useEffect(() => {
+  React.useEffect(() => {
     return function () {
       localStorage.removeItem("conversationId");
     }
@@ -75,21 +78,30 @@ const AppRoutes = (props) => {
       <ScrollToTop />
       <Switch>
         <Route path={adminRoutes.ADMIN_LOGIN} component={AdminLoginComponent} />
-        <Route path={"/admin"} loggedIn={true} component={AdminComponent} />
+        <Route path={"/admin"} component={AdminComponent} />
         <Route path={"/"} component={HomeComponent} />
         <Route component={ ClientNotFoundComponent } />
        </Switch>
     </Router>
   );
-}
+};
+
+type WrapperProps = {
+  loggedIn: any;
+};
+type Props = {
+  ...WrapperProps;
+  adminState: any;
+  _setAdmin: (adminData: any) => void;
+};
 
 const App = (props) => {
   const { adminState, _setAdmin } = props;
   const { loggedIn } = adminState;
   
-  const [socketConnectionInterval, setSocketConnectionInterval] = useState(null);
+  const [socketConnectionInterval, setSocketConnectionInterval] = React.useState(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     // keep client connected to the same socket if idle //
     socket.on("clientCredentialsReceived", () => {
       // set an interval to keep connection alive while idle //
@@ -116,11 +128,6 @@ const App = (props) => {
     <AppRoutes loggedIn={loggedIn} />
   );
 };
-// PropTypes validation //
-App.propTypes = {
-  adminState: PropTypes.object.isRequired,
-  _setAdmin: PropTypes.func.isRequired
-};
 
 const mapStateToProps = (state) => {
   return {
@@ -133,4 +140,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default (connect(mapStateToProps, mapDispatchToProps)(App): React.AbstractComponent<Props>);
