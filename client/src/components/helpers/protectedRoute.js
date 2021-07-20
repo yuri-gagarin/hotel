@@ -1,19 +1,26 @@
 // @flow
 import * as React from "react";
+import { Route } from "react-router-dom";
 import axios from "axios";
+// additional components //
+import AdminLoginComponent from "../admin/auth/AdminLoginComponent"
+import { NotAllowedComponent } from "../display_components/NotAllowedComponent";
+// constants //
+import { adminRoutes } from "../../routes/appRoutes";
 // Higer order comoponent to protect some of admin UI components //
 // should check and verify admin login and direct to the correct component //
 // otherwise should display a default 401 NOT ALLOWED page //
 
 type Props = {
-  ReactCmponent: React.Node;
+  clientPath: string;
+  component: React$ComponentType<any>;
 };
 type LocalState = {
   loaded: boolean;
   validLogin: boolean;
 }
 
-export const ProtectedRoute = ({ ReactCmponent }: Props): React.Node => {
+export const ProtectedRoute = ({ clientPath, component }: Props): React.Node => {
 
   const [ localState, setLocalState ] = React.useState<LocalState>({ loaded: false, validLogin: false });
   // get token or user session //
@@ -33,9 +40,11 @@ export const ProtectedRoute = ({ ReactCmponent }: Props): React.Node => {
         })
         .catch((err) => {
           // error handling //
+          console.log("here")
           setLocalState({ loaded: true, validLogin: false });
         });
     } else {
+      console.log("here")
       setLocalState({ loaded: true, validLogin: false });
     }
   }, []);
@@ -45,14 +54,12 @@ export const ProtectedRoute = ({ ReactCmponent }: Props): React.Node => {
     ? 
       localState.validLogin 
       ?
-        ReactCmponent
+        <Route path={ clientPath } component={ component } />
       :
-      <div>
-
-      </div>
+        <NotAllowedComponent />
     :
-    <div>
-      <hh3>Not Allowed</hh3>
+    <div style={{ position: "fixed", top: "0", right: "0", bottom: "0", left: "0", backgroundColor: "red" }}>
+      <h3>Loading</h3>
     </div>
   );
 };

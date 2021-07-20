@@ -12,7 +12,7 @@ import styles from "./css/apiMessage.module.css";
 
 type LocalState = AdminConversationState | ServiceState | ContactPostState | RoomState;
 
-const APIMessage = ({ currentLocalState } : { currentLocalState: LocalState }): React.Node => {
+const APIMessage = ({ currentLocalState }: { currentLocalState: LocalState }): React.Node => {
   const [ messageVisible, setMessageVisible ] = React.useState(true);
 
   const { loading, responseMsg, error } = currentLocalState;

@@ -30,6 +30,7 @@ import HomeComponent from "./components/client_components/HomeComponent";
 import AdminComponent from './components/admin/AdminComponent';
 import AdminLoginComponent from "./components/admin/auth/AdminLoginComponent";
 import { ClientNotFoundComponent } from "./components/client_components/shared/ClientNotFoundComponent";
+import { ProtectedRoute } from "./components/helpers/protectedRoute";
 //
 
 interface SocketIO extends Socket {
@@ -78,7 +79,7 @@ const AppRoutes = (props) => {
       <ScrollToTop />
       <Switch>
         <Route path={adminRoutes.ADMIN_LOGIN} component={AdminLoginComponent} />
-        <Route path={"/admin"} component={AdminComponent} />
+        <ProtectedRoute clientPath={ "/admin" } component={ AdminComponent } />
         <Route path={"/"} component={HomeComponent} />
         <Route component={ ClientNotFoundComponent } />
        </Switch>

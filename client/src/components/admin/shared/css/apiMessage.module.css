@@ -1,11 +1,9 @@
 .apiMessageContainer {
   position: fixed;
   left: 0%;
-  top: 50%;
-  left: 50%;
+  top: 0%;
   z-index: 999;
-  transform: translate(-50%, -50%);
-  width: 50%;
+  width: 100vw;
   font-weight: bold;
   opacity: 1;  
 }
