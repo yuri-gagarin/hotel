@@ -54,7 +54,7 @@ export const ConversationCard = ({ adminConversationState, conversation, openCon
             updateAdminConversationName={ updateAdminConversationName }
           />
         </div>
-        <div className={ `${styles.conversationContentWrapper} ${convoSelected ? styles.textColorSelected : ""}`}>
+        <div className={ `${styles.conversationContentWrapper} ${ convoSelected ? styles.selectedConversationContentWrapper : ""}`}>
           {
             lastMessageContent 
             ?

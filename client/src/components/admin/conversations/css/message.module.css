@@ -17,9 +17,9 @@
 
 .left {
   background-color: rgb(68, 168, 68);
-  border-radius: 10px 10px 10px 0;
+  border-radius: 20px 20px 20px 0;
 }
 .right {
   background-color: rgb(100, 164, 194);
-  border-radius: 10px 10px 0 10px;
+  border-radius: 20px 20px 0 20px ;
 }

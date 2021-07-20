@@ -107,12 +107,11 @@ app.use(router);
 
 
 
+const redisPassword = process.env.NODE_ENV === "production" ? process.env.REDIS_PASS : null;
+export const redisControllerInstance = RedisController({ password: redisPassword });
 // app config //
 app.on("dbReady", () => {
   const server = http.createServer(app);
-  const redisPassword = process.env.NODE_ENV === "production" ? process.env.REDIS_PASS : null;
-  const redisControllerInstance = RedisController({ password: redisPassword });
-
   server.listen(PORT, () => {
     console.info(`App listening at Port: ${PORT}`);
   });

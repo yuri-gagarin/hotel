@@ -1,8 +1,7 @@
 import Conversation from "../models/Conversation";
 import Message from "../models/Message";
 // Redis controller for Redis queries //
-import RedisController from "./redisController";
-
+import { redisControllerInstance } from "../server";
 export default {
   /*
   createNewConversation: (req, res) => {
@@ -25,16 +24,16 @@ export default {
         });
     } else if (viewActive && viewActive === "true") {
       let conversations; 
-      RedisController.getKeys("CONVERSATION_HASH")
+      redisControllerInstance.getKeys("CONVERSATION_HASH")
         .then((data) => {
-          return RedisController.getConversationHashes(data);
+          return redisControllerInstance.getConversationHashes(data);
         })
         .then((convDataArr) => {
           conversations = convDataArr;
           if (convDataArr.length > 0) {
             const promises = [];
             for (const convData of convDataArr) {
-              promises.push(RedisController.getConversationMessages(convData.conversationId));
+              promises.push(redisControllerInstance.getConversationMessages(convData.conversationId));
             }
             return Promise.all(promises);
           } else {
