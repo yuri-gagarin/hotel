@@ -35,3 +35,30 @@
   font-style: italic;
 }
 
+.loginBtnDiv {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.loginBtn {
+  height: 50px;
+  width: 100px;
+  outline: none;
+  border: 2px solid rgb(242, 250, 244);
+  border-radius: 3px;
+  background-color: white;
+  color: #4b6cb7;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1.2em;
+  font-weight: 800;
+}
+.loginBtn:active {
+  outline: none;
+  border: 2px solid rgb(39, 86, 240);
+  background-color: white;
+  color:rgb(39, 86, 240);
+}
+.loginBtn:focus {
+  outline: none;
+}
+

@@ -5,6 +5,8 @@ import axios from "axios";
 // additional components //
 import AdminLoginComponent from "../admin/auth/AdminLoginComponent"
 import { NotAllowedComponent } from "../display_components/NotAllowedComponent";
+// types //
+import type { RouterHistory } from "react-router-dom";
 // constants //
 import { adminRoutes } from "../../routes/appRoutes";
 // Higer order comoponent to protect some of admin UI components //
