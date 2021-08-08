@@ -5,6 +5,7 @@ import type { DiningEntModelData } from "../dining_entertainment/flowTypes";
 import type { RoomData } from "../rooms/flowTypes";
 import type { MessageData } from "../conversations/flowTypes";
 import type { AdminConversationData } from "../admin_conversations/flowTypes";
+import type { NewsPostData } from "../news_posts/flowTypes";
 
 export const generateEmptyService = (): ServiceData => {
   return {
@@ -123,3 +124,14 @@ export const generateEmptyMessageModel = (): MessageData => {
     sentAt: ""
   };
 };
+
+export const generateEmptyNewsPostModel = (): NewsPostData => {
+  const emptyNewsPostData: NewsPostData = {
+    _id: "",
+    content: "",
+    createdAt: "",
+    createdBy: "",
+    editedAt: "",
+  };
+  return emptyNewsPostData;
+}

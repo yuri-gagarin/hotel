@@ -24,7 +24,7 @@ export const sendContactPostRequest = (): ContactPostAPIRequest => {
   };
 };
 
-export const setContactPosts = (data : { status: number, responseMsg: string, createdContactPosts: Array<ContactPostData>, numberOfContactPosts: number }): SetContactPosts => {
+export const setContactPosts = (data: { status: number, responseMsg: string, createdContactPosts: Array<ContactPostData>, numberOfContactPosts: number }): SetContactPosts => {
   return {
     type: "SetContactPosts",
     payload: {

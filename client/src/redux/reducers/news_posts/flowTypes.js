@@ -34,7 +34,7 @@ export type NewsPostState = {
   status: number,
   loading: boolean,
   responseMsg: string,
-  newsPostPostData: NewsPostData,
+  newsPostData: NewsPostData,
   createdNewsPosts: Array<NewsPostData>,
   numberOfNewsPosts: number,
   error: null | Error
@@ -73,7 +73,7 @@ export type NewsPostCreated = {
     status: number,
     loading: boolean,
     responseMsg: string,
-    newNewsPostData: NewsPostData
+    newsPostData: NewsPostData
   }
 };
 export type NewsPostUpdated = {
@@ -92,7 +92,7 @@ export type NewsPostDeleted = {
     status: number,
     loading: boolean,
     responseMsg: string,
-    contactPostData: NewsPostData,
+    newsPostData: NewsPostData,
     createdNewsPosts: Array<NewsPostData>,
     numberOfNewsPosts: number
   }
@@ -100,13 +100,13 @@ export type NewsPostDeleted = {
 export type OpenNewsPost = {
   +type: "OpenNewsPost",
   payload: {
-    contactPostData: NewsPostData,
+    newsPostData: NewsPostData,
   }
 };
 export type ClearNewsPostData = {
   +type: "ClearNewsPostData",
   payload: {
-    contactPostData: NewsPostData,
+    newsPostData: NewsPostData,
   }
 };
 // union contactPost action type //

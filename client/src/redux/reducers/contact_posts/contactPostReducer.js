@@ -20,21 +20,21 @@ const contactPostReducer = (state: ContactPostState = initialState, action: Cont
         loading: action.payload.loading,
         error: null
       };
-    };
+    }
     case "OpenContactPost": {
       return {
         ...state,
         contactPostData: { ...action.payload.contactPostData },
         error: null
       };
-    };
+    }
     case "ClearContactPostData": {
       return {
         ...state,
         contactPostData: { ...action.payload.contactPostData },
         error: null
       };
-    };
+    }
     case "ContactPostUpdated": {
       return {
         ...state,
@@ -45,7 +45,7 @@ const contactPostReducer = (state: ContactPostState = initialState, action: Cont
         createdContactPosts: action.payload.updatedContactPosts,
         error: null
       };
-    };
+    }
     case "ContactPostDeleted": {
       return {
         ...state,
@@ -57,7 +57,7 @@ const contactPostReducer = (state: ContactPostState = initialState, action: Cont
         numberOfContactPosts: action.payload.numberOfContactPosts,
         error: null
       };
-    };
+    }
     case "SetContactPosts": {
       return {
         ...state,
@@ -69,7 +69,7 @@ const contactPostReducer = (state: ContactPostState = initialState, action: Cont
         numberContactPosts: action.payload.numberOfContactPosts,
         error: null
       };
-    };
+    }
     case "ContactPostError": {
       return {
         ...state,
@@ -78,11 +78,11 @@ const contactPostReducer = (state: ContactPostState = initialState, action: Cont
         responseMsg: action.payload.responseMsg,
         error: action.payload.error
       };
-    };
+    }
     default: {
       return state;
     }
-  };  
+  }
 };
 
 export default contactPostReducer;
