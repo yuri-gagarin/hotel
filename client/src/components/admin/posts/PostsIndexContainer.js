@@ -4,9 +4,11 @@ import { Grid, Segment } from "semantic-ui-react";
 import { PostForm } from "./PostForm";
 // additional components //
 import { PostsControls } from "./PostsControls";
+import { NewsPostCard } from "./cards/NewsPostCard";
+import { NewsPostPreviewCard } from "./cards/NewsPostPreviewCard";
 // redux actions //
 import { connect } from "react-redux";
-import { handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost } from "../../../redux/actions/newsPostActions";
+import { handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handleOpenNewsPost, handleCloseNewsPost } from "../../../redux/actions/newsPostActions";
 // types //
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { NewsPostAction, NewsPostsState, ClientNewsPostFormData, NewsPostUpdateData } from "../../../redux/reducers/news_posts/flowTypes";
@@ -28,10 +30,12 @@ type Props = {
   _handleFetchNewsPosts: (options?: any) => Promise<boolean>;
   _handleCreateNewsPost: (data: ClientNewsPostFormData, newsPostsState: NewsPostsState) => Promise<boolean>;
   _handleUpdateNewsPost: (data: NewsPostUpdateData, newsPostsState: NewsPostsState) => Promise<boolean>;
+  _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => void;
+  _handleCloseNewsPost: () => void;
 };
 
-const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, newsPostsState }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<LocalState>({ newPostFormOpen: true, editorTitle: "", editorText: "" });
+const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, _handleOpenNewsPost, _handleCloseNewsPost, newsPostsState }: Props): React.Node => {
+  const [ localState, setLocalState ] = React.useState<LocalState>({ newPostFormOpen: false, editorTitle: "", editorText: "" });
   
   const handleOpenNewPostForm = (): void => {
     setLocalState({ ...localState, newPostFormOpen: true });
@@ -78,7 +82,11 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
         });
     }
   };
+  const handleToggleNewsPost = (newsPostId: string): void => {
+    _handleOpenNewsPost(newsPostId, newsPostsState);
+  };
   const handleCancelPost = (): Promise<boolean> => {
+    _handleCloseNewsPost();
      setLocalState({ ...localState, newPostFormOpen: false, editorText: "" });
      return Promise.resolve(true);
   };
@@ -106,13 +114,27 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       </Grid.Row>
       <Grid.Row centered style={{ height: "80%", border: "5px solid red"}}>
         <Grid.Column width={6}>
-          <Segment style={{height: "100px", width: "300px"}}>1</Segment>
+          {
+            newsPostsState.createdNewsPosts.map((newsPost) => {
+              return (
+                <NewsPostCard key={ newsPost._id } newsPostData={ newsPost } toggleNewsPost={ handleToggleNewsPost } />
+              )
+            })
+          }
         </Grid.Column>
         <Grid.Column width={10}>{
           localState.newPostFormOpen ? 
           <PostForm titleText={ localState.editorTitle } editorText={localState.editorText} handleTitleChange={ handleTitleChange } handleUpdateEditor={ handleUpdateEditorChange } />
           :
-          <Segment>1</Segment>
+          (
+            objectValuesEmpty(newsPostsState.newsPostData)
+            ?
+            <Segment style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+              Open on the side to view your posts
+            </Segment>
+            :
+            <NewsPostPreviewCard newsPostData={ newsPostsState.newsPostData } />
+          )
         }
         </Grid.Column>
       </Grid.Row>
@@ -129,7 +151,9 @@ const mapDispatchToProps = (dispatch: Dispatch<NewsPostAction>) => {
   return {
     _handleFetchNewsPosts: (options?: any) => handleFetchNewsPosts(dispatch, options),
     _handleCreateNewsPost: (clientNewsPostData: ClientNewsPostFormData) => handleCreateNewsPost(dispatch, clientNewsPostData),
-    _handleUpdateNewsPost: (clientNewsPostData: NewsPostUpdateData, newsPostsState: NewsPostsState) => handleUpdateNewsPost(dispatch, clientNewsPostData, newsPostsState)
+    _handleUpdateNewsPost: (clientNewsPostData: NewsPostUpdateData, newsPostsState: NewsPostsState) => handleUpdateNewsPost(dispatch, clientNewsPostData, newsPostsState),
+    _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => handleOpenNewsPost(dispatch, newsPostId, newsPostsState),
+    _handleCloseNewsPost: () => handleCloseNewsPost(dispatch)
   };
 };
 
