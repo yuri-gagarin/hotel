@@ -37,7 +37,7 @@ export type Props = {
   _handleClearDiningModelData: () => void,
   _handleDeleteDiningModel: (modelIdToDelete: string, diningEntModelState: DiningEntertainmentState) => Promise<boolean>,
   _handleToggleModelOnlineOfflineStatus: (modelToUpdate: DiningEntModelData, diningEntState: DiningEntertainmentState) => Promise<boolean>,
-  _handleToggleAllOnlineOffline: (data : { onlineStatus: boolean }) => Promise<boolean>
+  _handleToggleAllOnlineOffline: (data: { onlineStatus: boolean }) => Promise<boolean>
 };
 
 type ConfirmDeleteModalState = {
@@ -45,7 +45,7 @@ type ConfirmDeleteModalState = {
   modelIdToDelete: string
 }
 
-const DiningEntertainmentIndexContainer = (props : Props): React.Node => {
+const DiningEntertainmentIndexContainer = (props: Props): React.Node => {
   const { useEffect, useState } = React;
   const { adminState, diningEntertainmentState, history } = props;
   const { _handleFetchDiningModels, _handleOpenDiningModel, _handleClearDiningModelData, _handleDeleteDiningModel, _handleToggleModelOnlineOfflineStatus, _handleToggleAllOnlineOffline } = props;
@@ -172,7 +172,7 @@ const mapDispatchToProps = (dispatch: Dispatch<DiningEntModelAction>) => {
     _handleToggleModelOnlineOfflineStatus: (modelToUpdate: DiningEntModelData, diningEntState: DiningEntertainmentState) => {
       return handleToggleModelOnlineOfflineStatus(dispatch, modelToUpdate, diningEntState);
     },
-    _handleToggleAllOnlineOffline: ({ onlineStatus } : { onlineStatus: boolean }) => {
+    _handleToggleAllOnlineOffline: ({ onlineStatus }: { onlineStatus: boolean }) => {
       return handleToggleAllOnlineOffline(dispatch, { onlineStatus });
     }
   };

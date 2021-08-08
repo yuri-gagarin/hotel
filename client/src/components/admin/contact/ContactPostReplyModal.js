@@ -38,7 +38,7 @@ type ErrorComponentState = {
 
 const initialString = `<p>Initial Email</p><p>Thank you for your interest. This is our response. We really Appreciate your email</p><p>Administrator</p>`;
 
-export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleCloseModal, sendContactReply } : Props): React.Node => {
+export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleCloseModal, sendContactReply }: Props): React.Node => {
   const { useState, useEffect, useRef } = React;
   // this may be bad practice to reassign prop data to state but //
   // for now we need to have emails editable //
@@ -123,7 +123,7 @@ export const ContactPostReplyModal = ({ replyModalOpen, contactPostData, handleC
   const handleRecipientEmailChange = (_, data: any) => {
     setLocalState({ ...localState, recipientEmail: data.value });
   };
-  const handleSenderEmailChange = (_, data: { value : string }) => {
+  const handleSenderEmailChange = (_, data: { value: string }) => {
     setLocalState({ ...localState, senderEmail: data.value });
   };
   const handleEmailSubjectChange = (_, data: { value: string }) => {

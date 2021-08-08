@@ -41,7 +41,7 @@
   border: 5px solid red;
 }
 .headerFixed {
-  z-index: 999;
+  z-index: 900;
   position: fixed;
   left: 0px;
   top: 40px;

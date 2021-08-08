@@ -5,7 +5,7 @@ import styles from "./css/contactPostReplyMarkup.module.css";
 type Props = {
   rawHTMLString: string
 }
-export const ContactPostReplyMarkup = ({ rawHTMLString } : Props): React.Node => {
+export const ContactPostReplyMarkup = ({ rawHTMLString }: Props): React.Node => {
 
   return (
     <div className={ styles.contactPostReplyMarkupWrapper }>

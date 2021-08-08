@@ -80,7 +80,7 @@ const AdminComponent = ({
     }
     // event listener for closed window //
     window.addEventListener("beforeunload", saveAdminState);
-    history.push("/admin/messages");
+    history.push("/admin/posts");
     return function () {
       window.removeEventListener("beforeunload", saveAdminState);
     }
