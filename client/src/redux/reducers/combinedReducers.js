@@ -8,6 +8,7 @@ import clientReducer from "./client/clientReducer";
 import contactPostReducer from "./contact_posts/contactPostReducer";
 import conversationReducer from "./conversations/conversationReducer";
 import serviceReducer from "./service/serviceReducer";
+import newsPostsReducer from "./news_posts/newsPostReducer";
 
 const rootReducer = combineReducers({
   adminConversationState: adminConversationsReducer, 
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   conversationState: conversationReducer,
   adminState: adminReducer,
   serviceState: serviceReducer,
-  diningEntertainmentState: diningEntertainmentReducer
+  diningEntertainmentState: diningEntertainmentReducer,
+  newsPostsState: newsPostsReducer
 });
 
 export default rootReducer;

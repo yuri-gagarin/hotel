@@ -41,7 +41,7 @@ const newPostReducer = (state: NewsPostState = initialState, action: NewsPostAct
         status: action.payload.status,
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
-        newPostData: action.payload.updatedNewsPost,
+        newsPostData: action.payload.updatedNewsPost,
         createdNewsPosts: action.payload.updatedNewsPosts,
         error: null
       };
@@ -52,7 +52,7 @@ const newPostReducer = (state: NewsPostState = initialState, action: NewsPostAct
         status: action.payload.status,
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
-        newPostData: action.payload.newPostData,
+        newsPostData: action.payload.newsPostData,
         createdNewsPosts: action.payload.createdNewsPosts,
         numberOfNewsPosts: action.payload.numberOfNewsPosts,
         error: null
@@ -65,7 +65,7 @@ const newPostReducer = (state: NewsPostState = initialState, action: NewsPostAct
         loading: action.payload.loading,
         responseMsg: action.payload.responseMsg,
         createdNewsPosts: action.payload.createdNewsPosts,
-        newPostData: generateEmptyNewsPost(),
+        newsPostData: generateEmptyNewsPostModel(),
         numberNewsPosts: action.payload.numberOfNewsPosts,
         error: null
       };

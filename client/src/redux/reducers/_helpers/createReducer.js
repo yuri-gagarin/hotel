@@ -6,8 +6,9 @@ import type { RoomAction, RoomState, RoomData, RoomImgData } from "../rooms/flow
 import type { ClientAction, ClientState } from "../client/flowTypes";
 import type { ConversationAction, ConversationState } from "../conversations/flowTypes";
 import type { AdminConversationAction, AdminConversationState } from "../admin_conversations/flowTypes";
+import type { NewsPostAction, NewsPostState } from "../news_posts/flowTypes";
 
-export type AppAction = ServiceAction | ContactPostAction | DiningEntModelAction | RoomAction | ClientAction | ConversationAction | AdminConversationAction;
+export type AppAction = ServiceAction | ContactPostAction | DiningEntModelAction | RoomAction | ClientAction | ConversationAction | AdminConversationAction | NewsPostAction;
 export type Reducer<S, A: AppAction> = (S, A) => S;
 export type Dispatch<A> = (action: A) => any;
 
@@ -21,7 +22,8 @@ export type RootState = {
   adminConversationState: AdminConversationState,
   appGeneralState: any,
   clientState: ClientState,
-  conversationState: ConversationState
+  conversationState: ConversationState,
+  newsPostState: NewsPostState
 };
 
 export type GenericModelData = (ServiceData | DiningEntModelData | RoomData);
