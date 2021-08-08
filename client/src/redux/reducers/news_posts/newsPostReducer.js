@@ -1,7 +1,7 @@
 // @flow 
 import { generateEmptyNewsPostModel } from "../_helpers/emptyDataGenerators";
-import type { NewsPostState, NewsPostData, NewsPostAction } from "./flowTypes";
-const initialState: NewsPostState = {
+import type { NewsPostsState, NewsPostData, NewsPostAction } from "./flowTypes";
+const initialState: NewsPostsState = {
   status: 202,
   loading: false,
   responseMsg: "",
@@ -11,7 +11,7 @@ const initialState: NewsPostState = {
   error: null
 };
 
-const newPostReducer = (state: NewsPostState = initialState, action: NewsPostAction): NewsPostState => {
+const newPostReducer = (state: NewsPostsState = initialState, action: NewsPostAction): NewsPostsState => {
   switch (action.type) {
     case "NewsPostAPIRequest": {
       return {

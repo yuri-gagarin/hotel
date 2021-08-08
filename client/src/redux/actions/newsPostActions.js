@@ -4,7 +4,7 @@ import { normalizeErrorMessages } from "./helpers/errorHelpers";
 import { generateEmptyNewsPostModel } from "../reducers/_helpers/emptyDataGenerators";
 // flow types 
 import type { 
-  NewsPostData, NewsPostState,
+  NewsPostData, NewsPostsState,
   NewsPostAPIRequest, SetNewsPosts, NewsPostError,
   NewsPostCreated, NewsPostUpdated, NewsPostDeleted,
   OpenNewsPost, ClearNewsPostData, NewsPostAction, 
@@ -81,7 +81,7 @@ export const setNewsPostError = (error: any): NewsPostError => {
   };
 };
 
-export const handleOpenNewsPost = (dispatch: Dispatch<NewsPostAction>, newsPostId: string, newsPostState: NewsPostState): void => {
+export const handleOpenNewsPost = (dispatch: Dispatch<NewsPostAction>, newsPostId: string, newsPostState: NewsPostsState): void => {
   const newsPostData = newsPostState.createdNewsPosts.filter((post) => post._id === newsPostId)[0];
   dispatch(openNewsPost({ newsPostData: { ...newsPostData } } ));
 };
@@ -113,7 +113,7 @@ export const handleCreateNewsPost = (dispatch: Dispatch<NewsPostAction>, formDat
     });
 };
 
-export const handleUpdateNewsPost = (dispatch: Dispatch<NewsPostAction>, updateData: NewsPostUpdateData, newsPostState: NewsPostState): Promise<boolean> => {
+export const handleUpdateNewsPost = (dispatch: Dispatch<NewsPostAction>, updateData: NewsPostUpdateData, newsPostState: NewsPostsState): Promise<boolean> => {
   const { _id, content } = updateData;
   const requestOptions = {
     method: "patch",
@@ -153,7 +153,7 @@ export const handleUpdateNewsPost = (dispatch: Dispatch<NewsPostAction>, updateD
 export const handleFetchNewsPosts = (dispatch: Dispatch<NewsPostAction>, options?: FetchNewsPostParams ): Promise<boolean> => {
   const requestOptions = {
     method: "get",
-    url: "/api/newsPosts",
+    url: "/api/news_posts",
     params:  options ? { ...options } : {}
   };
 
@@ -172,16 +172,17 @@ export const handleFetchNewsPosts = (dispatch: Dispatch<NewsPostAction>, options
       return Promise.resolve(true);
     })
     .catch((error) => {
+      console.log(error)
       dispatch(setNewsPostError(error));
       return Promise.resolve(false);
     });
 };
 
-export const handleNewsPostDelete = (dispatch: Dispatch<NewsPostAction>, postId: string, newsPostState: NewsPostState): Promise<boolean>  => {
+export const handleNewsPostDelete = (dispatch: Dispatch<NewsPostAction>, postId: string, newsPostState: NewsPostsState): Promise<boolean>  => {
   const { createdNewsPosts } =  newsPostState;
   const requestOptions = {
     method: "delete",
-    url: "/api/newsPosts/" + postId
+    url: "/api/news_posts/" + postId
   };
   
   dispatch(sendNewsPostRequest());

@@ -12,6 +12,8 @@ import serviceRoutes from "./serviceRoutes";
 import diningRoutes from "./diningRoutes";
 import diningImageRoutes from "./diningImageRoutes";
 import menuImageRoutes from "./menuImageRoutes";
+// news posts routes //
+import newsPostsRoutes from "./newsPostsRoutes";
 // mailer //
 import mailRoutes from "./mailRoutes";
 // test routes
@@ -26,9 +28,10 @@ export default function (router) {
   mailRoutes(router);
   menuImageRoutes(router);
   messageRoutes(router);
+  newsPostsRoutes(router);
   roomImageRoutes(router);
   roomRoutes(router);
   serviceImageRoutes(router);
   serviceRoutes(router);
   testRoutes(router);
-};
+}

@@ -1,6 +1,6 @@
 import contactPostsController from "../controllers/contactPostsController";
 
-export default function (router) {
+export default function(router) {
   // @route GET "/api/contactPosts" //
   // @desc Gets all of the ContactPost(s) //
   // @access PRIVATE //
@@ -28,4 +28,4 @@ export default function (router) {
   router
     .route("/api/contactPosts/:contactPostId")
     .delete(contactPostsController.deleteContactPost);
-};
+}

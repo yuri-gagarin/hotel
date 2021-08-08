@@ -7,24 +7,25 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import styles from "./css/postForm.module.css";
 
 type PostFormProps = {
+  titleText: string;
   editorText: string;
   handleUpdateEditor: (editor: any) => void;
+  handleTitleChange: (e: any) => void;
 }
-export const PostForm = ({ editorText, handleUpdateEditor }: PostFormProps): React.Node => {
+export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdateEditor }: PostFormProps): React.Node => {
+  
   const handleEditorChange = (_, editor: any): void => {
     handleUpdateEditor(editor);
   };
   const setInitialData = (): void => {
 
-  }
+  };
+
   return (
     <div className={ styles.newPostFormWrapper }>
-      <div className={ styles.previewTextHTML }>
-        {
-          editorText 
-          ? <div dangerouslySetInnerHTML={{ __html: editorText }}></div>
-          : <p>You post preview will show up here</p>
-        }
+      <div className={ styles.titleInputDiv}>
+        <label>Title:</label>
+        <input onChange={ handleTitleChange } value={ titleText ? titleText : "" }></input>
       </div>
       <div className={ styles.editorContainer}>
         <CKEditor
@@ -35,4 +36,4 @@ export const PostForm = ({ editorText, handleUpdateEditor }: PostFormProps): Rea
       </div>
     </div>
   );
-}
+};

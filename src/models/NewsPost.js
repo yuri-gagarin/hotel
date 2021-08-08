@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const contactPostSchema = new Schema({
+const newsPostSchema = new Schema({
   createdBy: {
     type: String,
     required: true
@@ -24,4 +24,4 @@ const contactPostSchema = new Schema({
   }
 });
 
-export default mongoose.model("ContactPost",  contactPostSchema);
+export default mongoose.model("NewsPost",  newsPostSchema);

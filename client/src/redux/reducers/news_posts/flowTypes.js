@@ -3,12 +3,14 @@
 export type ClientNewsPostFormData = {
   _id?: string,
   createdBy?: string,
+  title?: string,
   content?: string,
   createdAt?: string,
   editedAt?: string
 };
 export type NewsPostUpdateData = {
   _id: string,
+  title: string;
   createdBy: string,
   content: string,
   createdAt: string,
@@ -31,7 +33,7 @@ export type NewsPostData = {
   editedAt: string
 };
 
-export type NewsPostState = {
+export type NewsPostsState = {
   status: number,
   loading: boolean,
   responseMsg: string,
