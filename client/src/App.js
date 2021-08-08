@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   BrowserRouter as Router,
-  Switch, Route, useLocation
+  Switch, Route, useLocation, withRouter
 } from "react-router-dom";
 // additional redux imports //
 import { connect } from "react-redux";
@@ -37,7 +37,7 @@ interface SocketIO extends Socket {
   connected?: boolean;
 }
 export const socket: SocketIO = io("http://localhost:8080");
-
+/*
 const AuthorizedRoute = ({ loggedIn, component, path, history }) => {
   if (loggedIn) {
     return (
@@ -56,6 +56,7 @@ const AuthorizedRoute = ({ loggedIn, component, path, history }) => {
     );
   }
  };
+ */
 
 export const ScrollToTop = (): null => {
   const { pathname } = useLocation();
@@ -65,7 +66,7 @@ export const ScrollToTop = (): null => {
   return null;
 };
 
-const AppRoutes = (props) => {
+const AppRoutes = withRouter(({ history }) => {
 
   React.useEffect(() => {
     return function () {
@@ -75,17 +76,21 @@ const AppRoutes = (props) => {
   
   // admin routes should be protected lated //
   return (
-    <Router>
+    <React.Fragment>
       <ScrollToTop />
-      <Switch>
-        <Route path={adminRoutes.ADMIN_LOGIN} component={AdminLoginComponent} />
-        <ProtectedRoute clientPath={ "/admin" } component={ AdminComponent } />
-        <Route path={"/"} component={HomeComponent} />
-        <Route component={ ClientNotFoundComponent } />
-       </Switch>
-    </Router>
+        <Switch>
+          <Route path={adminRoutes.ADMIN_LOGIN} component={AdminLoginComponent} />
+          <Route path={"/rooms"} exact={true} component={HomeComponent} />
+          <Route path={"/dining"} exact={true} component={HomeComponent} />
+          <Route path={"/services"} exact={true} component={HomeComponent} />
+          <ProtectedRoute clientPath={ "/admin/*" } component={ AdminComponent } history={ history } />
+          <Route component={ClientNotFoundComponent} />
+        </Switch>
+        <Route path={"/"} exact={true} component={HomeComponent} />
+    </React.Fragment>
+      
   );
-};
+});
 
 type WrapperProps = {
   loggedIn: any;
@@ -126,7 +131,9 @@ const App = (props) => {
   }, []);
 
   return (
-    <AppRoutes loggedIn={loggedIn} />
+    <Router>
+      <AppRoutes loggedIn={loggedIn} />
+    </Router>
   );
 };
 

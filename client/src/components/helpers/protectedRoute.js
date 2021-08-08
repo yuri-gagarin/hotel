@@ -16,13 +16,14 @@ import { adminRoutes } from "../../routes/appRoutes";
 type Props = {
   clientPath: string;
   component: React$ComponentType<any>;
+  history: RouterHistory;
 };
 type LocalState = {
   loaded: boolean;
   validLogin: boolean;
 }
 
-export const ProtectedRoute = ({ clientPath, component }: Props): React.Node => {
+export const ProtectedRoute = ({ clientPath, component, history }: Props): React.Node => {
 
   const [ localState, setLocalState ] = React.useState<LocalState>({ loaded: false, validLogin: false });
   // get token or user session //
@@ -42,12 +43,10 @@ export const ProtectedRoute = ({ clientPath, component }: Props): React.Node => 
         })
         .catch((err) => {
           // error handling //
-          console.log("here")
           setLocalState({ loaded: true, validLogin: false });
         });
     } else {
-      console.log("here")
-      setLocalState({ loaded: true, validLogin: false });
+      setLocalState({ loaded: true, validLogin: true });
     }
   }, []);
 
@@ -58,7 +57,7 @@ export const ProtectedRoute = ({ clientPath, component }: Props): React.Node => 
       ?
         <Route path={ clientPath } component={ component } />
       :
-        <NotAllowedComponent />
+        <NotAllowedComponent history={ history } />
     :
     <div style={{ position: "fixed", top: "0", right: "0", bottom: "0", left: "0", backgroundColor: "red" }}>
       <h3>Loading</h3>

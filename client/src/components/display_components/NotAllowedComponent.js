@@ -9,7 +9,7 @@ type Props = {
 export const NotAllowedComponent = ({ history }: Props): React.Node => {
 
   const handleGoToLogin = (): void => {
-    history.push("/admin/login");
+    history.push("/login/admin");
   };
   
   return (

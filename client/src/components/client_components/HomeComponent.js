@@ -134,6 +134,7 @@ const HomeComponent = ({
   return (
     <div style={{ width: "100vw" }}>
       <NavbarComponent />
+      <Switch>
       <Route path={"/"} exact={true}>
         <MainHeaderComponent />
         <BookingForm />
@@ -159,6 +160,7 @@ const HomeComponent = ({
           _handleFetchServices={ _handleFetchServices }
         />
       </Route>
+      </Switch>
       <MessengerContainer />
       <Footer history={ history } />
     </div>
