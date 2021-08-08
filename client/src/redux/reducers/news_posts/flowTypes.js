@@ -25,6 +25,7 @@ export type FetchNewsPostParams = {
 export type NewsPostData = {
   _id: string,
   createdBy: string,
+  title: string,
   content: string,
   createdAt: string,
   editedAt: string

@@ -24,7 +24,7 @@ export default {
       .then((contactPosts) => {
         const filteredPosts = sortReadUnread(readSort, contactPosts);
         return res.status(200).json({
-          responseMsg: `Retreived all ${ Boolean(archived) ? 'archived' : 'new'} contact requests`,
+          responseMsg: `Retreived all ${ archived ? 'archived' : 'new'} contact requests`,
           contactPosts: filteredPosts
         });
       })

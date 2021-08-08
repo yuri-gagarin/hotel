@@ -128,6 +128,7 @@ export const generateEmptyMessageModel = (): MessageData => {
 export const generateEmptyNewsPostModel = (): NewsPostData => {
   const emptyNewsPostData: NewsPostData = {
     _id: "",
+    title: "",
     content: "",
     createdAt: "",
     createdBy: "",

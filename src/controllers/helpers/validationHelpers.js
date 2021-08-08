@@ -163,3 +163,20 @@ export const validateMessage = (data) => {
   }
 };
 
+// new post validataion //
+export const validateNewsPost = (data) => {
+  const errors = {};
+  if (!data.createdBy) {
+    errors.messsage = "Author field cannot be blank";
+  }
+  if (!data.title) {
+    errors.message = "Title field cannot be blank";
+  }
+  if (!data.content) {
+    errors.message = "Content field cannot be blank";
+  }
+  return {
+    errors, isValid: isEmpty(errors)
+  };
+};
+
