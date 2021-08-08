@@ -26,11 +26,15 @@ type PicureModalState = {
   imgURLS: Array<string>,
   imageIndex: number
 };
+type HeaderRowState = {
+  headerFixed: boolean;
+  headerTop: string;
+}
 
 const ServicesIndexComponent = ({ _handleFetchServices, serviceState }): React.Node => {
-  const [ headerFixed, setHeaderFixed ] = React.useState(false);
+  const headerRowRef = React.useRef<HTMLElement | null>(null);
   const [ picureModalState, setPictureModalState ] = React.useState<PicureModalState>({ modalOpen: false, imgURLS: [], imageIndex: 0 })
-  const indexRowRef = React.useRef<HTMLElement | null>(null);
+  const [ headerRowState, setHeaderRowState ] = React.useState<HeaderRowState>({ headerFixed: false, headerTop: "" });
 
 
   React.useEffect(() => {
@@ -43,23 +47,39 @@ const ServicesIndexComponent = ({ _handleFetchServices, serviceState }): React.N
   const closeModal = () => {
     setPictureModalState({ modalOpen: false, imgURLS: [], imageIndex: 0 });
   };
+  const scrollToContent = () => {
+    const intViewportHeight = window.innerHeight;
+    window.scrollTo({ top: intViewportHeight - 180, behavior: "smooth" });
+  }
 
-  const handleScrollToContent = () => {
-
-  };
+  React.useEffect(() => {
+    if (headerRowRef.current) {
+      window.onscroll = () => {
+        const headerRowRefY: number = headerRowRef.current ? headerRowRef.current.getBoundingClientRect().top : 0;
+        if (headerRowRefY <= 50) {
+          if (!headerRowState.headerFixed) {
+            setHeaderRowState({ headerFixed: true, headerTop: "50px" });
+          }
+        }
+      }
+    }
+    return () => {
+      window.onscroll = null;
+    }
+  }, [ headerRowRef.current ]);
 
   return (
     <div className={ styles.mainContainer }>
       <div className={ styles.parallaxContainer }>
-        <div className={ styles.headerRow }>
+        <div className={ `${styles.headerRow} ${headerRowState.headerFixed ? styles.headerFixed : ""}`} ref={ headerRowRef }>
           <div className={ styles.animatedHeaderBorderTop }></div>
-          <div className={ `${styles.headerText} ${ headerFixed ? styles.fixed : ""}`} ref={ indexRowRef }>
-            <ClipText text={"Services"} className={ `${styles.svgElem} ${ headerFixed ? styles.animateSVGElem : ""}` } />
+          <div className={ `${styles.svgContainer} ${headerRowState.headerFixed ? styles.svgContainerFixed : "" }` }>
+            <ClipText text="Services" textId="services" fontSize={"1.75em"} className={ `${styles.svgElem} ${ headerRowState.headerFixed ? styles.animateSVGElem : ""}` } />
           </div>
           <div className={ styles.animatedHeaderBorderTop }></div>
         </div>
         <div className={ styles.exploreBtnWrapper }>
-          <AnimatedBorderButton onClick={ handleScrollToContent } />
+          <AnimatedBorderButton onClick={ scrollToContent } />
         </div>
       </div>
      

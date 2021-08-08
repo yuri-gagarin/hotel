@@ -10,7 +10,7 @@ type LocalState = {
   fireBorderAnimation: boolean
 };
 
-export const AnimatedBorder = ({ animationDelay } : Props): React.Node => {
+export const AnimatedBorder = ({ animationDelay }: Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ fireBorderAnimation: false });
   React.useEffect(() => {
     let animationTimeout: any;

@@ -15,7 +15,7 @@ type Props = {
   triggerImgModal: (imgULRS: Array<string>, imageIndex: number) => void
 };
 
-const ServiceClientView = ({ service, triggerImgModal } : Props): React.Node => {
+const ServiceClientView = ({ service, triggerImgModal }: Props): React.Node => {
   const { serviceType, price, hours, description } = service;
   const [ imgURLS, setImgURLS ] = React.useState<Array<string>>([]);
   
@@ -45,17 +45,17 @@ const ServiceClientView = ({ service, triggerImgModal } : Props): React.Node => 
           </div>
         </Row>
         <Row className={ styles.servicesPicRow }>
-          <Col className={ styles.servicesPicCol } xs={12} md={3}>
+          <Col className={ styles.servicesPicCol } xs={12} md={4}>
             <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 0)}>
               <Image className={ styles.serviceImg } src={ imgURLS[0] }></Image>
             </div>
           </Col>
-          <Col className={ styles.servicesPicCol }  xs={12} md={3}>
+          <Col className={ styles.servicesPicCol }  xs={12} md={4}>
             <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 1)}>
               <Image className={ styles.serviceImg } src={ imgURLS[1] }></Image>
             </div>
           </Col>
-          <Col className={ styles.servicesPicCol }  xs={12} md={3}>
+          <Col className={ styles.servicesPicCol }  xs={12} md={4}>
             <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 2)}>
               <Image className={ styles.serviceImg } src={ imgURLS[2] }></Image>
             </div>
