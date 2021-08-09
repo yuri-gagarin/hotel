@@ -21,7 +21,6 @@ export const NewsPostPreviewCard = ({ newsPostData }: Props): React.Node => {
         </Button.Group>
       </div>
       <div className={ styles.titleDiv}>{ newsPostData.title}</div>
-      <div className={ styles.contentDiv }>{ newsPostData.content }</div>
       <div className={ styles.timeStampsDiv }>
         <span>{ newsPostData.createdAt }</span>
         <span>{ newsPostData.editedAt }</span>

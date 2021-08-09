@@ -1,0 +1,60 @@
+.titleDiv {
+  border-left: 3px solid rgb(73, 160, 38);
+  border-top: 3px solid rgb(73, 160, 38);
+  border-right: 3px solid rgb(73, 160, 38);
+  border-radius: 5px 5px 0px 0px;
+  display: flex;
+  align-items: center;
+}
+.titleDiv > span {
+  font-size: 1.25em;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 900;
+  border-right: 3px solid rgb(73, 160, 38);
+  border-bottom: 3px solid rgb(73, 160, 38);
+  border-radius: 0px 0px 30% 0px;
+  background-color: rgb(73, 160, 38);
+  color: white;
+  padding: 5px 10px 5px 5px;
+}
+.titleDiv > div {
+  font-size: 1.5em;
+  font-family:Arial, Helvetica, sans-serif;
+  padding-left: 5px;
+  margin-left: 5px;
+}
+
+.contentDiv {
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+  border-left: 3px solid rgb(73, 160, 38);
+  border-right: 3px solid rgb(73, 160, 38);
+  padding: 0 5px;
+}
+
+.timeStampsDiv {
+  display: flex;
+  flex-direction: column;
+  border-left: 3px solid rgb(73, 160, 38);
+  border-bottom: 3px solid rgb(73, 160, 38);
+  border-right: 3px solid rgb(73, 160, 38);
+  border-radius: 0px 0px 5px 5px;
+}
+
+.postCreatedAt, .postEditedAt {
+  display: flex;
+  padding: 0px 5px;
+  align-items: center;
+}
+.postCreatedAt > span:nth-child(1), .postEditedAt > span:nth-child(1) {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+.postCreatedAt > span:nth-child(2), .postEditedAt > span:nth-child(2) {
+  margin-left: 5px;
+}
+
+.controlBtns {
+  margin-top: 10px !important;
+}

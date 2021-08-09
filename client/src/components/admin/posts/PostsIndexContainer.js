@@ -12,6 +12,8 @@ import { handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handl
 // types //
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { NewsPostAction, NewsPostsState, ClientNewsPostFormData, NewsPostUpdateData } from "../../../redux/reducers/news_posts/flowTypes";
+// styles //
+import styles from "./css/postsIndexContainer.module.css";
 // helpers //
 import { objectValuesEmpty } from "../../helpers/displayHelpers";
 
@@ -102,7 +104,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   return (
     <React.Fragment>
       
-      <Grid.Row style={{ height: "10%", border: "5px solid blue" }}>
+      <Grid.Row style={{ height: "10%" }}>
         <PostsControls 
           formOpen={ localState.newPostFormOpen }
           newPost={ true } 
@@ -112,8 +114,8 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
           handleDeletePost={ handleDeletePost }
         />
       </Grid.Row>
-      <Grid.Row centered style={{ height: "80%", border: "5px solid red"}}>
-        <Grid.Column width={6}>
+      <Grid.Row centered style={{ height: "80%" }}>
+        <Grid.Column className={ styles.postsCardColumn } width={6}>
           {
             newsPostsState.createdNewsPosts.map((newsPost) => {
               return (

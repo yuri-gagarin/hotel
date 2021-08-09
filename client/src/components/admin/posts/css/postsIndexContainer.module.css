@@ -1,0 +1,6 @@
+.postsCardColumn {
+  border: 2px solid gray;
+  border-radius: 5px;
+  padding-top: 5px;
+  overflow-y: scroll;
+}

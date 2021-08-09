@@ -49,17 +49,19 @@ export const formatDate = (date, options) => {
   let day = dateObj.getDate();
   let hour = dateObj.getHours();
   let minutes = dateObj.getMinutes();
-  if(options.military) {
-    hour = addZero(hour);
-    minutes = addZero(minutes);
-    return `${month}-${day}-${year}, ${hour}:${minutes}`;
-  }
-  else if (options.ddmmyyyy) {
-    return `${addZero(day)}/${addZero(month)}/${year}`;
-  } else if (options.nextDay) {
-    const tomorrow = new Date(date);
-    tomorrow.setDate(tomorrow.getDate()+1);
-    return tomorrow.toISOString();
+  if (options) {
+    if(options.military) {
+      hour = addZero(hour);
+      minutes = addZero(minutes);
+      return `${month}-${day}-${year}, ${hour}:${minutes}`;
+    }
+    else if (options.ddmmyyyy) {
+      return `${addZero(day)}/${addZero(month)}/${year}`;
+    } else if (options.nextDay) {
+      const tomorrow = new Date(date);
+      tomorrow.setDate(tomorrow.getDate()+1);
+      return tomorrow.toISOString();
+    }
   }
   else {
     let timeOfDay = formatAMPM({hour: hour, minutes: minutes});
