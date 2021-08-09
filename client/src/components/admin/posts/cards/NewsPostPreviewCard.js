@@ -5,6 +5,8 @@ import { Button, Segment } from "semantic-ui-react";
 import styles from "./css/newsPostPreviewCard.module.css";
 // types //
 import type { NewsPostData } from "../../../../redux/reducers/news_posts/flowTypes";
+// helpes //
+import { formatDate } from "../../../helpers/dateHelpers";
 
 type Props = {
   newsPostData: NewsPostData;
@@ -12,7 +14,7 @@ type Props = {
 export const NewsPostPreviewCard = ({ newsPostData }: Props): React.Node => {
 
   return (
-    <Segment style={{ height: "100%", width: "100&" }}>
+    <Segment style={{ height: "100%", width: "100%" }}>
       <div className={ styles.controlsRow }>
         <Button.Group>
           <Button inverted color="blue">Close</Button>
@@ -20,11 +22,23 @@ export const NewsPostPreviewCard = ({ newsPostData }: Props): React.Node => {
           <Button color="red">Delete</Button>
         </Button.Group>
       </div>
-      <div className={ styles.titleDiv}>{ newsPostData.title}</div>
+      <div className={ styles.titleDiv }>
+        <span>Title:</span>
+        <div>{newsPostData.title}</div>
+      </div>
+      <div className={ styles.contentDiv }>
+        <div dangerouslySetInnerHTML={{__html: newsPostData.content }}></div>
+      </div>
       <div className={ styles.timeStampsDiv }>
-        <span>{ newsPostData.createdAt }</span>
-        <span>{ newsPostData.editedAt }</span>
+        <div className={ styles.createdAtDiv }>
+          <span>Created At:</span>
+          <span>{ formatDate(newsPostData.createdAt) }</span>
+        </div>
+        <div className={ styles.editedAtDiv }>
+          <span>Edited At:</span>
+          <span>{ formatDate(newsPostData.editedAt) }</span>
+        </div>
       </div>
     </Segment>
-  )
-}
+  );
+};

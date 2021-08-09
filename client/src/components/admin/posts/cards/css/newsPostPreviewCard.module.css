@@ -1,0 +1,63 @@
+.controlsRow {
+  height: 10%;
+  display: flex;
+  align-items: center;
+}
+.titleDiv {
+  height: 10%;
+  display: flex;
+  align-items: center;
+  border-left: 3px solid rgb(73, 160, 38);
+  border-top: 3px solid rgb(73, 160, 38);
+  border-right: 3px solid rgb(73, 160, 38);
+  border-radius: 5px 5px 0px 0px;
+  display: flex;
+  align-items: center;
+}
+.titleDiv > span {
+  height: 100%;
+  background-color: rgb(73, 160, 38);
+  display: flex;
+  align-items: center;
+  padding: 0px 10px;
+  border-radius: 0 0 15px 0;
+  font-size: 1.2em;
+  color: white;
+}
+.titleDiv > div {
+  margin-left: 5px;
+  font-size: 1.25em;
+  font-weight: bold;
+}
+.contentDiv {
+  height: 70%;
+  overflow-y: scroll;
+  padding: 5px 10px;
+  border-left: 3px solid rgb(73, 160, 38);
+  border-right: 3px solid rgb(73, 160, 38);
+}
+
+.timeStampsDiv {
+  height: 10%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  border-left: 3px solid rgb(73, 160, 38);
+  border-bottom: 3px solid rgb(73, 160, 38);
+  border-right: 3px solid rgb(73, 160, 38);
+  border-radius: 0 0 5px 5px;
+}
+.createdAtDiv, .editedAtDiv {
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+}
+.createdAtDiv > span:nth-child(1), .editedAtDiv > span:nth-child(1) {
+  font-style: italic;
+  color: grey;
+  font-size: 0.9em;
+}
+.createdAtDiv > span:nth-child(2), .editedAtDiv > span:nth-child(2) {
+  margin-left: 5px;
+  color: black;
+}
