@@ -12,8 +12,9 @@ type Props = {
   newsPostData: NewsPostData;
   closeCurrentNewsPost: () => void;
   handleOpenEditCurrentNewsPost: () => void;
+  triggerDeleteCurrentNewsPost: () => void;
 }
-export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handleOpenEditCurrentNewsPost }: Props): React.Node => {
+export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handleOpenEditCurrentNewsPost, triggerDeleteCurrentNewsPost }: Props): React.Node => {
 
   return (
     <Segment style={{ height: "100%", width: "100%" }}>
@@ -21,7 +22,7 @@ export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handle
         <Button.Group>
           <Button inverted color="blue" onClick={ closeCurrentNewsPost }>Close</Button>
           <Button inverted color="orange" onClick={ handleOpenEditCurrentNewsPost }>Edit</Button>
-          <Button color="red">Delete</Button>
+          <Button color="red" onClick={ triggerDeleteCurrentNewsPost }>Delete</Button>
         </Button.Group>
       </div>
       <div className={ styles.titleDiv }>

@@ -179,7 +179,7 @@ export const handleFetchNewsPosts = (dispatch: Dispatch<NewsPostAction>, options
     });
 };
 
-export const handleNewsPostDelete = (dispatch: Dispatch<NewsPostAction>, postId: string, newsPostState: NewsPostsState): Promise<boolean>  => {
+export const handleDeleteNewsPost = (dispatch: Dispatch<NewsPostAction>, postId: string, newsPostState: NewsPostsState): Promise<boolean>  => {
   const { createdNewsPosts } =  newsPostState;
   const requestOptions = {
     method: "delete",

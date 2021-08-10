@@ -3,12 +3,13 @@ import * as React from "react";
 import { Grid, Segment } from "semantic-ui-react";
 import { PostForm } from "./PostForm";
 // additional components //
+import { ConfirmDeleteModal} from "../shared/ConfirmDeleteModal";
 import { PostsControls } from "./PostsControls";
 import { NewsPostCard } from "./cards/NewsPostCard";
 import { NewsPostPreviewCard } from "./cards/NewsPostPreviewCard";
 // redux actions //
 import { connect } from "react-redux";
-import { handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handleOpenNewsPost, handleCloseNewsPost } from "../../../redux/actions/newsPostActions";
+import { handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handleDeleteNewsPost, handleOpenNewsPost, handleCloseNewsPost, setNewsPostError } from "../../../redux/actions/newsPostActions";
 // types //
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { NewsPostAction, NewsPostsState, ClientNewsPostFormData, NewsPostUpdateData } from "../../../redux/reducers/news_posts/flowTypes";
@@ -22,6 +23,11 @@ type LocalState = {
   editorTitle: string;
   editorText: string;
 }
+type ConfirmDeleteModalState = {
+  modalOpen: boolean;
+  modelName: "news post" | "";
+  modelId: string;
+}
 
 type WrapperProps = {
 
@@ -32,13 +38,15 @@ type Props = {
   _handleFetchNewsPosts: (options?: any) => Promise<boolean>;
   _handleCreateNewsPost: (data: ClientNewsPostFormData, newsPostsState: NewsPostsState) => Promise<boolean>;
   _handleUpdateNewsPost: (data: NewsPostUpdateData, newsPostsState: NewsPostsState) => Promise<boolean>;
+  _handleDeleteNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => Promise<boolean>;
   _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => void;
   _handleCloseNewsPost: () => void;
 };
 
-const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, _handleOpenNewsPost, _handleCloseNewsPost, newsPostsState }: Props): React.Node => {
+const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, _handleDeleteNewsPost, _handleOpenNewsPost, _handleCloseNewsPost, newsPostsState }: Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ newPostFormOpen: false, editorTitle: "", editorText: "" });
-  
+  const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<ConfirmDeleteModalState>({ modalOpen: false, modelName: "", modelId: "" });
+
   const handleOpenNewPostForm = (): void => {
     setLocalState({ ...localState, newPostFormOpen: true });
   };
@@ -72,8 +80,6 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
           return false;
         });
     } else {
-      console.log(75);
-      console.log(localState.editorTitle)
       const editedPost: NewsPostUpdateData = {
         ...newsPostsState.newsPostData,
         title: localState.editorTitle,
@@ -98,11 +104,33 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
      setLocalState({ ...localState, newPostFormOpen: false, editorTitle: "", editorText: "" });
      return Promise.resolve(true);
   };
-  const handleDeletePost = (): Promise<boolean> => {
-    setLocalState({ ...localState, newPostFormOpen: false, editorText: "" });
-    return Promise.resolve(true);
+
+  // delete functionality withh confirm modal popup //
+  const triggerDeleteNewsPost = (): void => {
+    const { _id } = newsPostsState.newsPostData;
+    setConfirmDeleteModalState({ modalOpen: true, modelName: "news post", modelId: _id });
+  };
+  const cancelDeleteNewsPost = (): void => {
+    setConfirmDeleteModalState({ modalOpen: false, modelName: "", modelId: "" });
+  };
+  const confirmDeleteNewsPost = (): Promise<boolean> => {
+    const { _id } = newsPostsState.newsPostData;
+    return _handleDeleteNewsPost(_id, newsPostsState)
+      .then((success) => {
+        if (success) {
+          setConfirmDeleteModalState({ modalOpen: false, modelId: "", modelName: "" });
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        return false;
+      })
   };
 
+  // lifecycle //
   React.useEffect(() => {
     _handleFetchNewsPosts();
   }, []);
@@ -115,7 +143,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
 
   return (
     <React.Fragment>
-      
+      <ConfirmDeleteModal open={ confirmDeleteModalState.modalOpen} modelName="news post" confirmAction={ confirmDeleteNewsPost } cancelAction={ cancelDeleteNewsPost }/>
       <Grid.Row style={{ height: "10%" }}>
         <PostsControls 
           formOpen={ localState.newPostFormOpen }
@@ -123,7 +151,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
           handleOpenNewPostForm={ handleOpenNewPostForm } 
           handleSavePost={ handleSavePost }
           handleCancelPost={ handleCancelPost }
-          handleDeletePost={ handleDeletePost }
+          handleDeletePost={ triggerDeleteNewsPost }
         />
       </Grid.Row>
       <Grid.Row centered style={{ height: "80%" }}>
@@ -151,6 +179,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
               newsPostData={ newsPostsState.newsPostData } 
               closeCurrentNewsPost={ _handleCloseNewsPost }
               handleOpenEditCurrentNewsPost={ handleOpenEditNewsPost }
+              triggerDeleteCurrentNewsPost={ triggerDeleteNewsPost }
             />
           )
         }
@@ -170,6 +199,7 @@ const mapDispatchToProps = (dispatch: Dispatch<NewsPostAction>) => {
     _handleFetchNewsPosts: (options?: any) => handleFetchNewsPosts(dispatch, options),
     _handleCreateNewsPost: (clientNewsPostData: ClientNewsPostFormData) => handleCreateNewsPost(dispatch, clientNewsPostData),
     _handleUpdateNewsPost: (clientNewsPostData: NewsPostUpdateData, newsPostsState: NewsPostsState) => handleUpdateNewsPost(dispatch, clientNewsPostData, newsPostsState),
+    _handleDeleteNewsPost: (newspPostId: string, newsPostsState: NewsPostsState) => handleDeleteNewsPost(dispatch, newspPostId, newsPostsState),
     _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => handleOpenNewsPost(dispatch, newsPostId, newsPostsState),
     _handleCloseNewsPost: () => handleCloseNewsPost(dispatch)
   };

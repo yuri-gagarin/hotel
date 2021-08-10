@@ -10,7 +10,7 @@ type Props = {
   newPost: boolean;
   handleSavePost: () => Promise<boolean>;
   handleCancelPost: () => Promise<boolean>;
-  handleDeletePost: () => Promise<boolean>;
+  handleDeletePost: () => void;
 }
 export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handleSavePost, handleCancelPost, handleDeletePost }: Props): React.Node => {
 
