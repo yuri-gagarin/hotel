@@ -24,7 +24,7 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
   } else if (formOpen && !newPost) {
     return (
       <div className={ styles.postControlsContainer }>  
-        <Button color="green" onClick={ handleOpenNewPostForm }>Update</Button>
+        <Button color="green" onClick={ handleSavePost }>Update</Button>
         <Button color="orange" onClick={ handleCancelPost }>Cancel</Button>
         <Button color="red" onClick={ handleDeletePost }>Delete</Button>
       </div>

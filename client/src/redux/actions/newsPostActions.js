@@ -114,12 +114,13 @@ export const handleCreateNewsPost = (dispatch: Dispatch<NewsPostAction>, formDat
 };
 
 export const handleUpdateNewsPost = (dispatch: Dispatch<NewsPostAction>, updateData: NewsPostUpdateData, newsPostState: NewsPostsState): Promise<boolean> => {
-  const { _id, content } = updateData;
+  const { _id, title, content } = updateData;
   const requestOptions = {
     method: "patch",
     url: "/api/news_posts/" + _id,
     data: {
       updateData: {
+        title,
         content
       },
     }

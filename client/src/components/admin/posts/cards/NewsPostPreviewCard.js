@@ -10,15 +10,17 @@ import { formatDate } from "../../../helpers/dateHelpers";
 
 type Props = {
   newsPostData: NewsPostData;
+  closeCurrentNewsPost: () => void;
+  handleOpenEditCurrentNewsPost: () => void;
 }
-export const NewsPostPreviewCard = ({ newsPostData }: Props): React.Node => {
+export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handleOpenEditCurrentNewsPost }: Props): React.Node => {
 
   return (
     <Segment style={{ height: "100%", width: "100%" }}>
       <div className={ styles.controlsRow }>
         <Button.Group>
-          <Button inverted color="blue">Close</Button>
-          <Button inverted color="orange">Edit</Button>
+          <Button inverted color="blue" onClick={ closeCurrentNewsPost }>Close</Button>
+          <Button inverted color="orange" onClick={ handleOpenEditCurrentNewsPost }>Edit</Button>
           <Button color="red">Delete</Button>
         </Button.Group>
       </div>

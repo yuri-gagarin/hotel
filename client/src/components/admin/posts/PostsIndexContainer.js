@@ -42,6 +42,10 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   const handleOpenNewPostForm = (): void => {
     setLocalState({ ...localState, newPostFormOpen: true });
   };
+  const handleOpenEditNewsPost = (): void => {
+    const { title, content } = newsPostsState.newsPostData;
+    setLocalState({ newPostFormOpen: true, editorTitle: title, editorText: content });
+  };
 
   const handleTitleChange = (e: any) => {
     setLocalState({ ...localState, editorTitle: e.target.value });
@@ -68,6 +72,8 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
           return false;
         });
     } else {
+      console.log(75);
+      console.log(localState.editorTitle)
       const editedPost: NewsPostUpdateData = {
         ...newsPostsState.newsPostData,
         title: localState.editorTitle,
@@ -89,7 +95,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   };
   const handleCancelPost = (): Promise<boolean> => {
     _handleCloseNewsPost();
-     setLocalState({ ...localState, newPostFormOpen: false, editorText: "" });
+     setLocalState({ ...localState, newPostFormOpen: false, editorTitle: "", editorText: "" });
      return Promise.resolve(true);
   };
   const handleDeletePost = (): Promise<boolean> => {
@@ -100,6 +106,12 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   React.useEffect(() => {
     _handleFetchNewsPosts();
   }, []);
+  
+  React.useEffect(() => {
+    if (!objectValuesEmpty(newsPostsState.newsPostData) && localState.newPostFormOpen) {
+      setLocalState({ ...localState, newPostFormOpen: false });
+    }
+  }, [ newsPostsState ]);
 
   return (
     <React.Fragment>
@@ -107,7 +119,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       <Grid.Row style={{ height: "10%" }}>
         <PostsControls 
           formOpen={ localState.newPostFormOpen }
-          newPost={ true } 
+          newPost={ objectValuesEmpty(newsPostsState.newsPostData) } 
           handleOpenNewPostForm={ handleOpenNewPostForm } 
           handleSavePost={ handleSavePost }
           handleCancelPost={ handleCancelPost }
@@ -135,7 +147,11 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
               Open on the side to view your posts
             </Segment>
             :
-            <NewsPostPreviewCard newsPostData={ newsPostsState.newsPostData } />
+            <NewsPostPreviewCard 
+              newsPostData={ newsPostsState.newsPostData } 
+              closeCurrentNewsPost={ _handleCloseNewsPost }
+              handleOpenEditCurrentNewsPost={ handleOpenEditNewsPost }
+            />
           )
         }
         </Grid.Column>

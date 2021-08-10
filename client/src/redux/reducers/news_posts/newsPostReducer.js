@@ -31,7 +31,7 @@ const newPostReducer = (state: NewsPostsState = initialState, action: NewsPostAc
     case "ClearNewsPostData": {
       return {
         ...state,
-        newPostData: { ...action.payload.newsPostData },
+        newsPostData: { ...action.payload.newsPostData },
         error: null
       };
     }

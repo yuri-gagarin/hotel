@@ -17,9 +17,6 @@ export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdat
   const handleEditorChange = (_, editor: any): void => {
     handleUpdateEditor(editor);
   };
-  const setInitialData = (): void => {
-
-  };
 
   return (
     <div className={ styles.newPostFormWrapper }>
@@ -31,7 +28,7 @@ export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdat
         <CKEditor
           editor={ ClassicEditor }
           onChange={ handleEditorChange }
-          data={ setInitialData() }
+          data={ editorText }
         />  
       </div>
     </div>

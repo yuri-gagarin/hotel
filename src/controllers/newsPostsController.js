@@ -57,14 +57,13 @@ export default {
   updateNewsPost: (req, res) => {
     const { newsPostId } = req.params;
     const { updateData } = req.body;
-    
     if (updateData) {
       // handle a reply //
-      const { content } = updateData;
+      const { title, content } = updateData;
       if (content) {
         return NewsPost.findOneAndUpdate(
           { _id: newsPostId },
-          { $set: { content: content, editedAt: new Date(Date.now()) } },
+          { $set: { title: title, content: content, editedAt: new Date(Date.now()) } },
           { new: true }
         )
         .then((updatedNewsPost) => {
