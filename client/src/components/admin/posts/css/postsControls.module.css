@@ -1,3 +1,5 @@
 .postControlsContainer {
-  margin-left: 10px;
+  margin-left: 30px;
+  display: flex;
+  align-items: center;
 }

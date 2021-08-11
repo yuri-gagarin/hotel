@@ -10,13 +10,13 @@ import { formatDate } from "../../../helpers/dateHelpers";
 import { trimStringToSpecificLength } from "../../../helpers/displayHelpers";
 
 type Props = {
+  active: boolean;
   newsPostData: NewsPostData;
   toggleNewsPost: (newsPostId: string) => void;
 }
-export const NewsPostCard = ({ newsPostData, toggleNewsPost }: Props): React.Node => {
-
+export const NewsPostCard = ({ active, newsPostData, toggleNewsPost }: Props): React.Node => {
   return (
-    <Segment>
+    <Segment className={`${active ? styles.activeCard : ""}`}>
       <div className={ styles.titleDiv}>
         <span>Title:</span>
         <div>{newsPostData.title}</div>

@@ -1,3 +1,10 @@
+.activeCard {
+  background-color: rgb(210, 215, 218) !important;
+}
+
+.titleDiv, .contentDiv, .timeStampsDiv, .controlBtns {
+  background-color: white;
+}
 .titleDiv {
   border-left: 3px solid rgb(73, 160, 38);
   border-top: 3px solid rgb(73, 160, 38);

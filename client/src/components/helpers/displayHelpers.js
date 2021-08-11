@@ -121,3 +121,12 @@ export const checkEmptyString = (string: string): boolean => {
   return (typeof string === "string") && (string.length > 0) ? false : true;
 };
 
+export const removeHTMLTagsFromString = (htmlString: string): string => {
+  if (!htmlString || typeof htmlString !== "string") {
+    return "Invalid input string";
+  } else {
+    return htmlString.replace(/<\/?[^>]+(>|$)/g, "");
+  }
+};
+
+

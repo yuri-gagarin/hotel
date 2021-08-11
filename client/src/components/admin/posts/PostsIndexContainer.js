@@ -1,25 +1,28 @@
 // @flow
 import * as React from "react";
 import { Grid, Segment } from "semantic-ui-react";
-import { PostForm } from "./PostForm";
-// additional components //
-import { ConfirmDeleteModal} from "../shared/ConfirmDeleteModal";
-import { PostsControls } from "./PostsControls";
-import { NewsPostCard } from "./cards/NewsPostCard";
-import { NewsPostPreviewCard } from "./cards/NewsPostPreviewCard";
+// router //
+import { useRouteMatch, useHistory, Route, Switch } from "react-router-dom";
 // redux actions //
 import { connect } from "react-redux";
+// additional components //
 import { handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handleDeleteNewsPost, handleOpenNewsPost, handleCloseNewsPost, setNewsPostError } from "../../../redux/actions/newsPostActions";
+import { ConfirmDeleteModal} from "../shared/ConfirmDeleteModal";
+import { PostsControls } from "./PostsControls";
+import { PostForm } from "./PostForm";
+import { NewsPostCard } from "./cards/NewsPostCard";
+import { NewsPostPreviewCard } from "./cards/NewsPostPreviewCard";
+import { ViewAllContainer } from "./view_all/ViewAllPosts";
 // types //
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
-import type { NewsPostAction, NewsPostsState, ClientNewsPostFormData, NewsPostUpdateData } from "../../../redux/reducers/news_posts/flowTypes";
+import type { NewsPostAction, NewsPostsState, NewsPostData, ClientNewsPostFormData, NewsPostUpdateData } from "../../../redux/reducers/news_posts/flowTypes";
 // styles //
 import styles from "./css/postsIndexContainer.module.css";
 // helpers //
 import { objectValuesEmpty } from "../../helpers/displayHelpers";
 
 type LocalState = {
-  newPostFormOpen: boolean;
+  newsPostFormOpen: boolean;
   editorTitle: string;
   editorText: string;
 }
@@ -44,15 +47,19 @@ type Props = {
 };
 
 const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, _handleDeleteNewsPost, _handleOpenNewsPost, _handleCloseNewsPost, newsPostsState }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<LocalState>({ newPostFormOpen: false, editorTitle: "", editorText: "" });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ viewAll: false, newsPostFormOpen: false, editorTitle: "", editorText: "" });
   const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<ConfirmDeleteModalState>({ modalOpen: false, modelName: "", modelId: "" });
 
-  const handleOpenNewPostForm = (): void => {
-    setLocalState({ ...localState, newPostFormOpen: true });
+  const lastPost = React.useRef<NewsPostData>(newsPostsState.newsPostData);
+  const { path, url } = useRouteMatch()
+
+  const handleOpenNewsPostForm = (): void => {
+    _handleCloseNewsPost()
+    setLocalState({ newsPostFormOpen: true, editorTitle: "", editorText: "" });
   };
   const handleOpenEditNewsPost = (): void => {
     const { title, content } = newsPostsState.newsPostData;
-    setLocalState({ newPostFormOpen: true, editorTitle: title, editorText: content });
+    setLocalState({ newsPostFormOpen: true, editorTitle: title, editorText: content });
   };
 
   const handleTitleChange = (e: any) => {
@@ -72,7 +79,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       };
       return _handleCreateNewsPost(newPost, newsPostsState)
         .then((success) => {
-          if(success) setLocalState({ newPostFormOpen: false, editorTitle: "", editorText: "" });
+          if(success) setLocalState({ newsPostFormOpen: false, editorTitle: "", editorText: "" });
           return true;
         })
         .catch((error) => {
@@ -87,7 +94,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       };
       return _handleUpdateNewsPost(editedPost, newsPostsState)
         .then((success) => {
-          if(success) setLocalState({ newPostFormOpen: false, editorTitle: "", editorText: "" });
+          if(success) setLocalState({ newsPostFormOpen: false, editorTitle: "", editorText: "" });
           return true;
         })
         .catch((error) => {
@@ -96,13 +103,17 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
         });
     }
   };
+
   const handleToggleNewsPost = (newsPostId: string): void => {
     _handleOpenNewsPost(newsPostId, newsPostsState);
   };
-  const handleCancelPost = (): Promise<boolean> => {
-    _handleCloseNewsPost();
-     setLocalState({ ...localState, newPostFormOpen: false, editorTitle: "", editorText: "" });
-     return Promise.resolve(true);
+  const handleCancelPost = (): void => {
+    if (objectValuesEmpty(newsPostsState.newsPostData)) {
+      setLocalState({ ...localState, newsPostFormOpen: false, editorTitle: "", editorText: "" });
+    } else {
+      _handleCloseNewsPost();
+      setLocalState({ ...localState, newsPostFormOpen: false, editorTitle: "", editorText: "" });
+    }
   };
 
   // delete functionality withh confirm modal popup //
@@ -136,55 +147,73 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   }, []);
   
   React.useEffect(() => {
-    if (!objectValuesEmpty(newsPostsState.newsPostData) && localState.newPostFormOpen) {
-      setLocalState({ ...localState, newPostFormOpen: false });
+    if(lastPost !== newsPostsState.newsPostData) {
+      if(localState.newsPostFormOpen) setLocalState({ ...localState, newsPostFormOpen: false });
+    }
+  }, [ newsPostsState.newsPostData]);
+  /*
+  React.useEffect(() => {
+    if (!objectValuesEmpty(newsPostsState.newsPostData) && localState.newsPostFormOpen) {
     }
   }, [ newsPostsState ]);
+  */
 
   return (
     <React.Fragment>
       <ConfirmDeleteModal open={ confirmDeleteModalState.modalOpen} modelName="news post" confirmAction={ confirmDeleteNewsPost } cancelAction={ cancelDeleteNewsPost }/>
       <Grid.Row style={{ height: "10%" }}>
         <PostsControls 
-          formOpen={ localState.newPostFormOpen }
+          formOpen={ localState.newsPostFormOpen }
           newPost={ objectValuesEmpty(newsPostsState.newsPostData) } 
-          handleOpenNewPostForm={ handleOpenNewPostForm } 
+          handleOpenNewPostForm={ handleOpenNewsPostForm } 
           handleSavePost={ handleSavePost }
           handleCancelPost={ handleCancelPost }
           handleDeletePost={ triggerDeleteNewsPost }
         />
       </Grid.Row>
-      <Grid.Row centered style={{ height: "80%" }}>
-        <Grid.Column className={ styles.postsCardColumn } width={6}>
-          {
-            newsPostsState.createdNewsPosts.map((newsPost) => {
-              return (
-                <NewsPostCard key={ newsPost._id } newsPostData={ newsPost } toggleNewsPost={ handleToggleNewsPost } />
+      <Switch>
+        <Route exact path={ url }>
+          <Grid.Row centered style={{ height: "80%" }}>
+            <Grid.Column className={ styles.postsCardColumn } width={6}>
+              {
+                newsPostsState.createdNewsPosts.map((newsPost) => {
+                  return (
+                    <NewsPostCard 
+                      key={ newsPost._id } 
+                      active={ newsPostsState.newsPostData._id === newsPost._id } 
+                      newsPostData={ newsPost } 
+                      toggleNewsPost={ handleToggleNewsPost } 
+                    />
+                  )
+                })
+              }
+            </Grid.Column>
+            <Grid.Column width={10}>{
+              localState.newsPostFormOpen ? 
+              <PostForm titleText={ localState.editorTitle } editorText={localState.editorText} handleTitleChange={ handleTitleChange } handleUpdateEditor={ handleUpdateEditorChange } />
+              :
+              (
+                objectValuesEmpty(newsPostsState.newsPostData)
+                ?
+                <Segment style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                  Open on the side to view your posts
+                </Segment>
+                :
+                <NewsPostPreviewCard 
+                  newsPostData={ newsPostsState.newsPostData } 
+                  closeCurrentNewsPost={ _handleCloseNewsPost }
+                  handleOpenEditCurrentNewsPost={ handleOpenEditNewsPost }
+                  triggerDeleteCurrentNewsPost={ triggerDeleteNewsPost }
+                />
               )
-            })
-          }
-        </Grid.Column>
-        <Grid.Column width={10}>{
-          localState.newPostFormOpen ? 
-          <PostForm titleText={ localState.editorTitle } editorText={localState.editorText} handleTitleChange={ handleTitleChange } handleUpdateEditor={ handleUpdateEditorChange } />
-          :
-          (
-            objectValuesEmpty(newsPostsState.newsPostData)
-            ?
-            <Segment style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-              Open on the side to view your posts
-            </Segment>
-            :
-            <NewsPostPreviewCard 
-              newsPostData={ newsPostsState.newsPostData } 
-              closeCurrentNewsPost={ _handleCloseNewsPost }
-              handleOpenEditCurrentNewsPost={ handleOpenEditNewsPost }
-              triggerDeleteCurrentNewsPost={ triggerDeleteNewsPost }
-            />
-          )
-        }
-        </Grid.Column>
-      </Grid.Row>
+            }
+            </Grid.Column>
+          </Grid.Row>
+        </Route>
+        <Route exact path={`${url}/view_all`}>
+          <ViewAllContainer newsPosts={ newsPostsState.createdNewsPosts } />
+        </Route>
+      </Switch>
     </React.Fragment>
   )
 };
