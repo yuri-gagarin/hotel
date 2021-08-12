@@ -12,7 +12,7 @@ import { PostsControls } from "./PostsControls";
 import { PostForm } from "./PostForm";
 import { NewsPostCard } from "./cards/NewsPostCard";
 import { NewsPostPreviewCard } from "./cards/NewsPostPreviewCard";
-import { ViewAllContainer } from "./view_all/ViewAllPosts";
+import { ViewAllPosts } from "./view_all/ViewAllPosts";
 // types //
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
 import type { NewsPostAction, NewsPostsState, NewsPostData, ClientNewsPostFormData, NewsPostUpdateData } from "../../../redux/reducers/news_posts/flowTypes";
@@ -210,8 +210,8 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
             </Grid.Column>
           </Grid.Row>
         </Route>
-        <Route exact path={`${url}/view_all`}>
-          <ViewAllContainer newsPosts={ newsPostsState.createdNewsPosts } />
+        <Route path={`${url}/view_all/`}>
+          <ViewAllPosts newsPosts={ newsPostsState.createdNewsPosts } />
         </Route>
       </Switch>
     </React.Fragment>

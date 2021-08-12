@@ -55,7 +55,6 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
   } else {
     return (
       <div className={ styles.postControlsContainer }>
-        { console.log(currentUrl)}
         <Button color="green" onClick={ handleOpenNewPostForm }>New Post</Button>
         <Button color="blue" onClick={ () => toggleViewAllPosts(url) }>{currentUrl === "/admin/posts" ? "View All" : "View Editor"}</Button>
       </div>
