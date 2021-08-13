@@ -1,6 +1,11 @@
-.postsCardColumn {
+.postsIndexLeftColumn {
+  height: 100%;
   border: 2px solid gray;
   border-radius: 5px;
   padding-top: 5px;
   overflow-y: scroll;
+}
+
+.postIndexRightColumn {
+  height: 100%;
 }

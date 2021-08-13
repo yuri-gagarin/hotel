@@ -1,3 +1,7 @@
+:root {
+  --postsSectionBgColor: rgb(73, 160, 38);
+}
+
 .activeCard {
   background-color: rgb(210, 215, 218) !important;
 }
@@ -20,7 +24,7 @@
   border-right: 3px solid rgb(73, 160, 38);
   border-bottom: 3px solid rgb(73, 160, 38);
   border-radius: 0px 0px 30% 0px;
-  background-color: rgb(73, 160, 38);
+  background-color: var(--postsSectionBgColor);
   color: white;
   padding: 5px 10px 5px 5px;
 }

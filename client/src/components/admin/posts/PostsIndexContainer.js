@@ -105,6 +105,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   };
 
   const handleToggleNewsPost = (newsPostId: string): void => {
+    if (localState.newsPostFormOpen) setLocalState({ ...localState, newsPostFormOpen: false });
     _handleOpenNewsPost(newsPostId, newsPostsState);
   };
   const handleCancelPost = (): void => {
@@ -145,18 +146,12 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   React.useEffect(() => {
     _handleFetchNewsPosts();
   }, []);
-  
-  React.useEffect(() => {
-    if(lastPost !== newsPostsState.newsPostData) {
-      if(localState.newsPostFormOpen) setLocalState({ ...localState, newsPostFormOpen: false });
-    }
-  }, [ newsPostsState.newsPostData]);
-  /*
+
   React.useEffect(() => {
     if (!objectValuesEmpty(newsPostsState.newsPostData) && localState.newsPostFormOpen) {
+      setLocalState({ ...localState, editorTitle: newsPostsState.newsPostData.title, editorText: newsPostsState.newsPostData.content })
     }
-  }, [ newsPostsState ]);
-  */
+  }, [ newsPostsState, localState.newsPostFormOpen ]);
 
   return (
     <React.Fragment>
@@ -174,7 +169,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       <Switch>
         <Route exact path={ url }>
           <Grid.Row centered style={{ height: "80%" }}>
-            <Grid.Column className={ styles.postsCardColumn } width={6}>
+            <Grid.Column className={ styles.postsIndexLeftColumn } width={6}>
               {
                 newsPostsState.createdNewsPosts.map((newsPost) => {
                   return (
@@ -188,7 +183,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
                 })
               }
             </Grid.Column>
-            <Grid.Column width={10}>{
+            <Grid.Column width={10} className={ styles.postIndexRightColumn }>{
               localState.newsPostFormOpen ? 
               <PostForm titleText={ localState.editorTitle } editorText={localState.editorText} handleTitleChange={ handleTitleChange } handleUpdateEditor={ handleUpdateEditorChange } />
               :
@@ -211,7 +206,11 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
           </Grid.Row>
         </Route>
         <Route path={`${url}/view_all/`}>
-          <ViewAllPosts newsPosts={ newsPostsState.createdNewsPosts } />
+          <ViewAllPosts 
+            newsPosts={ newsPostsState.createdNewsPosts } 
+            currentNewsPost={ newsPostsState.newsPostData } 
+            handleToggleNewsPost={ handleToggleNewsPost }
+          />
         </Route>
       </Switch>
     </React.Fragment>
