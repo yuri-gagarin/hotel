@@ -29,6 +29,10 @@ export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handle
         <span>Title:</span>
         <div>{newsPostData.title}</div>
       </div>
+      <div className={ styles.authorDiv }>
+        <span>Author:</span>
+        <div>{newsPostData.createdBy}</div>
+      </div>
       <div className={ styles.contentDiv }>
         <div dangerouslySetInnerHTML={{__html: newsPostData.content }}></div>
       </div>

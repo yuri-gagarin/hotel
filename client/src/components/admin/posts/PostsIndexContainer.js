@@ -23,6 +23,7 @@ import { objectValuesEmpty } from "../../helpers/displayHelpers";
 
 type LocalState = {
   newsPostFormOpen: boolean;
+  updateForm: boolean;
   editorTitle: string;
   editorText: string;
 }
@@ -47,7 +48,7 @@ type Props = {
 };
 
 const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, _handleDeleteNewsPost, _handleOpenNewsPost, _handleCloseNewsPost, newsPostsState }: Props): React.Node => {
-  const [ localState, setLocalState ] = React.useState<LocalState>({ viewAll: false, newsPostFormOpen: false, editorTitle: "", editorText: "" });
+  const [ localState, setLocalState ] = React.useState<LocalState>({ viewAll: false, newsPostFormOpen: false, updateForm: false, editorTitle: "", editorText: "" });
   const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<ConfirmDeleteModalState>({ modalOpen: false, modelName: "", modelId: "" });
 
   const lastPost = React.useRef<NewsPostData>(newsPostsState.newsPostData);
@@ -58,11 +59,11 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   const handleOpenNewsPostForm = (): void => {
     if (history.location.pathname !== "/admin/posts") history.push("/admin/posts");
     if (!objectValuesEmpty(newsPostsState.newsPostData)) _handleCloseNewsPost();
-    setLocalState({ newsPostFormOpen: true, editorTitle: "", editorText: "" });
+    setLocalState({ newsPostFormOpen: true, updateForm: false, editorTitle: "", editorText: "" });
   };
   const handleOpenEditNewsPost = (): void => {
     const { title, content } = newsPostsState.newsPostData;
-    setLocalState({ newsPostFormOpen: true, editorTitle: title, editorText: content });
+    setLocalState({ newsPostFormOpen: true, updateForm: true, editorTitle: title, editorText: content });
   };
 
   const handleTitleChange = (e: any) => {
@@ -82,7 +83,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       };
       return _handleCreateNewsPost(newPost, newsPostsState)
         .then((success) => {
-          if(success) setLocalState({ newsPostFormOpen: false, editorTitle: "", editorText: "" });
+          if(success) setLocalState({ newsPostFormOpen: false, updateForm: false, editorTitle: "", editorText: "" });
           return true;
         })
         .catch((error) => {
@@ -97,7 +98,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       };
       return _handleUpdateNewsPost(editedPost, newsPostsState)
         .then((success) => {
-          if(success) setLocalState({ newsPostFormOpen: false, editorTitle: "", editorText: "" });
+          if(success) setLocalState({ newsPostFormOpen: false, updateForm: false, editorTitle: "", editorText: "" });
           return true;
         })
         .catch((error) => {
@@ -150,16 +151,19 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
     _handleFetchNewsPosts();
   }, []);
 
+  /*
   React.useEffect(() => {
     if (!objectValuesEmpty(newsPostsState.newsPostData) && localState.newsPostFormOpen) {
+      console.log("this has been called")
       setLocalState({ ...localState, editorTitle: newsPostsState.newsPostData.title, editorText: newsPostsState.newsPostData.content })
     }
-  }, [ newsPostsState, localState.newsPostFormOpen ]);
+  }, [ newsPostsState, localState.newsPostFormOpen, localState.updateForm ]);
+  */
 
   return (
     <React.Fragment>
       <ConfirmDeleteModal open={ confirmDeleteModalState.modalOpen} modelName="news post" confirmAction={ confirmDeleteNewsPost } cancelAction={ cancelDeleteNewsPost }/>
-      <Grid.Row style={{ height: "10%" }}>
+      <Grid.Row style={{ height: "60px", display: "flex", alignItems: "center", padding: 0 }}>
         <PostsControls 
           formOpen={ localState.newsPostFormOpen }
           newPost={ objectValuesEmpty(newsPostsState.newsPostData) } 
@@ -171,7 +175,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       </Grid.Row>
       <Switch>
         <Route exact path={ url }>
-          <Grid.Row centered style={{ height: "80%" }}>
+          <Grid.Row centered style={{ height: "calc(90% - 60px)" }}>
             <Grid.Column className={ styles.postsIndexLeftColumn } width={6}>
               {
                 newsPostsState.createdNewsPosts.map((newsPost) => {

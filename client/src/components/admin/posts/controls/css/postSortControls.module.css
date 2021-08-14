@@ -1,3 +1,9 @@
+.dropdownWrapper {
+  height: 30px;
+  padding: 0 0.5em;
+  display: flex;
+  align-items: center;
+}
 .postDropdownIcon {
   float: right !important;
   margin-left: 5px !important;

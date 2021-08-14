@@ -1,21 +1,15 @@
-.controlsRow {
-  height: 10%;
+.controlsRow, .titleDiv, .authorDiv {
+  height: 40px;
   display: flex;
   align-items: center;
 }
 .titleDiv {
-  height: 10%;
-  display: flex;
-  align-items: center;
   border-left: 3px solid rgb(73, 160, 38);
   border-top: 3px solid rgb(73, 160, 38);
   border-right: 3px solid rgb(73, 160, 38);
   border-radius: 5px 5px 0px 0px;
-  display: flex;
-  align-items: center;
 }
-.titleDiv > span {
-  height: 100%;
+.titleDiv > span, .authorDiv > span {
   background-color: rgb(73, 160, 38);
   display: flex;
   align-items: center;
@@ -24,21 +18,35 @@
   font-size: 1.2em;
   color: white;
 }
-.titleDiv > div {
+.titleDiv > span {
+  height: 100%;
+}
+
+.titleDiv > div, .authorDiv > div {
   margin-left: 5px;
   font-size: 1.25em;
   font-weight: bold;
 }
+
+.authorDiv {
+  border-left: 3px solid rgb(73, 160, 38);
+  border-right: 3px solid rgb(73, 160, 38);
+}
+.authorDiv > span {
+  height: 90%;
+}
 .contentDiv {
-  height: 70%;
+  height: calc(100% - 150px);
   overflow-y: scroll;
   padding: 5px 10px;
   border-left: 3px solid rgb(73, 160, 38);
   border-right: 3px solid rgb(73, 160, 38);
+  border-top: 1px solid rgb(199, 197, 197);
+  border-bottom: 1px solid rgb(199, 197, 197);
 }
 
 .timeStampsDiv {
-  height: 10%;
+  height: 30px;
   display: flex;
   align-items: center;
   flex-wrap: wrap;

@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { useHistory, useRouteMatch } from "react-router";
+import { useHistory, useRouteMatch, useLocation } from "react-router";
 import { Button, Dropdown, Menu } from "semantic-ui-react";
 // additional components //
 import { PostSortControls } from "./controls/PostSortControls";
@@ -20,6 +20,8 @@ type Props = {
 export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handleSavePost, handleCancelPost, handleDeletePost }: Props): React.Node => {
   const history = useHistory();
   const { url } = useRouteMatch();
+  const { pathname } = useLocation();
+
   const [ currentUrl, setCurrentURL ] = React.useState<string>(url);
 
   const toggleViewAllPosts = (url): void => {
@@ -46,12 +48,8 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
           <Button color="green" onClick={ handleSavePost }>Save</Button>
           <Button color="orange" onClick={ handleCancelPost }>Cancel</Button>
         </div>
-        <div>
-          <PostSortControls />
-        </div>
       </div>
-      
-    )
+    );
   } else if (formOpen && !newPost) {
     return (
     <div className={ styles.postControlsContainer }>
@@ -59,9 +57,6 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
         <Button color="green" onClick={ handleSavePost }>Update</Button>
         <Button color="orange" onClick={ handleCancelPost }>Cancel</Button>
         <Button color="red" onClick={ handleDeletePost }>Delete</Button>
-      </div>
-      <div>
-        <PostSortControls />
       </div>
     </div>
      
@@ -73,9 +68,15 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
           <Button color="green" onClick={ handleOpenNewPostForm }>New Post</Button>
           <Button color="blue" onClick={ () => toggleViewAllPosts(url) }>{currentUrl === "/admin/posts" ? "View All" : "View Editor"}</Button>
         </div>
+        {
+        pathname === "/admin/posts/view_all" || pathname === "/admin/posts"
+        ?
         <div>
           <PostSortControls />
         </div>
+        : null
+        }
+        { console.log(pathname) }
       </div>
     );
   }
