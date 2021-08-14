@@ -6,6 +6,7 @@ import { generateMockContactPosts } from "./generateMockContactPosts";
 import { generateMockDiningEntOptions } from "./generateMockDiningEntOptions";
 
 import appConfig from "../../config/appConfig";
+import { generateMockNewsPosts } from "./generateMockNewsPosts";
 
 const { dbSettings } = appConfig;
 const mongoOptions = {
@@ -28,6 +29,7 @@ const models =
    3 - Dining and Entertainment
    4 - Messages
    5 - Contact Posts
+   6 - News Posts
    0 - Exit`;
 
 console.log(chalk.bgBlack.white.bold("Seed mock model data: \n"));
@@ -40,7 +42,7 @@ class SeedModels {
   }
 
   initialize() {
-    mongoose.connect(dbSettings.mongoURI, mongoOptions, (err) => {
+    mongoose.connect("mongodb://localhost:27017/hotelDevelopment", mongoOptions, (err) => {
       if (err) {
         console.log(err);
         process.exit(1);
@@ -60,7 +62,7 @@ class SeedModels {
         self.recursiveAsyncReadLine();
       }
     });
-  };
+  }
 
   async processCLInput(string) {
     switch (string) {
@@ -95,6 +97,13 @@ class SeedModels {
         return new Promise((res, rej) => {
           rl.question("How many 'Contact Post models to create?: ", (value) => {
             return res(generateMockContactPosts(parseInt(value, 10)));
+          });
+        });
+      }
+      case "6": {
+        return new Promise((res) => {
+          rl.question("How many 'News Post' models to create?: ", (value) => {
+            return res(generateMockNewsPosts(parseInt(value, 10)));
           });
         });
       }

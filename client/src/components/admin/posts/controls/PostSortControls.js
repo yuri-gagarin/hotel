@@ -20,20 +20,20 @@ export const PostSortControls = (): React.Node => {
         <Dropdown text={ localState.dropDownText }>
           <Dropdown.Menu>
             <Dropdown.Item value="Newest" onClick={ selectDropDownValue }>
-              Newest
+              <span>Newest</span>
               <Icon className={ styles.postDropdownIcon } name="clock"></Icon>
             </Dropdown.Item>
-            <Dropdown.Item value="Oldest" text="Oldest" onClick={ selectDropDownValue }>
-              Oldest
+            <Dropdown.Item value="Oldest" onClick={ selectDropDownValue }>
+              <span>Oldest</span>
               <Icon className={ styles.postDropdownIcon } name="clock"></Icon>
             </Dropdown.Item>   
             <Dropdown.Divider /> 
             <Dropdown.Item value="Most Read" onClick={ selectDropDownValue }>
-              Most Read
+              <span>Most Read</span>
               <Icon className={ styles.postDropdownIcon } name="book"></Icon>
             </Dropdown.Item>
             <Dropdown.Item value="Least Read" onClick={ selectDropDownValue }>
-              Least Read
+              <span>Least Read</span>
               <Icon className={ styles.postDropdownIcon } name="book"></Icon>
             </Dropdown.Item>
           </Dropdown.Menu>

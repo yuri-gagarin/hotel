@@ -8,7 +8,7 @@
     "start": "NODE_ENV=production node ./dist/server.js",
     "start:dev": "NODE_ENV=development nodemon --exec babel-node ./src/server.js",
     "test": "NODE_ENV=test nodemon --exec babel-node mocha",
-    "seedModels": "NODE_ENV=development babel-node ./helpers/data_generation/generateData.js"
+    "seedModels": "NODE_ENV=development babel-node ./src/helpers/data_generation/generateData.js"
   },
   "author": "yuri-gagarin",
   "license": "ISC",
