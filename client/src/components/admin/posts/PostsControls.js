@@ -1,7 +1,9 @@
 // @flow
 import * as React from "react";
 import { useHistory, useRouteMatch } from "react-router";
-import { Button } from "semantic-ui-react";
+import { Button, Dropdown, Menu } from "semantic-ui-react";
+// additional components //
+import { PostSortControls } from "./controls/PostSortControls";
 // 
 import styles from "./css/postsControls.module.css";
 
@@ -40,25 +42,41 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
   if (formOpen && newPost) {
     return (
       <div className={ styles.postControlsContainer }>
-        <Button color="green" onClick={ handleSavePost }>Save</Button>
-        <Button color="orange" onClick={ handleCancelPost }>Cancel</Button>
+        <div>
+          <Button color="green" onClick={ handleSavePost }>Save</Button>
+          <Button color="orange" onClick={ handleCancelPost }>Cancel</Button>
+        </div>
+        <div>
+          <PostSortControls />
+        </div>
       </div>
+      
     )
   } else if (formOpen && !newPost) {
     return (
-      <div className={ styles.postControlsContainer }>  
+    <div className={ styles.postControlsContainer }>
+       <div> 
         <Button color="green" onClick={ handleSavePost }>Update</Button>
         <Button color="orange" onClick={ handleCancelPost }>Cancel</Button>
         <Button color="red" onClick={ handleDeletePost }>Delete</Button>
       </div>
+      <div>
+        <PostSortControls />
+      </div>
+    </div>
+     
     );
   } else {
     return (
       <div className={ styles.postControlsContainer }>
-        <Button color="green" onClick={ handleOpenNewPostForm }>New Post</Button>
-        <Button color="blue" onClick={ () => toggleViewAllPosts(url) }>{currentUrl === "/admin/posts" ? "View All" : "View Editor"}</Button>
+        <div>
+          <Button color="green" onClick={ handleOpenNewPostForm }>New Post</Button>
+          <Button color="blue" onClick={ () => toggleViewAllPosts(url) }>{currentUrl === "/admin/posts" ? "View All" : "View Editor"}</Button>
+        </div>
+        <div>
+          <PostSortControls />
+        </div>
       </div>
-    )
+    );
   }
- 
-}
+};

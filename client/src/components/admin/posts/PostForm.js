@@ -14,18 +14,24 @@ type PostFormProps = {
 }
 export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdateEditor }: PostFormProps): React.Node => {
   
+  const titleInputRef = React.useRef<HTMLInputElement | null>(null);
+
   const handleEditorChange = (_, editor: any): void => {
     handleUpdateEditor(editor);
   };
+
+  React.useEffect(() => {
+    if (titleInputRef.current) titleInputRef.current.focus();
+  }, [ titleInputRef.current ]);
 
   return (
     <div className={ styles.newPostFormWrapper }>
       <div className={ styles.titleInputDiv}>
         <label>Title:</label>
-        <input onChange={ handleTitleChange } value={ titleText ? titleText : "" }></input>
+        <input onChange={ handleTitleChange } value={ titleText ? titleText : "" } placeholder={ "Title of news post here" } ref={ titleInputRef }></input>
       </div>
       <div className={ styles.editorContainer}>
-        <CKEditor
+        <CKEditor className={ styles.editor }
           editor={ ClassicEditor }
           onChange={ handleEditorChange }
           data={ editorText }

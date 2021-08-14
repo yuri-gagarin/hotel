@@ -51,10 +51,13 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<ConfirmDeleteModalState>({ modalOpen: false, modelName: "", modelId: "" });
 
   const lastPost = React.useRef<NewsPostData>(newsPostsState.newsPostData);
-  const { path, url } = useRouteMatch()
+
+  const history = useHistory();
+  const { path, url } = useRouteMatch();
 
   const handleOpenNewsPostForm = (): void => {
-    _handleCloseNewsPost()
+    if (history.location.pathname !== "/admin/posts") history.push("/admin/posts");
+    if (!objectValuesEmpty(newsPostsState.newsPostData)) _handleCloseNewsPost();
     setLocalState({ newsPostFormOpen: true, editorTitle: "", editorText: "" });
   };
   const handleOpenEditNewsPost = (): void => {
