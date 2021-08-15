@@ -4,17 +4,10 @@ export type ClientNewsPostFormData = {
   _id?: string,
   createdBy?: string,
   title?: string,
+  live?: boolean,
   content?: string,
   createdAt?: string,
   editedAt?: string
-};
-export type NewsPostUpdateData = {
-  _id: string,
-  title: string;
-  createdBy: string,
-  content: string,
-  createdAt: string,
-  editedAt: string
 };
 export type FetchNewsPostParams = {
   readSort?: "read" | "unread" | "view all",
@@ -29,6 +22,7 @@ export type NewsPostData = {
   createdBy: string,
   title: string,
   content: string,
+  live: boolean,
   createdAt: string,
   editedAt: string
 };
@@ -112,8 +106,19 @@ export type ClearNewsPostData = {
     newsPostData: NewsPostData,
   }
 };
+
+export type ToggleNewsPostOnlineStatus = {
+  +type: "ToggleNewsPostOnlineStatus",
+  payload: {
+    status: number;
+    loading: boolean;
+    responseMsg: string;
+    newsPostData: NewsPostData;
+    createdNewsPosts: Array<NewsPostData>;
+  }
+};
 // union contactPost action type //
 export type NewsPostAction = (
   NewsPostAPIRequest | SetNewsPosts | NewsPostError | NewsPostCreated | NewsPostUpdated | NewsPostDeleted |
-  OpenNewsPost | ClearNewsPostData
+  OpenNewsPost | ClearNewsPostData | ToggleNewsPostOnlineStatus
 );

@@ -70,6 +70,17 @@ const newPostReducer = (state: NewsPostsState = initialState, action: NewsPostAc
         error: null
       };
     }
+    case "ToggleNewsPostOnlineStatus": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        newsPostData: action.payload.newsPostData,
+        createdNewsPosts: action.payload.createdNewsPosts,
+        error: null
+      };
+    }
     case "NewsPostError": {
       return {
         ...state,

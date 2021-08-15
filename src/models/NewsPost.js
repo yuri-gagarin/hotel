@@ -14,6 +14,10 @@ const newsPostSchema = new Schema({
     type: String,
     required: true
   },
+  live: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: new Date(Date.now())

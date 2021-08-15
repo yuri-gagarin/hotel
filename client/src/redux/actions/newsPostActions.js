@@ -6,9 +6,9 @@ import { generateEmptyNewsPostModel } from "../reducers/_helpers/emptyDataGenera
 import type { 
   NewsPostData, NewsPostsState,
   NewsPostAPIRequest, SetNewsPosts, NewsPostError,
-  NewsPostCreated, NewsPostUpdated, NewsPostDeleted,
+  NewsPostCreated, NewsPostUpdated, NewsPostDeleted, ToggleNewsPostOnlineStatus,
   OpenNewsPost, ClearNewsPostData, NewsPostAction, 
-  ClientNewsPostFormData, FetchNewsPostParams, NewsPostUpdateData
+  ClientNewsPostFormData, FetchNewsPostParams
 } from "../reducers/news_posts/flowTypes";
 import type { Dispatch } from "../reducers/_helpers/createReducer";
 // helpers //
@@ -69,6 +69,13 @@ export const deleteNewsPost = (data: { status: number, responseMsg: string, crea
   };
 };
 
+const toggleNewsPostLiveStatus = (data: { status: number, responseMsg: string, newsPostData: NewsPostData, createdNewsPosts: Array<NewsPostData> }): ToggleNewsPostOnlineStatus => {
+  return {
+    type: "ToggleNewsPostOnlineStatus",
+    payload: { ...data, loading: false  }
+  };
+};
+
 export const setNewsPostError = (error: any): NewsPostError => {
   return {
     type: "NewsPostError",
@@ -113,7 +120,7 @@ export const handleCreateNewsPost = (dispatch: Dispatch<NewsPostAction>, formDat
     });
 };
 
-export const handleUpdateNewsPost = (dispatch: Dispatch<NewsPostAction>, updateData: NewsPostUpdateData, newsPostState: NewsPostsState): Promise<boolean> => {
+export const handleUpdateNewsPost = (dispatch: Dispatch<NewsPostAction>, updateData: NewsPostData, newsPostState: NewsPostsState): Promise<boolean> => {
   const { _id, title, content } = updateData;
   const requestOptions = {
     method: "patch",
@@ -200,6 +207,37 @@ export const handleDeleteNewsPost = (dispatch: Dispatch<NewsPostAction>, postId:
         numberOfNewsPosts: updatedPosts.length
       }
       dispatch(deleteNewsPost(stateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(setNewsPostError(error));
+      return Promise.resolve(false);
+    });
+};
+
+export const handleToggleNewsPostLiveStatus = (dispatch: Dispatch<NewsPostAction>, newsPostData: NewsPostData, newsPostState: NewsPostsState): Promise<boolean> => {
+  const { _id: postId, live } = newsPostData;
+  const requestOtions = {
+    method: "patch",
+    url: "/api/news_posts/" + postId,
+    data: {
+      liveStatus: { live: !live }
+    }
+  };
+
+  dispatch(sendNewsPostRequest());
+  return axios(requestOtions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, updatedNewsPost }: { responseMsg: string, updatedNewsPost: NewsPostData } = data;
+      const updatedNewsPosts = newsPostState.createdNewsPosts.map((newsPost) => {
+        if (newsPost._id === updatedNewsPost._id) {
+          return { ...updatedNewsPost };
+        } else {
+          return newsPost;
+        }
+      });
+      dispatch(toggleNewsPostLiveStatus({ status, responseMsg, newsPostData: updatedNewsPost, createdNewsPosts: updatedNewsPosts } ));
       return Promise.resolve(true);
     })
     .catch((error) => {

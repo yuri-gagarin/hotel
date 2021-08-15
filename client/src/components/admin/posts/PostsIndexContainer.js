@@ -6,7 +6,7 @@ import { useRouteMatch, useHistory, Route, Switch } from "react-router-dom";
 // redux actions //
 import { connect } from "react-redux";
 // additional components //
-import { handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handleDeleteNewsPost, handleOpenNewsPost, handleCloseNewsPost, setNewsPostError } from "../../../redux/actions/newsPostActions";
+import { handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handleToggleNewsPostLiveStatus, handleDeleteNewsPost, handleOpenNewsPost, handleCloseNewsPost, setNewsPostError } from "../../../redux/actions/newsPostActions";
 import { ConfirmDeleteModal} from "../shared/ConfirmDeleteModal";
 import { PostsControls } from "./PostsControls";
 import { PostForm } from "./PostForm";
@@ -15,7 +15,7 @@ import { NewsPostPreviewCard } from "./cards/NewsPostPreviewCard";
 import { ViewAllPosts } from "./view_all/ViewAllPosts";
 // types //
 import type { RootState, Dispatch } from "../../../redux/reducers/_helpers/createReducer";
-import type { NewsPostAction, NewsPostsState, NewsPostData, ClientNewsPostFormData, NewsPostUpdateData } from "../../../redux/reducers/news_posts/flowTypes";
+import type { NewsPostAction, NewsPostsState, NewsPostData, ClientNewsPostFormData } from "../../../redux/reducers/news_posts/flowTypes";
 // styles //
 import styles from "./css/postsIndexContainer.module.css";
 // helpers //
@@ -41,13 +41,14 @@ type Props = {
   newsPostsState: NewsPostsState;
   _handleFetchNewsPosts: (options?: any) => Promise<boolean>;
   _handleCreateNewsPost: (data: ClientNewsPostFormData, newsPostsState: NewsPostsState) => Promise<boolean>;
-  _handleUpdateNewsPost: (data: NewsPostUpdateData, newsPostsState: NewsPostsState) => Promise<boolean>;
+  _handleUpdateNewsPost: (data: NewsPostData, newsPostsState: NewsPostsState) => Promise<boolean>;
+  _handleToggleNewsPostOnlineStatus: (data: NewsPostData, NewsPostsState) => Promise<boolean>;
   _handleDeleteNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => Promise<boolean>;
   _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => void;
   _handleCloseNewsPost: () => void;
 };
 
-const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, _handleDeleteNewsPost, _handleOpenNewsPost, _handleCloseNewsPost, newsPostsState }: Props): React.Node => {
+const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, _handleToggleNewsPostOnlineStatus, _handleDeleteNewsPost, _handleOpenNewsPost, _handleCloseNewsPost, newsPostsState }: Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<LocalState>({ viewAll: false, newsPostFormOpen: false, updateForm: false, editorTitle: "", editorText: "" });
   const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<ConfirmDeleteModalState>({ modalOpen: false, modelName: "", modelId: "" });
 
@@ -92,7 +93,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
           return false;
         });
     } else {
-      const editedPost: NewsPostUpdateData = {
+      const editedPost: NewsPostData = {
         ...newsPostsState.newsPostData,
         title: localState.editorTitle,
         content: localState.editorText
@@ -120,6 +121,11 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       _handleCloseNewsPost();
       setLocalState({ ...localState, newsPostFormOpen: false, editorTitle: "", editorText: "" });
     }
+  };
+
+  // toggle news post online status //
+  const toggleNewsPostLiveStatus = (): Promise<boolean> => {
+    return _handleToggleNewsPostOnlineStatus(newsPostsState.newsPostData, newsPostsState);
   };
 
   // delete functionality withh confirm modal popup //
@@ -151,6 +157,12 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   React.useEffect(() => {
     _handleFetchNewsPosts();
   }, []);
+
+  React.useEffect(() => {
+    if(history.location.pathname.includes("view_all/") && objectValuesEmpty(newsPostsState.newsPostData)) {
+      history.push("/admin/posts");
+    }
+  }, [ history.location.pathname ]);
 
   /*
   React.useEffect(() => {
@@ -236,7 +248,8 @@ const mapDispatchToProps = (dispatch: Dispatch<NewsPostAction>) => {
   return {
     _handleFetchNewsPosts: (options?: any) => handleFetchNewsPosts(dispatch, options),
     _handleCreateNewsPost: (clientNewsPostData: ClientNewsPostFormData) => handleCreateNewsPost(dispatch, clientNewsPostData),
-    _handleUpdateNewsPost: (clientNewsPostData: NewsPostUpdateData, newsPostsState: NewsPostsState) => handleUpdateNewsPost(dispatch, clientNewsPostData, newsPostsState),
+    _handleUpdateNewsPost: (clientNewsPostData: NewsPostData, newsPostsState: NewsPostsState) => handleUpdateNewsPost(dispatch, clientNewsPostData, newsPostsState),
+    _handleToggleNewsPostOnlineStatus: (clientNewsPostData: NewsPostData, newsPostsState: NewsPostsState) => handleToggleNewsPostLiveStatus(dispatch, clientNewsPostData, newsPostsState),
     _handleDeleteNewsPost: (newspPostId: string, newsPostsState: NewsPostsState) => handleDeleteNewsPost(dispatch, newspPostId, newsPostsState),
     _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => handleOpenNewsPost(dispatch, newsPostId, newsPostsState),
     _handleCloseNewsPost: () => handleCloseNewsPost(dispatch)

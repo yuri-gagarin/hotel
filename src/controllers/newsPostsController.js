@@ -56,7 +56,26 @@ export default {
 
   updateNewsPost: (req, res) => {
     const { newsPostId } = req.params;
-    const { updateData } = req.body;
+    const { updateData, liveStatus } = req.body;
+    if (liveStatus && typeof liveStatus === "object" && typeof liveStatus.live === "boolean") {
+      const { live } = liveStatus;
+      return NewsPost.findOneAndUpdate(
+        { _id: newsPostId }, 
+        { $set: { live: live, editedAt: new Date(Date.now()) } },
+        { new: true }
+      )
+      .exec()
+        .then((updatedNewsPost) => {
+          const { live } = updatedNewsPost;
+          const responseMsg = `Your News Post is now ${live ? "live and visible" : "offline"}.`;
+          return res.status(200).json({ responseMsg, updatedNewsPost });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            responseMsg: "An error occured", error
+          });
+        });
+    }
     if (updateData) {
       // handle a reply //
       const { title, content } = updateData;
