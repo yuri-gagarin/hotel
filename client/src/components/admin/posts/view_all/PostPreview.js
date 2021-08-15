@@ -15,19 +15,20 @@ type Props = {
   newsPostData: NewsPostData;
   handleOpenEditNewsPost: () => void;
   triggerDeleteCurrentNewsPost: () => void;
+  toggleNewsPostLiveStatus: () => Promise<boolean>;
 }
-export const PostPreview = ({ history, newsPostData, handleOpenEditNewsPost, triggerDeleteCurrentNewsPost }: Props): React.Node => {
-  const { title, createdBy, content, editedAt, createdAt } = newsPostData;
-
+export const PostPreview = ({ history, newsPostData, handleOpenEditNewsPost, triggerDeleteCurrentNewsPost, toggleNewsPostLiveStatus }: Props): React.Node => {
+  const { title, createdBy, live, content, editedAt, createdAt } = newsPostData;
 
   return (
     <div className={ styles.newsPostPreviewWrapper }>
       <div className={ styles.newsPostPreviewCtrls}>
         <PostPreviewControls 
           history={ history } 
-          online={ false } 
+          online={ live } 
           handleOpenEditNewsPost={ handleOpenEditNewsPost } 
           triggerDeleteCurrentNewsPost={ triggerDeleteCurrentNewsPost }
+          toggleNewsPostLiveStatus={ toggleNewsPostLiveStatus }
         />
       </div>
       <div className={ styles.newsPostPreviewTitle}>

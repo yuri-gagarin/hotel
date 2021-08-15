@@ -1,6 +1,8 @@
 // @flow
 import * as React from "react";
 import { Button, Segment } from "semantic-ui-react";
+// aditional components //
+import { CardOnlineStatusBlinkers } from "../../shared/CardOnlineStatusBlinkers";
 // styles //
 import styles from "./css/newsPostCard.module.css";
 // types //
@@ -33,6 +35,9 @@ export const NewsPostCard = ({ active, newsPostData, toggleNewsPost }: Props): R
           <span>Edited at:</span>
           <span>{formatDate(newsPostData.editedAt)}</span>
         </div>
+      </div>
+      <div className={ styles.postOnlineBlinker }> 
+        <CardOnlineStatusBlinkers live={ newsPostData.live } />
       </div>
       <Button.Group className={ styles.controlBtns }>
         <Button inverted color="green" onClick={ () => toggleNewsPost(newsPostData._id) }>View</Button>

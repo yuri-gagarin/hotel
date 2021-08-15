@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Button, Segment } from "semantic-ui-react";
+import { Button, Icon, Popup, Segment } from "semantic-ui-react";
 // styles //
 import styles from "./css/newsPostPreviewCard.module.css";
 // types //
@@ -13,8 +13,9 @@ type Props = {
   closeCurrentNewsPost: () => void;
   handleOpenEditCurrentNewsPost: () => void;
   triggerDeleteCurrentNewsPost: () => void;
+  toggleNewsPostLiveStatus: () => Promise<boolean>;
 }
-export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handleOpenEditCurrentNewsPost, triggerDeleteCurrentNewsPost }: Props): React.Node => {
+export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handleOpenEditCurrentNewsPost, triggerDeleteCurrentNewsPost, toggleNewsPostLiveStatus }: Props): React.Node => {
 
   return (
     <Segment style={{ height: "100%", width: "100%" }}>
@@ -24,6 +25,15 @@ export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handle
           <Button inverted color="orange" onClick={ handleOpenEditCurrentNewsPost }>Edit</Button>
           <Button color="red" onClick={ triggerDeleteCurrentNewsPost }>Delete</Button>
         </Button.Group>
+        <Button.Group className={ styles.postOnlineBtns }>
+          <Button icon inverted color={ newsPostData.live ? "red" : "green" } labelPosition="right" onClick={ toggleNewsPostLiveStatus }>
+            <Popup  
+              content={ newsPostData.live ? "Post is online and visible" : "Post is offline, not visible to clients" }
+              trigger={ <Icon className= { newsPostData.live ? styles.onlineIcon : styles.offlineIcon } name="world" /> }
+            />
+            { newsPostData.live ? "Take Offline" : "Take Online" }
+          </Button>
+      </Button.Group>
       </div>
       <div className={ styles.titleDiv }>
         <span>Title:</span>

@@ -219,6 +219,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
                   closeCurrentNewsPost={ _handleCloseNewsPost }
                   handleOpenEditCurrentNewsPost={ handleOpenEditNewsPost }
                   triggerDeleteCurrentNewsPost={ triggerDeleteNewsPost }
+                  toggleNewsPostLiveStatus={ toggleNewsPostLiveStatus }
                 />
               )
             }
@@ -232,6 +233,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
             handleToggleNewsPost={ handleToggleNewsPost }
             handleOpenEditNewsPost={ handleOpenEditNewsPost }
             triggerDeleteCurrentNewsPost= { triggerDeleteNewsPost }
+            toggleNewsPostLiveStatus={ toggleNewsPostLiveStatus }
           />
         </Route>
       </Switch>

@@ -28,7 +28,7 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
       route = url + "/view_all";
       history.push(route);
 
-    } else if (pathname === "/admin/posts/view_all") {
+    } else if (pathname.includes("/admin/posts/view_all")) {
       route = "/admin/posts";
       history.push("/admin/posts");
     } else {

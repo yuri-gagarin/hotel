@@ -3,6 +3,18 @@
   display: flex;
   align-items: center;
 }
+
+.postOnlineBtns {
+  margin-left: 5px !important;
+}
+.onlineIcon {
+  color: green;
+}
+.offlineIcon {
+  color: red;
+}
+
+
 .titleDiv {
   border-left: 3px solid rgb(73, 160, 38);
   border-top: 3px solid rgb(73, 160, 38);

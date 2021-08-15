@@ -13,8 +13,9 @@ type Props = {
   online: boolean;
   handleOpenEditNewsPost: () => void;
   triggerDeleteCurrentNewsPost: () => void;
+  toggleNewsPostLiveStatus: () => Promise<boolean>;
 }
-export const PostPreviewControls = ({ history, online, handleOpenEditNewsPost, triggerDeleteCurrentNewsPost }: Props): React.Node => {
+export const PostPreviewControls = ({ history, online, handleOpenEditNewsPost, triggerDeleteCurrentNewsPost, toggleNewsPostLiveStatus }: Props): React.Node => {
 
   const goBack = (): void => {
     history.goBack();
@@ -28,7 +29,7 @@ export const PostPreviewControls = ({ history, online, handleOpenEditNewsPost, t
         <Button color="red" onClick={ triggerDeleteCurrentNewsPost }>Delete</Button>
       </Button.Group>
       <Button.Group className={ styles.postOnlineBtns }>
-        <Button icon inverted color={ online ? "red" : "green" } labelPosition="right">
+        <Button icon inverted color={ online ? "red" : "green" } labelPosition="right" onClick={ toggleNewsPostLiveStatus }>
           <Popup  
             content={ online ? "Post is online and visible" : "Post is offline, not visible to clients" }
             trigger={ <Icon className= {online ? styles.onlineIcon : styles.offlineIcon } name="world" /> }

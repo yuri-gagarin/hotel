@@ -16,9 +16,10 @@ type Props = {
   handleToggleNewsPost: (postId: string) => void;
   handleOpenEditNewsPost: () => void;
   triggerDeleteCurrentNewsPost: () => void;
+  toggleNewsPostLiveStatus: () => Promise<boolean>;
 };
 
-export const ViewAllPosts = ({ newsPosts, currentNewsPost, handleToggleNewsPost, handleOpenEditNewsPost, triggerDeleteCurrentNewsPost }: Props): React.Node => {
+export const ViewAllPosts = ({ newsPosts, currentNewsPost, handleToggleNewsPost, handleOpenEditNewsPost, triggerDeleteCurrentNewsPost, toggleNewsPostLiveStatus }: Props): React.Node => {
 
   const { url, path } = useRouteMatch();
   const history = useHistory();
@@ -54,6 +55,7 @@ export const ViewAllPosts = ({ newsPosts, currentNewsPost, handleToggleNewsPost,
               newsPostData={ currentNewsPost } 
               handleOpenEditNewsPost={ handleOpenEditNewsPost } 
               triggerDeleteCurrentNewsPost={ triggerDeleteCurrentNewsPost }
+              toggleNewsPostLiveStatus={ toggleNewsPostLiveStatus }
             />
           </Route>
         </Switch>

@@ -49,7 +49,7 @@ export const ViewAllCard = ({ newsPostData, goToPost }: Props): React.Node => {
         <Button basic color="green" onClick={ () => goToPost(postId, title) }>View</Button>
       </Card.Content>
       <CardContent>
-        <CardOnlineStatusBlinkers live={true} />
+        <CardOnlineStatusBlinkers live={ newsPostData.live } />
       </CardContent>
     </Card>
   );

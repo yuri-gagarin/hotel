@@ -43,13 +43,22 @@
   padding: 0 5px;
 }
 
-.timeStampsDiv {
+.timeStampsDiv{
   display: flex;
   flex-direction: column;
   border-left: 3px solid rgb(73, 160, 38);
   border-bottom: 3px solid rgb(73, 160, 38);
   border-right: 3px solid rgb(73, 160, 38);
   border-radius: 0px 0px 5px 5px;
+}
+
+.postOnlineBlinker {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+  border: 3px solid rgb(93, 134, 182);
+  border-radius: 5px;
+  padding: 5px 0px;
 }
 
 .postCreatedAt, .postEditedAt {
