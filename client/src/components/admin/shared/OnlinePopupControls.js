@@ -19,7 +19,7 @@ type Props = {|
   takeAllOnline: () => Promise<boolean | void>,
   takeAllOffline: () => Promise<boolean | void>
 |}
-const OnlinePopupControls = ({ handleFormOpen, modelType, createdModels, takeAllOnline, takeAllOffline } : Props): React.Node => {
+const OnlinePopupControls = ({ handleFormOpen, modelType, createdModels, takeAllOnline, takeAllOffline }: Props): React.Node => {
   const [ localState, setLocalState ] = React.useState<{ createdModelsLength: number, numOnline: number, numOffline: number }>({ createdModelsLength: 0, numOnline: 0, numOffline: 0 });
 
   React.useEffect((): void => {

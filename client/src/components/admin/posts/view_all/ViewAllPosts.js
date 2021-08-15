@@ -14,9 +14,11 @@ type Props = {
   newsPosts: Array<NewsPostData>;
   currentNewsPost: NewsPostData;
   handleToggleNewsPost: (postId: string) => void;
+  handleOpenEditNewsPost: () => void;
+  triggerDeleteCurrentNewsPost: () => void;
 };
 
-export const ViewAllPosts = ({ newsPosts, currentNewsPost, handleToggleNewsPost, }: Props): React.Node => {
+export const ViewAllPosts = ({ newsPosts, currentNewsPost, handleToggleNewsPost, handleOpenEditNewsPost, triggerDeleteCurrentNewsPost }: Props): React.Node => {
 
   const { url, path } = useRouteMatch();
   const history = useHistory();
@@ -29,7 +31,7 @@ export const ViewAllPosts = ({ newsPosts, currentNewsPost, handleToggleNewsPost,
 
   return (
     <Grid.Row style={{ height: "80%" }}>
-      <Grid.Column width={ 16 } style={{ height: "100%" }}>
+      <Grid.Column width={ 16 } style={{ height: "100%", paddingLeft: "30px", paddingRight: "30px" }}>
         <Switch>
           <Route exact path={ url }>
             <Card.Group>
@@ -47,7 +49,12 @@ export const ViewAllPosts = ({ newsPosts, currentNewsPost, handleToggleNewsPost,
             </Card.Group>
           </Route>
           <Route path={ `${url}/:postTitle`}>
-            <PostPreview newsPostData={ currentNewsPost } />
+            <PostPreview 
+              history={ history } 
+              newsPostData={ currentNewsPost } 
+              handleOpenEditNewsPost={ handleOpenEditNewsPost } 
+              triggerDeleteCurrentNewsPost={ triggerDeleteCurrentNewsPost }
+            />
           </Route>
         </Switch>
       </Grid.Column>   

@@ -1,0 +1,23 @@
+.postPreviewControlsWrapper {
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.postOnlineBtns {
+  margin-left: 5px !important;
+}
+.postBlinkers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
+}
+
+.onlineIcon {
+  color: green;
+}
+.offlineIcon {
+  color: red;
+}
+

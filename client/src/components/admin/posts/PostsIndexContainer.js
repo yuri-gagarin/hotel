@@ -63,6 +63,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   };
   const handleOpenEditNewsPost = (): void => {
     const { title, content } = newsPostsState.newsPostData;
+    if (history.location.pathname !== "/admin/posts") history.push("/admin/posts");
     setLocalState({ newsPostFormOpen: true, updateForm: true, editorTitle: title, editorText: content });
   };
 
@@ -163,7 +164,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   return (
     <React.Fragment>
       <ConfirmDeleteModal open={ confirmDeleteModalState.modalOpen} modelName="news post" confirmAction={ confirmDeleteNewsPost } cancelAction={ cancelDeleteNewsPost }/>
-      <Grid.Row style={{ height: "60px", display: "flex", alignItems: "center", padding: 0 }}>
+      <Grid.Row style={{ height: "60px", display: "flex", alignItems: "center", padding: 0, border: "3px solid green" }}>
         <PostsControls 
           formOpen={ localState.newsPostFormOpen }
           newPost={ objectValuesEmpty(newsPostsState.newsPostData) } 
@@ -217,6 +218,8 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
             newsPosts={ newsPostsState.createdNewsPosts } 
             currentNewsPost={ newsPostsState.newsPostData } 
             handleToggleNewsPost={ handleToggleNewsPost }
+            handleOpenEditNewsPost={ handleOpenEditNewsPost }
+            triggerDeleteCurrentNewsPost= { triggerDeleteNewsPost }
           />
         </Route>
       </Switch>

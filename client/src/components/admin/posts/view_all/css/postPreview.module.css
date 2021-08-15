@@ -1,9 +1,14 @@
 .newsPostPreviewWrapper {
   height: 100%;
   width: 100%;
-  padding: 0px 15px;
+  padding: 0px;
 }
 
+.newsPostPreviewCtrls {
+  width: 100%;
+  height: 35px;
+  margin-bottom: 5px;
+}
 .newsPostPreviewTitle, .newsPostCreatedBy, .newsPostTimeStamps {
   width: 100%;
   height: 30px;
@@ -32,7 +37,7 @@
 
 .newsPostContentDiv {
   width: 100%;
-  height: calc(100% - 120px);
+  height: calc(100% - 120px - 35px);
   border: 3px solid var(--postsSectionBgColor);
   border-radius: 5px;
   overflow-y: scroll;

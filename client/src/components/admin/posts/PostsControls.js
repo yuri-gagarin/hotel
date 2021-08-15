@@ -19,22 +19,18 @@ type Props = {
 
 export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handleSavePost, handleCancelPost, handleDeletePost }: Props): React.Node => {
   const history = useHistory();
-  const { url } = useRouteMatch();
   const { pathname } = useLocation();
 
-  const [ currentUrl, setCurrentURL ] = React.useState<string>(url);
 
   const toggleViewAllPosts = (url): void => {
     let route: string;
-    if (currentUrl === "/admin/posts") {
+    if (pathname === "/admin/posts") {
       route = url + "/view_all";
       history.push(route);
-      setCurrentURL(route);
 
-    } else if (currentUrl === "/admin/posts/view_all") {
+    } else if (pathname === "/admin/posts/view_all") {
       route = "/admin/posts";
       history.push("/admin/posts");
-      setCurrentURL(route);
     } else {
       return;
     }
@@ -66,7 +62,7 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
       <div className={ styles.postControlsContainer }>
         <div>
           <Button color="green" onClick={ handleOpenNewPostForm }>New Post</Button>
-          <Button color="blue" onClick={ () => toggleViewAllPosts(url) }>{currentUrl === "/admin/posts" ? "View All" : "View Editor"}</Button>
+          <Button color="blue" onClick={ () => toggleViewAllPosts(pathname) }>{pathname === "/admin/posts" ? "View All" : "View Editor"}</Button>
         </div>
         {
         pathname === "/admin/posts/view_all" || pathname === "/admin/posts"
@@ -76,7 +72,6 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
         </div>
         : null
         }
-        { console.log(pathname) }
       </div>
     );
   }

@@ -1,0 +1,21 @@
+.titleContent, .authorContent {
+  height: 35px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.titleContent > span:nth-child(1), .authorContent > span:nth-child(1) {
+  width: 60px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(69, 121, 189);
+  color: white;
+  border-radius: 0px 0px 30% 0px;
+}
+
+.titleContent > span:nth-child(2), .authorContent > span:nth-child(2) {
+  margin-left: 5px;
+}

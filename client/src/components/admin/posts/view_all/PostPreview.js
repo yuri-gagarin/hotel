@@ -1,20 +1,35 @@
 // @flow
 import * as React from "react";
+// additonal components //
+import { PostPreviewControls } from "../controls/PostPreviewControls";
 // types //
 import type { NewsPostData } from "../../../../redux/reducers/news_posts/flowTypes";
-import { formatDate } from "../../../helpers/dateHelpers";
+import type { RouterHistory } from "react-router-dom";
 // styles //
 import styles from "./css/postPreview.module.css";
+// helpers //
+import { formatDate } from "../../../helpers/dateHelpers";
 
 type Props = {
+  history: RouterHistory;
   newsPostData: NewsPostData;
+  handleOpenEditNewsPost: () => void;
+  triggerDeleteCurrentNewsPost: () => void;
 }
-export const PostPreview = ({ newsPostData }: Props): React.Node => {
+export const PostPreview = ({ history, newsPostData, handleOpenEditNewsPost, triggerDeleteCurrentNewsPost }: Props): React.Node => {
   const { title, createdBy, content, editedAt, createdAt } = newsPostData;
 
 
   return (
     <div className={ styles.newsPostPreviewWrapper }>
+      <div className={ styles.newsPostPreviewCtrls}>
+        <PostPreviewControls 
+          history={ history } 
+          online={ false } 
+          handleOpenEditNewsPost={ handleOpenEditNewsPost } 
+          triggerDeleteCurrentNewsPost={ triggerDeleteCurrentNewsPost }
+        />
+      </div>
       <div className={ styles.newsPostPreviewTitle}>
         <span>Title:</span>
         <span className={ styles.newsPostPreviewTitleText}>{ title }</span>
