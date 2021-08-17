@@ -2,7 +2,7 @@
 import * as React from "react";
 // redux actions //
 import { connect } from "react-redux";
-import { handleFetchNewsPosts } from "../../../redux/actions/newsPostActions";
+import { handleFetchNewsPosts, handleOpenNewsPost } from "../../../redux/actions/newsPostActions";
 // additional componets //
 import { NewsPostSideCard } from "./NewsPostSideCard";
 // types //
@@ -11,6 +11,7 @@ import type { RootState, Dispatch, AppAction } from "../../../redux/reducers/_he
 // styles //
 import styles from "./css/newsPostsIndexContainer.module.css";
 import { NewsPostMainCard } from "./NewsPostMainCard";
+import { objectValuesEmpty } from "../../helpers/displayHelpers";
 
 
 type WrapperProps = {
@@ -19,13 +20,29 @@ type WrapperProps = {
 type Props = {
   ...WrapperProps,
   newsPostsState: NewsPostsState;
+  _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => void;
   _handleFetchNewsPosts: (options?: FetchNewsPostParams) => Promise<boolean>;
 };
-const NewsPostIndexContainer = ({ newsPostsState, _handleFetchNewsPosts }: Props): React.Node => {
+const NewsPostIndexContainer = ({ newsPostsState, _handleFetchNewsPosts, _handleOpenNewsPost }: Props): React.Node => {
+
+
+  const handleSelectNewsPost = (postId: string): void => {
+    _handleOpenNewsPost(postId, newsPostsState);
+  };
+
+  // lifecycle methods //
+  React.useEffect(() => {
+    _handleFetchNewsPosts({ date: "desc" })
+      .catch((error) => console.log(error));
+  }, []);
 
   React.useEffect(() => {
-    _handleFetchNewsPosts({ date: "desc" });
-  }, []);
+    if (newsPostsState.createdNewsPosts.length > 0 && objectValuesEmpty(newsPostsState.newsPostData)) {
+      console.log(newsPostsState)
+      const { _id: newsPostId } = newsPostsState.createdNewsPosts[0];
+      _handleOpenNewsPost(newsPostId, newsPostsState);
+    }
+  }, [ newsPostsState ]);
 
   return (
     <div className={ styles.newsPostContainerWrapper }>
@@ -33,11 +50,12 @@ const NewsPostIndexContainer = ({ newsPostsState, _handleFetchNewsPosts }: Props
       <div className={ styles.newsPostMainContent } >
         <div className={ styles.newsPostsLeftContainer }>
           {
-            newsPostsState.createdNewsPosts[0]
+            objectValuesEmpty(newsPostsState.newsPostData)
             ?
-            <NewsPostMainCard newsPostData={ newsPostsState.createdNewsPosts[0] } />
+            <div>Loading...</div>
             :
-            null
+            <NewsPostMainCard newsPostData={ newsPostsState.newsPostData } />
+
           }
         </div>
         <div className={ styles.newsPostsRightContainer }>
@@ -46,7 +64,9 @@ const NewsPostIndexContainer = ({ newsPostsState, _handleFetchNewsPosts }: Props
                 return (
                   <NewsPostSideCard 
                     key={ newsPostData._id }
-                    newsPostData={ newsPostData } 
+                    active={ newsPostData._id === newsPostsState.newsPostData._id }
+                    newsPostData={ newsPostData }
+                    handleSelectNewsPost={ handleSelectNewsPost } 
                   />
                 )
               })
@@ -66,7 +86,8 @@ const mapStateToProps = (state: RootState) => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<NewsPostAction>) => {
   return {
-    _handleFetchNewsPosts: (options?: FetchNewsPostParams) => handleFetchNewsPosts(dispatch, options)
+    _handleFetchNewsPosts: (options?: FetchNewsPostParams) => handleFetchNewsPosts(dispatch, options),
+    _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => handleOpenNewsPost(dispatch, newsPostId, newsPostsState)
   };  
 };
 

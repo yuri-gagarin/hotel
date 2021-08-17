@@ -11,6 +11,10 @@
   overflow: hidden;
 }
 
+.activeStyle {
+  border: 6px solid rgb(253, 217, 15);
+}
+
 .sideCardTimeStamps {
   position: absolute;
   display: flex;
