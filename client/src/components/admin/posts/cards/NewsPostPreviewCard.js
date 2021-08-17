@@ -26,7 +26,7 @@ export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handle
           <Button color="red" onClick={ triggerDeleteCurrentNewsPost }>Delete</Button>
         </Button.Group>
         <Button.Group className={ styles.postOnlineBtns }>
-          <Button icon inverted color={ newsPostData.live ? "red" : "green" } labelPosition="right" onClick={ toggleNewsPostLiveStatus }>
+          <Button icon basic color={ newsPostData.live ? "red" : "green" } labelPosition="right" onClick={ toggleNewsPostLiveStatus }>
             <Popup  
               content={ newsPostData.live ? "Post is online and visible" : "Post is offline, not visible to clients" }
               trigger={ <Icon className= { newsPostData.live ? styles.onlineIcon : styles.offlineIcon } name="world" /> }

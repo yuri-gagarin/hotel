@@ -55,7 +55,7 @@ const ServicesIndexContainer = (props: Props): React.Node => {
   const { _handleClearServiceData, _handleOpenService, _handleFetchServices, 
           _handleDeleteService, _handleToggleServiceOnlineOffline, _handleToggleAllServicesOnlineStatus
   } = props;
-  const { createdServices, serviceData } : { createdServices: Array<ServiceData>, serviceData: ServiceData } = serviceState;
+  const { createdServices, serviceData }: { createdServices: Array<ServiceData>, serviceData: ServiceData } = serviceState;
 
   const [ confirmDelModalState, setConfirmDelModalState ] = React.useState<ConfirmDeleteModalState>({ confirmModalOpen: false, serviceIdToDelete: "" });
 
@@ -202,4 +202,4 @@ const mapDispatchToProps = (dispatch: Dispatch<ServiceAction>) => {
   };
 };
 
-export default (withRouter((connect(null, mapDispatchToProps)(ServicesIndexContainer):  React.AbstractComponent<OwnProps>)): React.AbstractComponent<WrapperProps>)
+export default (withRouter((connect(null, mapDispatchToProps)(ServicesIndexContainer): React.AbstractComponent<OwnProps>)): React.AbstractComponent<WrapperProps>)

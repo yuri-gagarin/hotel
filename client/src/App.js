@@ -83,6 +83,7 @@ const AppRoutes = withRouter(({ history }) => {
           <Route path={"/rooms"} exact={true} component={HomeComponent} />
           <Route path={"/dining"} exact={true} component={HomeComponent} />
           <Route path={"/services"} exact={true} component={HomeComponent} />
+          <Route path={"/news"} exact={true} component={HomeComponent} />
           <ProtectedRoute clientPath={ "/admin/*" } component={ AdminComponent } history={ history } />
           <Route component={ClientNotFoundComponent} />
         </Switch>

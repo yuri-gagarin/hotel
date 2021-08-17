@@ -1,0 +1,73 @@
+.sideCardWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+  width: 100%;
+  margin-bottom: 5px;
+  border: 2px solid rgb(51, 113, 184);
+  border-radius: 5px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.sideCardTimeStamps {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  right: 5px;
+  top: 5px;
+  background: rgba(0, 0, 0, .65);
+  color: rgb(253, 217, 15);
+  padding: 5px 10px;
+  border-radius: 2px;
+}
+.sideCardTimeStamps > span:nth-child(2) {
+  margin-left: 5px;
+  color: white;
+}
+
+.sideCardImg {
+  width: 100%;
+}
+.sideCardUpper {
+  height: 100%;
+}
+.sideCardLower {
+  height: 70px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, .75);
+}
+.sideCardAuthor {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  color: white;
+  font-size: 0.75em;
+}
+.sideCardAuthor > span:nth-child(1) {
+  font-style: italic;
+}
+.sideCardAuthor > span:nth-child(2) {
+  margin-left: 10px;
+}
+.userIcon {
+  color: rgb(253, 217, 15);
+  margin-left: 5px;
+}
+.sideCardTitle {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  padding: 0 10px;
+  color: rgb(253, 217, 15);
+}
+.sideCardLower:hover {
+  height: 85px;
+  transition: all 300ms ease-in;
+}

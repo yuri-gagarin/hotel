@@ -44,11 +44,11 @@ const AdminNavMenu = (props) =>  {
       case "home": {
         history.push(adminRoutes.ADMIN_DASH);
         break;
-      };
+      }
       case "messenger": {
         history.push(adminRoutes.ADMIN_MESSAGES);
         break;
-      };
+      }
       case "rooms": {
         history.push("/admin/rooms");
         break;
@@ -60,11 +60,11 @@ const AdminNavMenu = (props) =>  {
       case "posts": {
         history.push(adminRoutes.ADMIN_POSTS);
         break;
-      };
+      }
       case "services": {
         history.push("/admin/services");
         break;
-      };
+      }
       case "contact_requests": {
         history.push("/admin/contact_requests");
         break;
@@ -72,7 +72,7 @@ const AdminNavMenu = (props) =>  {
       case "regulate users": {
         history.push(adminRoutes.ADMIN_REGULATE_USERS);
         break;
-      };
+      }
       default: {
         history.push(adminRoutes.ADMIN_DASH);
       }

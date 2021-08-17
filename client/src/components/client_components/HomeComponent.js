@@ -15,6 +15,7 @@ import ErrorComponent from "../display_components/ErrorComponent";
 import RoomsIndexContainer from "./rooms/RoomsIndexContainer";
 import DiningIndexContainer from "./dining/DiningIndex";
 import ServicesIndexComponent from "./services/ServicesIndexComponent";
+import NewsPostIndexContainer from "./news_posts/NewsPostsIndexContainer";
 // redux imports //
 import { connect } from "react-redux";
 import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
@@ -135,31 +136,34 @@ const HomeComponent = ({
     <div style={{ width: "100vw" }}>
       <NavbarComponent />
       <Switch>
-      <Route path={"/"} exact={true}>
-        <MainHeaderComponent />
-        <BookingForm />
-        <HomePageServices history={ history } roomState={ roomState } diningEntertainmentState={ diningEntertainmentState } serviceState={ serviceState } />
-        <ContactForm />
-      </Route>
-      <Route path={"/rooms"} exact={true}>
-        <RoomsIndexContainer 
-          history={history}
-          roomState={roomState}
-          _handleFetchRooms={_handleFetchRooms}
-        />
-      </Route>
-      <Route path={"/dining"} exact={true}>
-        <DiningIndexContainer
-          history={history}
-        />
-      </Route>
-      <Route path={"/services"} exact={true}>
-        <ServicesIndexComponent
-          history={history}
-          serviceState={ serviceState }
-          _handleFetchServices={ _handleFetchServices }
-        />
-      </Route>
+        <Route path={"/"} exact={true}>
+          <MainHeaderComponent />
+          <BookingForm />
+          <HomePageServices history={ history } roomState={ roomState } diningEntertainmentState={ diningEntertainmentState } serviceState={ serviceState } />
+          <ContactForm />
+        </Route>
+        <Route path={"/rooms"} exact={true}>
+          <RoomsIndexContainer 
+            history={history}
+            roomState={roomState}
+            _handleFetchRooms={_handleFetchRooms}
+          />
+        </Route>
+        <Route path={"/dining"} exact={true}>
+          <DiningIndexContainer
+            history={history}
+          />
+        </Route>
+        <Route path={`/services`} exact={true} >
+          <ServicesIndexComponent
+            history={history}
+            serviceState={ serviceState }
+            _handleFetchServices={ _handleFetchServices }
+          />
+        </Route> 
+        <Route path={`/news`} exact={true} >
+          <NewsPostIndexContainer />
+        </Route>
       </Switch>
       <MessengerContainer />
       <Footer history={ history } />
