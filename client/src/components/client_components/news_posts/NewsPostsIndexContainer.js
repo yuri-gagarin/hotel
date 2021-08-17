@@ -10,6 +10,7 @@ import type { NewsPostsState, FetchNewsPostParams, NewsPostAction } from "../../
 import type { RootState, Dispatch, AppAction } from "../../../redux/reducers/_helpers/createReducer";
 // styles //
 import styles from "./css/newsPostsIndexContainer.module.css";
+import { NewsPostMainCard } from "./NewsPostMainCard";
 
 
 type WrapperProps = {
@@ -29,21 +30,30 @@ const NewsPostIndexContainer = ({ newsPostsState, _handleFetchNewsPosts }: Props
   return (
     <div className={ styles.newsPostContainerWrapper }>
       <div className={ styles.newsPostsHeader }></div>
-      <div className={ styles.newsPostsLeftContainer }>
-       
-      </div>
-      <div className={ styles.newsPostsRightContainer }>
-        <div className={ styles.newsPostsSideCardDiv }>
-          { newsPostsState.createdNewsPosts.map((newsPostData) => {
-              return (
-                <NewsPostSideCard 
-                  key={ newsPostData._id }
-                  newsPostData={ newsPostData } 
-                />
-              )
-            })
+      <div className={ styles.newsPostMainContent } >
+        <div className={ styles.newsPostsLeftContainer }>
+          {
+            newsPostsState.createdNewsPosts[0]
+            ?
+            <NewsPostMainCard newsPostData={ newsPostsState.createdNewsPosts[0] } />
+            :
+            null
           }
         </div>
+        <div className={ styles.newsPostsRightContainer }>
+          <div className={ styles.newsPostsSideCardDiv }>
+            { newsPostsState.createdNewsPosts.map((newsPostData) => {
+                return (
+                  <NewsPostSideCard 
+                    key={ newsPostData._id }
+                    newsPostData={ newsPostData } 
+                  />
+                )
+              })
+            }
+          </div>
+        </div>
+          
       </div>
     </div>
   );

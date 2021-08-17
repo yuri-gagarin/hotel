@@ -1,0 +1,135 @@
+.postCardWrapper  {
+  height: 95%;
+  width: 95%;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.newsPostsCardAuthor {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}
+.newsPostsCardAuthor > span:nth-child(1) {
+  font-size: 0.9em;
+  font-style: italic;
+}
+.newsPostsCardAuthor > span:nth-child(2) {
+  font-size: 1.2em;
+  font-weight: bolder;
+  font-family: Lobster;
+  margin-left: 5px;
+}
+.newsPostsCardAuthor > i {
+  font-size: 1.5em;
+  margin-left: 5px;
+}
+
+.newsPostsCardUpper {
+  display: flex;
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  z-index: -2;
+}
+.newsPostsLogoDiv, .newsPostsImagesDiv {
+  display: flex;
+  flex-wrap: wrap;
+  height: calc(100% - 250px);
+}
+
+.newsPostsLogoDiv {
+  justify-content: center;
+  align-items: center;
+  width: 67%;
+}
+.newsPostsImagesDiv {
+  width: 33%;
+}
+.newsPostsLogoDiv > i {
+ font-size: 10em;
+ color: gray;
+}
+.imageDiv {
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  border: 1px solid rgb(44, 53, 49, 1)
+}
+.imageDiv > img {
+  width: 100%;
+}
+.newsPostsCardLower {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 250px;
+  z-index: 1;
+  background-color: #ffdb4d;
+}
+.mainCardTitleDiv {
+  display: flex;
+  flex: 1;
+  font-size: 2em;
+  color: rgb(44, 53, 49, 1);
+  width: 100%;
+  padding: 0 10px;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bolder;
+}
+.mainCardContentDiv, .mainCardTimeStampsDiv {
+  display: flex;
+  flex-direction: column;
+}
+.mainCardContentDiv {
+  flex: 5;
+  padding: 10px;
+}
+.readMoreBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  cursor: pointer;
+  border: 1px solid rgb(44, 53, 49, 1);
+  padding: 5px;
+  border-radius: 3px;
+  margin-top: 5px;
+  font-weight: bolder;
+}
+.mainCardTimeStampsDiv {
+  flex: 1;
+  padding: 0 10px;
+}
+
+.mainCardCreatedAt > span:first-child, .mainCardEditedAt > span:first-child {
+  font-weight: 600;
+}
+.mainCardCreatedAt > span:nth-child(2), .mainCardEditedAt > span:nth-child(2) {
+  margin-left: 5px;
+  font-style: italic;
+}
+
+.newsPostsCardLower::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #ffdb4d;
+  transform-origin: top left;
+  transform: skewY(-3deg);
+  z-index: -1;
+ }
+ .newsPostsCardLower:hover {
+   height: 270px;
+   transition: all 500ms linear;
+ }
+
+ 
