@@ -4,7 +4,8 @@ import * as React from "react";
 import { Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { handleFetchNewsPosts, handleOpenNewsPost } from "../../../redux/actions/newsPostActions";
-// additional componets //
+// additional components //
+import GenericImgModalCarousel from "../shared/GenericImgModalCarousel";
 import { NewsPostMainCard } from "./NewsPostMainCard";
 import { NewsPostSideCard } from "./NewsPostSideCard";
 import { NewsPostReader } from "./NewsPostReader";
@@ -26,6 +27,10 @@ type Props = {
   _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => void;
   _handleFetchNewsPosts: (options?: FetchNewsPostParams) => Promise<boolean>;
 };
+
+type PictureModalState = {
+
+}
 const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts, _handleOpenNewsPost }: Props): React.Node => {
 
   const handleSelectNewsPost = (postId: string): void => {
@@ -64,6 +69,10 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
     history.goBack();
   };
 
+  const handleClosePictureModal = () => {
+
+  };
+
   // lifecycle methods //
   React.useEffect(() => {
     _handleFetchNewsPosts({ date: "desc" })
@@ -79,6 +88,7 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
   
   return (
     <React.Fragment>
+      <GenericImgModalCarousel show={true}  closePictureModal={ handleClosePictureModal } imgURLS={[]} imageIndex={0} />
       <Route path={`/news/:newsPostTitle`}>
         <NewsPostReader 
           newsPostData={ newsPostsState.newsPostData} 
