@@ -9,10 +9,13 @@ import styles from "./css/newsPostReader.module.css";
 
 type Props = {
   newsPostData: NewsPostData;
+  handleGoBack: () => void;
+  handleGoToPreviousNewsPost: (currentPostId: string) => void;
+  handleGoToNextNewsPost: (currentPostId: string) => void;
 };
 
-export const NewsPostReader = ({ newsPostData }: Props): React.Node => {
-  const { title, createdBy, content, editedAt } = newsPostData;
+export const NewsPostReader = ({ newsPostData, handleGoBack, handleGoToPreviousNewsPost, handleGoToNextNewsPost }: Props): React.Node => {
+  const { _id: postId, title, createdBy, content, editedAt } = newsPostData;
   React.useEffect(() => {
     console.log("loaded reader here")
   }, []);
@@ -20,13 +23,13 @@ export const NewsPostReader = ({ newsPostData }: Props): React.Node => {
   return (
     <div className={ styles.newsPostReaderWrapper }>
       <div className={ styles.readerControls }>
-        <Button basic color="blue" icon="arrow left" content="Back" />
+        <Button basic color="blue" icon="arrow left" content="Back" onClick={ handleGoBack } />
         <Button.Group>
-          <Button basic icon labelPosition="left" color="green">
+          <Button basic icon labelPosition="left" color="green" onClick={ () => handleGoToPreviousNewsPost(postId) }>
             Previous
             <Icon name="caret left" />
           </Button>
-          <Button basic icon labelPosition="right" color="green"> 
+          <Button basic icon labelPosition="right" color="green" onClick={ () => handleGoToNextNewsPost(postId) }> 
             Next
             <Icon name="caret right" />
           </Button>

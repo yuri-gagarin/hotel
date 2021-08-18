@@ -31,11 +31,38 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
   const handleSelectNewsPost = (postId: string): void => {
     _handleOpenNewsPost(postId, newsPostsState);
   };
+  const handleGoToPreviousNewsPost = (postId: string): void => {
+    const { createdNewsPosts } = newsPostsState;
+    let postIndex: number = 0;
+    for (let i = 0; i < createdNewsPosts.length; i++) {
+      if (createdNewsPosts[i]._id === postId) {
+        i - 1 > - 1 ? postIndex = i - 1 : postIndex = 0;
+        break;
+      }
+    }
+    const previousPostId = createdNewsPosts[postIndex]._id;
+    _handleOpenNewsPost(previousPostId, newsPostsState);
+  };
+  const handleGoToNextNewsPost = (postId: string): void => {
+    const { createdNewsPosts } = newsPostsState;
+    let postIndex: number = 0;
+    for (let i = 0; i < createdNewsPosts.length; i++) {
+      if (createdNewsPosts[i]._id === postId) {
+        i + 1 < createdNewsPosts.length - 1 ? postIndex = i + 1 : postIndex = createdNewsPosts.length - 1;
+        break;
+      }
+    }
+    const nextPostId = createdNewsPosts[postIndex]._id;
+    _handleOpenNewsPost(nextPostId, newsPostsState);
+  };
 
   const handleGoToNewsPostReader = (postId: string): void => {
     const normalizedPath = newsPostsState.newsPostData.title.split(" ").join("_");
     history.push("/news" + "/" + normalizedPath);
-  }
+  };
+  const handleGoTopPosts = (): void => {
+    history.goBack();
+  };
 
   // lifecycle methods //
   React.useEffect(() => {
@@ -53,7 +80,12 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
   return (
     <React.Fragment>
       <Route path={`/news/:newsPostTitle`}>
-        <NewsPostReader newsPostData={ newsPostsState.newsPostData} />
+        <NewsPostReader 
+          newsPostData={ newsPostsState.newsPostData} 
+          handleGoBack={ handleGoTopPosts }
+          handleGoToPreviousNewsPost={ handleGoToPreviousNewsPost }
+          handleGoToNextNewsPost={ handleGoToNextNewsPost }
+        />
       </Route>
       <Route exact path={ "/news" }>
         <div className={ styles.newsPostContainerWrapper }>
