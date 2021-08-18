@@ -80,11 +80,11 @@ const AppRoutes = withRouter(({ history }) => {
       <ScrollToTop />
         <Switch>
           <Route path={adminRoutes.ADMIN_LOGIN} component={AdminLoginComponent} />
-          <Route path={"/rooms"} exact={true} component={HomeComponent} />
-          <Route path={"/dining"} exact={true} component={HomeComponent} />
-          <Route path={"/services"} exact={true} component={HomeComponent} />
-          <Route path={"/news"} exact={true} component={HomeComponent} />
-          <ProtectedRoute clientPath={ "/admin/*" } component={ AdminComponent } history={ history } />
+          <Route path={"/rooms"} component={HomeComponent} />
+          <Route path={"/dining"} component={HomeComponent} />
+          <Route path={"/services"} component={HomeComponent} />
+          <Route path={"/news"} component={HomeComponent} />
+          <ProtectedRoute clientPath={ "/admin/" } component={ AdminComponent } history={ history } />
           <Route component={ClientNotFoundComponent} />
         </Switch>
         <Route path={"/"} exact={true} component={HomeComponent} />

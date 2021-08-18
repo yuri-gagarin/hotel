@@ -1,5 +1,6 @@
 // @flow 
 import * as React from "react";
+import { useHistory } from "react-router-dom"
 // type imports //
 import type { NewsPostData } from "../../../redux/reducers/news_posts/flowTypes";
 // styles //
@@ -11,14 +12,11 @@ import { formatDate } from "../../helpers/dateHelpers";
 
 type Props = {
   newsPostData: NewsPostData;
+  handleGoToNewsPostReader: (postId: string) => void;
 };
 
-export const NewsPostMainCard = ({ newsPostData }: Props): React.Node => {
-
-  React.useEffect(() => {
-    console.log("loaded");
-  }, []);
-  
+export const NewsPostMainCard = ({ newsPostData, handleGoToNewsPostReader }: Props): React.Node => {
+  const history = useHistory();
   return (
     <div className={ styles.postCardWrapper }>
       <div className={ styles.newsPostsCardAuthor }>
@@ -45,7 +43,7 @@ export const NewsPostMainCard = ({ newsPostData }: Props): React.Node => {
         </div>
         <div className={ styles.mainCardContentDiv }>
           { trimStringToSpecificLength(removeHTMLTagsFromString(newsPostData.content), 225)}
-          <span className={ styles.readMoreBtn }>Read...</span>
+          <span className={ styles.readMoreBtn } onClick={ () => handleGoToNewsPostReader(newsPostData._id) }>Read...</span>
         </div>
         <div className={ styles.mainCardTimeStampsDiv }>
           <div className={ styles.mainCardCreatedAt }>

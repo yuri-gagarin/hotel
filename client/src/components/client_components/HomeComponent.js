@@ -161,8 +161,10 @@ const HomeComponent = ({
             _handleFetchServices={ _handleFetchServices }
           />
         </Route> 
-        <Route path={`/news`} exact={true} >
-          <NewsPostIndexContainer />
+        <Route path={`/news`} >
+          <NewsPostIndexContainer
+            history={ history }
+           />
         </Route>
       </Switch>
       <MessengerContainer />

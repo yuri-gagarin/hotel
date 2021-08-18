@@ -187,6 +187,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
         />
       </Grid.Row>
       <Switch>
+        { console.log(url) }
         <Route exact path={ url }>
           <Grid.Row centered style={{ height: "calc(90% - 60px)" }}>
             <Grid.Column className={ styles.postsIndexLeftColumn } width={6}>
@@ -226,7 +227,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
             </Grid.Column>
           </Grid.Row>
         </Route>
-        <Route path={`${url}/view_all/`}>
+        <Route path={`${url}/view_all`}>
           <ViewAllPosts 
             newsPosts={ newsPostsState.createdNewsPosts } 
             currentNewsPost={ newsPostsState.newsPostData } 

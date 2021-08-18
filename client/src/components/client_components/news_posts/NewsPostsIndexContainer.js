@@ -1,21 +1,24 @@
 // @flow 
 import * as React from "react";
 // redux actions //
+import { Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { handleFetchNewsPosts, handleOpenNewsPost } from "../../../redux/actions/newsPostActions";
 // additional componets //
+import { NewsPostMainCard } from "./NewsPostMainCard";
 import { NewsPostSideCard } from "./NewsPostSideCard";
+import { NewsPostReader } from "./NewsPostReader";
 // types //
 import type { NewsPostsState, FetchNewsPostParams, NewsPostAction } from "../../../redux/reducers/news_posts/flowTypes";
 import type { RootState, Dispatch, AppAction } from "../../../redux/reducers/_helpers/createReducer";
+import type { RouterHistory } from "react-router-dom";
 // styles //
 import styles from "./css/newsPostsIndexContainer.module.css";
-import { NewsPostMainCard } from "./NewsPostMainCard";
 import { objectValuesEmpty } from "../../helpers/displayHelpers";
 
 
 type WrapperProps = {
-
+  history: RouterHistory;
 };
 type Props = {
   ...WrapperProps,
@@ -23,12 +26,16 @@ type Props = {
   _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => void;
   _handleFetchNewsPosts: (options?: FetchNewsPostParams) => Promise<boolean>;
 };
-const NewsPostIndexContainer = ({ newsPostsState, _handleFetchNewsPosts, _handleOpenNewsPost }: Props): React.Node => {
-
+const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts, _handleOpenNewsPost }: Props): React.Node => {
 
   const handleSelectNewsPost = (postId: string): void => {
     _handleOpenNewsPost(postId, newsPostsState);
   };
+
+  const handleGoToNewsPostReader = (postId: string): void => {
+    const normalizedPath = newsPostsState.newsPostData.title.split(" ").join("_");
+    history.push("/news" + "/" + normalizedPath);
+  }
 
   // lifecycle methods //
   React.useEffect(() => {
@@ -38,44 +45,53 @@ const NewsPostIndexContainer = ({ newsPostsState, _handleFetchNewsPosts, _handle
 
   React.useEffect(() => {
     if (newsPostsState.createdNewsPosts.length > 0 && objectValuesEmpty(newsPostsState.newsPostData)) {
-      console.log(newsPostsState)
       const { _id: newsPostId } = newsPostsState.createdNewsPosts[0];
       _handleOpenNewsPost(newsPostId, newsPostsState);
     }
   }, [ newsPostsState ]);
-
+  
   return (
-    <div className={ styles.newsPostContainerWrapper }>
-      <div className={ styles.newsPostsHeader }></div>
-      <div className={ styles.newsPostMainContent } >
-        <div className={ styles.newsPostsLeftContainer }>
-          {
-            objectValuesEmpty(newsPostsState.newsPostData)
-            ?
-            <div>Loading...</div>
-            :
-            <NewsPostMainCard newsPostData={ newsPostsState.newsPostData } />
+    <React.Fragment>
+      <Route path={`/news/:newsPostTitle`}>
+        <NewsPostReader newsPostData={ newsPostsState.newsPostData} />
+      </Route>
+      <Route exact path={ "/news" }>
+        <div className={ styles.newsPostContainerWrapper }>
+          { console.log(history.location) }
+          <div className={ styles.newsPostsHeader }></div>
+          <div className={ styles.newsPostMainContent } >
+            <div className={ styles.newsPostsLeftContainer }>
+            {
+              objectValuesEmpty(newsPostsState.newsPostData)
+              ?
+              <div>Loading...</div>
+              :
+              <NewsPostMainCard 
+                newsPostData={ newsPostsState.newsPostData } 
+                handleGoToNewsPostReader={ handleGoToNewsPostReader }
+              />
 
-          }
-        </div>
-        <div className={ styles.newsPostsRightContainer }>
-          <div className={ styles.newsPostsSideCardDiv }>
-            { newsPostsState.createdNewsPosts.map((newsPostData) => {
-                return (
-                  <NewsPostSideCard 
-                    key={ newsPostData._id }
-                    active={ newsPostData._id === newsPostsState.newsPostData._id }
-                    newsPostData={ newsPostData }
-                    handleSelectNewsPost={ handleSelectNewsPost } 
-                  />
-                )
-              })
             }
+            </div>
+            <div className={ styles.newsPostsRightContainer }>
+              <div className={ styles.newsPostsSideCardDiv }>
+                { newsPostsState.createdNewsPosts.map((newsPostData) => {
+                    return (
+                      <NewsPostSideCard 
+                        key={ newsPostData._id }
+                        active={ newsPostData._id === newsPostsState.newsPostData._id }
+                        newsPostData={ newsPostData }
+                        handleSelectNewsPost={ handleSelectNewsPost } 
+                      />
+                    )
+                  })
+                }
+              </div>
+            </div>
           </div>
         </div>
-          
-      </div>
-    </div>
+      </Route>
+    </React.Fragment>
   );
 };
 

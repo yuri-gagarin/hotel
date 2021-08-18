@@ -1,0 +1,99 @@
+.newsPostReaderWrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 90vh;
+  width: 90%;
+  border-radius: 3px;
+  margin: 0 auto;
+  margin-top: 70px;
+  margin-bottom: 10px;
+}
+.readerControls {
+  display: flex;
+  flex-wrap: wrap;
+  height: 40px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.readerContent {
+  display: flex;
+  flex-direction: column;
+  min-height: 90vh;
+  margin-top: 10px;
+  box-shadow: 0px 1px 3px 1px rgb(44, 53, 49, 1);
+  -webkit-box-shadow: 0px 1px 3px 1px rgb(44, 53, 49, 1); 
+}
+.contentTitle, .contentDetails {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.contentTitle {
+  font-size: 2.5em;
+  padding: 5px 10px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: 700;
+}
+.contentDetails {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  padding: 0px 10px;
+}
+.contentAuthor {
+  display: flex;
+  flex: 4;
+  align-items: center;
+}
+.contentAuthor > span:nth-child(1) {
+  display: flex;
+  align-items: center;
+  background-color: #ffdb4d;
+  padding: 5px 10px 10px 5px;
+  border-radius: 0 0 10px 0;
+  font-weight: 800;
+  color: rgb(44, 53, 49, 1);
+}
+.contentAuthor > span:nth-child(2) {
+  margin-left: 5px;
+  font-size: 1.2em;
+  font-family: "Lobster";
+  letter-spacing: 1px;
+}
+.contentAuthor > span:nth-child(3) {
+  margin-left: 5px;
+  height: 20px;
+  width: 20px;
+  background-color: rgb(98, 98, 255);
+  border-radius: 50%;
+}
+.contentTimestamps {
+  display: flex;
+  flex: 2;
+  align-items: center;
+}
+.contentTimestamps > span:nth-child(1) {
+  display: flex;
+  align-items: center;
+  background-color: #ffdb4d;
+  font-weight: 800;
+  color: rgb(44, 53, 49, 1);
+  padding: 5px 10px 10px 5px;
+  border-radius: 0 0 10px 0;
+}
+.contentTimestamps > span:nth-child(2) {
+  margin-left: 5px;
+  color: grey;
+  font-style: italic;
+}
+
+.readerContentinner {
+  flex: 20;
+  padding: 10px;
+  border-left: 3px solid #ffdb4d;
+  border-top: 3px solid #ffdb4d;
+  width: 90%;
+  margin-left: 10px;
+  border-radius: 5px 0 0 0;
+}
