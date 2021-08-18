@@ -101,6 +101,8 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
               <NewsPostMainCard 
                 newsPostData={ newsPostsState.newsPostData } 
                 handleGoToNewsPostReader={ handleGoToNewsPostReader }
+                handleGoToPreviousNewsPost={ handleGoToPreviousNewsPost }
+                handleGoToNextNewsPost={ handleGoToNextNewsPost }
               />
 
             }

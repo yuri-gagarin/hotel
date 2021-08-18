@@ -5,6 +5,10 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.transitionAnimation {
+  animation: animateTransition 1s ease-in;
+}
+
 .newsPostsCardAuthor {
   display: flex;
   align-items: center;
@@ -127,9 +131,36 @@
   transform: skewY(-3deg);
   z-index: -1;
  }
- .newsPostsCardLower:hover {
-   height: 270px;
-   transition: all 500ms linear;
- }
+.newsPostsCardLower:hover {
+  height: 270px;
+  transition: all 500ms linear;
+}
+
+.mainCardPrevious, .mainCardNext {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2em;
+  z-index: 20;
+  cursor: pointer;
+}
+.mainCardPrevious {
+  left: 10px;
+}
+.mainCardNext {
+  right: 10px;
+}
+
+@keyframes animateTransition {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
 
  

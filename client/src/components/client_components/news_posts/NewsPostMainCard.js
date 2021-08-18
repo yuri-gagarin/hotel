@@ -13,15 +13,36 @@ import { formatDate } from "../../helpers/dateHelpers";
 type Props = {
   newsPostData: NewsPostData;
   handleGoToNewsPostReader: (postId: string) => void;
+  handleGoToPreviousNewsPost: (postId: string) => void;
+  handleGoToNextNewsPost: (postId: string) => void
 };
 
-export const NewsPostMainCard = ({ newsPostData, handleGoToNewsPostReader }: Props): React.Node => {
-  const history = useHistory();
+export const NewsPostMainCard = ({ newsPostData, handleGoToNewsPostReader, handleGoToPreviousNewsPost, handleGoToNextNewsPost }: Props): React.Node => {
+  const { _id: postId, createdBy, title, content, editedAt, createdAt } = newsPostData;
+  // local state for transition //
+  const [ transitionState, setTransitionState ] = React.useState<{ transition: boolean }>({ transition: false });
+
+  const goToPreviousPostWithEffect = (): void => {
+    setTransitionState({  transition: true });
+    setTimeout(() => handleGoToPreviousNewsPost(postId), 500);
+   
+  };
+  const goToNextPostWithEffect = (): void => {
+    setTransitionState({  transition: true });
+    setTimeout(() => handleGoToNextNewsPost(postId), 500);
+  };
+
+  React.useEffect(() => {
+    if (transitionState.transition) {
+      setTimeout(() => setTransitionState({ transition: false }), 1000);
+    }
+  }, [ transitionState ]);
+
   return (
-    <div className={ styles.postCardWrapper }>
+    <div className={ `${styles.postCardWrapper} ${transitionState.transition ? styles.transitionAnimation : ""}` } >
       <div className={ styles.newsPostsCardAuthor }>
         <span>Written by:</span>
-        <span>{ newsPostData.createdBy }</span>
+        <span>{ createdBy }</span>
         <i className="fas fa-user"></i>      
       </div>
       <div className={ styles.newsPostsCardUpper }>
@@ -39,22 +60,28 @@ export const NewsPostMainCard = ({ newsPostData, handleGoToNewsPostReader }: Pro
       </div>
       <div className={ styles.newsPostsCardLower }>
         <div className={ styles.mainCardTitleDiv}>
-          { newsPostData.title }
+          { title }
         </div>
         <div className={ styles.mainCardContentDiv }>
-          { trimStringToSpecificLength(removeHTMLTagsFromString(newsPostData.content), 225)}
-          <span className={ styles.readMoreBtn } onClick={ () => handleGoToNewsPostReader(newsPostData._id) }>Read...</span>
+          { trimStringToSpecificLength(removeHTMLTagsFromString(content), 225)}
+          <span className={ styles.readMoreBtn } onClick={ () => handleGoToNewsPostReader(postId) }>Read...</span>
         </div>
         <div className={ styles.mainCardTimeStampsDiv }>
           <div className={ styles.mainCardCreatedAt }>
             <span>Posted at:</span>
-            <span>{ formatDate(newsPostData.createdAt) }</span>
+            <span>{ formatDate(createdAt) }</span>
           </div>
           <div className={ styles.mainCardEditedAt }>
             <span>Updated at:</span>
-            <span>{ formatDate(newsPostData.editedAt) }</span>
+            <span>{ formatDate(editedAt) }</span>
           </div>
         </div>
+      </div>
+      <div className={ styles.mainCardPrevious }>
+        <i className="fas fa-chevron-circle-left" onClick={ goToPreviousPostWithEffect }></i>
+      </div>
+      <div className={ styles.mainCardNext }>
+        <i className="fas fa-chevron-circle-right" onClick={ goToNextPostWithEffect }></i>
       </div>
     </div>
   );
