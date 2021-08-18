@@ -48,8 +48,23 @@ export const NewsPostReader = ({ newsPostData, handleGoBack, handleGoToPreviousN
             <span>{ formatDate(editedAt)} </span>
           </div>
         </div>
-        <div className={ styles.readerContentinner } dangerouslySetInnerHTML={{ __html: content }}>
-
+        <div className={ styles.readerContentInner }>
+          <div className={ styles.readerPicsColumn }>
+            <div className={ styles.readerImgDiv }>
+              <img src="/assets/images/roomStock3.jpeg"></img>
+            </div>
+            <div className={ styles.readerImgDiv }>
+              <img src="/assets/images/roomStock3.jpeg"></img>
+            </div>
+            <div className={ styles.readerImgDiv }>
+              <img src="/assets/images/roomStock3.jpeg"></img>
+            </div>
+          </div>
+          <div className={ styles.readerTextColumn }>
+            <div className={ styles.readerInnerText} dangerouslySetInnerHTML={{ __html: content }}>
+            </div>
+          </div>
+        
         </div>
       </div>
     </div>
