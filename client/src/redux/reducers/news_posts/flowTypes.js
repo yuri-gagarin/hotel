@@ -5,6 +5,7 @@ export type ClientNewsPostFormData = {
   createdBy?: string,
   title?: string,
   live?: boolean,
+  images?: Array<NewsPostImgData>;
   content?: string,
   createdAt?: string,
   editedAt?: string
@@ -22,6 +23,7 @@ export type NewsPostData = {
   createdBy: string,
   title: string,
   content: string,
+  images: Array<NewsPostImgData>;
   live: boolean,
   createdAt: string,
   editedAt: string
@@ -115,6 +117,39 @@ export type ClearNewsPostData = {
   }
 };
 
+// images //
+export type NewsPostImgUplSuccess = {
+  +type: "NewsPostImgUplSuccess",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    newsPostImages: Array<NewsPostImgData>,
+    updatedNewsPost: NewsPostData,
+    createdNewsPosts: Array<NewsPostData>
+  }
+};
+export type NewsPostImgDelSuccess = {
+  +type: "NewsPostImgDelSuccess",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    newsPostImages: Array<NewsPostImgData>,
+    updatedNewsPost: NewsPostData,
+    createdNewsPosts: Array<NewsPostData>
+  }
+};
+export type DeleteAllNewsPostImages = {
+  +type: "DeleteAllNewsPostImages",
+  payload: {
+    status: number,
+    loading: boolean,
+    responseMsg: string,
+    updatedNewsPostImages: Array<NewsPostImgData>
+  }
+};
+
 export type ToggleNewsPostOnlineStatus = {
   +type: "ToggleNewsPostOnlineStatus",
   payload: {
@@ -128,5 +163,5 @@ export type ToggleNewsPostOnlineStatus = {
 // union contactPost action type //
 export type NewsPostAction = (
   NewsPostAPIRequest | SetNewsPosts | NewsPostError | NewsPostCreated | NewsPostUpdated | NewsPostDeleted |
-  OpenNewsPost | ClearNewsPostData | ToggleNewsPostOnlineStatus
+  OpenNewsPost | ClearNewsPostData | ToggleNewsPostOnlineStatus | NewsPostImgUplSuccess | NewsPostImgDelSuccess | DeleteAllNewsPostImages
 );

@@ -212,6 +212,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
                 handleTitleChange={ handleTitleChange } 
                 handleUpdateEditor={ handleUpdateEditorChange } 
                 newsPostsState={ newsPostsState }
+                _handleUploadNewsPostImage={ }
               />
               :
               (

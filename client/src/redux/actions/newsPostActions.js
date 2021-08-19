@@ -7,6 +7,7 @@ import type {
   NewsPostData, NewsPostsState, NewsPostImgData,
   NewsPostAPIRequest, SetNewsPosts, NewsPostError,
   NewsPostCreated, NewsPostUpdated, NewsPostDeleted, ToggleNewsPostOnlineStatus,
+  NewsPostImgUplSuccess, NewsPostImgDelSuccess, DeleteAllNewsPostImages,
   OpenNewsPost, ClearNewsPostData, NewsPostAction, 
   ClientNewsPostFormData, FetchNewsPostParams
 } from "../reducers/news_posts/flowTypes";
@@ -73,6 +74,28 @@ const toggleNewsPostLiveStatus = (data: { status: number, responseMsg: string, n
   return {
     type: "ToggleNewsPostOnlineStatus",
     payload: { ...data, loading: false  }
+  };
+};
+
+// news post image processing //
+export const newsPostImgUploadSuccess = (data: { status: number, responseMsg: string, updatedNewsPost: NewsPostData, newsPostImages: Array<NewsPostImgData>, createdNewsPosts: Array<NewsPostData> }): NewsPostImgUplSuccess => {
+  return {
+    type: "NewsPostImgUplSuccess",
+    payload: { ...data, loading: false }
+  };
+};
+
+export const newsPostImgDeleteSuccess = (data: { status: number, responseMsg: string, updatedNewsPost: NewsPostData, newsPostImages: Array<NewsPostImgData>, createdNewsPosts: Array<NewsPostData> }): NewsPostImgDelSuccess => {
+  return {
+    type: "NewsPostImgDelSuccess",
+    payload: { ...data, loading: false }
+  };
+};
+
+export const deleteAllNewsPostImages = (data: { status: number, responseMsg: string, updatedNewsPostImages: Array<NewsPostImgData> }): DeleteAllNewsPostImages => {
+  return {
+    type: "DeleteAllNewsPostImages",
+    payload: { ...data, loading: false }
   };
 };
 
@@ -350,7 +373,7 @@ export const handleDeleteAllNewsPostImages = (dispatch: Dispatch<NewsPostAction>
       const { status, data } = response;
       const { responseMsg }: { responseMsg: string } = data;
 
-      const updatedState = { status, responseMsg, updatedRoomImages: [] };
+      const updatedState = { status, responseMsg, updatedNewsPostImages: [] };
       dispatch(deleteAllNewsPostImages(updatedState));
       return Promise.resolve(true);
     })

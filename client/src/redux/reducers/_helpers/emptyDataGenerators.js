@@ -131,6 +131,7 @@ export const generateEmptyNewsPostModel = (): NewsPostData => {
     title: "",
     live: false,
     content: "",
+    images: [],
     createdAt: "",
     createdBy: "",
     editedAt: "",
