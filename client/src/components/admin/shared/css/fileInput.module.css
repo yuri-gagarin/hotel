@@ -1,0 +1,9 @@
+.fileInputContainer {
+  display: flex;
+}
+
+.uplPreviewThumb {
+  height: 100px;
+  border: 2px solid rgb(55, 55, 196);
+  border-radius: 5px;
+}

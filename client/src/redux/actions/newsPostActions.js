@@ -4,7 +4,7 @@ import { normalizeErrorMessages } from "./helpers/errorHelpers";
 import { generateEmptyNewsPostModel } from "../reducers/_helpers/emptyDataGenerators";
 // flow types 
 import type { 
-  NewsPostData, NewsPostsState,
+  NewsPostData, NewsPostsState, NewsPostImgData,
   NewsPostAPIRequest, SetNewsPosts, NewsPostError,
   NewsPostCreated, NewsPostUpdated, NewsPostDeleted, ToggleNewsPostOnlineStatus,
   OpenNewsPost, ClearNewsPostData, NewsPostAction, 
@@ -244,4 +244,118 @@ export const handleToggleNewsPostLiveStatus = (dispatch: Dispatch<NewsPostAction
       dispatch(setNewsPostError(error));
       return Promise.resolve(false);
     });
+};
+
+export const handleUploadNewsPostImage = (dispatch: Dispatch<NewsPostAction>, file: FormData, currentRoomsState: NewsPostsState): Promise<boolean> => {
+  const { newsPostData, createdNewsPosts, newsPostImages } = currentRoomsState;
+  const { _id: newsPostId } = newsPostData
+
+  const requestOptions = {
+    method: "post",
+    url: "/api/upload_news_post_image/" + (newsPostId ? newsPostId : ""),
+    headers: {
+      'content-type': 'multipart/form-data'
+    },
+    data: file
+  };
+
+  dispatch(sendNewsPostRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, newImage, updatedNewsPost }: { responseMsg: string, newImage: NewsPostImgData, updatedNewsPost: NewsPostData } = data;
+      let updatedNewsPostData: any; let updatedNewsPosts: any; 
+      let updatedNewsPostImages: Array<NewsPostImgData> = [ ...newsPostImages, newImage ];
+      if (updatedNewsPost) {
+        // image being uploaded on a created NewsPost //
+        // update NewsPostData and createdNewsPosts array //
+        updatedNewsPosts = createdNewsPosts.map((newsPost) => {
+          if (newsPost._id === updatedNewsPost._id) {
+            return { ...updatedNewsPost, images: [ ...updatedNewsPost.images ] };
+          } else {
+            return newsPost;
+          }
+        });
+        updatedNewsPostData = { ...updatedNewsPost };
+      }
+      const stateData = {
+        status,
+        responseMsg,
+        newsPostImages: updatedNewsPostImages,
+        updatedNewsPost: updatedNewsPostData ? updatedNewsPostData : newsPostData,
+        createdNewsPosts: updatedNewsPosts ? updatedNewsPosts : createdNewsPosts
+      };
+      dispatch(newsPostImgUploadSuccess(stateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(setNewsPostError(error));
+      return Promise.resolve(false);
+    });
+};
+
+ export const handleDeleteNewsPostImage = (dispatch: Dispatch<NewsPostAction>, imageToDeleteId: string, newsPostsState: NewsPostsState): Promise<boolean> => {
+  const { newsPostData, newsPostImages, createdNewsPosts } = newsPostsState;
+  const requestOptions = {
+    method: "delete",
+    url: "/api/delete_news_post_image/" + imageToDeleteId
+  };
+
+  dispatch(sendNewsPostRequest());
+  return axios(requestOptions)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg, deletedImage, updatedNewsPost }: { responseMsg: string, deletedImage: NewsPostImgData, updatedNewsPost: NewsPostData } = data;
+      const { _id: deletedImgId } = deletedImage;
+
+      const newImageState = newsPostImages.filter((image) => deletedImage._id !== image._id);
+      let updatedNewsPostsArr; 
+      if (updatedNewsPost) {
+        updatedNewsPostsArr = createdNewsPosts.map((room) => {
+          if (room._id === updatedNewsPost._id) {
+            return { ...updatedNewsPost, images: [ ...updatedNewsPost.images ] };
+          } else {
+            return room;
+          }
+        });
+      }
+      const stateData = {
+        status,
+        responseMsg,
+        newsPostImages: newImageState,
+        updatedNewsPost: updatedNewsPost ? updatedNewsPost : newsPostData,
+        createdNewsPosts: updatedNewsPostsArr ? updatedNewsPostsArr : createdNewsPosts,
+      };
+      dispatch(newsPostImgDeleteSuccess(stateData));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(setNewsPostError(error));
+      return Promise.resolve(false);
+    });
+};
+
+export const handleDeleteAllNewsPostImages = (dispatch: Dispatch<NewsPostAction>, currentNewsPostState: NewsPostsState): Promise<boolean> => {
+  const { newsPostImages } = currentNewsPostState;
+  const axiosRequest = {
+    method: "delete",
+    url: "/api/rooms/delete_all_news_post_images",
+    data: {
+      newsPostImages: newsPostImages
+    }
+  };
+  
+  return axios(axiosRequest)
+    .then((response) => {
+      const { status, data } = response;
+      const { responseMsg }: { responseMsg: string } = data;
+
+      const updatedState = { status, responseMsg, updatedRoomImages: [] };
+      dispatch(deleteAllNewsPostImages(updatedState));
+      return Promise.resolve(true);
+    })
+    .catch((error) => {
+      dispatch(setNewsPostError(error));
+      return Promise.resolve(true);
+    })
 };

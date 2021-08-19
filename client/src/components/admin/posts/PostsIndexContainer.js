@@ -206,7 +206,13 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
             </Grid.Column>
             <Grid.Column width={10} className={ styles.postIndexRightColumn }>{
               localState.newsPostFormOpen ? 
-              <PostForm titleText={ localState.editorTitle } editorText={localState.editorText} handleTitleChange={ handleTitleChange } handleUpdateEditor={ handleUpdateEditorChange } />
+              <PostForm 
+                titleText={ localState.editorTitle } 
+                editorText={localState.editorText} 
+                handleTitleChange={ handleTitleChange } 
+                handleUpdateEditor={ handleUpdateEditorChange } 
+                newsPostsState={ newsPostsState }
+              />
               :
               (
                 objectValuesEmpty(newsPostsState.newsPostData)

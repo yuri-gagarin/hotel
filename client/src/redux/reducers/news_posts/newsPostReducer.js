@@ -6,6 +6,7 @@ const initialState: NewsPostsState = {
   loading: false,
   responseMsg: "",
   newsPostData: generateEmptyNewsPostModel(),
+  newsPostImages: [],
   createdNewsPosts: [],
   numberOfNewsPosts: 0,
   error: null

@@ -89,13 +89,13 @@ const toggleRoomOnlineOffline = (data: { status: number, responseMsg: string, up
 /* */
 
 /* Non API actions */
-const setRooms = (data : { status: number, responseMsg: string, createdRooms: Array<RoomData>, numberOfRooms: number }): SetRooms => {
+const setRooms = (data: { status: number, responseMsg: string, createdRooms: Array<RoomData>, numberOfRooms: number }): SetRooms => {
   return {
     type: "SetRooms",
     payload: { ...data, loading: false }
   };
 };
-const openRoom = (data : { roomImages: Array<RoomImgData>, roomData: RoomData }): OpenRoom => {
+const openRoom = (data: { roomImages: Array<RoomImgData>, roomData: RoomData }): OpenRoom => {
   return {
     type: "OpenRoom",
     payload: { ...data }
@@ -135,8 +135,8 @@ export const handleClearRoomData = (dispatch: Dispatch<RoomAction>): void => {
 export const handleRoomError = (err: any): RoomError => {
   // process error, extract relavant error data //
   if (typeof err === "object" && err.response) {
-    const { status, data } : { status: number, data: any } = err.response;
-    const { responseMsg, error } : { responseMsg: string, error: Error } = data;
+    const { status, data }: { status: number, data: any } = err.response;
+    const { responseMsg, error }: { responseMsg: string, error: Error } = data;
     const errorResponse = error ? error : new Error("An error occured");
     return roomError({ status: status, responseMsg: responseMsg, error: errorResponse }); 
   } else {
@@ -158,7 +158,7 @@ export const handleCreateNewRoom = (dispatch: Dispatch<RoomAction>, clientRoomFo
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newRoom } : { responseMsg: string, newRoom: RoomData } = data;
+      const { responseMsg, newRoom }: { responseMsg: string, newRoom: RoomData } = data;
 
       const stateData = { status, responseMsg, newRoomData: newRoom };
       dispatch(roomCreated(stateData));
@@ -186,7 +186,7 @@ export const handleUpdateRoom = (dispatch: Dispatch<RoomAction>, roomFormData: C
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedRoom } : { responseMsg: string, updatedRoom: RoomData } = data;
+      const { responseMsg, updatedRoom }: { responseMsg: string, updatedRoom: RoomData } = data;
 
       const updatedRooms = createdRooms.map((room) => {
         if (room._id == updatedRoom._id) {
@@ -224,7 +224,7 @@ export const handleDeleteRoom = (dispatch: Dispatch<RoomAction>, roomIdToDelete:
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedRoom } : { responseMsg: string, deletedRoom: RoomData } = data;
+      const { responseMsg, deletedRoom }: { responseMsg: string, deletedRoom: RoomData } = data;
 
       const updatedRooms = createdRooms.filter((room) => deletedRoom._id !== room._id);
       const roomStateData = {
@@ -259,7 +259,7 @@ export const handleFetchRooms = (dispatch: Dispatch<RoomAction>, options?: RoomF
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, rooms } : { responseMsg: string, rooms: Array<RoomData> } = data;
+      const { responseMsg, rooms }: { responseMsg: string, rooms: Array<RoomData> } = data;
 
       const stateData = { status, responseMsg, createdRooms: rooms, numberOfRooms: rooms.length };
       dispatch(setRooms(stateData));
@@ -290,7 +290,7 @@ export const handleUploadRoomImage = (dispatch: Dispatch<RoomAction>, file: Form
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newImage, updatedRoom } : { responseMsg: string, newImage: RoomImgData, updatedRoom: RoomData } = data;
+      const { responseMsg, newImage, updatedRoom }: { responseMsg: string, newImage: RoomImgData, updatedRoom: RoomData } = data;
       let updatedRoomData: any; let updatedRooms: any; 
       let updatedRoomImages: Array<RoomImgData> = [ ...roomImages, newImage ];
       if (updatedRoom) {
@@ -337,7 +337,7 @@ export const handleUploadRoomImage = (dispatch: Dispatch<RoomAction>, file: Form
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedImage, updatedRoom } : { responseMsg: string, deletedImage: RoomImgData, updatedRoom: RoomData } = data;
+      const { responseMsg, deletedImage, updatedRoom }: { responseMsg: string, deletedImage: RoomImgData, updatedRoom: RoomData } = data;
       const { _id: deletedImgId } = deletedImage;
 
       const newImageState = roomImages.filter((image) => deletedImage._id !== image._id);
@@ -380,7 +380,7 @@ export const handleDeleteAllRoomImages = (dispatch: Dispatch<RoomAction>, curren
   return axios(axiosRequest)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg } : { responseMsg: string } = data;
+      const { responseMsg }: { responseMsg: string } = data;
 
       const updatedState = { status, responseMsg, updatedRoomImages: [] };
       dispatch(deleteAllRoomImages(updatedState));
@@ -408,7 +408,7 @@ export const handleToggleRoomOnlineOffline = (dispatch: Dispatch<RoomAction>, ro
   return axios.request(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedRoom } : { responseMsg: string, updatedRoom: RoomData } = data;
+      const { responseMsg, updatedRoom }: { responseMsg: string, updatedRoom: RoomData } = data;
 
       const updatedRoomsArr = createdRooms.map((room) => {
         if (room._id == updatedRoom._id) {
@@ -427,7 +427,7 @@ export const handleToggleRoomOnlineOffline = (dispatch: Dispatch<RoomAction>, ro
     });
 };
 
-export const handleToggleAllOnlineOffline = (dispatch: Dispatch<RoomAction>, { live } : { live: boolean }): Promise<boolean> => {
+export const handleToggleAllOnlineOffline = (dispatch: Dispatch<RoomAction>, { live }: { live: boolean }): Promise<boolean> => {
   const requestOptions = {
     method: "patch",
     url: "/api/rooms/",
@@ -440,7 +440,7 @@ export const handleToggleAllOnlineOffline = (dispatch: Dispatch<RoomAction>, { l
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedRooms } : { responseMsg: string, updatedRooms: Array<RoomData> } = data;
+      const { responseMsg, updatedRooms }: { responseMsg: string, updatedRooms: Array<RoomData> } = data;
 
       const stateUpdateData = { status, responseMsg, updatedRooms };
       dispatch(toggleAllRoomsOnlineOfflineAction(stateUpdateData));

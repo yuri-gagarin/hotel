@@ -251,7 +251,7 @@ const RoomForm = (props: Props): React.Node => {
         checked ? setLocalFormState({ ...localFormState, options: { ...localFormState.options, paidParking: true } }) : setLocalFormState({ ...localFormState, options: { ...localFormState.options, paidParking: false } });
         break;
       }
-    };
+    }
   };
   // END checkbox handler //
   const handleFormSubmit = () => {

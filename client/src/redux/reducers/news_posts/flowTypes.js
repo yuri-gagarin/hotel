@@ -27,11 +27,19 @@ export type NewsPostData = {
   editedAt: string
 };
 
+export type NewsPostImgData = {
+  _id: string,
+  path: string,
+  newsPost?: string,
+  createdAt: string,
+}
+
 export type NewsPostsState = {
   status: number,
   loading: boolean,
   responseMsg: string,
   newsPostData: NewsPostData,
+  newsPostImages: Array<NewsPostImgData>,
   createdNewsPosts: Array<NewsPostData>,
   numberOfNewsPosts: number,
   error: null | Error
