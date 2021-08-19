@@ -16,4 +16,4 @@ export default function (router) {
     .route("/api/delete_room_image/:imageId")
     .delete(roomsController.deleteImage);
   
-};
+}

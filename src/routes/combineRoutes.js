@@ -14,6 +14,7 @@ import diningImageRoutes from "./diningImageRoutes";
 import menuImageRoutes from "./menuImageRoutes";
 // news posts routes //
 import newsPostsRoutes from "./newsPostsRoutes";
+import newsPostImageRouter from "./newsPostImageRouters";
 // mailer //
 import mailRoutes from "./mailRoutes";
 // test routes
@@ -29,6 +30,7 @@ export default function (router) {
   menuImageRoutes(router);
   messageRoutes(router);
   newsPostsRoutes(router);
+  newsPostImageRouter(router);
   roomImageRoutes(router);
   roomRoutes(router);
   serviceImageRoutes(router);
