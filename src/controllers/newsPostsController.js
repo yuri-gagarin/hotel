@@ -1,5 +1,7 @@
 import NewsPost from "../models/NewsPost";
+import NewsPostImage from "../models/NewsPostImage";
 import { validateNewsPost } from "./helpers/validationHelpers";
+import { deleteFile } from "./helpers/apiHelpers";
 
 export default {
   getNewsPosts: (req, res) => {
@@ -117,6 +119,142 @@ export default {
         });
       })
       .catch((error) => {
+        return res.status(500).json({
+          responseMsg: "An error occured",
+          error: error
+        });
+      });
+  },
+
+  uploadImage: (req, res) => {
+    const { success, imagePath, absolutePath } = req.locals.roomImageUpload;
+    const { newsPostId } = req.params;
+    let uploadedImage;
+
+    if (success) {
+      if (newsPostId) {
+        // request is on an existing news post //
+        return NewsPostImage.create({ path: imagePath, absolutePath: absolutePath, newsPost: newsPostId, createdAt: new Date(Date.now()) })
+          .then((createdImage) => {
+            uploadedImage = createdImage;
+            return (
+              NewsPost.findOneAndUpdate({ _id: newsPostId }, { $push: { images: createdImage._id } }, { new: true })
+                .populate("images").exec()
+            );
+          })
+          .then((updatedNewsPost) => {
+            return res.status(200).json({
+              responseMsg: "Uploaded an image",
+              newImage: uploadedImage,
+              updatedNewsPost
+            });
+          })
+          .catch((error) => {
+            return res.status(500).json({
+              responseMsg: "A database error occured",
+              error: error
+            });
+          });
+      } else {
+        // reqeust is on a new news post, not created yet //
+        return NewsPostImage.create({ path: imagePath,  absolutePath: absolutePath, createdAt: new Date(Date.now()) })
+          .then((createdImage) => {
+            return res.status(200).json({
+              responseMsg: "Uploaded an image",
+              newImage: createdImage,
+              updatedNewsPost: null
+            });
+          })
+          .catch((error) => {
+            console.error(error)
+            return res.status(500).json({
+              responseMsg: "A database error occured",
+              error: error
+            });
+          })
+      }
+    } else {
+      return res.status(500).json({
+        responseMsg: "Upload not successful"
+      });
+    }
+  },
+
+  deleteImage: (req, res) => {
+    const { imageId } = req.params;
+    let deletedImage;
+
+    return NewsPostImage.findOneAndDelete({ _id: imageId })
+      .then((deletedImg) => {
+        if (deletedImg) {
+          deletedImage = deletedImg;
+          // remove from the files //
+          return deleteFile(deletedImg.absolutePath);
+        } else {
+          return Promise.reject(new Error("No Image was found"));
+        }
+      })
+      .then(() => {
+        return (
+          NewsPost
+            .findOneAndUpdate({ _id: deletedImage.newsPost },  { $pull: { images: deletedImage._id } }, { new: true })
+            .populate("images").exec()
+          )
+      })
+      .then((updatedNewsPost) => {
+        return res.status(200).json({
+          responseMsg: "Deleted the image",
+          deletedImage: deletedImage,
+          updatedNewsPost
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        return res.status(500).json({
+          responseMsg: "A delete error occured",
+          error: error
+        });
+      });
+  },
+
+  deleteAllNewsPostImages: (req, res) => {
+    const { newsPostImages = [] } = req.body;
+    const newsPostImgIds = [];
+    const newsPostImgPaths = [];
+
+    if (newsPostImages.length > 0) {
+      for (const imgData of newsPostImages) {
+        newsPostImgIds.push(imgData._id);
+        newsPostImgPaths.push(imgData.absolutePath);
+      }
+    }
+
+    return Promise.resolve()
+      .then(() => {
+        const deletePromises = [];
+        if (newsPostImgPaths.length > 0) {
+          for (const imgPath of newsPostImgPaths) {
+            deletePromises.push(deleteFile(imgPath));
+          }
+          return Promise.all(deletePromises);
+        } else {
+          return Promise.resolve([]);
+        }
+      })
+      .then((response) => {
+        if (response.length > 0 && newsPostImgIds.length > 0) {
+          return NewsPostImage.deleteMany({ _id: { $in: newsPostImgIds } }).exec();
+        } else {
+          return Promise.resolve({ n: 0 });
+        }
+      })
+      .then(() => {
+        return res.status(200).json({
+          responseMsg: "Removed all images",
+        });
+      })
+      .catch((error) => {
+        console.error(error);
         return res.status(500).json({
           responseMsg: "An error occured",
           error: error
