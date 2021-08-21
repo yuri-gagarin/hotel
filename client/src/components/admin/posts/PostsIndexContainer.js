@@ -1,19 +1,20 @@
 // @flow
 import * as React from "react";
-import { Grid, Segment } from "semantic-ui-react";
+import { Grid, Modal, Segment } from "semantic-ui-react";
 // router //
 import { useRouteMatch, useHistory, Route, Switch } from "react-router-dom";
 // redux actions //
 import { connect } from "react-redux";
-// additional components //
 import {
    handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handleToggleNewsPostLiveStatus, handleDeleteNewsPost, handleOpenNewsPost, handleCloseNewsPost, setNewsPostError,
    handleUploadNewsPostImage, handleDeleteNewsPostImage, handleDeleteAllNewsPostImages
 } from "../../../redux/actions/newsPostActions";
+// additional components //
 import { ConfirmDeleteModal} from "../shared/ConfirmDeleteModal";
 import { PostsControls } from "./PostsControls";
 import { PostForm } from "./PostForm";
 import { NewsPostCard } from "./cards/NewsPostCard";
+import { NewsPostFormControls } from "./controls/NewsPostFormControls";
 import { NewsPostPreviewCard } from "./cards/NewsPostPreviewCard";
 import { ViewAllPosts } from "./view_all/ViewAllPosts";
 // types //
@@ -207,7 +208,6 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
         />
       </Grid.Row>
       <Switch>
-        { console.log(url) }
         <Route exact path={ url }>
           <Grid.Row centered style={{ height: "calc(90% - 60px)" }}>
             <Grid.Column className={ styles.postsIndexLeftColumn } width={6}>
@@ -226,7 +226,14 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
             </Grid.Column>
             <Grid.Column width={10} className={ styles.postIndexRightColumn }>{
               localState.newsPostFormOpen ? 
-              <PostForm 
+              <Modal open={ localState.newsPostFormOpen } size="fullscreen" className={ styles.formModal }>
+                <NewsPostFormControls 
+                  newPost={ objectValuesEmpty(newsPostsState.newsPostData) }
+                  handleSavePost={ handleSavePost }
+                  handleDeletePost={ triggerDeleteNewsPost }
+                  handleCloseNewPostForm={ handleCancelPost }
+                />
+                <PostForm 
                 titleText={ localState.editorTitle } 
                 editorText={localState.editorText} 
                 handleTitleChange={ handleTitleChange } 
@@ -234,6 +241,8 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
                 newsPostsState={ newsPostsState }
                 _handleUploadNewsPostImage={ _handleUploadNewsPostImage }
               />
+              </Modal>
+             
               :
               (
                 objectValuesEmpty(newsPostsState.newsPostData)

@@ -9,3 +9,11 @@
 .postIndexRightColumn {
   height: 100%;
 }
+
+.formModal {
+  height: 90vh;
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  transform: translateX(-50%);
+} 
