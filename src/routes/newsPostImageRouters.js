@@ -16,5 +16,12 @@ export default function (router) {
   router  
     .route("/api/delete_news_post_image/:imageId")
     .delete(newsPostsController.deleteImage);
+
+  // @route DELETE "/api/delete_all_news_post_images" //
+  // @desc Deletes all queried NewsPostImage models and removes files //
+  // @access PRIVATE 
+  router
+    .route("/api/delete_all_news_post_images")
+    .delete(newsPostsController.deleteAllNewsPostImages);
   
 }

@@ -362,7 +362,7 @@ export const handleDeleteAllNewsPostImages = (dispatch: Dispatch<NewsPostAction>
   const { newsPostImages } = currentNewsPostState;
   const axiosRequest = {
     method: "delete",
-    url: "/api/rooms/delete_all_news_post_images",
+    url: "/api/delete_all_news_post_images",
     data: {
       newsPostImages: newsPostImages
     }

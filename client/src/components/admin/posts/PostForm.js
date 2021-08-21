@@ -41,25 +41,29 @@ export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdat
         <label>Title:</label>
         <input onChange={ handleTitleChange } value={ titleText ? titleText : "" } placeholder={ "Title of news post here" } ref={ titleInputRef }></input>
       </div>
-      <div className={ styles.editorContainer}>
-        <CKEditor className={ styles.editor }
-          editor={ ClassicEditor }
-          onChange={ handleEditorChange }
-          data={ editorText }
-        />  
-      </div>
-      <div className={ styles.imageUploader }>
-        <div className= { styles.fileInputDiv }>
-          <FileInput dataName="newsPostImage" modelState={ newsPostsState } uploadImage={ _handleUploadNewsPostImage } />
+      <div className={ styles.newsPostFormInner }>
+        <div className={ styles.editorContainer}>
+          <CKEditor className={ styles.editor }
+            editor={ ClassicEditor }
+            onChange={ handleEditorChange }
+            data={ editorText }
+          />  
         </div>
-        {
-          newsPostsState.newsPostImages.length > 0
-          ?
-          <PreviewImagesCarousel images={ newsPostsState.newsPostImages } showDeleteIcons={ true } toggleImageModal={ handleToggleImageModal } />
-          :
-          <GeneralNoModelsSegment customHeaderMessage={'No post images'} customContentMessage={"Upload news post images here"}  />
-        }
+        <div className={ styles.imageUploader }>
+          <div className= { styles.fileInputDiv }>
+            <FileInput dataName="newsPostImage" modelState={ newsPostsState } uploadImage={ _handleUploadNewsPostImage } />
+          </div>
+          {
+            newsPostsState.newsPostImages.length > 0
+            ?
+            <PreviewImagesCarousel images={ newsPostsState.newsPostImages } showDeleteIcons={ true } toggleImageModal={ handleToggleImageModal } />
+            :
+            <GeneralNoModelsSegment customHeaderMessage={'No post images'} customContentMessage={"Upload news post images here"}  />
+          }
+        </div>
+
       </div>
+      
     </div>
   );
 };

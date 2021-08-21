@@ -125,7 +125,18 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   };
   const handleCancelPost = (): void => {
     if (objectValuesEmpty(newsPostsState.newsPostData)) {
-      setLocalState({ ...localState, newsPostFormOpen: false, editorTitle: "", editorText: "" });
+      if (newsPostsState.newsPostImages && newsPostsState.newsPostImages.length > 0) {
+        // get rid of uploaded images //
+        _handleDeleteAllNewsPostImages(newsPostsState)
+          .then((success) => {
+            setLocalState({ ...localState, newsPostFormOpen: false, editorTitle: "", editorText: "" });
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      } else {
+        setLocalState({ ...localState, newsPostFormOpen: false, editorTitle: "", editorText: "" });
+      }
     } else {
       _handleCloseNewsPost();
       setLocalState({ ...localState, newsPostFormOpen: false, editorTitle: "", editorText: "" });
