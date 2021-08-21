@@ -42,7 +42,7 @@ const fileFilter = (req, file, done) => {
   }
 };
 
-const diningImageUploader = (req, res, next) => {
+const newsPostImageUploader = (req, res, next) => {
   const maxFileSize = 10000000; // max 10mb file size //
   const upload = multer({
     limits: {
@@ -81,7 +81,7 @@ const diningImageUploader = (req, res, next) => {
       //if uploaded PostImage send postImageUpload object to the next middleware
       if (imagePath && fileName) {
         req.locals = { 
-          diningModelImageUpload: {
+          newsPostImageUpload: {
             responseMsg: "File uploaded",
             success: true,
             imagePath: path.join(imagePath, fileName),
@@ -93,7 +93,7 @@ const diningImageUploader = (req, res, next) => {
       //else report to next midleware that no upload took place
       else {
         req.locals = { 
-          diningModelImageUpload: {
+          newsPostImageUpload: {
             message: "No file uploaded",
             success: false,
             imagePath: null,
@@ -106,4 +106,4 @@ const diningImageUploader = (req, res, next) => {
   });
 };
 
-export default diningImageUploader;
+export default newsPostImageUploader;

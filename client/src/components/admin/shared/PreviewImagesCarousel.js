@@ -4,16 +4,16 @@ import * as React from "react";
 import { Header, Icon, Image, Segment } from "semantic-ui-react";
 // flow types //
 import type { DiningImgData, MenuImageData } from "../../../redux/reducers/dining_entertainment/flowTypes";
+import type { NewsPostImgData } from "../../../redux/reducers/news_posts/flowTypes";
 import type { RoomImgData } from "../../../redux/reducers/rooms/flowTypes";
 import type { ServiceImgData } from "../../../redux/reducers/service/flowTypes";
-
 // styles and css //
 import styles from "./css/previewImagesCarousel.module.css";
 // helpers //
 import { setImagePath } from "../../helpers/displayHelpers";
 
 type Props = {
-  images: Array<ServiceImgData> | Array<DiningImgData> | Array<MenuImageData> | Array<RoomImgData>,
+  images: Array<ServiceImgData> | Array<DiningImgData> | Array<MenuImageData> | Array<RoomImgData> | Array<NewsPostImgData>, 
   showDeleteIcons: boolean,
   toggleImageModal: (imgPath: string) => void,
   triggerImgModelDelete?: (imgIdToDelete: string) => void
@@ -23,7 +23,7 @@ type LocalState = {
   positionIndex: number,
   totalElements: number
 }
-export const PreviewImagesCarousel = ({ images, showDeleteIcons, toggleImageModal, triggerImgModelDelete } : Props): React.Node => {
+export const PreviewImagesCarousel = ({ images, showDeleteIcons, toggleImageModal, triggerImgModelDelete }: Props): React.Node => {
 
   const imagesWrapperRef = React.useRef<HTMLElement | null>(null);
   // const [ localState, setLocalState ] = React.useState<LocalState>({ elementPositions: [], positionIndex: 0, totalElements: 0 });

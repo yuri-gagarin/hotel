@@ -16,4 +16,4 @@ export default function (router) {
     .route("/api/dining/delete_menu_image/:imageId")
     .delete(diningEntertainmentController.deleteMenuImage);
 
-};
+}

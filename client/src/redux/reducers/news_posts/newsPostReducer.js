@@ -82,6 +82,35 @@ const newPostReducer = (state: NewsPostsState = initialState, action: NewsPostAc
         error: null
       };
     }
+    case "NewsPostImgUplSuccess": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        newsPostData: action.payload.updatedNewsPost,
+        newsPostImages: action.payload.newsPostImages,
+        createdNewsPosts: action.payload.createdNewsPosts,
+        error: null
+      };
+    }
+    case "NewsPostImgDelSuccess": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        newsPostData: action.payload.updatedNewsPost,
+        newsPostImages: action.payload.newsPostImages,
+        createdNewsPosts: action.payload.createdNewsPosts,
+        error: null
+      };
+    }
+    case "DeleteAllNewsPostImages": {
+      return {
+        ...state
+      };
+    }
     case "NewsPostError": {
       return {
         ...state,

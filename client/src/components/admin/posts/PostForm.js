@@ -4,10 +4,12 @@ import { Form } from "semantic-ui-react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import ImgUploadControls from "../shared/ImgUploadControls";
+import { PreviewImagesCarousel } from "../shared/PreviewImagesCarousel";
 import FileInput from "../shared/FileInput";
 import type { NewsPostsState } from "../../../redux/reducers/news_posts/flowTypes";
 //
 import styles from "./css/postForm.module.css";
+import { GeneralNoModelsSegment } from "../shared/GeneralNoModelsSegment";
 
 type PostFormProps = {
   titleText: string;
@@ -24,6 +26,10 @@ export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdat
   const handleEditorChange = (_, editor: any): void => {
     handleUpdateEditor(editor);
   };
+
+  const handleToggleImageModal = (imgId: string): void => {
+
+  }
 
   React.useEffect(() => {
     if (titleInputRef.current) titleInputRef.current.focus();
@@ -43,7 +49,16 @@ export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdat
         />  
       </div>
       <div className={ styles.imageUploader }>
-        <FileInput dataName="newsPostImage" modelState={ newsPostsState } uploadImage={ _handleUploadNewsPostImage } />
+        <div className= { styles.fileInputDiv }>
+          <FileInput dataName="newsPostImage" modelState={ newsPostsState } uploadImage={ _handleUploadNewsPostImage } />
+        </div>
+        {
+          newsPostsState.newsPostImages.length > 0
+          ?
+          <PreviewImagesCarousel images={ newsPostsState.newsPostImages } showDeleteIcons={ true } toggleImageModal={ handleToggleImageModal } />
+          :
+          <GeneralNoModelsSegment customHeaderMessage={'No post images'} customContentMessage={"Upload news post images here"}  />
+        }
       </div>
     </div>
   );

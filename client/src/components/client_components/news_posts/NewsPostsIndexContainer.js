@@ -69,6 +69,10 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
     history.goBack();
   };
 
+  const handleOpenPictureModal = () => {
+    // needs to be updated when news posts will support images //
+    const imageUrls = [ ]
+  }
   const handleClosePictureModal = () => {
 
   };
@@ -88,7 +92,7 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
   
   return (
     <React.Fragment>
-      <GenericImgModalCarousel show={true}  closePictureModal={ handleClosePictureModal } imgURLS={[]} imageIndex={0} />
+      <GenericImgModalCarousel show={ false }  closePictureModal={ handleClosePictureModal } imgURLS={[]} imageIndex={0} />
       <Route path={`/news/:newsPostTitle`}>
         <NewsPostReader 
           newsPostData={ newsPostsState.newsPostData} 

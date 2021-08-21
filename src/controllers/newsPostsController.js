@@ -127,7 +127,7 @@ export default {
   },
 
   uploadImage: (req, res) => {
-    const { success, imagePath, absolutePath } = req.locals.roomImageUpload;
+    const { success, imagePath, absolutePath } = req.locals.newsPostImageUpload;
     const { newsPostId } = req.params;
     let uploadedImage;
 

@@ -271,7 +271,11 @@ const mapDispatchToProps = (dispatch: Dispatch<NewsPostAction>) => {
     _handleToggleNewsPostOnlineStatus: (clientNewsPostData: NewsPostData, newsPostsState: NewsPostsState) => handleToggleNewsPostLiveStatus(dispatch, clientNewsPostData, newsPostsState),
     _handleDeleteNewsPost: (newspPostId: string, newsPostsState: NewsPostsState) => handleDeleteNewsPost(dispatch, newspPostId, newsPostsState),
     _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => handleOpenNewsPost(dispatch, newsPostId, newsPostsState),
-    _handleCloseNewsPost: () => handleCloseNewsPost(dispatch)
+    _handleCloseNewsPost: () => handleCloseNewsPost(dispatch),
+    // image handling //
+    _handleUploadNewsPostImage: (file: FormData, currentNewsPostsState: NewsPostsState) => handleUploadNewsPostImage(dispatch, file, currentNewsPostsState),
+    _handleDeleteNewsPostImage: (imgIdToDelete: string, currentNewsPostsState: NewsPostsState) => handleDeleteNewsPostImage(dispatch, imgIdToDelete, currentNewsPostsState),
+    _handleDeleteAllNewsPostImages: (currentNewsPostsState: NewsPostsState) => handleDeleteAllNewsPostImages(dispatch, currentNewsPostsState)
   };
 };
 
