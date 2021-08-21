@@ -6,7 +6,10 @@ import { useRouteMatch, useHistory, Route, Switch } from "react-router-dom";
 // redux actions //
 import { connect } from "react-redux";
 // additional components //
-import { handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handleToggleNewsPostLiveStatus, handleDeleteNewsPost, handleOpenNewsPost, handleCloseNewsPost, setNewsPostError } from "../../../redux/actions/newsPostActions";
+import {
+   handleFetchNewsPosts, handleCreateNewsPost, handleUpdateNewsPost, handleToggleNewsPostLiveStatus, handleDeleteNewsPost, handleOpenNewsPost, handleCloseNewsPost, setNewsPostError,
+   handleUploadNewsPostImage, handleDeleteNewsPostImage, handleDeleteAllNewsPostImages
+} from "../../../redux/actions/newsPostActions";
 import { ConfirmDeleteModal} from "../shared/ConfirmDeleteModal";
 import { PostsControls } from "./PostsControls";
 import { PostForm } from "./PostForm";
@@ -46,9 +49,15 @@ type Props = {
   _handleDeleteNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => Promise<boolean>;
   _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => void;
   _handleCloseNewsPost: () => void;
+  // images //
+  _handleUploadNewsPostImage: <NewsPostsState>(file: FormData, currentNewsPostsState: NewsPostsState) => Promise<boolean>,
+  _handleDeleteNewsPostImage: (imageIdToDelete: string, currentNewsPostsState: NewsPostsState) => Promise<boolean>,
+  _handleDeleteAllNewsPostImages: (currentNewsPostsState: NewsPostsState) => Promise<boolean>
 };
 
-const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, _handleToggleNewsPostOnlineStatus, _handleDeleteNewsPost, _handleOpenNewsPost, _handleCloseNewsPost, newsPostsState }: Props): React.Node => {
+const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _handleUpdateNewsPost, _handleToggleNewsPostOnlineStatus, _handleDeleteNewsPost, _handleOpenNewsPost, _handleCloseNewsPost, 
+  newsPostsState, _handleUploadNewsPostImage, _handleDeleteNewsPostImage, _handleDeleteAllNewsPostImages }: Props): React.Node => {
+
   const [ localState, setLocalState ] = React.useState<LocalState>({ viewAll: false, newsPostFormOpen: false, updateForm: false, editorTitle: "", editorText: "" });
   const [ confirmDeleteModalState, setConfirmDeleteModalState ] = React.useState<ConfirmDeleteModalState>({ modalOpen: false, modelName: "", modelId: "" });
 
@@ -212,7 +221,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
                 handleTitleChange={ handleTitleChange } 
                 handleUpdateEditor={ handleUpdateEditorChange } 
                 newsPostsState={ newsPostsState }
-                _handleUploadNewsPostImage={ }
+                _handleUploadNewsPostImage={ _handleUploadNewsPostImage }
               />
               :
               (

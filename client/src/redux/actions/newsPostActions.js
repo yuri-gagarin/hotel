@@ -269,8 +269,8 @@ export const handleToggleNewsPostLiveStatus = (dispatch: Dispatch<NewsPostAction
     });
 };
 
-export const handleUploadNewsPostImage = (dispatch: Dispatch<NewsPostAction>, file: FormData, currentRoomsState: NewsPostsState): Promise<boolean> => {
-  const { newsPostData, createdNewsPosts, newsPostImages } = currentRoomsState;
+export const handleUploadNewsPostImage = (dispatch: Dispatch<NewsPostAction>, file: FormData, currentNewsPostsState: NewsPostsState): Promise<boolean> => {
+  const { newsPostData, createdNewsPosts, newsPostImages } = currentNewsPostsState;
   const { _id: newsPostId } = newsPostData
 
   const requestOptions = {
