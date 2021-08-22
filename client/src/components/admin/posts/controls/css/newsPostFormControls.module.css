@@ -1,6 +1,6 @@
 .postControlsContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 5px 5px;
 }
 
@@ -11,13 +11,8 @@
   font-size: 2em;
 }
 
-.closeBtn {
-  color: red;
-  cursor: pointer;
-}
-
-.closeBtn:hover {
-  color: rgb(177, 19, 19);
-  transform: rotate(90deg);
-  transition: all 200ms linear;
+.formBtnIcon {
+  color: white;
+  float: right;
+  margin: 0 0 0 auto !important;
 }

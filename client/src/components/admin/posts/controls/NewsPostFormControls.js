@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import { useHistory, useRouteMatch, useLocation } from "react-router";
-import { Button, Dropdown, Menu } from "semantic-ui-react";
+import { Button, Dropdown, Icon, Menu } from "semantic-ui-react";
 // additional components //
 // 
 import styles from "./css/newsPostFormControls.module.css";
@@ -20,10 +20,14 @@ export const NewsPostFormControls = ({ newPost, handleCloseNewPostForm, handleSa
     return (
       <div className={ styles.postControlsContainer }>
         <div>
-          <Button color="green" onClick={ handleSavePost }>Save</Button>
-        </div>
-        <div>
-          <i className={ `far fa-times-circle ${styles.closeBtn}`} onClick={ handleCloseNewPostForm }></i>
+          <Button color="green" onClick={ handleSavePost }>
+            Save
+            <Icon className={ styles.formBtnIcon } name="save" />
+          </Button>
+          <Button color="orange" onClick={ handleCloseNewPostForm }>
+            Cancel
+            <Icon className={ styles.formBtnIcon } name="cancel" />
+          </Button>
         </div>
       </div>
     );
@@ -31,11 +35,20 @@ export const NewsPostFormControls = ({ newPost, handleCloseNewPostForm, handleSa
     return (
     <div className={ styles.postControlsContainer }>
        <div> 
-        <Button color="green" onClick={ handleSavePost }>Update</Button>
-        <Button color="red" onClick={ handleDeletePost }>Delete</Button>
+        <Button color="green" onClick={ handleSavePost }>
+          Update
+          <Icon className={ styles.formBtnIcon } name="save" />
+        </Button>
+        <Button color="orange" onClick={ handleCloseNewPostForm }>
+          Cancel
+          <Icon className={ styles.formBtnIcon } name="cancel" />
+        </Button>
       </div>
       <div>
-        <i className={ `far fa-times-circle ${styles.closeBtn}`} onClick={ handleCloseNewPostForm }></i>
+        <Button color="red" onClick={ handleDeletePost }>
+          Delete
+          <Icon className={ styles.formBtnIcon } name="trash alternate outline" />
+        </Button>
       </div>
     </div>
      

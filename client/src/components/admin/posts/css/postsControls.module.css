@@ -3,3 +3,7 @@
   display: flex;
   align-items: center;
 }
+
+.controlsIcon {
+  margin: 0 0 0 auto !important;
+}

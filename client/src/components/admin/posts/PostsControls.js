@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import { useHistory, useRouteMatch, useLocation } from "react-router";
-import { Button, Dropdown, Menu } from "semantic-ui-react";
+import { Button, Dropdown, Icon, Menu } from "semantic-ui-react";
 // additional components //
 import { PostSortControls } from "./controls/PostSortControls";
 // 
@@ -9,15 +9,10 @@ import styles from "./css/postsControls.module.css";
 
 type Props = {
   handleOpenNewPostForm: () => void;
-  formOpen: boolean;
-  newPost: boolean;
-  handleSavePost: () => Promise<boolean>;
-  handleCancelPost: () => void;
-  handleDeletePost: () => void;
 };
 
 
-export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handleSavePost, handleCancelPost, handleDeletePost }: Props): React.Node => {
+export const PostsControls = ({ handleOpenNewPostForm }: Props): React.Node => {
   const history = useHistory();
   const { pathname } = useLocation();
 
@@ -36,43 +31,26 @@ export const PostsControls = ({ formOpen, newPost, handleOpenNewPostForm, handle
     }
   };
 
-
-  if (formOpen && newPost) {
-    return (
-      <div className={ styles.postControlsContainer }>
-        <div>
-          <Button color="green" onClick={ handleSavePost }>Save</Button>
-          <Button color="orange" onClick={ handleCancelPost }>Cancel</Button>
-        </div>
-      </div>
-    );
-  } else if (formOpen && !newPost) {
-    return (
+  return (
     <div className={ styles.postControlsContainer }>
-       <div> 
-        <Button color="green" onClick={ handleSavePost }>Update</Button>
-        <Button color="orange" onClick={ handleCancelPost }>Cancel</Button>
-        <Button color="red" onClick={ handleDeletePost }>Delete</Button>
+      <div>
+        <Button color="green" onClick={ handleOpenNewPostForm }>
+          New Post
+          <Icon className={ styles.controlsIcon } name="file" />
+        </Button>
+        <Button color="blue" onClick={ () => toggleViewAllPosts(pathname) }>
+          {pathname === "/admin/posts" ? "View All" : "View Editor"}
+          {pathname === "/admin/posts" ? <Icon className={ styles.controlsIcon } name="archive" /> : <Icon className={ styles.controlsIcon } name="edit" />}
+        </Button>
       </div>
+      {
+      pathname === "/admin/posts/view_all" || pathname === "/admin/posts"
+      ?
+      <div>
+        <PostSortControls />
+      </div>
+      : null
+      }
     </div>
-     
-    );
-  } else {
-    return (
-      <div className={ styles.postControlsContainer }>
-        <div>
-          <Button color="green" onClick={ handleOpenNewPostForm }>New Post</Button>
-          <Button color="blue" onClick={ () => toggleViewAllPosts(pathname) }>{pathname === "/admin/posts" ? "View All" : "View Editor"}</Button>
-        </div>
-        {
-        pathname === "/admin/posts/view_all" || pathname === "/admin/posts"
-        ?
-        <div>
-          <PostSortControls />
-        </div>
-        : null
-        }
-      </div>
-    );
-  }
+  );
 };

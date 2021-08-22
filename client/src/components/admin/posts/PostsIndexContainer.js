@@ -199,12 +199,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
       <ConfirmDeleteModal open={ confirmDeleteModalState.modalOpen} modelName="news post" confirmAction={ confirmDeleteNewsPost } cancelAction={ cancelDeleteNewsPost }/>
       <Grid.Row style={{ height: "60px", display: "flex", alignItems: "center", padding: 0, border: "3px solid green" }}>
         <PostsControls 
-          formOpen={ localState.newsPostFormOpen }
-          newPost={ objectValuesEmpty(newsPostsState.newsPostData) } 
           handleOpenNewPostForm={ handleOpenNewsPostForm } 
-          handleSavePost={ handleSavePost }
-          handleCancelPost={ handleCancelPost }
-          handleDeletePost={ triggerDeleteNewsPost }
         />
       </Grid.Row>
       <Switch>
