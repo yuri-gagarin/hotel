@@ -108,6 +108,7 @@ export type OpenNewsPost = {
   +type: "OpenNewsPost",
   payload: {
     newsPostData: NewsPostData,
+    newsPostImages: Array<NewsPostImgData>
   }
 };
 export type ClearNewsPostData = {

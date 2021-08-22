@@ -38,12 +38,10 @@ export const setNewsPosts = (data: { status: number, responseMsg: string, create
   };
 };
 
-export const openNewsPost = (data: { newsPostData: NewsPostData }): OpenNewsPost => {
+export const openNewsPost = (data: { newsPostData: NewsPostData, newsPostImages: Array<NewsPostImgData> }): OpenNewsPost => {
   return {
     type: "OpenNewsPost",
-    payload: {
-      newsPostData: data.newsPostData,
-    }
+    payload: { ...data }
   };
 };
 
@@ -122,7 +120,7 @@ export const setNewsPostError = (error: any): NewsPostError => {
 
 export const handleOpenNewsPost = (dispatch: Dispatch<NewsPostAction>, newsPostId: string, newsPostState: NewsPostsState): void => {
   const newsPostData = newsPostState.createdNewsPosts.filter((post) => post._id === newsPostId)[0];
-  dispatch(openNewsPost({ newsPostData: { ...newsPostData } } ));
+  dispatch(openNewsPost({ newsPostData: { ...newsPostData }, newsPostImages: [ ...newsPostData.images ] } ));
 };
 export const handleCloseNewsPost = (dispatch: Dispatch<NewsPostAction>): void => {
   dispatch(clearNewsPostData());

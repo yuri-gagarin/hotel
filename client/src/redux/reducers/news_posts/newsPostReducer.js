@@ -25,7 +25,8 @@ const newPostReducer = (state: NewsPostsState = initialState, action: NewsPostAc
     case "OpenNewsPost": {
       return {
         ...state,
-        newsPostData: { ...action.payload.newsPostData },
+        newsPostData: action.payload.newsPostData,
+        newsPostImages: action.payload.newsPostImages,
         error: null
       };
     }

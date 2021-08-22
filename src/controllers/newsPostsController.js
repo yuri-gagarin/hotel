@@ -7,7 +7,10 @@ export default {
   getNewsPosts: (req, res) => {
     const { sort = "desc" } = req.query;
 
-    return NewsPost.find({}).sort({ createdAt: sort }).exec()
+    return NewsPost.find({})
+      .sort({ createdAt: sort })
+      .populate("images")
+      .exec()
       .then((newsPosts) => {
         return res.status(200).json({
           responseMsg: "Retrieved all news posts",
@@ -43,6 +46,8 @@ export default {
     };
   
     return NewsPost.create({ ...newNewsPost, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()) })
+      .populate("images")
+      .exec()
       .then((createdNewsPost) => {
         return res.status(200).json({
           responseMsg: "Create a new news post",
@@ -67,6 +72,7 @@ export default {
         { $set: { live: live, editedAt: new Date(Date.now()) } },
         { new: true }
       )
+      .populate("images")
       .exec()
         .then((updatedNewsPost) => {
           const { live } = updatedNewsPost;
@@ -88,6 +94,8 @@ export default {
           { $set: { title: title, content: content, editedAt: new Date(Date.now()) } },
           { new: true }
         )
+        .populate("images")
+        .exec()
         .then((updatedNewsPost) => {
           return res.status(200).json({
             responseMsg: "Done",
