@@ -18,6 +18,10 @@ const newsPostSchema = new Schema({
     type: Boolean,
     default: false
   },
+  images: [{
+    type: Schema.Types.ObjectId,
+    ref: "NewsPostImage"
+  }],
   createdAt: {
     type: Date,
     default: new Date(Date.now())

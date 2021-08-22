@@ -22,7 +22,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         status: action.payload.status,
         error: null
       };
-    };
+    }
     case "SetRooms": {
       return {
         ...state,
@@ -33,7 +33,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         numberOfRooms: action.payload.numberOfRooms,
         error: null
       };
-    };
+    }
     case "RoomError": {
       return {
         ...state,
@@ -42,7 +42,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         responseMsg: action.payload.responseMsg,
         error: action.payload.error
       };
-    };
+    }
     case "ClearRoomData": {
       return {
         ...state,
@@ -50,7 +50,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         roomImages: action.payload.roomImages,
         error: null
       };
-    };
+    }
     case "OpenRoom": {
       return {
         ...state,
@@ -58,7 +58,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         roomImages: action.payload.roomImages,
         error: null
       };
-    };
+    }
     case "RoomCreated": {
       return {
         ...state,
@@ -69,7 +69,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         createdRooms: [ ...state.createdRooms, action.payload.newRoomData ],
         error: null
       };
-    };
+    }
     case "RoomUpdated": {
       return {
         ...state,
@@ -80,7 +80,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         createdRooms: action.payload.createdRooms,
         error: null
       };
-    };
+    }
     case "RoomDeleted": {
       return {
         ...state,
@@ -92,7 +92,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         numberOfRooms: action.payload.numberOfRooms,
         error: null
       };
-    };
+    }
     case "RoomImgUplSuccess": {
       return {
         ...state,
@@ -104,7 +104,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         createdRooms: action.payload.createdRooms,
         error: null
       };
-    };  
+    } 
     case "RoomImgDelSuccess": {
       return {
         ...state,
@@ -116,7 +116,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         createdRooms: action.payload.createdRooms,
         error: null
       };
-    };
+    }
     case "ToggleRoomOnlineOffline": {
       return {
         ...state,
@@ -127,7 +127,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         createdRooms: action.payload.updatedRoomsArr,
         error: null
       };
-    };
+    }
     case "ToggleAllRoomsOnlineOffline": {
       return {
         ...state,
@@ -137,7 +137,7 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
         createdRooms: [ ...action.payload.updatedRooms ],
         error: null
       };
-    };
+    }
     case "DeleteAllRoomImages": {
       return {
         ...state,
@@ -150,8 +150,8 @@ const roomReducer = (state: RoomState = initialState, action: RoomAction): RoomS
     }
     default: {
       return state;
-    };
-  };
+    }
+  }
 };
 
 export default roomReducer;

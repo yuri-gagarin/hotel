@@ -23,7 +23,7 @@ export default {
   },
 
   createNewsPost: (req, res) => {
-    const { formData } = req.body;
+    const { formData, newsPostImages = [] } = req.body;
     const { isValid, errors } = validateNewsPost(formData);
 
     if (!isValid) {
@@ -38,14 +38,15 @@ export default {
     const newNewsPost = {
       createdBy: formData.createdBy,
       title: formData.title,
-      content: formData.content
+      content: formData.content,
+      images: newsPostImages
     };
   
     return NewsPost.create({ ...newNewsPost, createdAt: new Date(Date.now()), editedAt: new Date(Date.now()) })
-      .then((newsPost) => {
+      .then((createdNewsPost) => {
         return res.status(200).json({
           responseMsg: "Create a new news post",
-          newsPost
+          createdNewsPost
         });
       })
       .catch((error) => {
@@ -130,7 +131,9 @@ export default {
     const { success, imagePath, absolutePath } = req.locals.newsPostImageUpload;
     const { newsPostId } = req.params;
     let uploadedImage;
-
+    console.log(133)
+    console.log(success);
+    console.log(newsPostId)
     if (success) {
       if (newsPostId) {
         // request is on an existing news post //
@@ -143,6 +146,8 @@ export default {
             );
           })
           .then((updatedNewsPost) => {
+            console.log(148);
+            console.log(updatedNewsPost)
             return res.status(200).json({
               responseMsg: "Uploaded an image",
               newImage: uploadedImage,
@@ -150,6 +155,8 @@ export default {
             });
           })
           .catch((error) => {
+            console.log(155)
+            console.log(error)
             return res.status(500).json({
               responseMsg: "A database error occured",
               error: error

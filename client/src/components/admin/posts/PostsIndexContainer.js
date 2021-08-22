@@ -281,7 +281,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: Dispatch<NewsPostAction>) => {
   return {
     _handleFetchNewsPosts: (options?: any) => handleFetchNewsPosts(dispatch, options),
-    _handleCreateNewsPost: (clientNewsPostData: ClientNewsPostFormData) => handleCreateNewsPost(dispatch, clientNewsPostData),
+    _handleCreateNewsPost: (clientNewsPostData: ClientNewsPostFormData, newsPostsState: NewsPostsState) => handleCreateNewsPost(dispatch, clientNewsPostData, newsPostsState),
     _handleUpdateNewsPost: (clientNewsPostData: NewsPostData, newsPostsState: NewsPostsState) => handleUpdateNewsPost(dispatch, clientNewsPostData, newsPostsState),
     _handleToggleNewsPostOnlineStatus: (clientNewsPostData: NewsPostData, newsPostsState: NewsPostsState) => handleToggleNewsPostLiveStatus(dispatch, clientNewsPostData, newsPostsState),
     _handleDeleteNewsPost: (newspPostId: string, newsPostsState: NewsPostsState) => handleDeleteNewsPost(dispatch, newspPostId, newsPostsState),

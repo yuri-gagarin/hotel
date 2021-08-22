@@ -47,6 +47,7 @@ export const openNewsPost = (data: { newsPostData: NewsPostData }): OpenNewsPost
   };
 };
 
+
 export const clearNewsPostData = (): ClearNewsPostData => {
   return {
     type: "ClearNewsPostData",
@@ -55,6 +56,14 @@ export const clearNewsPostData = (): ClearNewsPostData => {
     }
   };
 };
+
+export const createNewsPost = (data: { status: number, responseMsg: string, newsPostData: NewsPostData }): NewsPostCreated => {
+  return {
+    type: "NewsPostCreated",
+    payload: { ...data, loading: false }
+  };
+};
+
 
 export const updateNewsPost = (data: { status: number, responseMsg: string, updatedNewsPost: NewsPostData, updatedNewsPosts: Array<NewsPostData> }): NewsPostUpdated => {
   return {
@@ -119,20 +128,21 @@ export const handleCloseNewsPost = (dispatch: Dispatch<NewsPostAction>): void =>
   dispatch(clearNewsPostData());
 };
 
-export const handleCreateNewsPost = (dispatch: Dispatch<NewsPostAction>, formData: ClientNewsPostFormData): Promise<boolean> => {
+export const handleCreateNewsPost = (dispatch: Dispatch<NewsPostAction>, formData: ClientNewsPostFormData, newsPostsState: NewsPostsState): Promise<boolean> => {
+  const { newsPostImages = [] } = newsPostsState;
   const requestOptions = {
     method: "post",
     url: "/api/news_posts",
-    data: {
-      formData: formData
-    }
+    data: { formData, newsPostImages }
   };
   dispatch(sendNewsPostRequest());
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg } = data;
-      return Promise.resolve(true);
+      const { responseMsg, createdNewsPost }: { responseMsg: string, createdNewsPost: NewsPostData } = data;
+      const stateUpdateData = { status, responseMsg, newsPostData: createdNewsPost };
+      dispatch(createNewsPost(stateUpdateData));
+      return true;
     })
     .catch((err) => {
       const { status, data } = err.response;

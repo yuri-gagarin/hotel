@@ -36,6 +36,17 @@ const newPostReducer = (state: NewsPostsState = initialState, action: NewsPostAc
         error: null
       };
     }
+    case "NewsPostCreated": {
+      return {
+        ...state,
+        status: action.payload.status,
+        loading: action.payload.loading,
+        responseMsg: action.payload.responseMsg,
+        newsPostData: action.payload.newsPostData,
+        createdNewsPosts: [ { ...action.payload.newsPostData }, ...state.createdNewsPosts ],
+        error: null
+      };
+    }
     case "NewsPostUpdated": {
       return {
         ...state,
