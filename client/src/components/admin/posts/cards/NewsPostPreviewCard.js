@@ -21,9 +21,18 @@ export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handle
     <Segment style={{ height: "100%", width: "100%" }}>
       <div className={ styles.controlsRow }>
         <Button.Group>
-          <Button inverted color="blue" onClick={ closeCurrentNewsPost }>Close</Button>
-          <Button inverted color="orange" onClick={ handleOpenEditCurrentNewsPost }>Edit</Button>
-          <Button color="red" onClick={ triggerDeleteCurrentNewsPost }>Delete</Button>
+          <Button inverted color="blue" onClick={ closeCurrentNewsPost }>
+            Close
+            <Icon className={ styles.postPrevCardControlIcon } name="cancel" />
+          </Button>
+          <Button inverted color="orange" onClick={ handleOpenEditCurrentNewsPost }>
+            Edit
+            <Icon className={ styles.postPrevCardControlIcon } name="edit" />
+          </Button>
+          <Button color="red" onClick={ triggerDeleteCurrentNewsPost }>
+            Delete
+            <Icon className={ styles.postPrevCardControlIcon } name="trash alternate outline" />
+          </Button>
         </Button.Group>
         <Button.Group className={ styles.postOnlineBtns }>
           <Button icon basic color={ newsPostData.live ? "red" : "green" } labelPosition="right" onClick={ toggleNewsPostLiveStatus }>

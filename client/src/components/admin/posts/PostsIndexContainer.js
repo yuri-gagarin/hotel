@@ -139,7 +139,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
         setLocalState({ ...localState, newsPostFormOpen: false, editorTitle: "", editorText: "" });
       }
     } else {
-      _handleCloseNewsPost();
+      //_handleCloseNewsPost();
       setLocalState({ ...localState, newsPostFormOpen: false, editorTitle: "", editorText: "" });
     }
   };
@@ -197,7 +197,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   return (
     <React.Fragment>
       <ConfirmDeleteModal open={ confirmDeleteModalState.modalOpen} modelName="news post" confirmAction={ confirmDeleteNewsPost } cancelAction={ cancelDeleteNewsPost }/>
-      <Grid.Row style={{ height: "60px", display: "flex", alignItems: "center", padding: 0, border: "3px solid green" }}>
+      <Grid.Row style={{ height: "60px", display: "flex", alignItems: "center", padding: 0 }}>
         <PostsControls 
           handleOpenNewPostForm={ handleOpenNewsPostForm } 
         />

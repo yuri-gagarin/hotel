@@ -19,3 +19,7 @@
 .titleContent > span:nth-child(2), .authorContent > span:nth-child(2) {
   margin-left: 5px;
 }
+
+.viewAllCardIcon {
+  margin-left: 5px !important;
+}

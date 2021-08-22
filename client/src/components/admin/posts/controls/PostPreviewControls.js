@@ -24,9 +24,18 @@ export const PostPreviewControls = ({ history, online, handleOpenEditNewsPost, t
   return (
     <div className={ styles.postPreviewControlsWrapper }>
       <Button.Group className={ styles.postControlBtns }>
-        <Button inverted color="blue" onClick={ goBack }>Back</Button>
-        <Button inverted color="orange" onClick={ handleOpenEditNewsPost }>Edit</Button>
-        <Button color="red" onClick={ triggerDeleteCurrentNewsPost }>Delete</Button>
+        <Button inverted color="blue" onClick={ goBack }>
+          Back
+          <Icon className={ styles.postPreviewControlsIcon } name="caret left" />
+        </Button>
+        <Button inverted color="orange" onClick={ handleOpenEditNewsPost }>
+          Edit
+          <Icon className={ styles.postPreviewControlsIcon } name="edit" />
+        </Button>
+        <Button color="red" onClick={ triggerDeleteCurrentNewsPost }>
+          Delete
+          <Icon className={ styles.postPreviewControlsIcon } name="trash alternate outline" />
+        </Button>
       </Button.Group>
       <Button.Group className={ styles.postOnlineBtns }>
         <Button icon inverted color={ online ? "red" : "green" } labelPosition="right" onClick={ toggleNewsPostLiveStatus }>

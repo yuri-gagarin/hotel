@@ -78,3 +78,18 @@
 .controlBtns {
   margin-top: 10px !important;
 }
+.cardIcon  {
+  margin: 0 0 0 auto !important;
+}
+
+.openCardDiv {
+  height: 35px;
+  background-color: rgb(73, 160, 38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2em;
+  margin-top: 5px;
+  border-radius: 5px;
+}

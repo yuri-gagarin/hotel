@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Button, Segment } from "semantic-ui-react";
+import { Button, Icon, Segment } from "semantic-ui-react";
 // aditional components //
 import { CardOnlineStatusBlinkers } from "../../shared/CardOnlineStatusBlinkers";
 // styles //
@@ -39,10 +39,24 @@ export const NewsPostCard = ({ active, newsPostData, toggleNewsPost }: Props): R
       <div className={ styles.postOnlineBlinker }> 
         <CardOnlineStatusBlinkers live={ newsPostData.live } />
       </div>
-      <Button.Group className={ styles.controlBtns }>
-        <Button inverted color="green" onClick={ () => toggleNewsPost(newsPostData._id) }>View</Button>
-        <Button inverted color="red">Delete</Button>
-      </Button.Group>
+      {
+        active 
+        ?
+          <div className={ styles.openCardDiv }>
+            <i className="fas fa-caret-right" />
+          </div>
+        :
+        <Button.Group className={ styles.controlBtns }>
+          <Button inverted color="green" onClick={ () => toggleNewsPost(newsPostData._id) }>
+            View
+            <Icon className={ styles.cardIcon } name="folder open outline" />
+          </Button>
+          <Button inverted color="red">
+            Delete
+            <Icon className={ styles.cardIcon }  name="trash alternate outline" />
+          </Button>
+        </Button.Group>
+      }
     </Segment>
   )
 }

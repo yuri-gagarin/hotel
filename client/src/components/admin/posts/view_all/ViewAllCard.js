@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Button, Card, CardContent } from "semantic-ui-react";
+import { Button, Card, CardContent, Icon } from "semantic-ui-react";
 // additional components //
 import { CardOnlineStatusBlinkers } from "../../shared/CardOnlineStatusBlinkers";
 // types //
@@ -46,7 +46,10 @@ export const ViewAllCard = ({ newsPostData, goToPost }: Props): React.Node => {
         <span>{ formatDate(createdAt) }</span>
       </Card.Meta>
       <Card.Content>
-        <Button basic color="green" onClick={ () => goToPost(postId, title) }>View</Button>
+        <Button basic color="green" onClick={ () => goToPost(postId, title) }>
+          View
+          <Icon className={ styles.viewAllCardIcon } name="folder open outline" />
+        </Button>
       </Card.Content>
       <CardContent>
         <CardOnlineStatusBlinkers live={ newsPostData.live } />

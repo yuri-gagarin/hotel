@@ -4,6 +4,10 @@
   align-items: center;
 }
 
+.postPrevCardControlIcon {
+  margin: 0 0 0 auto !important;
+}
+
 .postOnlineBtns {
   margin-left: 5px !important;
 }
