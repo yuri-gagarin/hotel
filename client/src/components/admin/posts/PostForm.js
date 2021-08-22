@@ -17,9 +17,10 @@ type PostFormProps = {
   handleUpdateEditor: (editor: any) => void;
   handleTitleChange: (e: any) => void;
   newsPostsState: NewsPostsState;
+  triggerImgModelDelete: (imgId: string) => void;
   _handleUploadNewsPostImage: <NewsPostsState>(imageFile: FormData, currentRoomState: NewsPostsState) => Promise<boolean>,
 }
-export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdateEditor, newsPostsState, _handleUploadNewsPostImage }: PostFormProps): React.Node => {
+export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdateEditor, newsPostsState, triggerImgModelDelete, _handleUploadNewsPostImage }: PostFormProps): React.Node => {
   
   const titleInputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -50,13 +51,14 @@ export const PostForm = ({ titleText, editorText, handleTitleChange, handleUpdat
           />  
         </div>
         <div className={ styles.imageUploader }>
+          <div>News post images:</div>
           <div className= { styles.fileInputDiv }>
             <FileInput dataName="newsPostImage" modelState={ newsPostsState } uploadImage={ _handleUploadNewsPostImage } />
           </div>
           {
             newsPostsState.newsPostImages.length > 0
             ?
-            <PreviewImagesCarousel images={ newsPostsState.newsPostImages } showDeleteIcons={ true } toggleImageModal={ handleToggleImageModal } />
+            <PreviewImagesCarousel images={ newsPostsState.newsPostImages } showDeleteIcons={ true } triggerImgModelDelete={ triggerImgModelDelete } toggleImageModal={ handleToggleImageModal } />
             :
             <GeneralNoModelsSegment customHeaderMessage={'No post images'} customContentMessage={"Upload news post images here"}  />
           }

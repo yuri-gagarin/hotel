@@ -120,7 +120,39 @@ export default {
   
   deleteNewsPost: (req, res) => {
     const newsPostId = req.params.newsPostId;
-    return NewsPost.findOneAndDelete({ _id: newsPostId })
+    let imagePaths = [];
+    let imageIds = [];
+
+    if (!newsPostId) {
+      return res.status(400).json({
+        responseMsg: "User input error",
+        error: new Error("Could not resolve News Post id")
+      });
+    }
+    
+    return NewsPost.findOne({ _id: newsPostId }).populate("images").exec()
+      .then((foundNewsPost) => {
+        if (foundNewsPost.images.length > 0) {
+          for (const imgData of foundNewsPost.images) {
+            imagePaths.push(imgData.path);
+            imageIds.push(imgData._id);
+          }
+          const deletePromises = imagePaths.map((filePath) => deleteFile(filePath))
+          return Promise.all(deletePromises);
+        } else {
+          return Promise.resolve([]);
+        }
+      })
+      .then((response) => {
+        if (response.length > 0) {
+          return NewsPostImage.deleteMany({ _id: imageIds });
+        } else {
+          return Promise.resolve({ n: 0 });
+        }
+      })
+      .then(() => {
+        return NewsPost.findOneAndDelete({ _id: newsPostId }).exec();
+      })
       .then((deletedNewsPost) => {
         return res.status(200).json({
           responseMsg: "Deleted the news post",

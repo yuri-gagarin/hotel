@@ -1,12 +1,16 @@
 // @flow
 import * as React from "react";
 import { Button, Icon, Popup, Segment } from "semantic-ui-react";
+// additional components //
+import GenericImgModal from "../../shared/GenericImgModal";
+import { PreviewImagesCarousel } from "../../shared/PreviewImagesCarousel";
 // styles //
 import styles from "./css/newsPostPreviewCard.module.css";
 // types //
 import type { NewsPostData } from "../../../../redux/reducers/news_posts/flowTypes";
-// helpes //
+// helpers //
 import { formatDate } from "../../../helpers/dateHelpers";
+import { setImagePath } from "../../../helpers/displayHelpers"
 
 type Props = {
   newsPostData: NewsPostData;
@@ -16,9 +20,18 @@ type Props = {
   toggleNewsPostLiveStatus: () => Promise<boolean>;
 }
 export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handleOpenEditCurrentNewsPost, triggerDeleteCurrentNewsPost, toggleNewsPostLiveStatus }: Props): React.Node => {
+  const [ localState, setLocalState ] = React.useState<{ imgModalOpen: boolean; imgURL: string }>({ imgModalOpen: false, imgURL: "" });
+
+  const toggleImgModal = (imagePath: string): void => {
+    setLocalState({ imgModalOpen: true, imgURL: setImagePath(imagePath) });
+  };
+  const handleImgModalClose = (): void => {
+    setLocalState({ imgModalOpen: false, imgURL: "" });
+  };
 
   return (
     <Segment style={{ height: "100%", width: "100%" }}>
+      <GenericImgModal open={ localState.imgModalOpen } imgURL={ localState.imgURL } handleClose={ handleImgModalClose } />
       <div className={ styles.controlsRow }>
         <Button.Group>
           <Button inverted color="blue" onClick={ closeCurrentNewsPost }>
@@ -42,7 +55,11 @@ export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handle
             />
             { newsPostData.live ? "Take Offline" : "Take Online" }
           </Button>
-      </Button.Group>
+        </Button.Group>
+        <div className={ styles.newsPostImagesCount }>
+          <div>{ newsPostData.images.length }</div>
+          <span>uploaded images</span>
+        </div>
       </div>
       <div className={ styles.titleDiv }>
         <span>Title:</span>
@@ -54,7 +71,22 @@ export const NewsPostPreviewCard = ({ newsPostData, closeCurrentNewsPost, handle
       </div>
       <div className={ styles.contentDiv }>
         <div dangerouslySetInnerHTML={{__html: newsPostData.content }}></div>
+        {
+        newsPostData.images.length > 0
+        ?
+        <div className={ styles.imagesDiv }>
+          <div>Uploaded images:</div>
+          <PreviewImagesCarousel 
+            images={ newsPostData.images }
+            toggleImageModal={ toggleImgModal }
+          />
+        </div>
+        :
+        null
+        }
       </div>
+      
+      
       <div className={ styles.timeStampsDiv }>
         <div className={ styles.createdAtDiv }>
           <span>Created At:</span>

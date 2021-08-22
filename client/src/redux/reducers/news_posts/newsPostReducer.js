@@ -34,6 +34,7 @@ const newPostReducer = (state: NewsPostsState = initialState, action: NewsPostAc
       return {
         ...state,
         newsPostData: { ...action.payload.newsPostData },
+        newsPostImages: [],
         error: null
       };
     }

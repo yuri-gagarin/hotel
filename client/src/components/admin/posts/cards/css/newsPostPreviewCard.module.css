@@ -18,6 +18,28 @@
   color: red;
 }
 
+.newsPostImagesCount {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: 3px;
+  height: 40px;
+}
+.newsPostImagesCount > div:first-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 26px;
+  width: 26px;
+  background-color: rgb(73, 160, 38);
+  color: white;
+  border-radius: 50%;
+}
+.newsPostImagesCount > span:nth-child(2) {
+  margin-left: 5px;
+  font-style: italic;
+}
+
 
 .titleDiv {
   border-left: 3px solid rgb(73, 160, 38);
@@ -52,6 +74,7 @@
   height: 90%;
 }
 .contentDiv {
+  position: relative;
   height: calc(100% - 150px);
   overflow-y: scroll;
   padding: 5px 10px;
@@ -59,6 +82,22 @@
   border-right: 3px solid rgb(73, 160, 38);
   border-top: 1px solid rgb(199, 197, 197);
   border-bottom: 1px solid rgb(199, 197, 197);
+}
+.imagesDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.imagesDiv > div:first-child {
+  display: flex;
+  font-size: 1.1em;
+  background-color: rgb(73, 160, 38);
+  padding: 3px 15px 3px 3px;
+  color: white;
+  font-weight: 500;
+  border-radius: 0px 0px 15px 0px;
+  margin-bottom: 3px;
 }
 
 .timeStampsDiv {

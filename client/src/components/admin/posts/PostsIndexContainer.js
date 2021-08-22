@@ -33,7 +33,7 @@ type LocalState = {
 }
 type ConfirmDeleteModalState = {
   modalOpen: boolean;
-  modelName: "news post" | "";
+  modelName: "news post" | "image" | "";
   modelId: string;
 }
 
@@ -157,6 +157,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   const cancelDeleteNewsPost = (): void => {
     setConfirmDeleteModalState({ modalOpen: false, modelName: "", modelId: "" });
   };
+
   const confirmDeleteNewsPost = (): Promise<boolean> => {
     const { _id } = newsPostsState.newsPostData;
     return _handleDeleteNewsPost(_id, newsPostsState)
@@ -172,6 +173,11 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
         console.log(error);
         return false;
       })
+  };
+
+  // image delete functionality //
+  const triggerDeleteNewsPostImage = (imageId: string): void => {
+    setConfirmDeleteModalState({ modalOpen: true, modelName: "image", modelId: imageId });
   };
 
   // lifecycle //
@@ -234,6 +240,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
                 handleTitleChange={ handleTitleChange } 
                 handleUpdateEditor={ handleUpdateEditorChange } 
                 newsPostsState={ newsPostsState }
+                triggerImgModelDelete={ triggerDeleteNewsPostImage }
                 _handleUploadNewsPostImage={ _handleUploadNewsPostImage }
               />
               </Modal>

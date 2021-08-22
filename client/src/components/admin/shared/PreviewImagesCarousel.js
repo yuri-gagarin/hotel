@@ -14,7 +14,7 @@ import { setImagePath } from "../../helpers/displayHelpers";
 
 type Props = {
   images: Array<ServiceImgData> | Array<DiningImgData> | Array<MenuImageData> | Array<RoomImgData> | Array<NewsPostImgData>, 
-  showDeleteIcons: boolean,
+  showDeleteIcons?: boolean,
   toggleImageModal: (imgPath: string) => void,
   triggerImgModelDelete?: (imgIdToDelete: string) => void
 }
