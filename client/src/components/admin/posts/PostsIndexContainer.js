@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Grid, Modal, Segment } from "semantic-ui-react";
+import { Grid, Icon, Modal, Segment } from "semantic-ui-react";
 // router //
 import { useRouteMatch, useHistory, Route, Switch } from "react-router-dom";
 // redux actions //
@@ -249,9 +249,11 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
               (
                 objectValuesEmpty(newsPostsState.newsPostData)
                 ?
-                <Segment style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                  Open on the side to view your posts
-                </Segment>
+                <div className={ styles.indexEditorClosedPage }>
+                  <div>News Post Editor</div>
+                  <div><Icon name="file word outline" /></div>
+                  <div>Open on the side to view your posts or click new to create a new one</div>
+                </div>
                 :
                 <NewsPostPreviewCard 
                   newsPostData={ newsPostsState.newsPostData } 

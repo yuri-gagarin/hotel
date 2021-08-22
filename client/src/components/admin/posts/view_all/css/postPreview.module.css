@@ -44,6 +44,22 @@
   padding: 0.5em 1em;
 }
 
+.postPreviewImages {
+  display: flex;
+  flex-wrap: wrap;
+  width: calc(100% - 10px);
+  border: 2px solid rgb(69, 121, 189);
+  margin: 5px auto;
+}
+.postPreviewImages > div:nth-child(1) {
+  padding: 5px 15px 5px 5px;
+  background-color: rgb(69, 121, 189);
+  color: white;
+  font-weight: 500;
+  border-radius: 0px 0px 15px 0px;
+  margin-bottom: 5px;
+}
+
 .newsPostTimeStamps {
   display: flex;
   border: 3px solid var(--postsSectionBgColor);
