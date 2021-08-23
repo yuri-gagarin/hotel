@@ -10,7 +10,8 @@ type DefaultData = {
 
 export const setDefaultImages = (newsPostData: NewsPostData): { imageURLs: Array<string>, numOfImages: number } => {
   let imageURLs: Array<string> = []; 
-  if (newsPostData.images && Array.isArray() && newsPostData.images.length <= 3) {
+  if (newsPostData.images && Array.isArray(newsPostData.images) && newsPostData.images.length <= 3) {
+    console.log("here")
     for (let i = 0; i < 3; i++) {
       if (newsPostData.images[i] && typeof newsPostData.images[i].path === "string") {
         imageURLs.push(setImagePath(newsPostData.images[i].path));

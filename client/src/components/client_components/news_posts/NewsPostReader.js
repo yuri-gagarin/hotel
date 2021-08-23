@@ -26,6 +26,7 @@ export const NewsPostReader = ({ newsPostData, handleGoBack, handleGoToPreviousN
 
   React.useEffect(() => {
     if (!objectValuesEmpty(newsPostData)) {
+      console.log(newsPostData)
       const { imageURLs } = setDefaultImages(newsPostData);
       setImagesState({ imageURLs, imageIndex: 0 });
     }

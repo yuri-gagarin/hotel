@@ -86,7 +86,6 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
   const headerObserverCb = (entries: Array<IntersectionObserverEntry>) => {
     const [ entry ] = entries;
     if (entry.boundingClientRect.y < 30) {
-      console.log("boo")
       setHeaderFixed(true);
     }
   }

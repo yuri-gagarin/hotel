@@ -25,7 +25,7 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
     dots: true,
     infinite: true,
     speed: 500,
-    autoplay: true,
+    autoplay: false,
     slidesToShow: 1,
     slidesToScroll: 1,
     initialSlide: imageIndex
@@ -42,7 +42,7 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
 
   return (
     <Modal open={ show } onClose={ closePictureModal } className={ styles.pictureModal } size="fullscreen">
-      <Slider { ...settings } className={ styles.carouselSlider } >
+      <Slider { ...settings } className={ styles.carouselSlider } onSwipe>
         {
           imgURLS.map((url, i) => {
             return (
