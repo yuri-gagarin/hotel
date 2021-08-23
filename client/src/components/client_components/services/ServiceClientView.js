@@ -37,26 +37,21 @@ const ServiceClientView = ({ service, triggerImgModal }: Props): React.Node => {
     <React.Fragment>
       <AnimatedBorder animationDelay={ 500 } />
         <div className={ styles.serviceViewContainer }>
-          <div className={ styles.serviceTitlediv }>
+          <div className={ styles.serviceTitleRow }>
+            <div className={ styles.titleLine }></div>
             <div className={ styles.serviceTitle }>  
               { serviceType ? serviceType : "Service type here..." }
             </div>
           </div>
           <div className={ styles.servicesPicRow }>
-            <div className={ styles.servicesPicDiv }>
-              <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 0)}>
-                <img className={ styles.serviceImg } src={ imgURLS[0] } />
-              </div>
+            <div className={ styles.servicesPicDiv } onClick={() => triggerImgModal(imgURLS, 0)}>
+              <img className={ styles.serviceImg } src={ imgURLS[0] } />
             </div>
-            <div className={ styles.servicesPicDiv } >
-              <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 1)}>
-                <img className={ styles.serviceImg } src={ imgURLS[1] } />
-              </div>
+            <div className={ styles.servicesPicDiv } onClick={() => triggerImgModal(imgURLS, 1)}>
+              <img className={ styles.serviceImg } src={ imgURLS[1] } />
             </div>
-            <div className={ styles.servicesPicDiv } >
-              <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 2)}>
-                <img className={ styles.serviceImg } src={ imgURLS[2] } />
-              </div>
+            <div className={ styles.servicesPicDiv } onClick={() => triggerImgModal(imgURLS, 2)}>
+              <img className={ styles.serviceImg } src={ imgURLS[2] } />
             </div>
           </div>
           <div className={ `${styles.serviceInfoRow}` }>

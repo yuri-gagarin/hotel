@@ -8,6 +8,7 @@
   box-shadow: 0px 0px 1px 1px rgba(176,176,176,1);
   padding: 0;
   background-color: white;
+  border-radius: 5px;
 }
 
 .serviceTitleRow  {
@@ -19,6 +20,7 @@
   padding-top: 1em;
   padding-bottom: 1em;
   height: 110px;
+  z-index: 1;
 }
 
 .serviceTitle {
@@ -31,9 +33,21 @@
   font-size: 3em;
   font-family: "Lobster", sans-serif;
   font-weight: 500;
+  background-color: white;
   /*
   transform: rotate(15deg);
   */
+  z-index: 3;
+}
+.titleLine {
+  position: absolute;
+  top: 50%;
+  left: 2%;
+  transform: translateY(-50%);
+  width: 96%;
+  height: 5px;
+  background-color: rgb(44, 53, 49);
+  z-index: 2;
 }
 
 .servicesPicRow {
@@ -70,8 +84,9 @@
 }
 
 .serviceInfoRow {
-  padding-bottom: 1.25em;
   flex-direction: row;
+  padding-left: 5px;
+  padding-bottom: 1.25em;
 }
 .serviceInfoDiv, .serviceDescDiv {
   display: flex;
@@ -119,9 +134,44 @@
  font-size: 1.1em;
 }
 
+
+@media only screen and (max-width: 550px) {
+  .serviceViewContainer {
+    width: 100%;
+  }
+  .servicesPicRow {
+    width: 100%;
+    overflow-x: scroll;
+    padding: 0px 5px;
+    justify-content: flex-start;
+    scrollbar-width: none;
+  }
+  .servicesPicRow::-webkit-scrollbar {
+    display: none;
+  }
+  .servicesPicDiv {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 200px;
+    width: 250px;
+    margin-right: 5px;
+    justify-content: center;
+  }
+  .serviceImg {
+    border-radius: 5px;
+  }
+
+  .serviceInfoRow {
+    flex-direction: column;
+  }
+}
+
+/*
 @media only screen and (max-width: 768px) {
   .serviceImg {
     width: 100%;
     height: auto;
   }
 }
+*/
