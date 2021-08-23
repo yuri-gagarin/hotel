@@ -1,7 +1,5 @@
 // @flow
 import * as React from "react";
-// bootsrap react //
-import { Col, Image, Row, Container, Button } from "react-bootstrap";
 // additional components //
 import { AnimatedBorder } from "../shared/AnimatedBorder";
 // FLOW types //
@@ -38,45 +36,47 @@ const ServiceClientView = ({ service, triggerImgModal }: Props): React.Node => {
   return (
     <React.Fragment>
       <AnimatedBorder animationDelay={ 500 } />
-      <Container className={ styles.serviceViewContainer }>
-        <Row className={ styles.serviceTitleRow }>
-          <div className={ styles.serviceTitle }>  
-            { serviceType ? serviceType : "Service type here..." }
+        <div className={ styles.serviceViewContainer }>
+          <div className={ styles.serviceTitlediv }>
+            <div className={ styles.serviceTitle }>  
+              { serviceType ? serviceType : "Service type here..." }
+            </div>
           </div>
-        </Row>
-        <Row className={ styles.servicesPicRow }>
-          <Col className={ styles.servicesPicCol } xs={12} md={4}>
-            <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 0)}>
-              <Image className={ styles.serviceImg } src={ imgURLS[0] }></Image>
+          <div className={ styles.servicesPicRow }>
+            <div className={ styles.servicesPicDiv }>
+              <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 0)}>
+                <img className={ styles.serviceImg } src={ imgURLS[0] } />
+              </div>
             </div>
-          </Col>
-          <Col className={ styles.servicesPicCol }  xs={12} md={4}>
-            <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 1)}>
-              <Image className={ styles.serviceImg } src={ imgURLS[1] }></Image>
+            <div className={ styles.servicesPicDiv } >
+              <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 1)}>
+                <img className={ styles.serviceImg } src={ imgURLS[1] } />
+              </div>
             </div>
-          </Col>
-          <Col className={ styles.servicesPicCol }  xs={12} md={4}>
-            <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 2)}>
-              <Image className={ styles.serviceImg } src={ imgURLS[2] }></Image>
+            <div className={ styles.servicesPicDiv } >
+              <div className={ styles.serviceImgDiv } onClick={() => triggerImgModal(imgURLS, 2)}>
+                <img className={ styles.serviceImg } src={ imgURLS[2] } />
+              </div>
             </div>
-          </Col>
-        </Row>
-        <Row className={ `${styles.serviceInfoRow}` }>
-          <Col className={ `${styles.serviceInfoColumn}` } xs={12} sm={12} lg={12}>
-            <div className={ styles.hoursDiv }>
-              <span>Hours</span>
-              <i className="far fa-clock"></i>
-              <span>{ hours ? hours : "No hours provided..." }</span>
+          </div>
+          <div className={ `${styles.serviceInfoRow}` }>
+            <div className={ `${styles.serviceInfoDiv}` }>
+              <div className={ styles.hoursDiv }>
+                <span>Hours:</span>
+                <i className="far fa-clock"></i>
+                <span>{ hours ? hours : "No hours provided..." }</span>
+                {
+                  price ? <div className={ styles.priceDiv }>{ price }</div>  : null
+                }
+              </div>
             </div>
-            {
-              price ? <div className={ styles.priceDiv }>{ price }</div>  : null
-            }
-            <div className={ styles.descDiv }>
-              <p>{ description ? setStringTranslation(description, "en") : "No description..."}</p>
+            <div className={ styles.serviceDescDiv }>
+              <div className={ styles.descContent }>
+                <p>{ description ? setStringTranslation(description, "en") : "No description..."}</p>
+              </div>
             </div>
-          </Col>
-        </Row>
-      </Container>
+          </div>
+        </div>
       <AnimatedBorder animationDelay={ 500 } />
     </React.Fragment>
   )

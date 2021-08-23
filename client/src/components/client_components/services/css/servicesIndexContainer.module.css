@@ -37,9 +37,7 @@
   background-color: rgb(44, 53, 49, .4);
   z-index: 200;
 }
-.headerText {
-  border: 5px solid red;
-}
+
 .headerFixed {
   z-index: 900;
   position: fixed;
@@ -66,7 +64,6 @@
   width: 50%;
   opacity: 0.75;
   fill: rgb(44, 53, 49);
-  background-color: rgb(44, 53, 49);
 }
 .animateSVGElem {
   opacity: 1;
