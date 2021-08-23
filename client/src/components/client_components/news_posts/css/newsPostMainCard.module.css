@@ -57,6 +57,9 @@
  color: gray;
 }
 .imageDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 50%;
   overflow: hidden;
@@ -65,7 +68,7 @@
   margin-bottom: 3px;
 }
 .imageDiv > img {
-  width: 100%;
+  height: 100%;
 }
 .newsPostsCardLower {
   display: flex;
@@ -109,8 +112,13 @@
   font-weight: bolder;
 }
 .mainCardTimeStampsDiv {
+  display: flex;
+  flex-direction: row;
   flex: 1;
   padding: 0 10px;
+}
+.mainCardCreatedAt, .mainCardEditedAt {
+  flex: 1;
 }
 
 .mainCardCreatedAt > span:first-child, .mainCardEditedAt > span:first-child {
@@ -134,8 +142,8 @@
   z-index: -1;
  }
 .newsPostsCardLower:hover {
-  height: 210px;
-  transition: all 500ms linear;
+  height: 220px;
+  transition: all 200ms linear;
 }
 
 .mainCardPrevious, .mainCardNext {

@@ -64,23 +64,16 @@ export const NewsPostReader = ({ newsPostData, handleGoBack, handleGoToPreviousN
             </div>
           </div>
           <div className={ styles.readerPicsRow }>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
-            </div>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
-            </div>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
-            </div>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
-            </div>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
-            </div>
+            {
+              imagesState.imageURLs.map((imgUrl) => {
+                return (
+                  <div key={imgUrl} className={ styles.readerImgDiv }>
+                    <img src={imgUrl}></img>
+                  </div>
+                )
+              })
+            }
           </div>
-        
         </div>
       </div>
     </div>

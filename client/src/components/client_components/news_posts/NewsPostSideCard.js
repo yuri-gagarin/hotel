@@ -6,6 +6,7 @@ import type { NewsPostData } from "../../../redux/reducers/news_posts/flowTypes"
 // helpers //
 import { formatDate } from "../../helpers/dateHelpers";
 import { trimStringToSpecificLength } from "../../helpers/displayHelpers";
+import { setDefaultNewsPostImg } from "./_helpers/setDefaults";
 
 type Props = {
   active: boolean;
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export const NewsPostSideCard = ({ active, newsPostData, handleSelectNewsPost }: Props): React.Node => {
-  const { _id: postId, createdAt, createdBy, title } = newsPostData;
+  const { _id: postId, createdAt, createdBy, title, images = [] } = newsPostData;
 
   return (
     <div className={ `${styles.sideCardWrapper} ${active ? styles.activeStyle : ""}` } onClick={ () => handleSelectNewsPost(postId) }>
@@ -23,7 +24,12 @@ export const NewsPostSideCard = ({ active, newsPostData, handleSelectNewsPost }:
         <span>{ formatDate(createdAt) }</span>
       </div>
       <div className={ styles.sideCardUpper }>
-        <img className={ styles.sideCardImg } src="/assets/images/roomStock3.jpeg"></img>
+        <div className={ styles.logoDiv }>
+          <i className="fas fa-th-large"></i>
+        </div>
+        <div className={ styles.imgDiv }>
+          <img className={ styles.sideCardImg } src={ setDefaultNewsPostImg(images[0])}></img>
+        </div>
       </div>
       <div className={ styles.sideCardLower }>
         <div className={ styles.sideCardAuthor }>

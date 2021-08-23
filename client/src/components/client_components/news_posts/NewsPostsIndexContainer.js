@@ -32,6 +32,8 @@ type PictureModalState = {
 
 }
 const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts, _handleOpenNewsPost }: Props): React.Node => {
+  const [ headerFixed, setHeaderFixed ] = React.useState<boolean>(false); 
+  const newsPostHeaderRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleSelectNewsPost = (postId: string): void => {
     _handleOpenNewsPost(postId, newsPostsState);
@@ -77,6 +79,14 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
 
   };
 
+  const headerObserverCb = (entries: Array<IntersectionObserverEntry>) => {
+    const [ entry ] = entries;
+    if (entry.boundingClientRect.y < 30) {
+      console.log("boo")
+      setHeaderFixed(true);
+    }
+  }
+
   // lifecycle methods //
   React.useEffect(() => {
     _handleFetchNewsPosts({ date: "desc" })
@@ -89,6 +99,16 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
       _handleOpenNewsPost(newsPostId, newsPostsState);
     }
   }, [ newsPostsState ]);
+
+  React.useEffect(() => {
+    const headerObserver = new IntersectionObserver(headerObserverCb, { root: null, rootMargin: "0px", threshold: 1.0 });
+    if (newsPostHeaderRef.current) {
+      headerObserver.observe(newsPostHeaderRef.current);
+    }
+    return () => {
+      if (newsPostHeaderRef.current) headerObserver.unobserve(newsPostHeaderRef.current);
+    }
+  }, [ newsPostHeaderRef.current ]);
   
   return (
     <React.Fragment>
@@ -102,9 +122,11 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
         />
       </Route>
       <Route exact path={ "/news" }>
-        <div className={ styles.newsPostContainerWrapper }>
-          <div className={ styles.newsPostsHeader }></div>
-          <div className={ styles.newsPostMainContent } >
+        <div className={ `${styles.newsPostContainerWrapper}` }>
+          <div className={ `${styles.newsPostsHeader} ${ headerFixed ? styles.headerFixed : ""}` } ref={ newsPostHeaderRef }>
+            <div className={ styles.newsPostsTitle }>Our News</div>
+          </div>
+          <div className={ `${styles.newsPostMainContent} ${ headerFixed ? styles.slideContent : "" }` } >
             <div className={ styles.newsPostsLeftContainer }>
             {
               objectValuesEmpty(newsPostsState.newsPostData)

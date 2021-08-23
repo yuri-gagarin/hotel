@@ -1,7 +1,7 @@
 // @flow
 import { setImagePath } from "../../../helpers/displayHelpers";
 // types //
-import type { NewsPostData } from "../../../../redux/reducers/news_posts/flowTypes";
+import type { NewsPostData, NewsPostImgData } from "../../../../redux/reducers/news_posts/flowTypes";
 type DefaultData = {
   defaultTitle: string;
   defaultAuthor: string;
@@ -30,7 +30,14 @@ export const setDefaultImages = (newsPostData: NewsPostData): { imageURLs: Array
   return { imageURLs, numOfImages: imageURLs.length };
 };
 
-export const setDefaultBalues = (newsPostData: NewsPostData): DefaultData => {
+export const setDefaultNewsPostImg = (data?: NewsPostImgData): string => {
+  if (data && typeof data === "object" && data.path) {
+    return setImagePath(data.path);
+  }
+  return "/assets/images/news/news_default1.jpeg";
+}
+
+export const setDefaultValues = (newsPostData: NewsPostData): DefaultData => {
   let defaultTitle: string; let defaultAuthor: string; let defaultContent: string;
   // default title //
   defaultTitle = newsPostData.title ? newsPostData.title : "Default news post title goes here";
