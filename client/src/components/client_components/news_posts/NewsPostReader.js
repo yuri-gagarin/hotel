@@ -15,9 +15,10 @@ type Props = {
   handleGoBack: () => void;
   handleGoToPreviousNewsPost: (currentPostId: string) => void;
   handleGoToNextNewsPost: (currentPostId: string) => void;
+  handleOpenPicturesModal: (imgUrl: string, imgURLSArray: Array<string>) => void;
 };
 
-export const NewsPostReader = ({ newsPostData, handleGoBack, handleGoToPreviousNewsPost, handleGoToNextNewsPost }: Props): React.Node => {
+export const NewsPostReader = ({ newsPostData, handleGoBack, handleGoToPreviousNewsPost, handleGoToNextNewsPost, handleOpenPicturesModal }: Props): React.Node => {
   const { _id: postId, title, createdBy, content, editedAt } = newsPostData;
   // images urls //
   // should set model image urls or defaults if no images //
@@ -67,7 +68,7 @@ export const NewsPostReader = ({ newsPostData, handleGoBack, handleGoToPreviousN
             {
               imagesState.imageURLs.map((imgUrl) => {
                 return (
-                  <div key={imgUrl} className={ styles.readerImgDiv }>
+                  <div key={imgUrl} className={ styles.readerImgDiv } onClick={ () => handleOpenPicturesModal(imgUrl, imagesState.imageURLs) }>
                     <img src={imgUrl}></img>
                   </div>
                 )

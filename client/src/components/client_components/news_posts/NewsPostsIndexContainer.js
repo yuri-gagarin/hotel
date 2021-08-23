@@ -27,12 +27,16 @@ type Props = {
   _handleOpenNewsPost: (newsPostId: string, newsPostsState: NewsPostsState) => void;
   _handleFetchNewsPosts: (options?: FetchNewsPostParams) => Promise<boolean>;
 };
-
 type PictureModalState = {
+  show: boolean;
+  imgURLS: Array<string>;
+  imageIndex: number;
+};
 
-}
 const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts, _handleOpenNewsPost }: Props): React.Node => {
   const [ headerFixed, setHeaderFixed ] = React.useState<boolean>(false); 
+  const [ pictureModalState, setPictureModalState ] = React.useState<PictureModalState>({ show: false, imgURLS: [], imageIndex: 0 });
+  // header ref to fix header on scroll //
   const newsPostHeaderRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleSelectNewsPost = (postId: string): void => {
@@ -71,12 +75,12 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
     history.goBack();
   };
 
-  const handleOpenPictureModal = () => {
-    // needs to be updated when news posts will support images //
-    const imageUrls = [ ]
-  }
+  const handleOpenPicturesModal = (imgUrl: string, imgURLArray: Array<string>): void => {
+    const imageIndex = imgURLArray.indexOf(imgUrl) > - 1 ? imgURLArray.indexOf(imgUrl) : 0;
+    setPictureModalState({ show: true, imgURLS: imgURLArray, imageIndex })
+  };
   const handleClosePictureModal = () => {
-
+    setPictureModalState({ show: false, imgURLS: [], imageIndex: 0 });
   };
 
   const headerObserverCb = (entries: Array<IntersectionObserverEntry>) => {
@@ -112,13 +116,19 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
   
   return (
     <React.Fragment>
-      <GenericImgModalCarousel show={ false }  closePictureModal={ handleClosePictureModal } imgURLS={[]} imageIndex={0} />
+      <GenericImgModalCarousel 
+        show={ pictureModalState.show }  
+        closePictureModal={ handleClosePictureModal } 
+        imgURLS={ pictureModalState.imgURLS } 
+        imageIndex={ pictureModalState.imageIndex } 
+      />
       <Route path={`/news/:newsPostTitle`}>
         <NewsPostReader 
           newsPostData={ newsPostsState.newsPostData} 
           handleGoBack={ handleGoTopPosts }
           handleGoToPreviousNewsPost={ handleGoToPreviousNewsPost }
           handleGoToNextNewsPost={ handleGoToNextNewsPost }
+          handleOpenPicturesModal= { handleOpenPicturesModal }
         />
       </Route>
       <Route exact path={ "/news" }>

@@ -27,21 +27,22 @@ const GenericImgModalCarousel = ({ show, imgURLS, imageIndex, closePictureModal 
     speed: 500,
     autoplay: true,
     slidesToShow: 1,
-    slidesToScroll: 1
+    slidesToScroll: 1,
+    initialSlide: imageIndex
   };
 
   React.useEffect(() => {
     if (show && typeof imageIndex === "number") setIndex(imageIndex);
-    console.log(show)
   }, [ show ]);
-  
+  /*
   const handleSelect = (selectedIndex: number, e: any) => {
     setIndex(selectedIndex);
   };
+  */
 
   return (
     <Modal open={ show } onClose={ closePictureModal } className={ styles.pictureModal } size="fullscreen">
-      <Slider { ...settings } className={ styles.carouselSlider }>
+      <Slider { ...settings } className={ styles.carouselSlider } >
         {
           imgURLS.map((url, i) => {
             return (
