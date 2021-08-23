@@ -90,12 +90,15 @@
 
 .readerContentInner {
   display: flex;
-  flex: 20;
+  flex-direction: column;
+  justify-content: space-between;
+  /*flex: 20;*/
   padding: 10px;
   margin-top: 10px;
   border-left: 3px solid #ffdb4d;
   border-top: 3px solid #ffdb4d;
   width: calc(100% - 20);
+  min-height: 75vh;
   margin-left: 10px;
   border-radius: 5px 0 0 0;
 }
@@ -105,48 +108,43 @@
   height: 300px;
 }
 
-.readerPicsColumn {
-  width: 300px;
-  display: block;
-  max-height: 75vh;
-  overflow-y: scroll;
+.readerTextRow {
+  width: 100%;
+  padding: 10px;
 }
+.readerPicsRow {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow-x: auto;
+  padding: 5px;
+  scrollbar-width: none;
+}
+.readerPicsRow::-webkit-scrollbar {
+  display: none;
+}
+
 .readerImgDiv {
-  width: 90%;
+  display: flex;
+  flex-shrink: 0;
+  width: 300px;
   overflow: hidden;
   border-radius: 5px;
-  margin-bottom: 10px;
   cursor: pointer;
+  margin-right: 5px;
+
 }
 .readerImgDiv > img {
   width: 100%;
 }
 
-.readerTextColumn {
-  width: calc(100% - 300px);
-  padding: 10px;
-}
+
 .readerInnerText {
   color: rgb(44, 53, 49, 1);
 }
 
 
 @media screen and (max-width: 650px) {
-  .readerContentInner {
-    flex-wrap: wrap-reverse;
-  }
-  .readerPicsColumn {
-    display: block;
-    width: 100%;
-    height: 300px;
-    overflow-y: scroll;
-    border-top: 2px solid rgb(44, 53, 49, 1);
-    padding-top: 5px;
-  }
-  .readerImgDiv {
-    margin: 0 auto;
-    margin-bottom: 5px;
-  }
   .readerTextColumn {
     width: 100%;
   }

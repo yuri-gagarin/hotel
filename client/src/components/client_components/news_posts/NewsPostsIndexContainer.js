@@ -103,7 +103,6 @@ const NewsPostIndexContainer = ({ history, newsPostsState, _handleFetchNewsPosts
       </Route>
       <Route exact path={ "/news" }>
         <div className={ styles.newsPostContainerWrapper }>
-          { console.log(history.location) }
           <div className={ styles.newsPostsHeader }></div>
           <div className={ styles.newsPostMainContent } >
             <div className={ styles.newsPostsLeftContainer }>

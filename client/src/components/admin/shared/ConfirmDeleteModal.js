@@ -8,7 +8,7 @@ import { capitalizeString } from "../../helpers/displayHelpers";
 
 type Props = {
   open: boolean,
-  modelName: "room" | "service" | "dining" | "extra" | "image" | "contact" | "conversation" | "message" | "news post" | "",
+  modelName: "room" | "service" | "dining" | "extra" | "image" | "contact" | "conversation" | "message" | "newsPost" | "",
   confirmAction: () => Promise<void | boolean>,
   cancelAction: () => void,
   customHeader?: string,

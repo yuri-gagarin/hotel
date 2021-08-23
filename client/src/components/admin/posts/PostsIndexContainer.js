@@ -33,7 +33,7 @@ type LocalState = {
 }
 type ConfirmDeleteModalState = {
   modalOpen: boolean;
-  modelName: "news post" | "image" | "";
+  modelName: "newsPost" | "image" | "";
   modelId: string;
 }
 
@@ -152,27 +152,44 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
   // delete functionality withh confirm modal popup //
   const triggerDeleteNewsPost = (): void => {
     const { _id } = newsPostsState.newsPostData;
-    setConfirmDeleteModalState({ modalOpen: true, modelName: "news post", modelId: _id });
+    setConfirmDeleteModalState({ modalOpen: true, modelName: "newsPost", modelId: _id });
   };
   const cancelDeleteNewsPost = (): void => {
     setConfirmDeleteModalState({ modalOpen: false, modelName: "", modelId: "" });
   };
 
-  const confirmDeleteNewsPost = (): Promise<boolean> => {
-    const { _id } = newsPostsState.newsPostData;
-    return _handleDeleteNewsPost(_id, newsPostsState)
-      .then((success) => {
-        if (success) {
-          setConfirmDeleteModalState({ modalOpen: false, modelId: "", modelName: "" });
-          return true;
-        } else {
+  const confirmDeleteModel = (): Promise<boolean> => {
+    const { modelName, modelId } = confirmDeleteModalState;
+    if (modelName === "newsPost" && modelId) {
+      return _handleDeleteNewsPost(modelId, newsPostsState)
+        .then((success) => {
+          if (success) {
+            setConfirmDeleteModalState({ modalOpen: false, modelId: "", modelName: "" });
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
           return false;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        return false;
-      })
+        });
+    } else if (modelName === "image" && modelId) {
+      return _handleDeleteNewsPostImage(modelId, newsPostsState)
+        .then((success) => {
+          if (success) {
+            setConfirmDeleteModalState({ modalOpen: false, modelId: "", modelName: "" });
+            return true;
+          }
+          return false;
+        })
+        .catch((error) => {
+          console.log(error);
+          return false;
+        });
+    } else {
+      return Promise.resolve(false);
+    }
   };
 
   // image delete functionality //
@@ -202,7 +219,7 @@ const PostsIndexContainer = ({ _handleFetchNewsPosts, _handleCreateNewsPost, _ha
 
   return (
     <React.Fragment>
-      <ConfirmDeleteModal open={ confirmDeleteModalState.modalOpen} modelName="news post" confirmAction={ confirmDeleteNewsPost } cancelAction={ cancelDeleteNewsPost }/>
+      <ConfirmDeleteModal open={ confirmDeleteModalState.modalOpen} modelName="newsPost" confirmAction={ confirmDeleteModel } cancelAction={ cancelDeleteNewsPost }/>
       <Grid.Row style={{ height: "60px", display: "flex", alignItems: "center", padding: 0 }}>
         <PostsControls 
           handleOpenNewPostForm={ handleOpenNewsPostForm } 

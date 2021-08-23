@@ -41,7 +41,7 @@
 .newsPostsLogoDiv, .newsPostsImagesDiv {
   display: flex;
   flex-wrap: wrap;
-  height: calc(100% - 250px);
+  height: calc(100% - 200px);
 }
 
 .newsPostsLogoDiv {
@@ -61,6 +61,8 @@
   height: 50%;
   overflow: hidden;
   border: 1px solid rgb(44, 53, 49, 1);
+  border-radius: 5px;
+  margin-bottom: 3px;
 }
 .imageDiv > img {
   width: 100%;
@@ -72,7 +74,7 @@
   left: 0;
   bottom: 0;
   right: 0;
-  height: 250px;
+  height: 200px;
   z-index: 1;
   background-color: #ffdb4d;
 }
@@ -132,7 +134,7 @@
   z-index: -1;
  }
 .newsPostsCardLower:hover {
-  height: 270px;
+  height: 210px;
   transition: all 500ms linear;
 }
 
@@ -144,8 +146,7 @@
   height: 30px;
   width: 30px;
   border-radius: 50%;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 175px;
   font-size: 2em;
   z-index: 20;
   cursor: pointer;

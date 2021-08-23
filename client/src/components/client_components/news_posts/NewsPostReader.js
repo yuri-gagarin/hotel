@@ -6,6 +6,9 @@ import type { NewsPostData } from "../../../redux/reducers/news_posts/flowTypes"
 import { formatDate } from "../../helpers/dateHelpers";
 // styles //
 import styles from "./css/newsPostReader.module.css";
+// helpers //
+import { setDefaultImages } from "./_helpers/setDefaults";
+import { objectValuesEmpty } from "../../helpers/displayHelpers";
 
 type Props = {
   newsPostData: NewsPostData;
@@ -16,9 +19,16 @@ type Props = {
 
 export const NewsPostReader = ({ newsPostData, handleGoBack, handleGoToPreviousNewsPost, handleGoToNextNewsPost }: Props): React.Node => {
   const { _id: postId, title, createdBy, content, editedAt } = newsPostData;
+  // images urls //
+  // should set model image urls or defaults if no images //
+  const [ imagesState, setImagesState ] = React.useState<{ imageURLs: Array<string>, imageIndex: number }>({ imageURLs: [], imageIndex: 0 });
+
   React.useEffect(() => {
-    console.log("loaded reader here")
-  }, []);
+    if (!objectValuesEmpty(newsPostData)) {
+      const { imageURLs } = setDefaultImages(newsPostData);
+      setImagesState({ imageURLs, imageIndex: 0 });
+    }
+  }, [ newsPostData ]);
 
   return (
     <div className={ styles.newsPostReaderWrapper }>
@@ -49,25 +59,25 @@ export const NewsPostReader = ({ newsPostData, handleGoBack, handleGoToPreviousN
           </div>
         </div>
         <div className={ styles.readerContentInner }>
-          <div className={ styles.readerPicsColumn }>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
-            </div>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
-            </div>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
-            </div>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
-            </div>
-            <div className={ styles.readerImgDiv }>
-              <img src="/assets/images/roomStock3.jpeg"></img>
+          <div className={ styles.readerTextRow }>
+            <div className={ styles.readerInnerText} dangerouslySetInnerHTML={{ __html: content }}>
             </div>
           </div>
-          <div className={ styles.readerTextColumn }>
-            <div className={ styles.readerInnerText} dangerouslySetInnerHTML={{ __html: content }}>
+          <div className={ styles.readerPicsRow }>
+            <div className={ styles.readerImgDiv }>
+              <img src="/assets/images/roomStock3.jpeg"></img>
+            </div>
+            <div className={ styles.readerImgDiv }>
+              <img src="/assets/images/roomStock3.jpeg"></img>
+            </div>
+            <div className={ styles.readerImgDiv }>
+              <img src="/assets/images/roomStock3.jpeg"></img>
+            </div>
+            <div className={ styles.readerImgDiv }>
+              <img src="/assets/images/roomStock3.jpeg"></img>
+            </div>
+            <div className={ styles.readerImgDiv }>
+              <img src="/assets/images/roomStock3.jpeg"></img>
             </div>
           </div>
         

@@ -6,8 +6,9 @@ import type { NewsPostData } from "../../../redux/reducers/news_posts/flowTypes"
 // styles //
 import styles from "./css/newsPostMainCard.module.css";
 // helpers //
-import { trimStringToSpecificLength, removeHTMLTagsFromString } from "../../helpers/displayHelpers";
+import { trimStringToSpecificLength, removeHTMLTagsFromString, objectValuesEmpty } from "../../helpers/displayHelpers";
 import { formatDate } from "../../helpers/dateHelpers";
+import { setDefaultImages } from "./_helpers/setDefaults";
 
 
 type Props = {
@@ -21,6 +22,8 @@ export const NewsPostMainCard = ({ newsPostData, handleGoToNewsPostReader, handl
   const { _id: postId, createdBy, title, content, editedAt, createdAt } = newsPostData;
   // local state for transition //
   const [ transitionState, setTransitionState ] = React.useState<{ transition: boolean }>({ transition: false });
+  const [ imageState, setImageState ] = React.useState<{ numOfImages: number; imageURLs: Array<string> }>({ numOfImages: 0, imageURLs: [] });
+
 
   const goToPreviousPostWithEffect = (): void => {
     setTransitionState({  transition: true });
@@ -31,6 +34,12 @@ export const NewsPostMainCard = ({ newsPostData, handleGoToNewsPostReader, handl
     setTransitionState({  transition: true });
     setTimeout(() => handleGoToNextNewsPost(postId), 500);
   };
+
+
+  React.useEffect(() => {
+    const { imageURLs, numOfImages } = setDefaultImages(newsPostData);
+    setImageState({ numOfImages: newsPostData.images.length, imageURLs });
+  }, [ newsPostData ]);
 
   React.useEffect(() => {
     if (transitionState.transition) {
@@ -51,10 +60,10 @@ export const NewsPostMainCard = ({ newsPostData, handleGoToNewsPostReader, handl
         </div>
         <div className={ styles.newsPostsImagesDiv }>
           <div className={ styles.imageDiv} >
-            <img src="/assets/images/roomStock3.jpeg"></img>
+            <img src={imageState.imageURLs[0]}></img>
           </div>
           <div className={ styles.imageDiv} >
-            <img src="/assets/images/roomStock3.jpeg"></img>
+            <img src={imageState.imageURLs[1]}></img>
           </div>
         </div>
       </div>
