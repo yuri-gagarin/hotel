@@ -25,7 +25,7 @@ const serviceAPIRequest = (): ServiceAPIRequest => {
     }
   };
 };
-const serviceError = ({ status, responseMsg, error } : { status: number, responseMsg: string, error: Error }): ServiceError => {
+const serviceError = ({ status, responseMsg, error }: { status: number, responseMsg: string, error: Error }): ServiceError => {
   console.error(error);
   return {
     type: "ServiceError",
@@ -38,19 +38,19 @@ const serviceError = ({ status, responseMsg, error } : { status: number, respons
 };
 
 /* CRUD API actions */
-const serviceCreated = (data : { status: number, responseMsg: string, newServiceData: ServiceData }): ServiceCreated => {
+const serviceCreated = (data: { status: number, responseMsg: string, newServiceData: ServiceData }): ServiceCreated => {
   return {
     type: "ServiceCreated",
     payload: { ...data, loading: false }
   };
 };
-const serviceUpdated = (data : { status: number, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData> }): ServiceUpdated => {
+const serviceUpdated = (data: { status: number, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData> }): ServiceUpdated => {
   return {
     type: "ServiceUpdated",
     payload: { ...data, loading: false }
   };
 };
-const serviceDeleted = (data : { status: number, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData>, numberOfServices: number }): ServiceDeleted => {
+const serviceDeleted = (data: { status: number, responseMsg: string, serviceData: ServiceData, createdServices: Array<ServiceData>, numberOfServices: number }): ServiceDeleted => {
   return {
     type: "ServiceDeleted",
     payload: { ...data, loading: false }
@@ -59,14 +59,14 @@ const serviceDeleted = (data : { status: number, responseMsg: string, serviceDat
 /* */
 
 /* image upload api actions */
-const serviceImgUploadSuccess = (data : { status: number, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgUplSuccess => {
+const serviceImgUploadSuccess = (data: { status: number, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgUplSuccess => {
   return {
     type: "ServiceImgUplSuccess",
     payload: { ...data, loading: false }
   };
 };
 
-const serviceImgDeleteSuccess = (data : { status: number, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgDelSuccess => {
+const serviceImgDeleteSuccess = (data: { status: number, responseMsg: string, serviceImages: Array<ServiceImgData>, updatedService: ServiceData, createdServices: Array<ServiceData> }): ServiceImgDelSuccess => {
   return {
     type: "ServiceImgDelSuccess",
     payload: { ...data, loading: false }
@@ -95,13 +95,13 @@ const toggleServiceOnlineOffline = (data: { status: number, responseMsg: string,
 };
 
 /* non API actions */
-const setServices = (data : { status: number, responseMsg: string, createdServices: Array<ServiceData>, numberOfServices: number }): SetServices => {
+const setServices = (data: { status: number, responseMsg: string, createdServices: Array<ServiceData>, numberOfServices: number }): SetServices => {
   return {
     type: "SetServices",
     payload: { ...data, loading: false }
   };
 };
-const openService = (data : { serviceImages: Array<ServiceImgData>, serviceData: ServiceData }): OpenService => {
+const openService = (data: { serviceImages: Array<ServiceImgData>, serviceData: ServiceData }): OpenService => {
   return {
     type: "OpenService",
     payload: { ...data }
@@ -151,7 +151,7 @@ export const handleCreateNewService= (dispatch: Dispatch<ServiceAction>, clientS
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newService } : { responseMsg: string, newService: ServiceData } = data;
+      const { responseMsg, newService }: { responseMsg: string, newService: ServiceData } = data;
       const stateData = {
         status: status,
         loading: false,
@@ -183,7 +183,7 @@ export const handleUpdateService = (dispatch: Dispatch<ServiceAction>, serviceDa
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedService } : { responseMsg: string, updatedService: ServiceData } = data;
+      const { responseMsg, updatedService }: { responseMsg: string, updatedService: ServiceData } = data;
       const updatedServices = createdServices.map((service) => {
         if (service._id == updatedService._id) {
           return { ...updatedService, images: [ ...updatedService.images ] };
@@ -218,7 +218,7 @@ export const handleDeleteService = (dispatch: Dispatch<ServiceAction>, serviceId
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedService } : { responseMsg: string, deletedService: ServiceData } = data;
+      const { responseMsg, deletedService }: { responseMsg: string, deletedService: ServiceData } = data;
 
       const updatedServices = currentServices.filter((service) => {
         return deletedService._id !== service._id;
@@ -252,7 +252,7 @@ export const handleFetchServices = (dispatch: Dispatch<ServiceAction>): Promise<
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, services } : { responseMsg: string, services: Array<ServiceData>} = data;
+      const { responseMsg, services }: { responseMsg: string, services: Array<ServiceData>} = data;
       const stateData = {
         status: status,
         loading: false,
@@ -271,7 +271,7 @@ export const handleFetchServices = (dispatch: Dispatch<ServiceAction>): Promise<
 
 /* Image upload, delete API actions */
 export const handleUploadServiceImage = (dispatch: Dispatch<ServiceAction>, file: FormData, currentServiceState: ServiceState): Promise<boolean> => {
-  const { serviceData, serviceImages, createdServices } : { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
+  const { serviceData, serviceImages, createdServices }: { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
   const { _id : serviceId } = serviceData;
   const requestOptions = {
     method: "post",
@@ -285,7 +285,7 @@ export const handleUploadServiceImage = (dispatch: Dispatch<ServiceAction>, file
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, newImage, updatedService } : { responseMsg: string, newImage: ServiceImgData, updatedService: ServiceData } = data;
+      const { responseMsg, newImage, updatedService }: { responseMsg: string, newImage: ServiceImgData, updatedService: ServiceData } = data;
       let updatedServiceData;
       let updatedServices;
       let updatedServiceImages: Array<ServiceImgData> = [ ...serviceImages, newImage ];
@@ -315,14 +315,14 @@ export const handleUploadServiceImage = (dispatch: Dispatch<ServiceAction>, file
       return true;
     })
     .catch((err) => {
-      const { status, responseMsg, error, errorMessages } : { status: number, responseMsg: string, error: Error, errorMessages: Array<any> } = setAxiosError(err);
+      const { status, responseMsg, error, errorMessages }: { status: number, responseMsg: string, error: Error, errorMessages: Array<any> } = setAxiosError(err);
       dispatch(serviceError({ status, responseMsg, error }));
       return false;
     });
 };
 
 export const handleDeleteServiceImage = (dispatch: Dispatch<ServiceAction>, imageId: string, currentServiceState: ServiceState): Promise<boolean> => {
-  const { serviceData, serviceImages, createdServices } : { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
+  const { serviceData, serviceImages, createdServices }: { serviceData: ServiceData, serviceImages: Array<ServiceImgData>, createdServices: Array<ServiceData> } = currentServiceState;
 
   const requestOptions = {
     method: "delete",
@@ -333,7 +333,7 @@ export const handleDeleteServiceImage = (dispatch: Dispatch<ServiceAction>, imag
   return axios(requestOptions)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, deletedImage, updatedService } : { responseMsg: string, deletedImage: ServiceImgData, updatedService: ServiceData } = data;
+      const { responseMsg, deletedImage, updatedService }: { responseMsg: string, deletedImage: ServiceImgData, updatedService: ServiceData } = data;
       const { _id: deletedImgId, hotelService: serviceId } = deletedImage
       // filter new state //
       const newImageState = serviceImages.filter((image) => deletedImgId !== image._id);
@@ -350,7 +350,7 @@ export const handleDeleteServiceImage = (dispatch: Dispatch<ServiceAction>, imag
       return true;
     })
     .catch((err) => {
-      const { status, responseMsg, error, errorMessages } : { status: number, responseMsg: string, error: Error, errorMessages: Array<any> } = setAxiosError(err);
+      const { status, responseMsg, error, errorMessages }: { status: number, responseMsg: string, error: Error, errorMessages: Array<any> } = setAxiosError(err);
       dispatch(serviceError({ status, responseMsg, error }));
       return false;
     });
@@ -370,7 +370,7 @@ export const handleDeleteAllServiceImages = (dispatch: Dispatch<ServiceAction>, 
   return axios(axiosRequest)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg } : { responseMsg: string } = data;
+      const { responseMsg }: { responseMsg: string } = data;
 
       const updatedState = { status, responseMsg, updatedServiceImages: [] };
       dispatch(deleteAllServiceImages(updatedState));
@@ -399,7 +399,7 @@ export const handleToggleServiceOnlineOffline = (dispatch: Dispatch<ServiceActio
   return axios(axiosRequest)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedService } : { responseMsg: string, updatedService: ServiceData } = data;
+      const { responseMsg, updatedService }: { responseMsg: string, updatedService: ServiceData } = data;
 
       const updatedServiceData = { ...updatedService };
       const updatedServicesArr = createdServices.map((service) => {
@@ -435,7 +435,7 @@ export const handleToggleAllServicesOnlineStatus = (dispatch: Dispatch<ServiceAc
   return axios(axiosRequest)
     .then((response) => {
       const { status, data } = response;
-      const { responseMsg, updatedServices } : { responseMsg: string, updatedServices: Array<ServiceData> } = data;
+      const { responseMsg, updatedServices }: { responseMsg: string, updatedServices: Array<ServiceData> } = data;
 
       const updatedState = { status: status, loading: false, responseMsg: responseMsg, updatedServices: updatedServices };
       dispatch(toggleAllServicesOnlineOfflineAction(updatedState));
