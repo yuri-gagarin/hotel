@@ -6,6 +6,7 @@ import type { RoomData } from "../rooms/flowTypes";
 import type { MessageData } from "../conversations/flowTypes";
 import type { AdminConversationData } from "../admin_conversations/flowTypes";
 import type { NewsPostData } from "../news_posts/flowTypes";
+import type { UserData } from "../users/flowTypes";
 
 export const generateEmptyService = (): ServiceData => {
   return {
@@ -137,4 +138,21 @@ export const generateEmptyNewsPostModel = (): NewsPostData => {
     editedAt: "",
   };
   return emptyNewsPostData;
-}
+};
+
+export const generateEmptyUserModel = (): UserData => {
+  const emptyUserData: UserData = {
+    _id: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    live: false,
+    confirmed: false,
+    role: "",
+    createdAt: "",
+    editedAt: ""
+  };
+  return emptyUserData;
+};
+

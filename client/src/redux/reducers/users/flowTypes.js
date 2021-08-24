@@ -2,10 +2,10 @@
 export type UserData = {
   _id: string;
   firstName: string;
-  lastBame: string;
+  lastName: string;
   email: string;
   phoneNumber: string;
-  role: "admin" | "owner" | "user";
+  role: "admin" | "owner" | "user" | "";
   confirmed: boolean;
   editedAt: string;
   createdAt: string;
@@ -13,7 +13,7 @@ export type UserData = {
 export type UserFormData  = {
   _id?: string;
   firstName?: string;
-  lastBame?: string;
+  lastName?: string;
   email?: string;
   phoneNumber?: string;
   role?: "admin" | "owner" | "user";
