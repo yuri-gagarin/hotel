@@ -1,0 +1,10 @@
+.controlsWrapper {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+
+.controlsIcon {
+  margin-left: 5px !important;
+}

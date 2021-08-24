@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import { Grid } from "semantic-ui-react";
-import { withRouter, Route } from "react-router-dom"; 
+import { withRouter, Route, Switch } from "react-router-dom"; 
 // additional components //
 import AdminNavComponent from "./nav/AdminNav";
 import ConversationIndexContainer from "./conversations/ConversationIndexContainer";
@@ -13,10 +13,11 @@ import DiningEntertainmentIndexContainer from "./dining_entertainment/DiningEnte
 import SuccessComponent from "./../display_components/SuccessComponent";
 import ErrorComponent from "./../display_components/ErrorComponent";
 import ServicesIndexContainer from "./services/ServicesIndexContainer";
+import UsersContainer from "./users/UsersContainer";
 // redux imports //
 import { connect } from "react-redux";
 import { handleLogOutUser, handleSetAdmin } from "../../redux/actions/apiActions";
-//import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
+// import { clearAppError, clearSuccessState } from "../../redux/actions/appGeneralActions";
 // socket io client //
 import { socket } from "./../../App";
 // types //
@@ -80,7 +81,7 @@ const AdminComponent = ({
     }
     // event listener for closed window //
     window.addEventListener("beforeunload", saveAdminState);
-    history.push("/admin/posts");
+    history.push("/admin/users");
     return function () {
       window.removeEventListener("beforeunload", saveAdminState);
     }
@@ -125,35 +126,39 @@ const AdminComponent = ({
       <Grid.Row style={{ display: "flex", flex: "1" }}>
         <AdminNavComponent logoutUser={logoutUser} />
       </Grid.Row>
-      <Route path="/admin/services">
-        <ServicesIndexContainer serviceState={serviceState} />
-      </Route>
-      <Route path="/admin/dashboard">
-        <AdminDashComponent 
-          history={ history }
-          adminState={ adminState }
-          adminConvState={ adminConversationState }
-          roomState={ roomState }
-          contactPostState={ contactPostState }
-          serviceState={ serviceState }
-        />
-      </Route>
-      <Route path="/admin/messages">
-        <ConversationIndexContainer history={ history } />
-      </Route>
-      <Route path="/admin/rooms">
-        <RoomsIndexContainer history={ history } roomState={ roomState } />
-      </Route>
-      <Route path="/admin/dining_entertainment">
-        <DiningEntertainmentIndexContainer adminState={adminState} diningEntertainmentState={  diningEntertainmentState } />
-      </Route>
-      <Route path="/admin/posts">
-        <PostsIndexContainer />
-      </Route>
-      <Route path="/admin/contact_requests">
-        <ContactPostContainer contactPostState={contactPostState} />
-      </Route>
-     
+      <Switch>
+        <Route path="/admin/services">
+          <ServicesIndexContainer serviceState={serviceState} />
+        </Route>
+        <Route path="/admin/dashboard">
+          <AdminDashComponent 
+            history={ history }
+            adminState={ adminState }
+            adminConvState={ adminConversationState }
+            roomState={ roomState }
+            contactPostState={ contactPostState }
+            serviceState={ serviceState }
+          />
+        </Route>
+        <Route path="/admin/messages">
+          <ConversationIndexContainer history={ history } />
+        </Route>
+        <Route path="/admin/rooms">
+          <RoomsIndexContainer history={ history } roomState={ roomState } />
+        </Route>
+        <Route path="/admin/dining_entertainment">
+          <DiningEntertainmentIndexContainer adminState={adminState} diningEntertainmentState={  diningEntertainmentState } />
+        </Route>
+        <Route path="/admin/posts">
+          <PostsIndexContainer />
+        </Route>
+        <Route path="/admin/contact_requests">
+          <ContactPostContainer contactPostState={contactPostState} />
+        </Route>
+        <Route path="/admin/users">
+          <UsersContainer />
+        </Route>
+      </Switch>
     </Grid>
   )
 };
