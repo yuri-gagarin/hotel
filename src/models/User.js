@@ -24,17 +24,23 @@ const userScema = new Schema({
   },
   role: {
     type: String,
+    enum: ["admin", "owner"],
     required: true,
-    default: "user"
+    default: "admin"
+  },
+  confirmed: {
+    type: Boolean,
+    required: true,
+    default: false
   },
   createdAt: {
     type: Date,
     required: true,
-    default: Date.now
+    default: new Date(Date.now())
   },
   editedAt: {
     type: Date,
-    required: false
+    required: new Date(Date.now())
   }
 });
 

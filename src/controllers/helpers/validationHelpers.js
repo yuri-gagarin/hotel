@@ -27,9 +27,10 @@ export const isEmpty = (value) => {
 /**
  * Validates new user data
  * @param {Object} userData - An {Object} containing data for new User model
+ * @param {Object} newUser - An object to specify new user
  * @returns {Object} An {Object} which contains any errors and .isValid property
  */
-export const validateUser = (userData) => {
+export const validateUser = (userData, { newUser }) => {
   const errors = {};
   //validate user name and last name
   if (userData.firstName) {
@@ -56,11 +57,13 @@ export const validateUser = (userData) => {
   }
   //validate user password - make sure they match
   if (userData.password) {
-    if (!userData.passwordConfirm) {
-      errors.password = "You must confirm your password";
-    }
-    if (userData.password !== userData.passwordConfirm) {
-      errors.password = "Passwords do not match";
+    if (newUser) {
+      if (!userData.passwordConfirm) {
+        errors.password = "You must confirm your password";
+      }
+      if (userData.password !== userData.passwordConfirm) {
+        errors.password = "Passwords do not match";
+      }
     }
   } else {
     errors.password = "Password field is required";
