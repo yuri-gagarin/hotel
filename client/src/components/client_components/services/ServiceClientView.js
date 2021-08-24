@@ -15,7 +15,17 @@ type Props = {
 
 const ServiceClientView = ({ service, triggerImgModal }: Props): React.Node => {
   const { serviceType, price, hours, description } = service;
+  // local state and refs //
   const [ imgURLS, setImgURLS ] = React.useState<Array<string>>([]);
+  const [ animateTitle, setAnimateTitle ] = React.useState<boolean>(false);
+  // title line ref for animation //
+  const titleLineRef = React.useRef<HTMLDivElement | null>(null);
+
+  // title line intersection observer callback for animation //
+  const observerCallback = (entries: Array<IntersectionObserverEntry>) => {
+    const [ entry ] = entries;
+    if (entry.isIntersecting) setAnimateTitle(true);
+  };
   
   React.useEffect(() => {
     const urls: Array<string> = [];
@@ -29,6 +39,13 @@ const ServiceClientView = ({ service, triggerImgModal }: Props): React.Node => {
     setImgURLS(urls);
   }, [ service ]);
 
+  React.useEffect(() => {
+    const titleLineObserver = new IntersectionObserver(observerCallback, { threshold: 1 });
+    if (titleLineRef.current) {
+      titleLineObserver.observe(titleLineRef.current);
+    }
+  }, [ titleLineRef.current ]);
+
   const handleServiceInfoClick = () => {
     console.log("clicked")
   }
@@ -38,7 +55,7 @@ const ServiceClientView = ({ service, triggerImgModal }: Props): React.Node => {
       <AnimatedBorder animationDelay={ 500 } />
         <div className={ styles.serviceViewContainer }>
           <div className={ styles.serviceTitleRow }>
-            <div className={ styles.titleLine }></div>
+            <div ref={ titleLineRef } className={ `${styles.titleLine} ${animateTitle ? styles.animateTitle : ""}` }></div>
             <div className={ styles.serviceTitle }>  
               { serviceType ? serviceType : "Service type here..." }
             </div>

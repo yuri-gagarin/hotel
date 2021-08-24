@@ -45,9 +45,15 @@
   left: 2%;
   transform: translateY(-50%);
   width: 96%;
-  height: 5px;
+  transform: scaleX(0);
+  height: 0px;
   background-color: rgb(44, 53, 49);
   z-index: 2;
+}
+.animateTitle {
+  transform: scaleX(1);
+  height: 6px;
+  transition: all 1400ms ease-in;
 }
 
 .servicesPicRow {
