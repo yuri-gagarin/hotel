@@ -7,6 +7,7 @@ import { generateMockDiningEntOptions } from "./generateMockDiningEntOptions";
 
 import appConfig from "../../config/appConfig";
 import { generateMockNewsPosts } from "./generateMockNewsPosts";
+import { generateMockUsers } from "./generateMockUser";
 
 const { dbSettings } = appConfig;
 const mongoOptions = {
@@ -30,6 +31,7 @@ const models =
    4 - Messages
    5 - Contact Posts
    6 - News Posts
+   7 - Users
    0 - Exit`;
 
 console.log(chalk.bgBlack.white.bold("Seed mock model data: \n"));
@@ -94,7 +96,7 @@ class SeedModels {
         return false;
       }
       case "5": {
-        return new Promise((res, rej) => {
+        return new Promise((res) => {
           rl.question("How many 'Contact Post models to create?: ", (value) => {
             return res(generateMockContactPosts(parseInt(value, 10)));
           });
@@ -104,6 +106,13 @@ class SeedModels {
         return new Promise((res) => {
           rl.question("How many 'News Post' models to create?: ", (value) => {
             return res(generateMockNewsPosts(parseInt(value, 10)));
+          });
+        });
+      }
+      case "7": {
+        return new Promise((res) => {
+          rl.question("How many 'User' models to create?: ", (value) => {
+            return res(generateMockUsers(value));
           });
         });
       }

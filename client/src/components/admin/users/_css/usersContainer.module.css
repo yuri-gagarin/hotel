@@ -4,10 +4,18 @@
   border: 5px solid red;
   padding: 0 !important;
 }
+
 .usersIndexControls {
   width: 100%;
   height: 50px;
-  border: 5px solid green;
+  border: 3px solid green;
   display: flex;
   align-items: center;
+}
+
+.usersMainDisplay {
+  height: calc(100% - 50px);
+  width: 100%;
+  border: 4px solid blue;
+  padding: 5px;
 }
